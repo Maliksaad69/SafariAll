@@ -1,0 +1,9 @@
+{
+  "/api/auth/me/route": "app/api/auth/me/route.js",
+  "/operators/[slug]/page": "app/operators/[slug]/page.js",
+  "/operators/page": "app/operators/page.js",
+  "/page": "app/page.js",
+  "/parks/page": "app/parks/page.js",
+  "/tours/[slug]/page": "app/tours/[slug]/page.js",
+  "/tours/page": "app/tours/page.js"
+}

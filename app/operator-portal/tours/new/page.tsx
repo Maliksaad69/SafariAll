@@ -1,0 +1,452 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import { Compass, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Calendar, MapPin, DollarSign, Award } from 'lucide-react';
+
+interface ItineraryDay {
+  dayNumber: number;
+  title: string;
+  description: string;
+  accommodationName: string;
+  mealsIncluded: string;
+}
+
+export default function NewTourPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // Tour fields
+  const [title, setTitle] = useState('');
+  const [durationDays, setDurationDays] = useState('7');
+  const [durationNights, setDurationNights] = useState('6');
+  const [minPriceUsd, setMinPriceUsd] = useState('2500');
+  const [maxPriceUsd, setMaxPriceUsd] = useState('3200');
+  const [comfortLevel, setComfortLevel] = useState('MID_RANGE');
+  const [tourType, setTourType] = useState('PRIVATE');
+  const [primaryCountry, setPrimaryCountry] = useState('Tanzania');
+  const [startLocation, setStartLocation] = useState('Arusha');
+  const [endLocation, setEndLocation] = useState('Zanzibar');
+  const [inclusionsText, setInclusionsText] = useState("All national park entrance fees\nProfessional safari driver/guide\n4x4 Land Cruiser transport\nMeals as specified\nAccommodations as listed");
+  const [exclusionsText, setExclusionsText] = useState("International flights\nVisas & travel insurance\nPersonal tips & gratuities\nAlcoholic beverages");
+
+  // Dynamic Day-by-Day Itineraries
+  const [itineraries, setItineraries] = useState<ItineraryDay[]>([
+    {
+      dayNumber: 1,
+      title: 'Arrival in Arusha & Safari Briefing',
+      description: 'Meet and greet at Kilimanjaro International Airport (JRO) and transfer to your luxury lodge in Arusha. Tour orientation with your lead safari guide.',
+      accommodationName: 'Gran Melia Arusha',
+      mealsIncluded: 'Dinner',
+    },
+    {
+      dayNumber: 2,
+      title: 'Game Drive in Tarangire National Park',
+      description: 'Depart for Tarangire, famous for huge elephant herds and ancient baobab trees. Afternoon game drive along the Tarangire River.',
+      accommodationName: 'Tarangire Safari Lodge',
+      mealsIncluded: 'Breakfast, Lunch, Dinner',
+    },
+  ]);
+
+  const addDay = () => {
+    const nextDay = itineraries.length + 1;
+    setItineraries([
+      ...itineraries,
+      {
+        dayNumber: nextDay,
+        title: `Day ${nextDay} Safari Exploration`,
+        description: '',
+        accommodationName: '',
+        mealsIncluded: 'Breakfast, Lunch, Dinner',
+      },
+    ]);
+  };
+
+  const removeDay = (index: number) => {
+    if (itineraries.length <= 1) return;
+    const updated = itineraries.filter((_, i) => i !== index).map((day, i) => ({
+      ...day,
+      dayNumber: i + 1,
+    }));
+    setItineraries(updated);
+  };
+
+  const updateDay = (index: number, field: keyof ItineraryDay, value: string) => {
+    const updated = [...itineraries];
+    updated[index] = { ...updated[index], [field]: value };
+    setItineraries(updated);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await fetch('/api/operator/tours', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          durationDays,
+          durationNights,
+          minPriceUsd,
+          maxPriceUsd,
+          comfortLevel,
+          tourType,
+          primaryCountry,
+          startLocation,
+          endLocation,
+          inclusions: inclusionsText.split('\n').filter(Boolean),
+          exclusions: exclusionsText.split('\n').filter(Boolean),
+          itineraries,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to publish safari package.');
+      }
+
+      setSuccess('Safari tour package published successfully! Redirecting...');
+      setTimeout(() => {
+        router.push('/operator-portal');
+        router.refresh();
+      }, 1200);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#FAF7F0] text-[#2C221E]">
+      <Navbar />
+
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <Link href="/operator-portal" className="inline-flex items-center gap-2 text-xs font-bold text-[#C85A17] hover:underline">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Portal
+          </Link>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Operator Tour Builder</span>
+        </div>
+
+        <div className="bg-[#1C2826] rounded-3xl p-8 text-white shadow-xl space-y-2">
+          <h1 className="text-3xl font-bold font-serif">Create New Safari Package</h1>
+          <p className="text-sm text-gray-300">
+            Publish a multi-day itinerary with pricing, comfort level, and day-by-day stops for travelers.
+          </p>
+        </div>
+
+        {error && (
+          <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center gap-3 text-red-800 text-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-red-600" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-800 text-sm">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+            <span>{success}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          
+          {/* Section 1: Basic Information */}
+          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
+            <h2 className="text-xl font-bold font-serif text-[#1C2826] border-b border-gray-100 pb-3">
+              1. Tour Overview & Pricing
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Safari Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. 7-Day Serengeti Great Migration & Ngorongoro Luxury Safari"
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Destination Country *
+                </label>
+                <select
+                  value={primaryCountry}
+                  onChange={(e) => setPrimaryCountry(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                >
+                  <option value="Tanzania">Tanzania</option>
+                  <option value="Kenya">Kenya</option>
+                  <option value="South Africa">South Africa</option>
+                  <option value="Uganda">Uganda</option>
+                  <option value="Botswana">Botswana</option>
+                  <option value="Zimbabwe">Zimbabwe</option>
+                  <option value="Rwanda">Rwanda</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Comfort Level *
+                </label>
+                <select
+                  value={comfortLevel}
+                  onChange={(e) => setComfortLevel(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                >
+                  <option value="BUDGET">Budget / Basic Lodge</option>
+                  <option value="MID_RANGE">Mid-Range (Standard Lodge / Camp)</option>
+                  <option value="LUXURY">Luxury (High-end Tented Camp)</option>
+                  <option value="SUPER_LUXURY">Super Luxury (Exclusive Private Villa)</option>
+                  <option value="CAMPING">Public / Adventure Camping</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Duration (Days) *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="1"
+                  value={durationDays}
+                  onChange={(e) => setDurationDays(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Duration (Nights)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={durationNights}
+                  onChange={(e) => setDurationNights(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Starting Price per Person (USD) *
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="50"
+                  value={minPriceUsd}
+                  onChange={(e) => setMinPriceUsd(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Max Price per Person (USD)
+                </label>
+                <input
+                  type="number"
+                  min="50"
+                  value={maxPriceUsd}
+                  onChange={(e) => setMaxPriceUsd(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Start Hub / City
+                </label>
+                <input
+                  type="text"
+                  value={startLocation}
+                  onChange={(e) => setStartLocation(e.target.value)}
+                  placeholder="e.g. Arusha or JRO Airport"
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  End Hub / City
+                </label>
+                <input
+                  type="text"
+                  value={endLocation}
+                  onChange={(e) => setEndLocation(e.target.value)}
+                  placeholder="e.g. Zanzibar or Kilimanjaro Airport"
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Inclusions & Exclusions */}
+          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
+            <h2 className="text-xl font-bold font-serif text-[#1C2826] border-b border-gray-100 pb-3">
+              2. What's Included & Excluded
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Inclusions (One per line)
+                </label>
+                <textarea
+                  rows={5}
+                  value={inclusionsText}
+                  onChange={(e) => setInclusionsText(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-xs text-[#1C2826] focus:outline-none focus:border-[#C85A17] font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                  Exclusions (One per line)
+                </label>
+                <textarea
+                  rows={5}
+                  value={exclusionsText}
+                  onChange={(e) => setExclusionsText(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-xs text-[#1C2826] focus:outline-none focus:border-[#C85A17] font-mono"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Day-by-Day Itinerary Builder */}
+          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 className="text-xl font-bold font-serif text-[#1C2826]">
+                3. Day-by-Day Itinerary ({itineraries.length} Days)
+              </h2>
+              <button
+                type="button"
+                onClick={addDay}
+                className="px-4 py-2 bg-[#1C2826] text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-[#C85A17] transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Day
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {itineraries.map((day, idx) => (
+                <div key={idx} className="p-6 rounded-2xl bg-[#FAF7F0] border border-[#E5E0D8] space-y-4 relative">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-sm text-[#C85A17] uppercase tracking-wider">
+                      Day {day.dayNumber}
+                    </span>
+                    {itineraries.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeDay(idx)}
+                        className="text-xs text-red-600 hover:text-red-800 flex items-center gap-1 font-bold"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Remove Day
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                        Day Title
+                      </label>
+                      <input
+                        type="text"
+                        value={day.title}
+                        onChange={(e) => updateDay(idx, 'title', e.target.value)}
+                        placeholder="e.g. Serengeti Central Game Drives"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                        Day Narrative & Activities
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={day.description}
+                        onChange={(e) => updateDay(idx, 'description', e.target.value)}
+                        placeholder="Describe morning game drives, wildlife sightings, landscape transitions, etc."
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                        Overnight Accommodation
+                      </label>
+                      <input
+                        type="text"
+                        value={day.accommodationName}
+                        onChange={(e) => updateDay(idx, 'accommodationName', e.target.value)}
+                        placeholder="e.g. Four Seasons Safari Lodge"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                        Meals Included
+                      </label>
+                      <input
+                        type="text"
+                        value={day.mealsIncluded}
+                        onChange={(e) => updateDay(idx, 'mealsIncluded', e.target.value)}
+                        placeholder="Breakfast, Lunch, Dinner"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Submit CTA */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-8 py-4 bg-[#C85A17] hover:bg-[#a6470e] text-white font-bold text-sm rounded-2xl shadow-xl flex items-center gap-2 transition-all"
+            >
+              <span>{loading ? 'Publishing Package...' : 'Publish Safari Package'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+        </form>
+
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
