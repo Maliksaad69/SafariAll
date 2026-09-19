@@ -1,0 +1,69 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js build output
+/.next/
+/out/
+/build
+
+# TypeScript / incremental build caches
+*.tsbuildinfo
+
+# Testing
+/coverage
+.nyc_output
+
+# Environment files (never commit secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor / OS noise
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Vercel / misc
+.vercel
+.eslintcache
+
+# ---------------------------------------------------------------------------
+# graphify — knowledge-graph components are intentionally TRACKED
+# (.agents/rules/graphify.md, .agents/workflows/graphify.md, graphify-out/).
+# Negations below make sure no broad rule above ever swallows them.
+# ---------------------------------------------------------------------------
+!graphify-out/
+!graphify-out/**
+!.agents/
+!.agents/**
+!graphify-out/graph.json
+!graphify-out/GRAPH_REPORT.md
+!graphify-out/graph.html
+!graphify-out/manifest.json
+!graphify-out/.graphify_root
+!graphify-out/.graphify_labels.json
+!graphify-out/.graphify_labels.json.sig
+!graphify-out/.graphify_analysis.json
+!graphify-out/cache/
+!graphify-out/cache/**
