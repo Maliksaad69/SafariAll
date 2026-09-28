@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. Self-Hosted PostgreSQL Database (Latest PostgreSQL 17)
+  postgres:
+    image: postgres:17-alpine
+    container_name: safaribookings_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-safari_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SafariSecurePass2026!}
+      POSTGRES_DB: ${POSTGRES_DB:-safaribookings_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-safari_admin} -d ${POSTGRES_DB:-safaribookings_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - safari_network
+
+  # 2. Database Management GUI (Optional pgAdmin 4 at http://localhost:5050)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: safaribookings_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@safaribookings.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-AdminSafariPass123!}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - safari_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  safari_network:
+    driver: bridge
