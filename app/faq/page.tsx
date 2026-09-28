@@ -27,15 +27,15 @@ const faqs = [
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-[#f6f3ee] text-[#2d1a12]">
+    <div className="min-h-screen bg-[var(--surface-page)] text-[var(--ink-body)]">
       <Navbar />
 
       <main className="mx-auto max-w-[980px] px-4 py-10 sm:px-6 lg:px-0">
-        <section className="rounded-[18px] border border-[#d8d1c8] bg-[#1f1712] p-7 shadow-[0_12px_28px_rgba(10,8,6,0.25)] md:p-10">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f5d27a]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#f9d98a]">
+        <section className="rounded-[18px] border border-[var(--border-strong)] bg-[var(--dark)] p-7 shadow-[0_12px_28px_rgba(10,8,6,0.25)] md:p-10">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--dark-gold)]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--dark-gold)]">
             FAQ
           </div>
-          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-white" style={{ fontFamily: 'Georgia, serif' }}>
+          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-white font-display">
             Frequently asked safari questions
           </h1>
           <p className="mt-3 max-w-[700px] text-sm leading-relaxed text-white">
@@ -45,12 +45,12 @@ export default function FAQPage() {
 
         <section className="mt-8 space-y-4">
           {faqs.map((faq) => (
-            <article key={faq.question} className="rounded-[14px] border border-[#d8d1c8] bg-white p-5 shadow-sm">
+            <article key={faq.question} className="rounded-[14px] border border-[var(--border-strong)] bg-[var(--surface-card)] p-5 shadow-sm">
               <div className="flex items-start justify-between gap-4">
-                <h2 className="text-[1.2rem] font-bold text-[#1d1a18]" style={{ fontFamily: 'Georgia, serif' }}>{faq.question}</h2>
-                <ChevronRight className="mt-1 h-4 w-4 flex-shrink-0 text-[#b58927]" />
+                <h2 className="text-[1.2rem] font-bold text-[var(--ink)] font-display">{faq.question}</h2>
+                <ChevronRight className="mt-1 h-4 w-4 flex-shrink-0 text-[var(--gold)]" />
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-[#5a4e46]">{faq.answer}</p>
+              <p className="mt-3 text-sm leading-relaxed text-[var(--ink-secondary)]">{faq.answer}</p>
             </article>
           ))}
         </section>

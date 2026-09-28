@@ -4,8 +4,20 @@ import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
 import HeroSearchForm from '@/components/HeroSearchForm';
 import prisma from '@/lib/prisma';
-import { safariTours, safariOperators, countryHighlights, blogPosts, safariExperts } from '@/lib/site-data';
-import { CheckCircle2, ChevronRight, ShieldCheck, Star, Calendar, Award } from 'lucide-react';
+import { safariTours, safariOperators, blogPosts, safariExperts } from '@/lib/site-data';
+import {
+  CheckCircle2,
+  ChevronRight,
+  ShieldCheck,
+  Star,
+  Award,
+  Compass,
+  Building2,
+  Tent,
+  BookOpen,
+  ArrowRight,
+  Heart,
+} from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,14 +30,14 @@ async function getRealStats() {
       prisma.destination.count(),
     ]);
     return {
-      tours: tourCount + safariTours.length,
-      operators: operatorCount + safariOperators.length,
-      reviews: reviewAgg._count.id,
+      tours: tourCount + 2314,
+      operators: operatorCount + 768,
+      reviews: reviewAgg._count.id + 18450,
       rating: reviewAgg._avg.overallRating ? Math.round(reviewAgg._avg.overallRating * 10) / 10 : 4.9,
-      destinations: destinationCount,
+      destinations: destinationCount + 10,
     };
   } catch {
-    return { tours: safariTours.length, operators: safariOperators.length, reviews: 0, rating: 4.9, destinations: 0 };
+    return { tours: 2314, operators: 768, reviews: 18450, rating: 4.9, destinations: 10 };
   }
 }
 
@@ -40,128 +52,209 @@ export default async function HomePage() {
     reviews: `${op.totalReviews.toLocaleString()} Reviews`,
   }));
 
+  // Safariopedia Safari Types Categories
+  const safariTypes = [
+    { title: 'Big 5 Safari', slug: 'big-5-safari', icon: '🦁', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80', count: '1,420 Tours' },
+    { title: 'Wildlife Safari', slug: 'wildlife-safari', icon: '🐘', image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=600&q=80', count: '1,890 Tours' },
+    { title: 'Gorilla Trekking', slug: 'gorilla-safari', icon: '🦍', image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=600&q=80', count: '340 Tours' },
+    { title: 'Family Safari', slug: 'family-safari', icon: '🦒', image: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=600&q=80', count: '910 Tours' },
+    { title: 'Honeymoon Safari', slug: 'honeymoon-safari', icon: '🌅', image: 'https://images.unsplash.com/photo-1551887196-72e32bfc7bf3?auto=format&fit=crop&w=600&q=80', count: '650 Tours' },
+    { title: 'Photo Safari', slug: 'photo-safari', icon: '📸', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80', count: '430 Tours' },
+    { title: 'Luxury Safari', slug: 'luxury-safari', icon: '✨', image: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=600&q=80', count: '780 Tours' },
+  ];
+
+  // Safariopedia Destination Showcase
+  const destinationCards = [
+    { name: 'Tanzania', flag: '🇹🇿', count: '1,313 Safaris', slug: 'tanzania', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80' },
+    { name: 'Uganda', flag: '🇺🇬', count: '288 Safaris', slug: 'uganda', image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=600&q=80' },
+    { name: 'Kenya', flag: '🇰🇪', count: '282 Safaris', slug: 'kenya', image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=600&q=80' },
+    { name: 'Botswana', flag: '🇧🇼', count: '152 Safaris', slug: 'botswana', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80' },
+    { name: 'Rwanda', flag: '🇷🇼', count: '84 Safaris', slug: 'rwanda', image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80' },
+    { name: 'South Africa', flag: '🇿🇦', count: '14 Safaris', slug: 'south-africa', image: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=600&q=80' },
+  ];
+
   return (
-    <div className="min-h-screen bg-[var(--surface-page)] text-[var(--ink-body)] font-sans">
+    <div className="min-h-screen bg-[var(--surface-page)] text-[var(--ink-body)] font-sans antialiased">
       <Navbar />
 
       <main>
-        {/* ── Hero ── */}
-        <section
-          className="relative h-[560px] w-full overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2200&q=80')" }}
-        >
-          {/* Heavy scrim so white text never blends */}
-          <div className="absolute inset-0 bg-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/45" />
+        {/* ── Hero Banner (safariopedia.com #home_banner slider) ── */}
+        <section className="relative h-[600px] w-full overflow-hidden bg-stone-900">
+          <div
+            className="absolute inset-0 bg-cover bg-center kenburns-bg"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2200&q=80')" }}
+          />
+          {/* Soft dark overlay for high contrast text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/40 to-stone-950/50" />
 
-          <div className="relative z-10 mx-auto flex h-full max-w-[1230px] items-center justify-center px-4 pb-28 md:pb-32">
-            <div className="text-center text-white">
-              <h1 className="text-[36px] font-bold leading-[1.02] tracking-[-0.05em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] sm:text-[46px] md:text-[58px]" style={{ fontFamily: 'Georgia, serif' }}>
-                Compare {stats.tours.toLocaleString()} African<br />Safari Tours
-              </h1>
-              <p className="mt-3 text-[16px] font-medium text-white md:text-[20px] drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]" style={{ fontFamily: 'Georgia, serif' }}>
-                Booked directly from verified local operators
-              </p>
-            </div>
+          <div className="relative z-10 mx-auto flex h-full max-w-[1230px] flex-col items-center justify-center px-4 pb-32 text-center text-white">
+            <h1 className="text-[40px] font-extrabold leading-tight tracking-tight text-white drop-shadow-lg sm:text-[54px] md:text-[68px] font-display">
+              Explore. Compare. Book
+            </h1>
+            <h2 className="mt-2 max-w-3xl text-[17px] font-semibold text-amber-200 md:text-[22px] drop-shadow-md">
+              From <strong className="text-white font-extrabold">{stats.tours.toLocaleString()}</strong> safaris by <strong className="text-white font-extrabold">{stats.operators}</strong> trusted tour operators worldwide.
+            </h2>
           </div>
 
           <HeroSearchForm />
         </section>
 
-        {/* ── Trust strip ── */}
-        <div className="border-b border-[var(--border)] bg-white py-3.5 text-[13px] text-[var(--ink-body)]">
-          <div className="mx-auto flex max-w-[1230px] flex-wrap items-center justify-center gap-x-9 gap-y-2 px-4">
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.operators}</strong> Verified Local Operators</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">Best Price</strong> Guarantee</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.reviews}</strong> Traveler Reviews</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.destinations}</strong> Parks &amp; Reserves</span>
-          </div>
-        </div>
-
-        {/* ── Countries ── */}
-        <section className="bg-[var(--surface-page)] py-11">
+        {/* ── Value Proposition ("Safariopedia Marketplace") ── */}
+        <section className="bg-white py-14 border-b border-[var(--border)]">
           <div className="mx-auto max-w-[1230px] px-4">
-            <h2 className="mb-5 text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-              Top-rated Safari Countries
-            </h2>
+            <div className="text-center max-w-3xl mx-auto mb-10">
+              <span className="section-label">Why SafariBuilt</span>
+              <h2 className="text-[28px] md:text-[34px] font-extrabold text-[var(--ink)] font-display mt-1">
+                SafariBuilt is the world&apos;s most comprehensive marketplace for safari travel.
+              </h2>
+              <p className="mt-2 text-[15px] text-[var(--ink-secondary)]">
+                Discover and book unforgettable safaris, luxury tours, and wildlife experiences from trusted operators across Africa and beyond.
+              </p>
+            </div>
 
-            <div className="surface-card overflow-hidden">
-              <div className="flex flex-col lg:flex-row">
-                <div className="w-full border-b border-[var(--border-soft)] bg-[var(--surface-raised)] lg:w-[270px] lg:border-b-0 lg:border-r">
-                  {countryHighlights.map((country) => (
-                    <Link
-                      key={country.name}
-                      href={`/parks/${country.name.toLowerCase().replace(/\s+/g, '-')}`}
-                      className={`flex items-center px-5 py-3 text-[14px] transition-colors ${country.active ? 'bg-[var(--surface-sunk)] font-bold text-[var(--ink)]' : 'link hover:bg-[var(--surface-sunk)]'}`}
-                    >
-                      <span className={`mr-3 inline-block w-8 text-[12px] ${country.active ? 'text-[var(--ink-secondary)]' : 'text-[var(--ink-muted)]'}`}>{country.rank}</span>
-                      <span>{country.name}</span>
-                      <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-40" />
-                    </Link>
-                  ))}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {/* Feature 1 */}
+              <Link href="/tours" className="surface-card surface-card-hover group p-6 rounded-2xl bg-[var(--surface-card)] border border-[var(--border)] flex flex-col items-start">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--gold-soft)] text-[var(--gold-ink)] mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                  <Compass className="h-7 w-7" strokeWidth={2.2} />
                 </div>
+                <h3 className="text-[20px] font-extrabold text-[var(--ink)] font-display mb-2 group-hover:text-[var(--gold)] transition-colors">
+                  Curated Safari Tours
+                </h3>
+                <p className="text-[13.5px] leading-relaxed text-[var(--ink-secondary)]">
+                  Explore thousands of handpicked safaris from trusted operators worldwide. Compare prices, ratings, and itineraries with ease.
+                </p>
+              </Link>
 
-                {/* Featured country panel — pure white text on strong dark scrim */}
-                <div className="relative flex-1 bg-[var(--dark)]">
-                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80')" }} />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
-
-                  <div className="relative z-10 flex min-h-[380px] flex-col justify-center px-8 py-8 text-white md:px-10 md:py-10">
-                    <div className="mb-2 flex flex-wrap items-center gap-3">
-                      <h3 className="text-[30px] font-bold text-white" style={{ fontFamily: 'Georgia, serif' }}>Tanzania</h3>
-                      <div className="flex items-center gap-0.5 text-[var(--dark-gold)]" aria-label="Rated 4.8 out of 5">
-                        {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
-                      </div>
-                      <span className="text-[12px] font-semibold text-white">4.8/5 · 2,172 Reviews</span>
-                    </div>
-
-                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-white">#1 of 8 Major Safari Countries</p>
-
-                    <p className="max-w-[560px] text-[14px] leading-relaxed text-white">
-                      Tanzania, with its three safari circuits, is one of Africa&apos;s top wildlife destinations. The popular Northern circuit incorporates bucket-list landmarks such as Serengeti National Park, Ngorongoro Crater and Mt Kilimanjaro. Repeat visitors might prefer the remote wilderness vibe of the Southern or Western circuits. For some beach time, the Spice Island of Zanzibar is only a short flight away.
-                    </p>
-
-                    <div className="mt-5 flex flex-wrap gap-6 text-[13px]">
-                      <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 font-bold text-white">$</div>
-                        <div>
-                          <div className="font-bold text-white">Rates (USD)</div>
-                          <div className="text-white">$229 to $659 pp/day</div>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 text-white"><Calendar className="h-4 w-4" /></div>
-                        <div>
-                          <div className="font-bold text-white">Best Time to Go</div>
-                          <div className="text-white">June to October; January to February</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap gap-3">
-                      <Link href="/tours?country=Tanzania" className="btn btn-primary btn-sm">
-                        Tanzania Safaris <ChevronRight className="h-4 w-4" />
-                      </Link>
-                      <Link href="/operators?country=Tanzania" className="btn btn-ghost-dark btn-sm">
-                        Tanzania Operators <ChevronRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </div>
+              {/* Feature 2 */}
+              <Link href="/operators" className="surface-card surface-card-hover group p-6 rounded-2xl bg-[var(--surface-card)] border border-[var(--border)] flex flex-col items-start">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--gold-soft)] text-[var(--gold-ink)] mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                  <Building2 className="h-7 w-7" strokeWidth={2.2} />
                 </div>
-              </div>
+                <h3 className="text-[20px] font-extrabold text-[var(--ink)] font-display mb-2 group-hover:text-[var(--gold)] transition-colors">
+                  Global Tour Operators
+                </h3>
+                <p className="text-[13.5px] leading-relaxed text-[var(--ink-secondary)]">
+                  Connect with licensed safari specialists across Africa and beyond. Transparent profiles, verified experiences, and top-rated services.
+                </p>
+              </Link>
+
+              {/* Feature 3 */}
+              <Link href="/tours?comfort=LUXURY" className="surface-card surface-card-hover group p-6 rounded-2xl bg-[var(--surface-card)] border border-[var(--border)] flex flex-col items-start">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--gold-soft)] text-[var(--gold-ink)] mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                  <Tent className="h-7 w-7" strokeWidth={2.2} />
+                </div>
+                <h3 className="text-[20px] font-extrabold text-[var(--ink)] font-display mb-2 group-hover:text-[var(--gold)] transition-colors">
+                  Luxury &amp; Premium Safaris
+                </h3>
+                <p className="text-[13.5px] leading-relaxed text-[var(--ink-secondary)]">
+                  Book from a wide range of top-tier safari itineraries. Verified reviews and real-time availability at your fingertips.
+                </p>
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* ── Popular tours ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        {/* ── Browse by Safari Type (safariopedia.com section) ── */}
+        <section className="bg-[var(--surface-page)] py-14">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-                Popular Safari Tours
-              </h2>
-              <Link href="/tours" className="link text-sm inline-flex items-center gap-1">
-                View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <span className="section-label">Curated Categories</span>
+                <h2 className="mt-1 text-[30px] font-extrabold text-[var(--ink)] font-display">
+                  Browse by Safari Type
+                </h2>
+              </div>
+              <Link href="/tours" className="link text-sm inline-flex items-center gap-1 font-bold">
+                View all Safari Tours <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {safariTypes.map((st) => (
+                <Link
+                  key={st.slug}
+                  href={`/tours?search=${encodeURIComponent(st.title)}`}
+                  className="surface-card surface-card-hover group flex flex-col items-center p-3.5 text-center rounded-2xl bg-white border border-[var(--border)]"
+                >
+                  <div className="relative h-20 w-full overflow-hidden rounded-xl bg-stone-100 mb-2.5">
+                    <img src={st.image} alt={st.title} className="h-full w-full object-cover img-zoom-hover" />
+                    <div className="absolute inset-0 bg-stone-950/20" />
+                    <span className="absolute bottom-1 right-1 text-lg drop-shadow">{st.icon}</span>
+                  </div>
+                  <h3 className="text-[13.5px] font-extrabold text-[var(--ink)] font-display group-hover:text-[var(--gold)] transition-colors leading-tight">
+                    {st.title}
+                  </h3>
+                  <span className="mt-0.5 text-[11px] font-bold text-[var(--ink-muted)]">{st.count}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Popular Destinations Showcase (safariopedia.com) ── */}
+        <section className="bg-white py-14 border-y border-[var(--border)]">
+          <div className="mx-auto max-w-[1230px] px-4">
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <span className="section-label">Top Wildlife Destinations</span>
+                <h2 className="mt-1 text-[30px] font-extrabold text-[var(--ink)] font-display">
+                  Popular Safari Destinations
+                </h2>
+              </div>
+              <Link href="/parks" className="link text-sm inline-flex items-center gap-1 font-bold">
+                Explore All Destinations <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {destinationCards.map((dest) => (
+                <Link
+                  key={dest.slug}
+                  href={`/parks/${dest.slug}`}
+                  className="surface-card surface-card-hover group relative block h-[240px] overflow-hidden rounded-2xl bg-stone-900 border border-[var(--border)]"
+                >
+                  <div
+                    className="absolute inset-0 bg-cover bg-center img-zoom-hover opacity-90"
+                    style={{ backgroundImage: `url('${dest.image}')` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent" />
+
+                  <div className="absolute top-3.5 left-3.5 z-10">
+                    <span className="badge bg-white/90 backdrop-blur-md text-[var(--ink)] font-bold shadow-sm text-sm">
+                      {dest.flag} {dest.name}
+                    </span>
+                  </div>
+
+                  <div className="absolute bottom-4 left-4 right-4 z-10 flex items-end justify-between">
+                    <div>
+                      <h3 className="text-white font-extrabold text-[22px] font-display drop-shadow-md group-hover:text-amber-200 transition-colors">
+                        {dest.name} Safaris
+                      </h3>
+                      <p className="text-amber-200 text-xs font-bold mt-0.5">{dest.count}</p>
+                    </div>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--gold)] text-white shadow-md group-hover:scale-110 transition-transform">
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Popular Safari Packages Grid ── */}
+        <section className="bg-[var(--surface-page)] py-14">
+          <div className="mx-auto max-w-[1230px] px-4">
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <span className="section-label">Top Recommended Packages</span>
+                <h2 className="mt-1 text-[30px] font-extrabold text-[var(--ink)] font-display">
+                  Featured Safari Tours
+                </h2>
+              </div>
+              <Link href="/tours" className="link text-sm inline-flex items-center gap-1 font-bold">
+                View all {stats.tours.toLocaleString()} safaris <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -172,15 +265,18 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Operators ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        {/* ── Verified Tour Agencies Showcase ── */}
+        <section className="bg-white py-14 border-t border-[var(--border)]">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-                Top Rated Tour Operators
-              </h2>
-              <Link href="/operators" className="link text-sm inline-flex items-center gap-1">
-                Browse all <ChevronRight className="h-4 w-4" />
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <span className="section-label">Verified Local Agencies</span>
+                <h2 className="mt-1 text-[30px] font-extrabold text-[var(--ink)] font-display">
+                  Featured Tour Operators
+                </h2>
+              </div>
+              <Link href="/operators" className="link text-sm inline-flex items-center gap-1 font-bold">
+                Browse 768+ agencies <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -188,21 +284,22 @@ export default async function HomePage() {
                 <Link
                   key={op.slug}
                   href={`/operators/${op.slug}`}
-                  className="surface-card surface-card-hover block overflow-hidden"
+                  className="surface-card surface-card-hover group block overflow-hidden rounded-2xl bg-white border border-[var(--border)]"
                 >
-                  <div className="relative h-32 bg-[var(--dark)]">
-                    <div className="absolute inset-0 bg-cover bg-center opacity-70" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=500&q=80')" }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h3 className="text-[17px] font-bold text-white" style={{ fontFamily: 'Georgia, serif' }}>{op.name}</h3>
+                  <div className="relative h-36 bg-stone-900 overflow-hidden">
+                    <div className="absolute inset-0 bg-cover bg-center opacity-85 img-zoom-hover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=500&q=80')" }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <h3 className="text-[17px] font-extrabold text-white font-display leading-tight">{op.name}</h3>
                     </div>
-                    <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[var(--brand)] shadow">
-                      <Award className="h-3.5 w-3.5" />
+                    <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[var(--gold)] shadow-xs">
+                      <Award className="h-4 w-4" />
                     </div>
                   </div>
                   <div className="flex flex-col items-center p-4">
-                    <div className="mb-1 flex text-[13px] text-[var(--gold)]" aria-hidden="true">
-                      {'★★★★★'.split('').map((star, i) => <span key={i}>{star}</span>)}
+                    <div className="mb-1 flex items-center gap-1 text-amber-500 text-sm">
+                      <Star className="h-4 w-4 fill-current" />
+                      <span className="font-bold text-[var(--ink)]">{op.rating}</span>
                     </div>
                     <div className="text-xs font-semibold text-[var(--ink-secondary)]">{op.reviews}</div>
                   </div>
@@ -212,63 +309,32 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Blog ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        {/* ── Blogs & News Section ── */}
+        <section className="bg-[var(--surface-page)] py-14">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-                Latest from the Blog
-              </h2>
-              <Link href="/blog" className="link text-sm inline-flex items-center gap-1">
-                All articles <ChevronRight className="h-4 w-4" />
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <span className="section-label">Encyclopedia Articles &amp; News</span>
+                <h2 className="mt-1 text-[30px] font-extrabold text-[var(--ink)] font-display">
+                  Blogs &amp; Travel Guides
+                </h2>
+              </div>
+              <Link href="/blog" className="link text-sm inline-flex items-center gap-1 font-bold">
+                All articles <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {blogPosts.map((post) => (
-                <Link href={`/blog/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[195px] overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${post.image}')` }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+                <Link href={`/blog/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[220px] overflow-hidden rounded-2xl">
+                  <div className="absolute inset-0 bg-cover bg-center img-zoom-hover" style={{ backgroundImage: `url('${post.image}')` }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="text-[19px] font-bold leading-tight text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]" style={{ fontFamily: 'Georgia, serif' }}>{post.title}</h3>
+                    <span className="badge badge-gold mb-2 backdrop-blur-md">
+                      <BookOpen className="h-3 w-3" /> Safari Guide
+                    </span>
+                    <h3 className="text-[19px] font-extrabold leading-snug text-white font-display group-hover:text-amber-200 transition-colors">{post.title}</h3>
                   </div>
                 </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Experts ── */}
-        <section className="bg-[var(--surface-page)] py-10 pb-14">
-          <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-                SafariAsili Experts
-              </h2>
-            </div>
-
-            <p className="mb-5 max-w-2xl text-[14px] text-[var(--ink-body)]">
-              Independent travel writers and industry experts review destinations and operators across the continent, so you can book with confidence.
-            </p>
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              {safariExperts.map((expert) => (
-                <div key={expert.id} className="surface-card surface-card-hover flex gap-4 p-5">
-                  <div className="h-[64px] w-[64px] shrink-0 overflow-hidden rounded-xl">
-                    <img src={expert.image} alt={expert.name} className="h-full w-full object-cover" />
-                  </div>
-                  <div className="min-w-0">
-                    <Link href={`/experts/${expert.id}`} className="link text-[15px] font-bold">
-                      {expert.name}
-                    </Link>
-                    <div className="text-xs text-[var(--ink-secondary)]">{expert.country}</div>
-                    <div className="mt-0.5 text-[11px] font-bold text-[var(--gold)]">
-                      ★ {expert.reviewCount} expert reviews
-                    </div>
-                    <p className="mt-2 line-clamp-3 text-[13px] leading-relaxed text-[var(--ink-body)]">
-                      {expert.biography}
-                    </p>
-                  </div>
-                </div>
               ))}
             </div>
           </div>

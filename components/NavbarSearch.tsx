@@ -100,14 +100,14 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
             onFocus={() => query.trim().length >= 2 && setOpen(true)}
             placeholder="Search tours, parks, agencies..."
             aria-label="Search"
-            className="w-full rounded-lg border border-white/15 bg-white/10 py-2.5 pl-9 pr-9 text-sm text-white placeholder:text-white/60 focus:border-[var(--dark-gold)] focus:outline-none"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] py-2.5 pl-9 pr-9 text-sm text-[var(--ink)] placeholder:text-[var(--ink-muted)] focus:border-[var(--brand)] focus:outline-none"
           />
           {query && (
             <button
               type="button"
               aria-label="Clear search"
               onClick={() => { setQuery(''); setResults(EMPTY); inputRef.current?.focus(); }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ink-muted)] hover:text-[var(--ink)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -116,7 +116,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
 
         {/* Mobile results panel */}
         {query.trim().length >= 2 && (
-          <div className="mt-2 max-h-[50vh] overflow-y-auto rounded-lg bg-white shadow-xl">
+          <div className="mt-2 max-h-[50vh] overflow-y-auto rounded-xl bg-white shadow-xl border border-[var(--border)]">
             <SearchResultsPanel
               loading={loading}
               hasResults={hasResults}
@@ -138,13 +138,13 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
           setOpen((o) => !o);
           setTimeout(() => inputRef.current?.focus(), 50);
         }}
-        className="flex items-center gap-1.5 hover:text-white"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] text-[var(--ink-body)] hover:text-[var(--brand)] hover:border-[var(--brand)] transition-colors font-semibold text-xs"
         aria-label="Search safaris"
         aria-expanded={open}
         aria-haspopup="dialog"
       >
+        <Search className="h-3.5 w-3.5 text-[var(--brand)]" />
         Search
-        <Search className="h-3.5 w-3.5" />
       </button>
 
       {open && (
