@@ -13,7 +13,17 @@ interface BookingBoxProps {
   dbTourId?: string;
 }
 
-// Generate the next 8 months of 1st-of-month departure options
+interface SlotInfo {
+  slotId: string;
+  startDate: string;
+  maxTravelers: number;
+  bookedTravelers: number;
+  spotsLeft: number;
+  isFull: boolean;
+}
+
+// Generate the next 8 months of 1st-of-month departure options (fallback when
+// the agency has not published fixed departure slots)
 function generateDepartures(): { value: string; label: string }[] {
   const options: { value: string; label: string }[] = [];
   const now = new Date();
@@ -26,10 +36,42 @@ function generateDepartures(): { value: string; label: string }[] {
   return options;
 }
 
+function monthKey(iso: string): string {
+  return iso.slice(0, 7); // YYYY-MM
+}
+
 export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, dbTourId }: BookingBoxProps) {
   const departures = useMemo(generateDepartures, []);
-  const [departure, setDeparture] = useState(departures[0].value);
+  const [slots, setSlots] = useState<SlotInfo[] | null>(null);
+  const [slotError, setSlotError] = useState(false);
+  const [departure, setDeparture] = useState(departures[0]?.value ?? '');
   const [travelers, setTravelers] = useState(2);
+
+  // Load real published departures + live capacity for this tour
+  useMemo(() => {
+    const effectiveId = dbTourId || tourId;
+    if (!effectiveId) return;
+    fetch(`/api/tours/${effectiveId}/slots`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && Array.isArray(d.availability)) {
+          // Only future departures
+          const future = (d.availability as SlotInfo[]).filter((s) => new Date(s.startDate) >= new Date(new Date().toDateString()));
+          setSlots(future.length > 0 ? future : d.availability as SlotInfo[]);
+        } else {
+          setSlots([]);
+        }
+      })
+      .catch(() => setSlotError(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dbTourId, tourId]);
+
+  const useSlots = slots && slots.length > 0;
+  const selectedSlot = useSlots
+    ? slots?.find((s) => s.startDate.slice(0, 10) === departure.slice(0, 10)) ?? null
+    : null;
+  const spotsLeft = selectedSlot ? selectedSlot.spotsLeft : null;
+  const isFull = selectedSlot ? selectedSlot.isFull : false;
 
   const estimate = minPriceUsd * travelers;
   const quoteHref = `/quote/request?tourId=${encodeURIComponent(tourId)}&departure=${encodeURIComponent(departure)}&travelers=${travelers}`;
@@ -54,11 +96,40 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
             onChange={(e) => setDeparture(e.target.value)}
             className="form-control"
           >
-            {departures.map((d) => (
-              <option key={d.value} value={d.value}>{d.label}</option>
-            ))}
+            {useSlots
+              ? slots!.map((s) => {
+                  const iso = s.startDate.slice(0, 10);
+                  const label = new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+                  const suffix = s.isFull ? ' — FULL' : ` — ${s.spotsLeft} spot${s.spotsLeft === 1 ? '' : 's'} left`;
+                  return (
+                    <option key={s.slotId} value={iso}>{label}{suffix}</option>
+                  );
+                })
+              : departures.map((d) => (
+                  <option key={d.value} value={d.value}>{d.label}</option>
+                ))}
           </select>
         </div>
+
+        {/* Capacity strip — real fullness from the agency's slot management */}
+        {useSlots && selectedSlot && (
+          <div
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold ${
+              isFull
+                ? 'border-[rgba(185,28,28,0.25)] bg-[var(--danger-soft)] text-[var(--danger)]'
+                : (spotsLeft ?? 99) <= 2
+                  ? 'border-[rgba(180,120,20,0.25)] bg-[var(--warning-soft)] text-[#8a5a00]'
+                  : 'border-[rgba(22,101,52,0.25)] bg-[var(--success-soft)] text-[var(--success)]'
+            }`}
+            role="status"
+          >
+            <Users className="h-3.5 w-3.5 shrink-0" />
+            {isFull
+              ? 'Fully booked — every seat on this departure is taken'
+              : `${selectedSlot.bookedTravelers}/${selectedSlot.maxTravelers} travelers booked · ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left`}
+          </div>
+        )}
+
         <div>
           <label htmlFor="travelers-select" className="form-label">Travelers</label>
           <select
@@ -66,8 +137,12 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
             value={travelers}
             onChange={(e) => setTravelers(Number(e.target.value))}
             className="form-control"
+            disabled={isFull}
           >
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+            {(spotsLeft !== null
+              ? Array.from({ length: Math.max(0, Math.min(8, spotsLeft)) }, (_, i) => i + 1)
+              : [1, 2, 3, 4, 5, 6, 7, 8]
+            ).map((n) => (
               <option key={n} value={n}>{n} {n === 1 ? 'traveler' : 'travelers'}</option>
             ))}
           </select>
@@ -80,9 +155,11 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
       </div>
 
       <div className="space-y-2.5">
-        <Link href={quoteHref} className="btn btn-primary w-full">
-          Request a Quote <ChevronRight className="h-4 w-4" />
-        </Link>
+        {!isFull && (
+          <Link href={quoteHref} className="btn btn-primary w-full">
+            Request a Quote <ChevronRight className="h-4 w-4" />
+          </Link>
+        )}
 
         <ReserveDialog tourId={dbTourId || tourId} tourTitle={tourTitle} minPriceUsd={minPriceUsd} />
       </div>

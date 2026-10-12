@@ -74,6 +74,17 @@ export default async function OperatorPortalPage() {
       })
     : [];
 
+  // New booking alerts: unread traveler messages on active reservations
+  const travelerIds = new Set(reservations.map((r) => r.travelerId));
+  const reservationIds = reservations.map((r) => r.id);
+  const unreadMessages = reservationIds.length
+    ? await prisma.reservationMessage.findMany({
+        where: { reservationId: { in: reservationIds }, isRead: false, senderId: { in: Array.from(travelerIds) } },
+        select: { id: true },
+      })
+    : [];
+  const unreadBookingAlerts = unreadMessages.length;
+
   const pendingCount = reservations.filter((r) => r.status === 'PENDING').length;
   const approvedRes = reservations.filter((r) => r.status === 'APPROVED');
   const approvedCount = approvedRes.length;
@@ -122,13 +133,30 @@ export default async function OperatorPortalPage() {
               {operatorName}
             </h1>
             <p className="mt-2 text-sm text-[var(--dark-text-soft)] max-w-xl">
-              Review reservation requests, manage your safari packages, and respond to traveler quote inquiries.
+              Review reservation requests, manage your safari packages, publish marketing stories, and respond to travelers.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className={`badge ${operator?.isVerified ? 'badge-success' : 'badge-warning'}`}>
               {operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}
             </span>
+            <Link href="/operator-portal/messages" className="btn btn-secondary relative">
+              <Mail className="h-4 w-4" />
+              Inbox
+              {unreadBookingAlerts > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
+                  {unreadBookingAlerts}
+                </span>
+              )}
+            </Link>
+            <Link href="/operator-portal/slots" className="btn btn-secondary">
+              <CalendarDays className="h-4 w-4" />
+              Departures
+            </Link>
+            <Link href="/operator-portal/blog/new" className="btn btn-secondary">
+              <Building2 className="h-4 w-4" />
+              Write Story
+            </Link>
             <Link href="/operator-portal/tours/new" className="btn btn-primary">
               <PlusCircle className="h-4 w-4" />
               Create Tour Package

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Heart, User, ChevronDown, Menu, X, Compass } from 'lucide-react';
+import { Search, Heart, User, ChevronDown, Menu, X, Compass, Calendar } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import { safariOperators, safariTours } from '@/lib/site-data';
 
@@ -67,6 +67,16 @@ export default function Navbar() {
       items: [
         ...countries.map((country) => ({ label: country, href: `/parks/${country.toLowerCase().replace(/\s+/g, '-')}` })),
         { label: 'All Countries', href: '/parks' },
+      ],
+    },
+    {
+      href: '/blogs',
+      label: 'Blogs',
+      items: [
+        { label: 'All Safari Stories', href: '/blogs' },
+        { label: 'Travel Guides', href: '/blogs?tag=Travel%20Guides' },
+        { label: 'Parks & Wildlife', href: '/blogs?tag=Parks%20%26%20Wildlife' },
+        { label: 'Trip Reports', href: '/blogs?tag=Trip%20Reports' },
       ],
     },
     {
@@ -205,6 +215,7 @@ export default function Navbar() {
                     {sessionUser.role === 'TRAVELER' && (
                       <>
                         <Link href="/favorites" className="block px-3 py-2 text-[13px] hover:bg-gray-50">Saved Tours</Link>
+                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold hover:bg-gray-50">My Bookings</Link>
                         <Link href="/quote/request" className="block px-3 py-2 text-[13px] hover:bg-gray-50">Request a Quote</Link>
                       </>
                     )}
@@ -268,6 +279,11 @@ export default function Navbar() {
                   {sessionUser.role === 'ADMIN' && (
                     <Link href="/admin" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
                       <User className="h-4 w-4" /> Admin Panel
+                    </Link>
+                  )}
+                  {sessionUser.role === 'TRAVELER' && (
+                    <Link href="/my-trips" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+                      <Calendar className="h-4 w-4" /> My Bookings
                     </Link>
                   )}
                   {sessionUser.role === 'TRAVELER' && (

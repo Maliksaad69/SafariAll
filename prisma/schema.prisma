@@ -84,6 +84,8 @@ model User {
   reviews      Review[]
   messages     Message[]
   reservations Reservation[]
+  reservationMessages ReservationMessage[]
+  blogPosts    BlogPost[]
 
   @@map("users")
 }
@@ -115,6 +117,7 @@ model Operator {
   leads        InquiryLead[]
   reviews      Review[]
   reservations Reservation[]
+  blogPosts    BlogPost[]
 
   @@map("operators")
 }
@@ -186,6 +189,8 @@ model Tour {
   // Relations
   destinations TourDestination[]
   itineraries  TourItinerary[]
+  slots        TourSlot[]
+  availability TourAvailability?
   inquiries    Inquiry[]
   reviews      Review[]
   reservations Reservation[]
@@ -202,6 +207,74 @@ model TourDestination {
 
   @@id([tourId, destinationId])
   @@map("tour_destinations")
+}
+
+// 5b. Departure Slots Model (per-tour capacity management)
+// Agencies define departure slots; or leave datesOpen for unlimited open-dated bookings.
+model TourSlot {
+  id             String   @id @default(uuid())
+  tourId         String   @map("tour_id")
+  tour           Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  startDate      DateTime @map("start_date")
+  maxTravelers   Int      @map("max_travelers")
+  note           String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  reservations Reservation[]
+
+  @@unique([tourId, startDate])
+  @@map("tour_slots")
+}
+
+// 5c. Tour Availability Settings (per-tour capacity mode)
+// mode: OPEN_DATED (any date accepted, optional total cap) | SLOTS (fixed departure slots)
+model TourAvailability {
+  tourId        String  @id @map("tour_id")
+  tour          Tour    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  mode          String  @default("OPEN_DATED")
+  totalCapacity Int?    @map("total_capacity")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("tour_availability")
+}
+
+// 12. Blog Posts Model (agencies publish marketing articles tied to their packages)
+model BlogPost {
+  id          String   @id @default(uuid())
+  operatorId  String   @map("operator_id")
+  operator    Operator @relation(fields: [operatorId], references: [id], onDelete: Cascade)
+  authorId    String   @map("author_id")
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String   @unique
+  excerpt     String?  @db.Text
+  content     String   @db.Text
+  coverImageUrl String? @map("cover_image_url")
+  tag         String?
+  status      String   @default("PUBLISHED")
+  viewCount   Int      @default(0) @map("view_count")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([operatorId])
+  @@map("blog_posts")
+}
+
+// 13. Agency <-> Traveler Thread Messages (per reservation)
+model ReservationMessage {
+  id            String     @id @default(uuid())
+  reservationId String     @map("reservation_id")
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  senderId      String     @map("sender_id")
+  sender        User       @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body          String     @db.Text
+  isRead        Boolean    @default(false) @map("is_read")
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  @@index([reservationId])
+  @@map("reservation_messages")
 }
 
 // 6. Tour Day-by-Day Itineraries Model
@@ -320,6 +393,9 @@ model Reservation {
   status            ReservationStatus @default(PENDING)
   operatorNote      String?           @map("operator_note") @db.Text
   decidedAt         DateTime?         @map("decided_at")
+  slotId            String?           @map("slot_id")
+  slot              TourSlot?         @relation(fields: [slotId], references: [id], onDelete: SetNull)
+  messages          ReservationMessage[]
   createdAt         DateTime          @default(now()) @map("created_at")
   updatedAt         DateTime          @updatedAt @map("updated_at")
 
