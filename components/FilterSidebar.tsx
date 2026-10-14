@@ -84,7 +84,7 @@ export default function FilterSidebar({
         <button
           type="button"
           onClick={resetAll}
-          className="absolute top-4 right-4 text-[12px] text-[#0070c0] hover:underline cursor-pointer"
+          className="absolute top-4 right-4 text-[12px] text-[var(--brand-ink)] hover:underline cursor-pointer"
         >
           Reset all
         </button>

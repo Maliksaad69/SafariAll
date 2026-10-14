@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FilterSidebar from '@/components/FilterSidebar';
 import TourCard from '@/components/TourCard';
+import prisma from '@/lib/prisma';
 import { safariTours } from '@/lib/site-data';
 import Link from 'next/link';
 import { ChevronRight, Star } from 'lucide-react';
@@ -34,7 +35,50 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
   const params = await searchParams;
   const { country, comfort, duration, sort, search, tourType, month, travelers } = params;
 
-  const tours = safariTours;
+  // The DATABASE is the source of truth: every tour listed here must resolve to
+  // a real record on its detail page, otherwise the reserve dialog's slot lookup
+  // 404s and the reservation request fails with "Tour not found".
+  // Static sample data is only a fallback for an empty database.
+  const dbTours = await prisma.tour.findMany({
+    where: { isPublished: true },
+    orderBy: [{ createdAt: 'desc' }],
+    include: {
+      operator: {
+        select: {
+          companyName: true,
+          slug: true,
+          isVerified: true,
+          averageRating: true,
+          totalReviews: true,
+        },
+      },
+      destinations: { include: { destination: { select: { name: true } } } },
+    },
+  });
+
+  const tours = (dbTours.length > 0
+    ? dbTours.map((t) => ({
+        id: t.id,
+        title: t.title,
+        slug: t.slug,
+        durationDays: t.durationDays,
+        durationNights: t.durationNights,
+        minPriceUsd: t.minPriceUsd,
+        comfortLevel: t.comfortLevel,
+        tourType: t.tourType,
+        primaryCountry: t.primaryCountry,
+        startLocation: t.startLocation ?? '',
+        inclusions: t.inclusions,
+        operator: {
+          companyName: t.operator.companyName,
+          slug: t.operator.slug,
+          isVerified: t.operator.isVerified,
+          averageRating: t.operator.averageRating,
+          totalReviews: t.operator.totalReviews,
+        },
+        destinations: t.destinations.map((d) => ({ destination: { name: d.destination.name } })),
+      }))
+    : safariTours) as unknown as typeof safariTours;
 
   const matchesBase = (tour: (typeof tours)[number], opts: { ignore?: string } = {}) => {
     const q = (search || '').trim().toLowerCase();
@@ -111,7 +155,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
           <div className="max-w-[1230px] mx-auto px-4">
             <nav className="text-[12px] text-[#6b5130] uppercase tracking-[0.12em] font-semibold mb-3 flex flex-wrap items-center gap-1.5" aria-label="Breadcrumb">
               <span>You are here:</span>
-              <Link href="/" className="text-[#0070c0] hover:underline normal-case">Home</Link>
+              <Link href="/" className="text-[var(--brand-ink)] hover:underline normal-case">Home</Link>
               <ChevronRight className="w-3 h-3" />
               <span className="text-[#2d1a12] normal-case">{heroTitle}</span>
             </nav>
@@ -184,12 +228,12 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
                         <span className="sr-only">Remove filter</span>
                       </Link>
                     ))}
-                    <Link href="/tours" className="text-[12px] font-bold text-[#0070c0] hover:underline">Clear all</Link>
+                    <Link href="/tours" className="text-[12px] font-bold text-[var(--brand-ink)] hover:underline">Clear all</Link>
                   </div>
                 )}
 
                 <div className="text-[13px] text-[#666]">
-                  <strong className="text-[#333]">1-{orderedTours.length} of {orderedTours.length}</strong> tours match your search. Rankings are based on performance, relevance and payment. <Link href="/how-it-works" className="text-[#0070c0] hover:underline">Learn more</Link>
+                  <strong className="text-[#333]">1-{orderedTours.length} of {orderedTours.length}</strong> tours match your search. Rankings are based on performance, relevance and payment. <Link href="/how-it-works" className="text-[var(--brand-ink)] hover:underline">Learn more</Link>
                 </div>
               </div>
 
@@ -200,7 +244,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
                 )) : (
                   <div className="col-span-full rounded border border-dashed border-[#c9c9c9] bg-white p-8 text-center text-[#555]">
                     <p className="font-bold text-[#333] mb-1">No tours match the currently selected filters.</p>
-                    <p className="text-[13px]">Try removing a filter or <Link href="/tours" className="text-[#0070c0] hover:underline">resetting the search</Link>.</p>
+                    <p className="text-[13px]">Try removing a filter or <Link href="/tours" className="text-[var(--brand-ink)] hover:underline">resetting the search</Link>.</p>
                   </div>
                 )}
               </div>
@@ -218,50 +262,50 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       </main>
 
       {/* Related Searches Section */}
-      <section className="bg-[#efefef] border-t border-[#d8d3cd] py-8 font-sans">
+      <section className="bg-[#efefef] border-t border-[var(--border)] py-8 font-sans">
         <div className="max-w-[1230px] mx-auto px-4">
           <h2 className="text-[16px] font-bold text-[#333] mb-4">Related Searches</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 text-[13px]">
-            <Link href="/tours" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Safari Tour Operators</Link>
-            <Link href="/operators" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Top 10 Safari Operators</Link>
-            <Link href="/tours?comfort=BUDGET" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Budget Safaris</Link>
-            <Link href="/tours?search=gorilla" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Gorilla Trekking Tours</Link>
-            <Link href="/tours?search=chimp" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Chimp Trekking Tours</Link>
-            <Link href="/tours?search=overland" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Overland Tours</Link>
-            <Link href="/tours?comfort=BUDGET" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Camping Safaris</Link>
-            <Link href="/tours?comfort=LUXURY" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Luxury Safaris</Link>
-            <Link href="/tours?search=honeymoon" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Honeymoon Safaris</Link>
-            <Link href="/tours?search=photographic" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Photographic Safaris</Link>
-            <Link href="/tours?tourType=PRIVATE" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Private Safaris</Link>
-            <Link href="/tours?search=family" className="text-[#0070c0] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Family Safaris</Link>
+            <Link href="/tours" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Safari Tour Operators</Link>
+            <Link href="/operators" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Top 10 Safari Operators</Link>
+            <Link href="/tours?comfort=BUDGET" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Budget Safaris</Link>
+            <Link href="/tours?search=gorilla" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Gorilla Trekking Tours</Link>
+            <Link href="/tours?search=chimp" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Chimp Trekking Tours</Link>
+            <Link href="/tours?search=overland" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Overland Tours</Link>
+            <Link href="/tours?comfort=BUDGET" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Camping Safaris</Link>
+            <Link href="/tours?comfort=LUXURY" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Luxury Safaris</Link>
+            <Link href="/tours?search=honeymoon" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Honeymoon Safaris</Link>
+            <Link href="/tours?search=photographic" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> African Photographic Safaris</Link>
+            <Link href="/tours?tourType=PRIVATE" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Private Safaris</Link>
+            <Link href="/tours?search=family" className="text-[var(--brand-ink)] hover:underline flex items-center gap-1"><ChevronRight className="w-3 h-3 text-[#aaa]" /> Family Safaris</Link>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="bg-white border-t border-[#d8d3cd] py-10 font-sans">
+      <section className="bg-white border-t border-[var(--border)] py-10 font-sans">
         <div className="max-w-[960px] mx-auto px-4 flex flex-col md:flex-row gap-10">
           <div className="md:w-[250px] shrink-0">
             <div className="flex items-start gap-4">
               <div className="w-[60px] h-[60px] rounded-sm overflow-hidden shrink-0 relative">
                 <img src="https://images.unsplash.com/photo-1531123897727-8f129e1bf98c?auto=format&fit=crop&w=150&q=80" alt="Harriet Akinyi" className="w-full h-full object-cover" />
-                <div className="absolute bottom-0 right-0 bg-[#f0c561] text-[9px] font-bold px-1 text-[#333]">Expert</div>
+                <div className="absolute bottom-0 right-0 bg-[var(--gold)] text-[9px] font-bold px-1 text-[#333]">Expert</div>
               </div>
               <div>
                 <h3 className="text-[15px] font-bold text-[#333]">Harriet Akinyi</h3>
                 <p className="text-[11px] text-[#555] leading-tight mt-1">Harriet is a zoologist with more than 20 years&apos; experience working in conservation communications. She has travelled extensively throughout central, eastern and southern Africa...</p>
-                <Link href="/experts/expert-2" className="text-[11px] text-[#0070c0] hover:underline mt-1 inline-block">&gt; More about Harriet</Link>
+                <Link href="/experts/expert-2" className="text-[11px] text-[var(--brand-ink)] hover:underline mt-1 inline-block">&gt; More about Harriet</Link>
               </div>
             </div>
 
             <div className="mt-6 space-y-3 text-[13px]">
-              <Link href="/faq" className="block text-[#0070c0] hover:underline font-bold">1. Why should I choose an African safari tour?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">2. Which are the best African countries for going on safari?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">3. What time of year is best for going on a safari?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">4. What wildlife can I expect to see?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">5. What does a typical day look like on safari?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">6. How much will this safari cost?</Link>
-              <Link href="/faq" className="block text-[#0070c0] hover:underline">7. What should I consider when choosing an African safari tour?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline font-bold">1. Why should I choose an African safari tour?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">2. Which are the best African countries for going on safari?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">3. What time of year is best for going on a safari?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">4. What wildlife can I expect to see?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">5. What does a typical day look like on safari?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">6. How much will this safari cost?</Link>
+              <Link href="/faq" className="block text-[var(--brand-ink)] hover:underline">7. What should I consider when choosing an African safari tour?</Link>
             </div>
           </div>
 
@@ -299,7 +343,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       </section>
 
       {/* Safari Reviews Section */}
-      <section className="bg-[#f5f1ea] border-t border-[#d8d3cd] py-10 font-sans">
+      <section className="bg-[#f5f1ea] border-t border-[var(--border)] py-10 font-sans">
         <div className="max-w-[1230px] mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
             <h2 className="text-[26px] font-bold text-[#333]" style={{ fontFamily: 'Georgia, serif' }}>Safari Reviews</h2>
@@ -323,17 +367,17 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
                   </div>
                 </div>
                 <h3 className="text-[16px] font-bold text-[#333] mb-1">&quot;The African dream experience&quot;</h3>
-                <div className="text-[#f0c561] text-[12px] mb-2">★★★★★ <span className="text-[#333] font-bold">5</span><span className="text-[#8a8a8a] font-normal"> / 5</span></div>
+                <div className="text-[var(--gold)] text-[12px] mb-2">★★★★★ <span className="text-[#333] font-bold">5</span><span className="text-[#8a8a8a] font-normal"> / 5</span></div>
                 <p className="text-[13px] text-[#4a4a4a] leading-relaxed mb-2 line-clamp-3">
                   Our experience with Samora explorers especially Iddy/Asia/Reginald has been excellent and would recommend to others. Firstly, our booking had to be postponed...
                 </p>
-                <Link href="/reviews" className="text-[13px] text-[#0070c0] hover:underline font-bold">Full Review</Link>
+                <Link href="/reviews" className="text-[13px] text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
               </div>
             ))}
           </div>
 
           <div className="mt-8">
-            <Link href="/reviews" className="inline-flex items-center gap-1 bg-white border border-[#0070c0] text-[#0070c0] font-bold text-[14px] px-6 py-2 rounded hover:bg-[#f0f8ff] transition-colors">
+            <Link href="/reviews" className="inline-flex items-center gap-1 bg-white border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold text-[14px] px-6 py-2 rounded hover:bg-[var(--brand-soft)] transition-colors">
               All 180,175 Safari Reviews <ChevronRight className="w-4 h-4" />
             </Link>
           </div>

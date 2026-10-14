@@ -62,18 +62,18 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
             </div>
           </div>
 
-          <div className="relative border border-[#f0c561] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
-            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[#f0c561] transform rotate-45"></div>
+          <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
+            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
             <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">&quot;{current.reviewTitle}&quot;</h4>
             <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${current.overallRating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(current.overallRating) ? 'fill-[#f0c561] text-[#f0c561]' : 'fill-[#ddd] text-[#ddd]'}`} />
+                <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#ddd] text-[#ddd]'}`} />
               ))}
               <span className="text-[#333] font-bold ml-1">{current.overallRating}</span>
               <span className="text-[#8a8a8a]">/5</span>
             </div>
             <p className="text-[#4a4a4a] line-clamp-4 leading-relaxed mb-1">{current.reviewBody}</p>
-            <Link href="/reviews" className="text-[#0070c0] hover:underline font-bold">Full Review</Link>
+            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
           </div>
 
           <div className="flex items-center justify-between">
@@ -100,20 +100,20 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
         </>
       ) : (
         <>
-          <div className="relative border border-[#f0c561] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
-            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[#f0c561] transform rotate-45"></div>
+          <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
+            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
             <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">&quot;{fallbackReview.title}&quot;</h4>
             <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${fallbackReview.rating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < fallbackReview.rating ? 'fill-[#f0c561] text-[#f0c561]' : 'fill-[#ddd] text-[#ddd]'}`} />
+                <Star key={i} className={`h-3.5 w-3.5 ${i < fallbackReview.rating ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#ddd] text-[#ddd]'}`} />
               ))}
               <span className="text-[#333] font-bold ml-1">{fallbackReview.rating}</span>
               <span className="text-[#8a8a8a]">/5</span>
             </div>
             <p className="text-[#4a4a4a] line-clamp-4 leading-relaxed mb-1">{fallbackReview.body}</p>
-            <Link href="/reviews" className="text-[#0070c0] hover:underline font-bold">Full Review</Link>
+            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
           </div>
-          <p className="text-[11px] text-[#8a8a8a] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[#0070c0] hover:underline">write one</Link>.</p>
+          <p className="text-[11px] text-[#8a8a8a] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">write one</Link>.</p>
         </>
       )}
     </div>

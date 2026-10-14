@@ -24,9 +24,9 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
       <main className="mx-auto max-w-[1230px] w-full px-4 py-10 sm:px-6">
         <div className="mb-6 text-[12px] text-[#6b5130] uppercase tracking-[0.12em] font-semibold">
           You are here:{' '}
-          <Link href="/" className="text-[#0070c0] hover:underline">Home</Link>
+          <Link href="/" className="text-[var(--brand-ink)] hover:underline">Home</Link>
           {' > '}
-          <Link href="/reviews" className="text-[#0070c0] hover:underline">Experts</Link>
+          <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">Experts</Link>
           {' > '}
           <span className="text-[#2d1a12]">{expert.name}</span>
         </div>

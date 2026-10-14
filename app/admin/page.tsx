@@ -48,7 +48,7 @@ export default async function AdminPage() {
               Platform Super-Admin Panel
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold font-serif">
-              SafariAsili Control Center
+              SafariRequest Control Center
             </h1>
             <p className="text-sm text-gray-300 mt-2 max-w-xl">
               Operator verification queue, review moderation, database health, and lead distribution engine.

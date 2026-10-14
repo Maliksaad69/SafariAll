@@ -1,63 +1,86 @@
 @import "tailwindcss";
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN SYSTEM — SafariAsili
-   Rule #1: TEXT NEVER BLENDS. Dark text on light
-   surfaces, light text on dark surfaces, nothing below
-   AA contrast. One palette, used consistently.
+   DESIGN SYSTEM — SafariRequest  (v3 · "Teal Glass")
+   Brand: Deep Safari Teal #012D32 · Ocean Teal #009992
+   Light, airy, modern. Frosted glass over a pale-aqua canvas.
+   Rule #1 (kept): TEXT NEVER BLENDS — every ink/surface pair
+   clears WCAG AA. Ocean Teal is a FILL/accent; teal TEXT uses
+   the darker #00726D so links stay legible.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @layer base {
   :root {
-    /* ── Surfaces (light side) ── */
-    --surface-page:   #F6F3EC;  /* page background            */
-    --surface-card:   #FFFFFF;  /* cards, panels              */
-    --surface-raised: #FBFAF6;  /* nested panels, table heads */
-    --surface-sunk:   #EFEBE1;  /* wells, code blocks         */
+    /* ── Canvas — Safari Ivory field the glass blurs ── */
+    --canvas-1: #FBF7EC;   /* ivory highlight */
+    --canvas-2: #F1F6F4;   /* pale teal mist  */
+    --canvas-3: #F2EAD9;   /* warm sand       */
+    --canvas-base: #F7F3E8;/* Safari Ivory    */
+
+    /* ── Named section tints (per-page identities) ── */
+    --ivory: #F7F3E8;      /* Safaris & Tours, Tour Operators */
+    --card-ivory: #FCFBF7; /* card fill        */
+    --sand: #EFE6D2;       /* Countries & Parks */
+    --blog-bg: #FCFBF7;    /* Blogs / editorial */
+
+    /* ── Surfaces (translucent — glassmorphism) ── */
+    --surface-page:   transparent;
+    --surface-card:   rgba(252, 251, 247, 0.72);
+    --surface-raised: rgba(252, 251, 247, 0.55);
+    --surface-sunk:   rgba(240, 234, 220, 0.70);
+
+    /* ── Glass ── */
+    --glass-blur: 18px;
+    --glass-bg:      rgba(252, 251, 247, 0.70);
+    --glass-bg-soft: rgba(252, 251, 247, 0.50);
+    --glass-border:  rgba(255, 255, 255, 0.78);
+    --glass-edge:    rgba(1, 45, 50, 0.06);
+    --glass-shadow:  0 1px 2px rgba(1, 45, 50, 0.04), 0 8px 24px rgba(1, 45, 50, 0.07);
+    --glass-shadow-lift: 0 2px 4px rgba(1, 45, 50, 0.05), 0 18px 40px rgba(1, 45, 50, 0.12);
 
     /* ── Borders ── */
-    --border-strong:  #C9C2B2;
-    --border:         #DDD6C6;
-    --border-soft:    #EAE5D8;
+    --border-strong:  rgba(1, 45, 50, 0.16);
+    --border:         rgba(1, 45, 50, 0.09);
+    --border-soft:    rgba(1, 45, 50, 0.055);
 
-    /* ── Ink (text on light) — darkest usable shades only ── */
-    --ink:            #26221C;  /* headings            */
-    --ink-body:       #3D382F;  /* body copy           */
-    --ink-secondary:  #5C5547;  /* secondary text      */
-    --ink-muted:      #7A7263;  /* meta, only ≥12px    */
+    /* ── Ink (text on light) — all ≥ AA on the canvas ── */
+    --ink:            #032126;  /* Midnight Teal — headings     */
+    --ink-body:       #17464A;  /* body copy                    */
+    --ink-secondary:  #4E7176;  /* Safari Mist (darkened)       */
+    --ink-muted:      #6E8D90;  /* meta only, ≥12px             */
 
     /* ── Brand ── */
-    --brand:          #9A3412;  /* terracotta — links, primary CTAs */
-    --brand-hover:    #7C2D12;
-    --brand-soft:     #FBEADF;  /* tinted chip background */
-    --brand-ink:      #7C2D12;  /* text on brand-soft */
+    --brand:          #009992;  /* Ocean Teal — fills, accents  */
+    --brand-strong:   #007A75;  /* gradient end / hover         */
+    --brand-deep:     #012D32;  /* Deep Safari Teal — CTA fills */
+    --brand-ink:      #00726D;  /* teal TEXT, AA 5.5            */
+    --brand-on:       #FFFFFF;
+    --brand-soft:     rgba(0, 153, 146, 0.12);
 
-    /* ── Accent gold (decorative only, never body text) ── */
-    --gold:           #B45309;
-    --gold-soft:      #FCF0DC;
+    /* ── Accent (stars, seals) ── */
+    --gold:           #009992;
+    --gold-soft:      rgba(0, 153, 146, 0.14);
 
     /* ── Semantic ── */
-    --success:        #166534;
-    --success-soft:   #DCF3E4;
-    --danger:         #B91C1C;
-    --danger-soft:    #FDE5E5;
-    --info:           #1D4ED8;
-    --info-soft:      #E3EBFC;
-    --warning:        #92400E;
-    --warning-soft:   #FCEED3;
+    --success:        #15803D;
+    --success-soft:   rgba(21, 128, 61, 0.12);
+    --danger:         #DC2626;
+    --danger-soft:    rgba(220, 38, 38, 0.12);
+    --info:           #0E7490;
+    --info-soft:      rgba(14, 116, 144, 0.12);
+    --warning:        #B45309;
+    --warning-soft:   rgba(180, 83, 9, 0.12);
 
-    /* ── Dark panels (navbar, hero, footer) ── */
-    --dark:           #221A12;
-    --dark-raised:    #2E2519;
-    --dark-border:    rgba(255,255,255,0.14);
-    --dark-text:      #F4EFE6;      /* primary text on dark  */
-    --dark-text-soft: #CFC6B8;      /* secondary on dark     */
-    --dark-gold:      #E7B35C;      /* accent on dark        */
+    /* ── Dark panels (hero scrim, footer) ── */
+    --dark:           #032126;  /* Midnight Teal */
+    --dark-raised:    #06363C;
+    --dark-border:    rgba(255, 255, 255, 0.14);
+    --dark-text:      #ECF5F5;
+    --dark-text-soft: #AECBCB;
+    --dark-gold:      #4FD8CE;  /* aqua accent on dark */
   }
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
 
   html {
     scroll-behavior: smooth;
@@ -66,35 +89,45 @@
 
   body {
     margin: 0;
-    background-color: var(--surface-page);
     color: var(--ink-body);
-    font-family: var(--font-body, 'DM Sans', system-ui, sans-serif);
+    font-family: var(--font-body, 'Manrope', system-ui, sans-serif);
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    background-color: var(--canvas-base);
+    background-image:
+      radial-gradient(1200px 620px at 8% -6%,  var(--canvas-1) 0%, transparent 58%),
+      radial-gradient(1050px 560px at 100% 0%, var(--canvas-2) 0%, transparent 52%),
+      radial-gradient(1000px 700px at 50% 112%, var(--canvas-3) 0%, transparent 58%),
+      linear-gradient(180deg, #FFFFFF 0%, var(--canvas-base) 100%);
+    background-attachment: fixed;
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
-    line-height: 1.15;
+    font-family: var(--font-display, 'Fraunces', Georgia, serif);
+    line-height: 1.12;
     font-weight: 600;
     color: var(--ink);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     margin: 0;
   }
 
   p { margin: 0; }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
+  a { color: inherit; text-decoration: none; }
   img { display: block; max-width: 100%; }
 
-  /* Consistent focus ring for keyboard users */
+  /* Headings inside DARK panels must inherit the panel's light text colour —
+     otherwise the base `h1..h4 { color: var(--ink) }` paints them near-black
+     on a dark background (invisible). Legacy panels pair bg-[#hex] with
+     text-white, so match both that and the shared dark surfaces. */
+  .surface-dark :is(h1, h2, h3, h4),
+  .glass-card-light :is(h1, h2, h3, h4),
+  [class*="text-white"] :is(h1, h2, h3, h4) {
+    color: inherit;
+  }
+
   :focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
@@ -102,30 +135,47 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SURFACES & CARDS — one elevation system
+   GLASS — the core material
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
+.glass,
+.glass-card,
+.glass-panel {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 18px;
+}
+
+.glass-panel { background: var(--glass-bg-soft); border-radius: 22px; }
+
 .surface-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(38, 34, 28, 0.05), 0 4px 14px rgba(38, 34, 28, 0.05);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: var(--glass-shadow);
 }
 
 .surface-card-hover {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
 }
 
 .surface-card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 2px 4px rgba(38, 34, 28, 0.06), 0 12px 28px rgba(38, 34, 28, 0.10);
-  border-color: var(--border-strong);
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow-lift);
+  border-color: rgba(255, 255, 255, 0.95);
 }
 
 .surface-dark {
   background: var(--dark);
   color: var(--dark-text);
-  border-radius: 14px;
+  border-radius: 18px;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -137,78 +187,67 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.4rem;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  font-family: var(--font-body, 'Manrope', sans-serif);
+  font-weight: 700;
   font-size: 0.875rem;
   line-height: 1.2;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease, border-color 0.2s ease,
+              color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-primary {
-  background: var(--brand);
-  color: #FFFFFF;
-  box-shadow: 0 1px 3px rgba(154, 52, 18, 0.35);
+  background: linear-gradient(135deg, #0A5F5A 0%, var(--brand-deep) 55%, var(--brand-deep) 100%);
+  color: var(--brand-on);
+  box-shadow: 0 2px 6px rgba(1, 45, 50, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .btn-primary:hover:not(:disabled) {
-  background: var(--brand-hover);
-  box-shadow: 0 3px 10px rgba(154, 52, 18, 0.30);
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
+  box-shadow: 0 6px 18px rgba(0, 153, 146, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-secondary {
-  background: var(--surface-card);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
   color: var(--ink);
-  border-color: var(--border-strong);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 .btn-secondary:hover:not(:disabled) {
-  background: var(--surface-raised);
-  border-color: var(--ink-muted);
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  box-shadow: var(--glass-shadow-lift);
 }
 
 .btn-ghost-dark {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.10);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--dark-text);
-  border-color: var(--dark-border);
+  border-color: rgba(255, 255, 255, 0.35);
 }
-.btn-ghost-dark:hover:not(:disabled) {
-  background: rgba(255,255,255,0.08);
-}
+.btn-ghost-dark:hover:not(:disabled) { background: rgba(255, 255, 255, 0.20); }
 
-.btn-danger {
-  background: var(--danger);
-  color: #FFFFFF;
-}
-.btn-danger:hover:not(:disabled) {
-  background: #991B1B;
-}
+.btn-danger  { background: var(--danger);  color: #FFFFFF; }
+.btn-danger:hover:not(:disabled)  { filter: brightness(1.08); }
 
-.btn-success {
-  background: var(--success);
-  color: #FFFFFF;
-}
-.btn-success:hover:not(:disabled) {
-  background: #14532D;
-}
+.btn-success { background: var(--success); color: #FFFFFF; }
+.btn-success:hover:not(:disabled) { filter: brightness(1.08); }
 
-/* Small size modifier */
-.btn-sm {
-  padding: 0.4rem 0.9rem;
-  font-size: 0.8rem;
-  border-radius: 8px;
-}
+.btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: 10px; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   FORM CONTROLS — readable everywhere
+   FORM CONTROLS — frosted, readable everywhere
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .form-label {
@@ -223,74 +262,68 @@
 
 .form-control {
   width: 100%;
-  padding: 0.7rem 0.9rem;
-  background: #FFFFFF;
-  border: 1.5px solid var(--border-strong);
-  border-radius: 10px;
+  padding: 0.72rem 0.95rem;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   color: var(--ink);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body, 'Manrope', sans-serif);
   font-size: 0.9rem;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   -webkit-appearance: none;
   appearance: none;
 }
 
 .form-control:focus {
   outline: none;
+  background: rgba(255, 255, 255, 0.95);
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(154, 52, 18, 0.14);
+  box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
-.form-control::placeholder {
-  color: var(--ink-muted);
-}
+.form-control::placeholder { color: var(--ink-muted); }
 
 select.form-control {
   cursor: pointer;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C5547' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234E7176' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.8rem center;
+  background-position: right 0.85rem center;
   padding-right: 2.2rem;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BADGES — status pills with guaranteed contrast
+   BADGES — frosted status pills
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.22rem 0.7rem;
+  padding: 0.24rem 0.72rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   border-radius: 100px;
   border: 1px solid transparent;
   white-space: nowrap;
 }
 
-.badge-brand   { background: var(--brand-soft);   color: var(--brand-ink);   border-color: rgba(154,52,18,0.25); }
-.badge-success { background: var(--success-soft); color: var(--success);     border-color: rgba(22,101,52,0.25); }
-.badge-danger  { background: var(--danger-soft);  color: var(--danger);      border-color: rgba(185,28,28,0.25); }
-.badge-warning { background: var(--warning-soft); color: var(--warning);     border-color: rgba(146,64,14,0.25); }
-.badge-info    { background: var(--info-soft);    color: var(--info);        border-color: rgba(29,78,216,0.25); }
+.badge-brand   { background: var(--brand-soft);   color: var(--brand-ink);     border-color: rgba(0,153,146,0.24); }
+.badge-success { background: var(--success-soft); color: var(--success);       border-color: rgba(21,128,61,0.22); }
+.badge-danger  { background: var(--danger-soft);  color: var(--danger);        border-color: rgba(220,38,38,0.22); }
+.badge-warning { background: var(--warning-soft); color: var(--warning);       border-color: rgba(180,83,9,0.22); }
+.badge-info    { background: var(--info-soft);    color: var(--info);          border-color: rgba(14,116,144,0.22); }
 .badge-neutral { background: var(--surface-sunk); color: var(--ink-secondary); border-color: var(--border); }
-
-/* On dark surfaces */
-.badge-on-dark { background: rgba(255,255,255,0.10); color: var(--dark-gold); border-color: var(--dark-border); }
+.badge-on-dark { background: rgba(255,255,255,0.12); color: var(--dark-gold); border-color: var(--dark-border); }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   TABLES — clean admin/portal tables
+   TABLES — clean, glass-friendly
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.data-table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
+.data-table { width: 100%; text-align: left; border-collapse: collapse; font-size: 0.85rem; }
 
 .data-table thead th {
   background: var(--surface-raised);
@@ -320,71 +353,94 @@ select.form-control {
 
 .section-label {
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 800;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .section-rule {
   width: 3rem;
-  height: 2px;
-  background: linear-gradient(90deg, var(--brand) 0%, transparent 100%);
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--brand) 0%, rgba(0,153,146,0) 100%);
   margin-bottom: 1.25rem;
 }
 
-.link {
-  color: var(--brand);
-  font-weight: 600;
-}
-.link:hover { text-decoration: underline; }
+.link { color: var(--brand-ink); font-weight: 600; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--surface-sunk); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 4px;
+  background: rgba(1, 45, 50, 0.16);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+::-webkit-scrollbar-thumb:hover { background: rgba(1, 45, 50, 0.30); background-clip: content-box; }
 
-/* Legacy glass helpers kept for existing pages, mapped to the palette */
-.glass-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  box-shadow: 0 1px 2px rgba(38,34,28,0.05), 0 4px 14px rgba(38,34,28,0.05);
-  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s cubic-bezier(0.16,1,0.3,1);
+/* ── Frosted nav & inputs ── */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.68);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  backdrop-filter: blur(20px) saturate(190%);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 24px rgba(1,45,50,0.06);
 }
-.glass-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 2px 4px rgba(38,34,28,0.06), 0 12px 28px rgba(38,34,28,0.10);
-}
+
 .glass-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: rgba(255,255,255,0.95);
-  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
   border-radius: 0.75rem;
-  color: #F4EFE6;
-  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  font-family: var(--font-body, 'Manrope', sans-serif);
   font-size: 0.9rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
-.glass-input::placeholder { color: rgba(244,239,230,0.55); }
+.glass-input::placeholder { color: var(--ink-muted); }
 .glass-input:focus {
   outline: none;
-  border-color: var(--dark-gold);
-  box-shadow: 0 0 0 3px rgba(231,179,92,0.2);
-}
-.glass-card-light {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--dark-border);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
-/* Animations */
+.glass-card-light { background: rgba(255,255,255,0.14); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); }
+
+/* ── Per-page section identities (from the site colour map) ──
+   Safaris & Tours / Tour Operators : Safari Ivory
+   Countries & Parks                : Sand
+   Blogs                            : Editorial white
+   Applied as section backgrounds so each page reads as its own space
+   while the glass cards and teal accents stay constant. */
+.section-ivory     { background: var(--ivory); }
+.section-sand      { background: var(--sand); }
+.section-editorial { background: var(--blog-bg); }
+
+/* Opaque popovers/menus — menus must NEVER be see-through; content behind
+   them would bleed through and hurt readability. Glass is for large panels. */
+.popover {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(1, 45, 50, 0.18), 0 2px 6px rgba(1, 45, 50, 0.08);
+}
+
+/* ── Animations ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-fade-up { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.animate-floaty { animation: floaty 7s ease-in-out infinite; }

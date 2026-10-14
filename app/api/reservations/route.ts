@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { completeElapsedTrips } from '@/lib/trips';
 
 export async function GET(req: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: 'You must be signed in to view reservations.' }, { status: 401 });
   }
+
+  // Lazily conclude any trips whose final day has passed, so status and
+  // traveller/agency notifications are always current without a scheduler.
+  await completeElapsedTrips().catch(() => {});
 
   try {
     const { searchParams } = new URL(req.url);
@@ -83,33 +88,56 @@ export async function GET(req: Request) {
     const reservations = await prisma.reservation.findMany({
       where: {
         travelerId: session.userId,
-        ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED'].includes(statusFilter)
+        ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED', 'COMPLETED'].includes(statusFilter)
           ? { status: statusFilter as any }
           : {}),
       },
       orderBy: { createdAt: 'desc' },
       include: {
         tour: { select: { id: true, title: true, slug: true, durationDays: true } },
-        operator: { select: { id: true, companyName: true, slug: true, isVerified: true } },
+        operator: {
+          select: {
+            id: true,
+            companyName: true,
+            slug: true,
+            isVerified: true,
+            headquartersAddress: true,
+            user: { select: { email: true, phone: true } },
+          },
+        },
       },
     });
 
-    const serialized = reservations.map((r) => ({
-      id: r.id,
-      reference: r.reference,
-      startDate: r.startDate.toISOString(),
-      adultsCount: r.adultsCount,
-      childrenCount: r.childrenCount,
-      specialRequests: r.specialRequests,
-      estimatedTotalUsd: r.estimatedTotalUsd,
-      status: r.status,
-      operatorNote: r.operatorNote,
-      slotId: r.slotId,
-      decidedAt: r.decidedAt ? r.decidedAt.toISOString() : null,
-      createdAt: r.createdAt.toISOString(),
-      tour: r.tour,
-      operator: r.operator,
-    }));
+    const serialized = reservations.map((r) => {
+      // Agency contact details are released to the traveller once the booking is
+      // confirmed (APPROVED or COMPLETED) so they can reach their operator directly.
+      const contactUnlocked = r.status === 'APPROVED' || r.status === 'COMPLETED';
+      return {
+        id: r.id,
+        reference: r.reference,
+        startDate: r.startDate.toISOString(),
+        adultsCount: r.adultsCount,
+        childrenCount: r.childrenCount,
+        specialRequests: r.specialRequests,
+        estimatedTotalUsd: r.estimatedTotalUsd,
+        status: r.status,
+        operatorNote: r.operatorNote,
+        slotId: r.slotId,
+        decidedAt: r.decidedAt ? r.decidedAt.toISOString() : null,
+        completedAt: r.completedAt ? r.completedAt.toISOString() : null,
+        createdAt: r.createdAt.toISOString(),
+        tour: r.tour,
+        operator: {
+          id: r.operator.id,
+          companyName: r.operator.companyName,
+          slug: r.operator.slug,
+          isVerified: r.operator.isVerified,
+          contact: contactUnlocked
+            ? { email: r.operator.user.email, phone: r.operator.user.phone, address: r.operator.headquartersAddress }
+            : null,
+        },
+      };
+    });
 
     return NextResponse.json({ reservations: serialized });
   } catch (error: any) {

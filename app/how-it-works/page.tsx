@@ -36,7 +36,7 @@ export default function HowItWorksPage() {
             Planning your safari should be simple and transparent
           </h1>
           <p className="mt-3 max-w-[700px] text-sm leading-relaxed text-white">
-            SafariAsili helps travelers compare trusted operators, check safari packages, and request tailored quotes without the hassle of confusing pricing or hidden costs.
+            SafariRequest helps travelers compare trusted operators, check safari packages, and request tailored quotes without the hassle of confusing pricing or hidden costs.
           </p>
         </section>
 
@@ -59,7 +59,7 @@ export default function HowItWorksPage() {
         <section className="mt-8 rounded-[16px] border border-[#d8d1c8] bg-white p-6 shadow-sm">
           <div className="mb-5 flex items-center gap-2 text-[#b58927]">
             <CheckCircle2 className="h-5 w-5" />
-            <h2 className="text-[1.8rem] font-bold text-[#1d1a18]" style={{ fontFamily: 'Georgia, serif' }}>Why travelers choose SafariAsili</h2>
+            <h2 className="text-[1.8rem] font-bold text-[#1d1a18]" style={{ fontFamily: 'Georgia, serif' }}>Why travelers choose SafariRequest</h2>
           </div>
           <ul className="space-y-3 text-sm text-[#5a4e46]">
             <li>• Compare local operators, safari styles, and park options on one marketplace.</li>

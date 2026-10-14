@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Compass, ShieldCheck, Award, Lock, ArrowUpRight } from 'lucide-react';
+import { ShieldCheck, Award, Lock, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -42,44 +42,34 @@ export default function Footer() {
   ];
 
   return (
-    <footer
-      style={{
-        backgroundColor: 'var(--dark)',
-        color: 'var(--dark-text-soft)',
-        fontFamily: 'var(--font-body), sans-serif',
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <div className="md:col-span-4 space-y-5">
-            <div className="flex items-center gap-3">
-              <img
-                src="/images/safaribuilt-logo.png"
-                alt="SafariBuilt — One Marketplace for African Safari Tours"
-                className="h-[44px] w-auto rounded-lg bg-white/95 px-2 py-1"
-              />
-            </div>
+    <footer className="mt-6 border-t border-[var(--glass-border)] bg-white/60 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 pt-16 pb-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 border-b border-[var(--border-soft)] pb-12 md:grid-cols-12">
+          <div className="space-y-5 md:col-span-4">
+            <img
+              src="/images/safaribuilt-logo.png"
+              alt="SafariRequest — One Marketplace for African Safari Tours"
+              className="h-[44px] w-auto"
+              style={{ mixBlendMode: 'multiply' }}
+            />
 
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--dark-text-soft)' }}>
+            <p className="text-sm leading-relaxed text-[var(--ink-secondary)]">
               Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators across Tanzania, Kenya, South Africa, Uganda, and beyond. Zero commission. Pure experience.
             </p>
 
-            <div
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold"
-              style={{ background: 'rgba(231,179,92,0.12)', border: '1px solid rgba(231,179,92,0.3)', color: 'var(--dark-gold)' }}
-            >
-              <ShieldCheck className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/25 bg-[var(--brand-soft)] px-3 py-2 text-xs font-semibold text-[var(--brand-ink)]">
+              <ShieldCheck className="h-4 w-4" />
               100% Verified Local Operator Network
             </div>
           </div>
 
           {columns.map((col) => (
             <div key={col.heading} className="md:col-span-2">
-              <h4 className="text-xs font-bold uppercase tracking-widest mb-5 text-white">{col.heading}</h4>
+              <h4 className="mb-5 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">{col.heading}</h4>
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm transition-colors hover:text-white" style={{ color: 'var(--dark-text-soft)' }}>
+                    <Link href={link.href} className="text-sm text-[var(--ink-secondary)] transition-colors hover:text-[var(--brand-ink)]">
                       {link.label}
                     </Link>
                   </li>
@@ -89,32 +79,31 @@ export default function Footer() {
           ))}
 
           <div className="md:col-span-4">
-            <h4 className="text-xs font-bold uppercase tracking-widest mb-4 text-white">For Tour Operators</h4>
-            <p className="text-sm mb-5 leading-relaxed" style={{ color: 'var(--dark-text-soft)' }}>
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">For Tour Operators</h4>
+            <p className="mb-5 text-sm leading-relaxed text-[var(--ink-secondary)]">
               Are you a licensed African safari company? Join our verified operator network and receive direct traveler quote requests — free of charge.
             </p>
             <Link
               href="/register?role=OPERATOR"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
-              style={{ background: 'var(--dark-gold)', color: 'var(--dark)', boxShadow: '0 4px 16px rgba(231,179,92,0.2)' }}
+              className="btn btn-primary"
             >
-              <Award className="w-4 h-4" />
+              <Award className="h-4 w-4" />
               Register Your Agency
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
-            <p className="mt-4 flex items-center gap-1.5 text-xs" style={{ color: 'rgba(250,247,240,0.45)' }}>
-              <Lock className="w-3.5 h-3.5" />
+            <p className="mt-4 flex items-center gap-1.5 text-xs text-[var(--ink-muted)]">
+              <Lock className="h-3.5 w-3.5" />
               Anti-scam verification · Direct booking · No hidden fees
             </p>
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs" style={{ color: 'rgba(250,247,240,0.5)' }}>
-          <p>© {year} SafariBuilt. All rights reserved.</p>
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-[var(--ink-muted)] sm:flex-row">
+          <p>© {year} SafariRequest. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="/how-it-works" className="hover:text-white transition-colors">How It Works</Link>
+            <Link href="/privacy-policy" className="transition-colors hover:text-[var(--ink)]">Privacy Policy</Link>
+            <Link href="/faq" className="transition-colors hover:text-[var(--ink)]">FAQ</Link>
+            <Link href="/how-it-works" className="transition-colors hover:text-[var(--ink)]">How It Works</Link>
           </div>
         </div>
       </div>

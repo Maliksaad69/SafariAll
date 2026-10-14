@@ -45,21 +45,21 @@ export default function HeroSearchForm() {
   const countries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe'];
 
   return (
-    <div className="absolute bottom-8 left-1/2 z-20 w-[min(94vw,980px)] -translate-x-1/2 md:bottom-12">
+    <div className="animate-fade-up absolute bottom-8 left-1/2 z-20 w-[min(94vw,1000px)] -translate-x-1/2 md:bottom-12">
       <form
         onSubmit={handleSearch}
-        className="flex flex-col overflow-hidden rounded-md shadow-[0_15px_30px_rgba(0,0,0,0.3)] md:flex-row md:items-stretch"
+        className="glass flex flex-col gap-1.5 rounded-[22px] p-2 md:flex-row md:items-stretch"
       >
         {/* Destination */}
-        <div className="relative flex flex-1 items-center border-b border-[#e5e5e5] bg-white px-4 py-3 md:border-b-0 md:border-r">
-          <MapPin className="mr-3 h-5 w-5 shrink-0 text-[#8a8a8a]" />
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors focus-within:bg-white/80 hover:bg-white/70">
+          <MapPin className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
           <div className="flex-1 min-w-0">
             <input
               type="text"
               list="hero-destinations"
               placeholder="Where To..."
               aria-label="Destination"
-              className="w-full bg-transparent text-[15px] font-bold text-[#333] outline-none placeholder:font-normal placeholder:text-[#8a8a8a]"
+              className="w-full bg-transparent text-[15px] font-bold text-[var(--ink)] outline-none placeholder:font-medium placeholder:text-[var(--ink-muted)]"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
             />
@@ -72,10 +72,10 @@ export default function HeroSearchForm() {
         </div>
 
         {/* Start date — real date input */}
-        <div className="relative flex flex-1 items-center border-b border-[#e5e5e5] bg-white px-4 py-3 md:border-b-0 md:border-r">
-          <Calendar className="mr-3 h-5 w-5 shrink-0 text-[#8a8a8a]" />
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors focus-within:bg-white/80 hover:bg-white/70">
+          <Calendar className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
           <div className="flex-1 min-w-0">
-            <label htmlFor="hero-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-[#8a8a8a]">
+            <label htmlFor="hero-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
               Start Date
             </label>
             <input
@@ -83,7 +83,7 @@ export default function HeroSearchForm() {
               type="date"
               aria-label="Start date"
               min={new Date().toISOString().split('T')[0]}
-              className="w-full bg-transparent text-[15px] font-bold text-[#333] outline-none"
+              className="w-full bg-transparent text-[15px] font-bold text-[var(--ink)] outline-none"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
@@ -91,27 +91,27 @@ export default function HeroSearchForm() {
         </div>
 
         {/* Travelers — interactive stepper */}
-        <div className="relative flex flex-1 items-center bg-white px-4 py-3">
-          <Users className="mr-3 h-5 w-5 shrink-0 text-[#8a8a8a]" />
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors hover:bg-white/70">
+          <Users className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
           <div className="flex-1 min-w-0">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-[#8a8a8a]">Travelers</div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">Travelers</div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 aria-label="Remove a traveler"
                 onClick={() => setTravelers((t) => Math.max(1, t - 1))}
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-[#d5d5d5] text-[#555] transition hover:border-[#999] hover:text-[#222]"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--ink-secondary)] transition hover:border-[var(--brand)] hover:text-[var(--brand-ink)]"
               >
                 <Minus className="h-3 w-3" />
               </button>
-              <span className="min-w-[64px] text-center text-[15px] font-bold text-[#333]">
+              <span className="min-w-[64px] text-center text-[15px] font-bold text-[var(--ink)]">
                 {travelers} {travelers === 1 ? 'Adult' : 'Adults'}
               </span>
               <button
                 type="button"
                 aria-label="Add a traveler"
                 onClick={() => setTravelers((t) => Math.min(15, t + 1))}
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-[#d5d5d5] text-[#555] transition hover:border-[#999] hover:text-[#222]"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--ink-secondary)] transition hover:border-[var(--brand)] hover:text-[var(--brand-ink)]"
               >
                 <Plus className="h-3 w-3" />
               </button>
@@ -121,7 +121,7 @@ export default function HeroSearchForm() {
 
         <button
           type="submit"
-          className="flex h-14 w-full items-center justify-center bg-[#f09b1f] px-4 text-[16px] font-bold text-white transition-colors hover:bg-[#e08b15] md:w-[240px]"
+          className="btn btn-primary h-14 w-full rounded-2xl px-5 text-[16px] md:w-[240px]"
         >
           Show {tourCount !== null ? tourCount.toLocaleString() : ''} Tours{' '}
           <ChevronRight className="ml-1 h-5 w-5 shrink-0" />

@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ChevronRight, Users } from 'lucide-react';
+import { Calendar, ChevronRight, ShieldCheck, Users } from 'lucide-react';
 import ReserveDialog from '@/components/ReserveDialog';
 
 interface BookingBoxProps {
@@ -22,152 +22,159 @@ interface SlotInfo {
   isFull: boolean;
 }
 
-// Generate the next 8 months of 1st-of-month departure options (fallback when
-// the agency has not published fixed departure slots)
-function generateDepartures(): { value: string; label: string }[] {
-  const options: { value: string; label: string }[] = [];
-  const now = new Date();
-  for (let i = 0; i < 8; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-    const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
-    const label = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-    options.push({ value: iso, label: label });
-  }
-  return options;
-}
+const fmtDate = (iso: string) =>
+  new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 
-function monthKey(iso: string): string {
-  return iso.slice(0, 7); // YYYY-MM
-}
-
+/**
+ * Sticky booking summary card.
+ *
+ * Deliberately a SUMMARY, not a form — the departure, party size and preferences
+ * are collected once inside the ReserveDialog popup. Duplicating those controls
+ * here (as the old version did) meant two places to set the same value.
+ */
 export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, dbTourId }: BookingBoxProps) {
-  const departures = useMemo(generateDepartures, []);
   const [slots, setSlots] = useState<SlotInfo[] | null>(null);
-  const [slotError, setSlotError] = useState(false);
-  const [departure, setDeparture] = useState(departures[0]?.value ?? '');
-  const [travelers, setTravelers] = useState(2);
 
-  // Load real published departures + live capacity for this tour
-  useMemo(() => {
+  useEffect(() => {
     const effectiveId = dbTourId || tourId;
     if (!effectiveId) return;
+    let cancelled = false;
     fetch(`/api/tours/${effectiveId}/slots`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => {
-        if (d && Array.isArray(d.availability)) {
-          // Only future departures
-          const future = (d.availability as SlotInfo[]).filter((s) => new Date(s.startDate) >= new Date(new Date().toDateString()));
-          setSlots(future.length > 0 ? future : d.availability as SlotInfo[]);
-        } else {
-          setSlots([]);
-        }
+        if (cancelled) return;
+        const all: SlotInfo[] = Array.isArray(d?.availability) ? d.availability : [];
+        const future = all.filter((s) => new Date(s.startDate) >= new Date(new Date().toDateString()));
+        setSlots(future.length > 0 ? future : all);
       })
-      .catch(() => setSlotError(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      .catch(() => {
+        if (!cancelled) setSlots([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [dbTourId, tourId]);
 
-  const useSlots = slots && slots.length > 0;
-  const selectedSlot = useSlots
-    ? slots?.find((s) => s.startDate.slice(0, 10) === departure.slice(0, 10)) ?? null
-    : null;
-  const spotsLeft = selectedSlot ? selectedSlot.spotsLeft : null;
-  const isFull = selectedSlot ? selectedSlot.isFull : false;
-
-  const estimate = minPriceUsd * travelers;
-  const quoteHref = `/quote/request?tourId=${encodeURIComponent(tourId)}&departure=${encodeURIComponent(departure)}&travelers=${travelers}`;
+  const loadingSlots = slots === null;
+  const openDepartures = (slots ?? []).filter((s) => !s.isFull);
+  const next = openDepartures[0] ?? null;
+  const totalSeatsLeft = openDepartures.reduce((sum, s) => sum + s.spotsLeft, 0);
 
   return (
-    <div className="surface-card p-5">
-      <div className="flex justify-between items-start mb-4">
-        <div className="text-sm font-bold text-[var(--ink)]">Price (USD)</div>
-        <div className="text-right">
-          <span className="text-[22px] font-bold leading-none text-[var(--success)]">${minPriceUsd.toLocaleString()}</span>
-          <div className="text-[11px] text-[var(--ink-secondary)]">to ${maxPrice.toLocaleString()}</div>
-          <div className="text-[10px] font-semibold text-[var(--ink-muted)]">per person</div>
+    <div className="rounded-3xl border border-[var(--glass-border)] bg-white p-5 shadow-[0_18px_44px_rgba(1,45,50,0.10)]">
+      {/* ── Price ── */}
+      <div className="flex items-end justify-between gap-3 border-b border-[var(--border-soft)] pb-4">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--brand-ink)]">
+            From
+          </div>
+          <div className="mt-1 flex items-baseline gap-1.5">
+            <span className="text-[30px] font-bold leading-none tracking-tight text-[var(--ink)]">
+              ${minPriceUsd.toLocaleString()}
+            </span>
+            <span className="text-[13px] font-semibold text-[var(--ink-secondary)]">pp</span>
+          </div>
+        </div>
+        <div className="text-right text-[11px] leading-relaxed text-[var(--ink-muted)]">
+          up to ${maxPrice.toLocaleString()} pp
+          <br />
+          per person sharing
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div>
-          <label htmlFor="departure-select" className="form-label">Departure</label>
-          <select
-            id="departure-select"
-            value={departure}
-            onChange={(e) => setDeparture(e.target.value)}
-            className="form-control"
-          >
-            {useSlots
-              ? slots!.map((s) => {
-                  const iso = s.startDate.slice(0, 10);
-                  const label = new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-                  const suffix = s.isFull ? ' — FULL' : ` — ${s.spotsLeft} spot${s.spotsLeft === 1 ? '' : 's'} left`;
-                  return (
-                    <option key={s.slotId} value={iso}>{label}{suffix}</option>
-                  );
-                })
-              : departures.map((d) => (
-                  <option key={d.value} value={d.value}>{d.label}</option>
-                ))}
-          </select>
-        </div>
-
-        {/* Capacity strip — real fullness from the agency's slot management */}
-        {useSlots && selectedSlot && (
-          <div
-            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold ${
-              isFull
-                ? 'border-[rgba(185,28,28,0.25)] bg-[var(--danger-soft)] text-[var(--danger)]'
-                : (spotsLeft ?? 99) <= 2
-                  ? 'border-[rgba(180,120,20,0.25)] bg-[var(--warning-soft)] text-[#8a5a00]'
-                  : 'border-[rgba(22,101,52,0.25)] bg-[var(--success-soft)] text-[var(--success)]'
-            }`}
-            role="status"
-          >
-            <Users className="h-3.5 w-3.5 shrink-0" />
-            {isFull
-              ? 'Fully booked — every seat on this departure is taken'
-              : `${selectedSlot.bookedTravelers}/${selectedSlot.maxTravelers} travelers booked · ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left`}
+      {/* ── Live availability ── */}
+      <div className="space-y-2.5 py-4">
+        {loadingSlots ? (
+          <>
+            <div className="h-14 animate-pulse rounded-2xl bg-[var(--surface-sunk)]" />
+            <div className="h-9 w-2/3 animate-pulse rounded-full bg-[var(--surface-sunk)]" />
+          </>
+        ) : next ? (
+          <>
+            <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[#FCFBF7] px-3.5 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-ink)]">
+                <Calendar className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
+                  Next departure
+                </div>
+                <div className="truncate text-sm font-bold text-[var(--ink)]">{fmtDate(next.startDate)}</div>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold ${
+                  next.spotsLeft <= 2
+                    ? 'bg-[var(--warning-soft)] text-[var(--warning)]'
+                    : 'bg-[var(--success-soft)] text-[var(--success)]'
+                }`}
+              >
+                <Users className="h-3.5 w-3.5" />
+                {next.spotsLeft} spot{next.spotsLeft === 1 ? '' : 's'} left on this date
+              </span>
+              {openDepartures.length > 1 && (
+                <span className="rounded-full bg-[var(--surface-sunk)] px-3 py-1 text-[11px] font-semibold text-[var(--ink-secondary)]">
+                  {openDepartures.length} departures · {totalSeatsLeft} seats
+                </span>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-3 rounded-2xl border border-dashed border-[var(--border)] px-3.5 py-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-sunk)] text-[var(--ink-secondary)]">
+              <Calendar className="h-4 w-4" />
+            </span>
+            <div>
+              <div className="text-sm font-bold text-[var(--ink)]">Open-dated tour</div>
+              <div className="text-[11px] text-[var(--ink-muted)]">
+                Pick any date — the agency confirms availability.
+              </div>
+            </div>
           </div>
         )}
-
-        <div>
-          <label htmlFor="travelers-select" className="form-label">Travelers</label>
-          <select
-            id="travelers-select"
-            value={travelers}
-            onChange={(e) => setTravelers(Number(e.target.value))}
-            className="form-control"
-            disabled={isFull}
-          >
-            {(spotsLeft !== null
-              ? Array.from({ length: Math.max(0, Math.min(8, spotsLeft)) }, (_, i) => i + 1)
-              : [1, 2, 3, 4, 5, 6, 7, 8]
-            ).map((n) => (
-              <option key={n} value={n}>{n} {n === 1 ? 'traveler' : 'travelers'}</option>
-            ))}
-          </select>
-        </div>
       </div>
 
-      <div className="mb-4 mt-4 flex justify-between items-center border-t border-[var(--border-soft)] pt-3 text-sm">
-        <span className="text-[var(--ink-secondary)]">Estimated total</span>
-        <strong className="text-base text-[var(--ink)]">${estimate.toLocaleString()}</strong>
-      </div>
-
+      {/* ── Actions ── */}
       <div className="space-y-2.5">
-        {!isFull && (
-          <Link href={quoteHref} className="btn btn-primary w-full">
-            Request a Quote <ChevronRight className="h-4 w-4" />
-          </Link>
-        )}
-
         <ReserveDialog tourId={dbTourId || tourId} tourTitle={tourTitle} minPriceUsd={minPriceUsd} />
+        <Link
+          href={`/quote/request?tourId=${encodeURIComponent(tourId)}`}
+          className="btn btn-secondary w-full"
+        >
+          Request a quote instead <ChevronRight className="h-4 w-4" />
+        </Link>
       </div>
 
-      <ul className="mt-4 space-y-1.5 border-t border-[var(--border-soft)] pt-3 text-[11px] text-[var(--ink-secondary)]">
-        <li className="flex items-start gap-1.5"><span className="mt-0.5 text-[var(--success)]">✓</span> <Link href="/best-price-guarantee" className="link">Best price guarantee</Link></li>
-        <li className="flex items-start gap-1.5"><span className="mt-0.5 text-[var(--success)]">✓</span> Requests go directly to the agency</li>
-        <li className="flex items-start gap-1.5"><span className="mt-0.5 text-[var(--success)]">✓</span> Or <Link href="/contact-us" className="link">contact</Link> the agency directly</li>
+      <ul className="mt-4 space-y-2 border-t border-[var(--border-soft)] pt-4 text-[11px] text-[var(--ink-secondary)]">
+        <li className="flex items-start gap-2">
+          <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--brand)]" />
+          <span>
+            <Link href="/best-price-guarantee" className="link">
+              Best price guarantee
+            </Link>{' '}
+            — booked direct, zero commission
+          </span>
+        </li>
+        <li className="flex items-start gap-2">
+          <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--brand)]" />
+          <span>No payment now — the agency confirms your date first</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--brand)]" />
+          <span>
+            Or{' '}
+            <Link href="/contact-us" className="link">
+              contact the agency
+            </Link>{' '}
+            directly
+          </span>
+        </li>
       </ul>
     </div>
   );

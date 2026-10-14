@@ -5,7 +5,7 @@ import TourCard from '@/components/TourCard';
 import HeroSearchForm from '@/components/HeroSearchForm';
 import prisma from '@/lib/prisma';
 import { safariTours, safariOperators, countryHighlights, blogPosts, safariExperts } from '@/lib/site-data';
-import { CheckCircle2, ChevronRight, ShieldCheck, Star, Calendar, Award } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Star, Calendar, Award } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,25 +41,29 @@ export default async function HomePage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[var(--surface-page)] text-[var(--ink-body)] font-sans">
+    <div className="min-h-screen font-sans text-[var(--ink-body)]">
       <Navbar />
 
       <main>
         {/* ── Hero ── */}
         <section
-          className="relative h-[560px] w-full overflow-hidden bg-cover bg-center"
+          className="relative h-[580px] w-full overflow-hidden bg-cover bg-center"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2200&q=80')" }}
         >
-          {/* Heavy scrim so white text never blends */}
-          <div className="absolute inset-0 bg-black/45" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/45" />
+          {/* Light, airy scrim — enough contrast for white text, no muddy slab */}
+          <div className="absolute inset-0 bg-black/25" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand)]/25 via-transparent to-transparent" />
 
           <div className="relative z-10 mx-auto flex h-full max-w-[1230px] items-center justify-center px-4 pb-28 md:pb-32">
-            <div className="text-center text-white">
-              <h1 className="text-[36px] font-bold leading-[1.02] tracking-[-0.05em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] sm:text-[46px] md:text-[58px]" style={{ fontFamily: 'Georgia, serif' }}>
+            <div className="animate-fade-up text-center text-white">
+              <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+                Zero commission · Direct local quotes
+              </span>
+              <h1 className="text-[38px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] sm:text-[48px] md:text-[62px]">
                 Compare {stats.tours.toLocaleString()} African<br />Safari Tours
               </h1>
-              <p className="mt-3 text-[16px] font-medium text-white md:text-[20px] drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]" style={{ fontFamily: 'Georgia, serif' }}>
+              <p className="mx-auto mt-4 max-w-xl text-[16px] font-medium text-white/95 md:text-[19px] drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
                 Booked directly from verified local operators
               </p>
             </div>
@@ -69,71 +73,72 @@ export default async function HomePage() {
         </section>
 
         {/* ── Trust strip ── */}
-        <div className="border-b border-[var(--border)] bg-white py-3.5 text-[13px] text-[var(--ink-body)]">
-          <div className="mx-auto flex max-w-[1230px] flex-wrap items-center justify-center gap-x-9 gap-y-2 px-4">
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.operators}</strong> Verified Local Operators</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">Best Price</strong> Guarantee</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.reviews}</strong> Traveler Reviews</span>
-            <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.destinations}</strong> Parks &amp; Reserves</span>
+        <div className="relative z-10 mx-auto mt-5 max-w-[1230px] px-4">
+          <div className="glass grid grid-cols-2 gap-y-3 rounded-2xl px-6 py-4 text-[13px] font-semibold text-[var(--ink-body)] md:grid-cols-4">
+            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.operators}</strong> Verified Operators</span>
+            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">Best Price</strong> Guarantee</span>
+            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.reviews}</strong> Traveler Reviews</span>
+            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.destinations}</strong> Parks &amp; Reserves</span>
           </div>
         </div>
 
         {/* ── Countries ── */}
-        <section className="bg-[var(--surface-page)] py-11">
+        <section className="pt-24 pb-16">
           <div className="mx-auto max-w-[1230px] px-4">
-            <h2 className="mb-5 text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <div className="section-rule" />
+            <h2 className="mb-6 text-[28px] font-semibold text-[var(--ink)]">
               Top-rated Safari Countries
             </h2>
 
             <div className="surface-card overflow-hidden">
               <div className="flex flex-col lg:flex-row">
-                <div className="w-full border-b border-[var(--border-soft)] bg-[var(--surface-raised)] lg:w-[270px] lg:border-b-0 lg:border-r">
+                <div className="w-full border-b border-[var(--border-soft)] bg-white/40 lg:w-[280px] lg:border-b-0 lg:border-r">
                   {countryHighlights.map((country) => (
                     <Link
                       key={country.name}
                       href={`/parks/${country.name.toLowerCase().replace(/\s+/g, '-')}`}
-                      className={`flex items-center px-5 py-3 text-[14px] transition-colors ${country.active ? 'bg-[var(--surface-sunk)] font-bold text-[var(--ink)]' : 'link hover:bg-[var(--surface-sunk)]'}`}
+                      className={`flex items-center px-5 py-3.5 text-[14px] transition-colors ${country.active ? 'bg-white/70 font-bold text-[var(--ink)]' : 'text-[var(--ink-secondary)] hover:bg-white/50 hover:text-[var(--ink)]'}`}
                     >
-                      <span className={`mr-3 inline-block w-8 text-[12px] ${country.active ? 'text-[var(--ink-secondary)]' : 'text-[var(--ink-muted)]'}`}>{country.rank}</span>
+                      <span className={`mr-3 inline-block w-8 text-[12px] ${country.active ? 'text-[var(--brand-ink)]' : 'text-[var(--ink-muted)]'}`}>{country.rank}</span>
                       <span>{country.name}</span>
                       <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-40" />
                     </Link>
                   ))}
                 </div>
 
-                {/* Featured country panel — pure white text on strong dark scrim */}
+                {/* Featured country panel */}
                 <div className="relative flex-1 bg-[var(--dark)]">
                   <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80')" }} />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
 
                   <div className="relative z-10 flex min-h-[380px] flex-col justify-center px-8 py-8 text-white md:px-10 md:py-10">
                     <div className="mb-2 flex flex-wrap items-center gap-3">
-                      <h3 className="text-[30px] font-bold text-white" style={{ fontFamily: 'Georgia, serif' }}>Tanzania</h3>
+                      <h3 className="text-[30px] font-semibold text-white">Tanzania</h3>
                       <div className="flex items-center gap-0.5 text-[var(--dark-gold)]" aria-label="Rated 4.8 out of 5">
                         {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
                       </div>
                       <span className="text-[12px] font-semibold text-white">4.8/5 · 2,172 Reviews</span>
                     </div>
 
-                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-white">#1 of 8 Major Safari Countries</p>
+                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--dark-gold)]">#1 of 8 Major Safari Countries</p>
 
-                    <p className="max-w-[560px] text-[14px] leading-relaxed text-white">
+                    <p className="max-w-[560px] text-[14px] leading-relaxed text-white/95">
                       Tanzania, with its three safari circuits, is one of Africa&apos;s top wildlife destinations. The popular Northern circuit incorporates bucket-list landmarks such as Serengeti National Park, Ngorongoro Crater and Mt Kilimanjaro. Repeat visitors might prefer the remote wilderness vibe of the Southern or Western circuits. For some beach time, the Spice Island of Zanzibar is only a short flight away.
                     </p>
 
                     <div className="mt-5 flex flex-wrap gap-6 text-[13px]">
                       <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 font-bold text-white">$</div>
+                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 font-bold text-white backdrop-blur-sm">$</div>
                         <div>
                           <div className="font-bold text-white">Rates (USD)</div>
-                          <div className="text-white">$229 to $659 pp/day</div>
+                          <div className="text-white/90">$229 to $659 pp/day</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 text-white"><Calendar className="h-4 w-4" /></div>
+                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 text-white backdrop-blur-sm"><Calendar className="h-4 w-4" /></div>
                         <div>
                           <div className="font-bold text-white">Best Time to Go</div>
-                          <div className="text-white">June to October; January to February</div>
+                          <div className="text-white/90">June to October; January to February</div>
                         </div>
                       </div>
                     </div>
@@ -154,13 +159,13 @@ export default async function HomePage() {
         </section>
 
         {/* ── Popular tours ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        <section className="pb-14">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <div className="mb-6 flex items-end justify-between">
+              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
                 Popular Safari Tours
               </h2>
-              <Link href="/tours" className="link text-sm inline-flex items-center gap-1">
+              <Link href="/tours" className="link inline-flex items-center gap-1 text-sm">
                 View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
@@ -173,13 +178,13 @@ export default async function HomePage() {
         </section>
 
         {/* ── Operators ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        <section className="pb-14">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <div className="mb-6 flex items-end justify-between">
+              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
                 Top Rated Tour Operators
               </h2>
-              <Link href="/operators" className="link text-sm inline-flex items-center gap-1">
+              <Link href="/operators" className="link inline-flex items-center gap-1 text-sm">
                 Browse all <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
@@ -191,12 +196,12 @@ export default async function HomePage() {
                   className="surface-card surface-card-hover block overflow-hidden"
                 >
                   <div className="relative h-32 bg-[var(--dark)]">
-                    <div className="absolute inset-0 bg-cover bg-center opacity-70" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=500&q=80')" }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=500&q=80')" }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h3 className="text-[17px] font-bold text-white" style={{ fontFamily: 'Georgia, serif' }}>{op.name}</h3>
+                      <h3 className="text-[17px] font-semibold text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.5)]">{op.name}</h3>
                     </div>
-                    <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[var(--brand)] shadow">
+                    <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-white/80 text-[var(--brand-ink)] backdrop-blur-md">
                       <Award className="h-3.5 w-3.5" />
                     </div>
                   </div>
@@ -213,23 +218,23 @@ export default async function HomePage() {
         </section>
 
         {/* ── Blog ── */}
-        <section className="bg-[var(--surface-page)] py-10">
+        <section className="pb-14">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <div className="mb-6 flex items-end justify-between">
+              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
                 Latest from the Blog
               </h2>
-              <Link href="/blog" className="link text-sm inline-flex items-center gap-1">
+              <Link href="/blog" className="link inline-flex items-center gap-1 text-sm">
                 All articles <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {blogPosts.map((post) => (
-                <Link href={`/blog/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[195px] overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url('${post.image}')` }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
+                <Link href={`/blog/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[200px] overflow-hidden">
+                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${post.image}')` }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="text-[19px] font-bold leading-tight text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]" style={{ fontFamily: 'Georgia, serif' }}>{post.title}</h3>
+                    <h3 className="text-[19px] font-semibold leading-tight text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">{post.title}</h3>
                   </div>
                 </Link>
               ))}
@@ -238,22 +243,22 @@ export default async function HomePage() {
         </section>
 
         {/* ── Experts ── */}
-        <section className="bg-[var(--surface-page)] py-10 pb-14">
+        <section className="pb-20">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-5 flex items-end justify-between">
-              <h2 className="text-[26px] font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
-                SafariAsili Experts
+            <div className="mb-6 flex items-end justify-between">
+              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
+                SafariRequest Experts
               </h2>
             </div>
 
-            <p className="mb-5 max-w-2xl text-[14px] text-[var(--ink-body)]">
+            <p className="mb-6 max-w-2xl text-[14px] text-[var(--ink-body)]">
               Independent travel writers and industry experts review destinations and operators across the continent, so you can book with confidence.
             </p>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
               {safariExperts.map((expert) => (
                 <div key={expert.id} className="surface-card surface-card-hover flex gap-4 p-5">
-                  <div className="h-[64px] w-[64px] shrink-0 overflow-hidden rounded-xl">
+                  <div className="h-[64px] w-[64px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/70">
                     <img src={expert.image} alt={expert.name} className="h-full w-full object-cover" />
                   </div>
                   <div className="min-w-0">

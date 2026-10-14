@@ -1,5 +1,5 @@
 /**
- * Transactional Email Notification Service for SafariAsili
+ * Transactional Email Notification Service for SafariRequest
  * Configurable via SMTP environment variables or fallback console logging.
  */
 

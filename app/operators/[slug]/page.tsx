@@ -286,7 +286,7 @@ export default async function OperatorProfilePage({ params }: OperatorProfilePag
               <div className="p-4 rounded-2xl bg-[#1C2826] text-white space-y-3">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#E9C46A]">
                   <ShieldCheck className="w-4 h-4" />
-                  SafariAsili Guarantee
+                  SafariRequest Guarantee
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed">
                   Book directly with verified local operators without middleman commissions. Free tailored itinerary quotes.

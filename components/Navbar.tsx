@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Heart, User, ChevronDown, Menu, X, Compass, Calendar } from 'lucide-react';
+import { Heart, User, ChevronDown, Menu, X, Calendar, Bell } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import { safariOperators, safariTours } from '@/lib/site-data';
 
@@ -118,22 +118,60 @@ export default function Navbar() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
+  const [notifications, setNotifications] = useState<Array<{ id: string; title: string; body: string; link: string | null; isRead: boolean; createdAt: string }>>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sessionUser) return;
+    fetch('/api/notifications?limit=15')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) return;
+        setNotifications(Array.isArray(d.notifications) ? d.notifications : []);
+        setUnreadCount(typeof d.unread === 'number' ? d.unread : 0);
+      })
+      .catch(() => {});
+  }, [sessionUser, pathname]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) setNotifOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const toggleNotifications = async () => {
+    const opening = !notifOpen;
+    setNotifOpen(opening);
+    if (opening && unreadCount > 0) {
+      setUnreadCount(0);
+      setNotifications((ns) => ns.map((n) => ({ ...n, isRead: true })));
+      await fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ all: true }),
+      }).catch(() => {});
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-[var(--dark)] text-[var(--dark-text)] font-sans shadow-[0_1px_0_rgba(255,255,255,0.10)]">
+    <header className="glass-nav sticky top-0 z-50 font-sans text-[var(--ink)]">
       <div className="mx-auto max-w-[1230px] px-4">
-        <div className="flex h-[58px] items-center justify-between gap-4">
+        <div className="flex h-[64px] items-center justify-between gap-4">
           <Link href="/" className="flex items-center flex-shrink-0">
-            <div className="leading-none flex items-center gap-2">
-              <img
-                src="/images/safaribuilt-logo.png"
-                alt="SafariBuilt — One Marketplace for African Safari Tours"
-                className="h-[34px] md:h-[40px] w-auto"
-              />
-            </div>
+            <img
+              src="/images/safaribuilt-logo.png"
+              alt="SafariRequest — One Marketplace for African Safari Tours"
+              className="h-[34px] md:h-[42px] w-auto"
+              style={{ mixBlendMode: 'multiply' }}
+            />
           </Link>
 
           <div className="hidden lg:flex items-center flex-1 justify-center">
-            <nav className="relative flex items-center gap-1 text-[13px] font-semibold uppercase tracking-[0.08em] text-[var(--dark-text-soft)]">
+            <nav className="relative flex items-center gap-1 text-[13px] font-bold uppercase tracking-[0.06em] text-[var(--ink-secondary)]">
               {navMenus.map(({ href, label, items }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -147,7 +185,7 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1.5 px-3 py-4 transition-colors border-b-2 ${active ? 'text-white border-[var(--dark-gold)]' : 'border-transparent hover:text-white'}`}
+                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 transition-colors ${active ? 'bg-white/70 text-[var(--ink)] shadow-sm' : 'hover:bg-white/55 hover:text-[var(--ink)]'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
@@ -156,17 +194,17 @@ export default function Navbar() {
                     </Link>
 
                     <div
-                      className={`absolute left-0 top-full pt-2 transition-all duration-200 ${
+                      className={`absolute left-0 top-full pt-3 transition-all duration-200 ${
                         isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
                       }`}
                     >
-                      <div className="w-[230px] rounded-[10px] border border-[var(--border)] bg-white p-2 shadow-[0_12px_28px_rgba(36,22,13,0.18)]">
+                      <div className="popover w-[240px] p-2">
                         {items.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
                             onClick={() => setOpenMenu(null)}
-                            className="block rounded-[8px] px-3 py-2 text-[12px] font-medium text-[var(--ink-body)] transition-colors hover:bg-[var(--surface-sunk)] hover:text-[var(--ink)]"
+                            className="block rounded-xl px-3 py-2 text-[13px] font-medium normal-case tracking-normal text-[var(--ink-body)] transition-colors hover:bg-[var(--brand-soft)] hover:text-[var(--ink)]"
                           >
                             {item.label}
                           </Link>
@@ -179,12 +217,56 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="hidden lg:flex items-center gap-5 text-[14px]">
-            <Link href="/favorites" className="flex items-center gap-1.5 hover:text-white group" aria-label="Favorites list">
+          <div className="hidden lg:flex items-center gap-4 text-[13px] font-semibold">
+            {sessionUser && (
+              <div className="relative" ref={notifRef}>
+                <button
+                  onClick={toggleNotifications}
+                  className="relative flex items-center text-[var(--ink-secondary)] transition-colors hover:text-[var(--ink)]"
+                  aria-label="Travel notifications"
+                  aria-expanded={notifOpen}
+                >
+                  <Bell className="h-5 w-5" strokeWidth={1.6} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[9px] font-bold text-[var(--brand-on)] shadow">{unreadCount}</span>
+                  )}
+                </button>
+                {notifOpen && (
+                  <div className="popover absolute right-0 mt-3 w-[330px] overflow-hidden">
+                    <div className="border-b border-[var(--border-soft)] px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+                      Travel notifications
+                    </div>
+                    <div className="max-h-[380px] overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <p className="px-3 py-6 text-center text-[13px] font-normal text-[var(--ink-muted)]">
+                          No notifications yet.
+                        </p>
+                      ) : (
+                        notifications.map((n) => (
+                          <Link
+                            key={n.id}
+                            href={n.link || '#'}
+                            onClick={() => setNotifOpen(false)}
+                            className={`block border-b border-[var(--border-soft)] px-3 py-2.5 transition-colors last:border-b-0 hover:bg-[var(--brand-soft)] ${n.isRead ? '' : 'bg-[var(--brand-soft)]'}`}
+                          >
+                            <div className="text-[13px] font-bold text-[var(--ink)]">{n.title}</div>
+                            <div className="mt-0.5 text-[12px] font-normal leading-snug text-[var(--ink-secondary)]">{n.body}</div>
+                            <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[var(--ink-muted)]">
+                              {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </div>
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            <Link href="/favorites" className="flex items-center gap-1.5 text-[var(--ink-secondary)] transition-colors hover:text-[var(--ink)] group" aria-label="Favorites list">
               <div className="relative">
-                <Heart className="h-5 w-5 group-hover:fill-white/30" strokeWidth={1.5} />
+                <Heart className="h-5 w-5 group-hover:fill-[var(--brand)]/25" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-[var(--dark-gold)] px-0.5 text-[9px] font-bold text-[var(--dark)]">{favoriteCount}</span>
+                  <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[9px] font-bold text-[var(--brand-on)] shadow">{favoriteCount}</span>
                 )}
               </div>
               List
@@ -194,43 +276,39 @@ export default function Navbar() {
               <div className="relative ml-1" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-1 hover:text-white"
+                  className="flex items-center gap-1.5 text-[var(--ink-secondary)] transition-colors hover:text-[var(--ink)]"
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
                   aria-label="Account menu"
                 >
-                  <span className="max-w-[110px] truncate text-[13px] font-semibold">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
-                  <User className="h-5 w-5" strokeWidth={1.5} />
+                  <span className="max-w-[110px] truncate text-[13px] font-bold text-[var(--ink)]">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
+                  <User className="h-5 w-5" strokeWidth={1.6} />
                   <ChevronDown className="h-3.5 w-3.5" />
                 </button>
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-3 w-52 rounded-md bg-white shadow-xl text-[#333] overflow-hidden border border-[#eee]">
-                    <div className="border-b border-gray-100 px-3 py-2 text-[11px] text-[#8a8a8a] truncate">{sessionUser.email}</div>
+                  <div className="popover absolute right-0 mt-3 w-56 overflow-hidden text-[var(--ink-body)]">
+                    <div className="truncate border-b border-[var(--border-soft)] px-3 py-2 text-[11px] text-[var(--ink-muted)]">{sessionUser.email}</div>
                     {sessionUser.role === 'OPERATOR' && (
-                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold hover:bg-gray-50">Agency Dashboard</Link>
+                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[var(--brand-soft)]">Agency Dashboard</Link>
                     )}
                     {sessionUser.role === 'ADMIN' && (
-                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold hover:bg-gray-50">Admin Panel</Link>
+                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[var(--brand-soft)]">Admin Panel</Link>
                     )}
                     {sessionUser.role === 'TRAVELER' && (
                       <>
-                        <Link href="/favorites" className="block px-3 py-2 text-[13px] hover:bg-gray-50">Saved Tours</Link>
-                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold hover:bg-gray-50">My Bookings</Link>
-                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] hover:bg-gray-50">Request a Quote</Link>
+                        <Link href="/favorites" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[var(--brand-soft)]">Saved Tours</Link>
+                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[var(--brand-soft)]">My Bookings</Link>
+                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[var(--brand-soft)]">Request a Quote</Link>
                       </>
                     )}
-                    <button onClick={handleLogout} className="block w-full text-left px-3 py-2 text-[13px] text-[#c0392b] hover:bg-[#fdf0ee] border-t border-gray-100">Sign Out</button>
+                    <button onClick={handleLogout} className="block w-full border-t border-[var(--border-soft)] px-3 py-2 text-left text-[13px] font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)]">Sign Out</button>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2 ml-1">
-                <Link href="/login" className="rounded-lg border border-white/40 px-3 py-1.5 text-[13px] font-bold hover:bg-white/10 transition-colors">
-                  Sign In
-                </Link>
-                <Link href="/register" className="rounded-lg bg-[var(--dark-gold)] px-3 py-1.5 text-[13px] font-bold text-[var(--dark)] hover:brightness-110 transition">
-                  Register
-                </Link>
+              <div className="ml-1 flex items-center gap-2">
+                <Link href="/login" className="btn btn-secondary btn-sm">Sign In</Link>
+                <Link href="/register" className="btn btn-primary btn-sm">Register</Link>
               </div>
             )}
           </div>
@@ -238,7 +316,7 @@ export default function Navbar() {
           {/* Single hamburger for small + medium screens */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden flex items-center justify-center text-white p-1"
+            className="flex items-center justify-center rounded-full p-1.5 text-[var(--ink)] transition-colors hover:bg-[var(--brand-soft)] lg:hidden"
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileOpen}
           >
@@ -248,61 +326,57 @@ export default function Navbar() {
 
         {/* Mobile / tablet drawer */}
         {mobileOpen && (
-          <div className="absolute left-0 right-0 top-[58px] z-40 max-h-[calc(100vh-58px)] overflow-y-auto border-t border-[var(--dark-border)] bg-[var(--dark-raised)] shadow-xl lg:hidden">
-            <nav className="flex flex-col gap-1 p-3 text-[15px]">
+          <div className="absolute left-0 right-0 top-[64px] z-40 max-h-[calc(100vh-64px)] overflow-y-auto border-t border-[var(--glass-border)] bg-white shadow-xl lg:hidden">
+            <nav className="flex flex-col gap-1.5 p-3 text-[15px]">
               {navMenus.map(({ href, label, items }) => (
-                <div key={href} className="rounded-lg border border-[var(--dark-border)] bg-white/5">
-                  <Link href={href} onClick={() => setMobileOpen(false)} className="flex w-full items-center justify-between px-2 py-2 text-white">
+                <div key={href} className="rounded-2xl border border-[var(--glass-border)] bg-white/60">
+                  <Link href={href} onClick={() => setMobileOpen(false)} className="flex w-full items-center justify-between px-3 py-2.5 font-semibold text-[var(--ink)]">
                     <span>{label}</span>
                     <ChevronDown className="h-4 w-4" />
                   </Link>
-                  <div className="space-y-1 border-t border-white/10 px-2 pb-2 pt-2">
+                  <div className="space-y-0.5 border-t border-[var(--border-soft)] px-2 pb-2 pt-2">
                     {items.map((item) => (
-                      <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block px-2 py-1.5 text-sm text-white/85 hover:text-white">
+                      <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-2 py-1.5 text-sm text-[var(--ink-secondary)] hover:bg-[var(--brand-soft)] hover:text-[var(--ink)]">
                         {item.label}
                       </Link>
                     ))}
                   </div>
                 </div>
               ))}
-              <Link href="/favorites" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+              <Link href="/favorites" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
                 <Heart className="h-4 w-4" /> Favorites List
               </Link>
               <NavbarSearch mobile onNavigate={() => setMobileOpen(false)} />
               {sessionUser ? (
                 <>
                   {sessionUser.role === 'OPERATOR' && (
-                    <Link href="/operator-portal" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+                    <Link href="/operator-portal" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
                       <User className="h-4 w-4" /> Agency Dashboard
                     </Link>
                   )}
                   {sessionUser.role === 'ADMIN' && (
-                    <Link href="/admin" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+                    <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
                       <User className="h-4 w-4" /> Admin Panel
                     </Link>
                   )}
                   {sessionUser.role === 'TRAVELER' && (
-                    <Link href="/my-trips" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+                    <Link href="/my-trips" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
                       <Calendar className="h-4 w-4" /> My Bookings
                     </Link>
                   )}
                   {sessionUser.role === 'TRAVELER' && (
-                    <Link href="/favorites" onClick={() => setMobileOpen(false)} className="px-2 py-2 hover:bg-black/10 rounded text-white flex items-center gap-2">
+                    <Link href="/favorites" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
                       <User className="h-4 w-4" /> Saved Tours
                     </Link>
                   )}
-                  <button onClick={handleLogout} className="px-2 py-2 hover:bg-black/10 rounded text-left text-[#FCA5A5] flex items-center gap-2">
+                  <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl px-2 py-2 text-left font-semibold text-[var(--danger)] hover:bg-[var(--danger-soft)]">
                     <X className="h-4 w-4" /> Sign Out
                   </button>
                 </>
               ) : (
                 <div className="flex gap-2 px-2 py-2">
-                  <Link href="/login" onClick={() => setMobileOpen(false)} className="flex-1 rounded border border-white/40 px-3 py-2 text-center text-[13px] font-bold text-white hover:bg-white/10">
-                    Sign In
-                  </Link>
-                  <Link href="/register" onClick={() => setMobileOpen(false)} className="flex-1 rounded bg-[var(--dark-gold)] px-3 py-2 text-center text-[13px] font-bold text-[var(--dark)] hover:brightness-110">
-                    Register
-                  </Link>
+                  <Link href="/login" onClick={() => setMobileOpen(false)} className="btn btn-secondary flex-1">Sign In</Link>
+                  <Link href="/register" onClick={() => setMobileOpen(false)} className="btn btn-primary flex-1">Register</Link>
                 </div>
               )}
             </nav>

@@ -35,6 +35,9 @@ enum DestinationType {
   GAME_RESERVE
   CONSERVANCY
   COUNTRY
+  ISLAND
+  NATURE_RESERVE
+  NATURAL_WONDER
 }
 
 enum InquiryStatus {
@@ -49,6 +52,7 @@ enum ReservationStatus {
   APPROVED
   DECLINED
   CANCELLED
+  COMPLETED
 }
 
 enum LeadStatus {
@@ -85,6 +89,7 @@ model User {
   messages     Message[]
   reservations Reservation[]
   reservationMessages ReservationMessage[]
+  notifications Notification[]
   blogPosts    BlogPost[]
 
   @@map("users")
@@ -194,8 +199,29 @@ model Tour {
   inquiries    Inquiry[]
   reviews      Review[]
   reservations Reservation[]
+  media        MediaAsset[]
 
   @@map("tours")
+}
+
+// 14. Media Assets — images stored as real binary blobs in Postgres (bytea).
+// Agencies upload one or more photos per package; the lowest sortOrder (or the
+// row flagged isCover) is used as the package's cover/hero image.
+model MediaAsset {
+  id        String   @id @default(uuid())
+  tourId    String?  @map("tour_id")
+  tour      Tour?    @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  filename  String
+  mimeType  String   @map("mime_type")
+  sizeBytes Int      @map("size_bytes")
+  data      Bytes
+  altText   String?  @map("alt_text")
+  isCover   Boolean  @default(false) @map("is_cover")
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tourId, sortOrder])
+  @@map("media_assets")
 }
 
 // 5. Tour Destinations Junction Model
@@ -396,8 +422,25 @@ model Reservation {
   slotId            String?           @map("slot_id")
   slot              TourSlot?         @relation(fields: [slotId], references: [id], onDelete: SetNull)
   messages          ReservationMessage[]
+  completedAt       DateTime?         @map("completed_at")
   createdAt         DateTime          @default(now()) @map("created_at")
   updatedAt         DateTime          @updatedAt @map("updated_at")
 
   @@map("reservations")
+}
+
+// 12. Notifications Model (in-app travel notifications for travelers & agencies)
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   @default("INFO")   // BOOKING_APPROVED | TRIP_COMPLETED | REVIEW_INVITE | CONTACT_SHARED | INFO
+  title     String
+  body      String   @db.Text
+  link      String?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, isRead])
+  @@map("notifications")
 }

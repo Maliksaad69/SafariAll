@@ -79,9 +79,9 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
       {/* Top Breadcrumb Bar */}
       <div className="bg-[#f4f4f4] border-b border-[#d5d5d5] py-2 text-[11px] text-[#666]">
         <div className="max-w-[1230px] mx-auto px-4 flex items-center gap-1">
-          You are here: <Link href="/" className="text-[#0070c0] hover:underline">Home</Link>
+          You are here: <Link href="/" className="text-[var(--brand-ink)] hover:underline">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link href="/parks" className="text-[#0070c0] hover:underline">Countries & Parks</Link>
+          <Link href="/parks" className="text-[var(--brand-ink)] hover:underline">Countries & Parks</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-[#333]">{park.name} Travel Guide</span>
         </div>
@@ -107,7 +107,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 <ul className="text-[12px]">
                   {sections.map((s: any, i: number) => (
                     <li key={s.key} className="border-b border-[#eee] last:border-0">
-                      <a href={`#guide-${s.key}`} className={`block px-4 py-2 hover:bg-[#f9f9f9] ${i === 0 ? 'font-bold text-[#c0392b] border-l-4 border-[#c0392b] bg-[#f9f9f9]' : 'text-[#555]'}`}>
+                      <a href={`#guide-${s.key}`} className={`block px-4 py-2 hover:bg-[#f9f9f9] ${i === 0 ? 'font-bold text-[var(--danger)] border-l-4 border-[var(--danger)] bg-[#f9f9f9]' : 'text-[#555]'}`}>
                         <ChevronRight className="w-3 h-3 inline mr-1 text-[#8a8a8a]" /> {s.title}
                       </a>
                     </li>
@@ -166,7 +166,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
             </div>
             <div className="flex gap-2">
               <div className="w-7 h-7 rounded-full bg-[#f4f4f4] text-[#888] flex items-center justify-center font-bold"><MapPin className="w-4 h-4"/></div>
-              <div><strong className="text-[#333] block">Size <span className="text-[#0070c0] hover:underline cursor-pointer">ⓘ</span></strong><span className="text-[#666]">947,303km²</span></div>
+              <div><strong className="text-[#333] block">Size <span className="text-[var(--brand-ink)] hover:underline cursor-pointer">ⓘ</span></strong><span className="text-[#666]">947,303km²</span></div>
             </div>
           </div>
         </div>
@@ -184,12 +184,12 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                   {s.bulletItems?.length > 0 && (
                     <ul className="space-y-2 mb-3 text-[13px] text-[#444]">
                       {s.bulletItems.map((b: string, bi: number) => (
-                        <li key={bi} className="flex gap-2"><ChevronRight className={`w-4 h-4 shrink-0 mt-0.5 ${s.key === 'reviews' ? 'text-[#0070c0]' : 'text-[#35792c]'}`} /> {b}</li>
+                        <li key={bi} className="flex gap-2"><ChevronRight className={`w-4 h-4 shrink-0 mt-0.5 ${s.key === 'reviews' ? 'text-[var(--brand-ink)]' : 'text-[#35792c]'}`} /> {b}</li>
                       ))}
                     </ul>
                   )}
                   {idx < sections.length - 1 && (
-                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`} className="text-[12px] text-[#0070c0] hover:underline font-bold flex items-center gap-1 mb-4">
+                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`} className="text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1 mb-4">
                       <ChevronRight className="w-3 h-3" /> Find tours related to {s.title.toLowerCase()}
                     </Link>
                   )}
@@ -202,11 +202,11 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 7,503 {park.name} Safaris <ChevronRight className="w-4 h-4" />
               </Link>
               <ul className="space-y-1 text-[13px]">
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[#0070c0] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[#0070c0] hover:underline">{park.name} Safaris & Tours</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[#0070c0] mt-1" /> <Link href={`/tours?search=${encodeURIComponent(park.name + ' chimp trekking')}`} className="text-[#0070c0] hover:underline">{park.name} Chimp Trekking Tours</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[#0070c0] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`} className="text-[#0070c0] hover:underline">{park.name} Budget Safaris</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[#0070c0] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`} className="text-[#0070c0] hover:underline">{park.name} Glamping Safaris</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[#0070c0] mt-1" /> <Link href={`/operators?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[#0070c0] hover:underline">Tour Operators for {park.name}</Link></li>
+                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[var(--brand-ink)] hover:underline">{park.name} Safaris & Tours</Link></li>
+                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?search=${encodeURIComponent(park.name + ' chimp trekking')}`} className="text-[var(--brand-ink)] hover:underline">{park.name} Chimp Trekking Tours</Link></li>
+                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`} className="text-[var(--brand-ink)] hover:underline">{park.name} Budget Safaris</Link></li>
+                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`} className="text-[var(--brand-ink)] hover:underline">{park.name} Glamping Safaris</Link></li>
+                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/operators?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[var(--brand-ink)] hover:underline">Tour Operators for {park.name}</Link></li>
               </ul>
             </section>
           </div>
@@ -224,7 +224,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                   <div className="flex gap-1 items-center">
                     <span className="text-[#ffc107] tracking-tight">★★★★★</span>
                     <strong className="text-[14px]">4.8</strong>
-                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[#0070c0] hover:underline">18 Reviews</Link></span>
+                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">18 Reviews</Link></span>
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -241,7 +241,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                   <div className="flex gap-1 items-center">
                     <span className="text-[#ffc107] tracking-tight">★★★★★</span>
                     <strong className="text-[14px]">4.8</strong>
-                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[#0070c0] hover:underline">2,156 Reviews</Link></span>
+                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">2,156 Reviews</Link></span>
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -263,16 +263,16 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                   <p className="text-[10px] text-[#6b6b6b] italic leading-tight mt-0.5">Tim is a travel writer who has covered 10 African countries for Lonely Planet\'s Africa, East Africa and West Africa guidebooks.</p>
                 </div>
               </div>
-              <div className="relative border border-[#f0c561] p-3 text-[12px] rounded-sm bg-[#fffdf5]">
-                <div className="absolute -top-[6px] left-6 w-3 h-3 bg-[#fffdf5] border-t border-l border-[#f0c561] transform rotate-45"></div>
+              <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5]">
+                <div className="absolute -top-[6px] left-6 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
                 <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">"Crowded Favorites and Well-Kept Secrets"</h4>
-                <div className="text-[#f0c561] text-[11px] mb-2">★★★★★ <span className="text-[#333] font-bold">5</span><span className="text-[#777]"> /5</span></div>
+                <div className="text-[var(--gold)] text-[11px] mb-2">★★★★★ <span className="text-[#333] font-bold">5</span><span className="text-[#777]"> /5</span></div>
                 <p className="text-[#555] line-clamp-4 leading-relaxed mb-1">
                   {park.name} is home to Serengeti National Park and Ngorongoro Crater; and this fact alone makes a solid case for declaring it Africa\'s best safari country. But, of course, there\'s much more that just these two places. Most visitors stick...
                 </p>
-                <Link href="/reviews" className="text-[#0070c0] hover:underline font-bold">Full Review</Link>
+                <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
               </div>
-              <Link href="/reviews" className="block mt-2 text-[12px] text-[#0070c0] hover:underline font-bold flex items-center gap-1">
+              <Link href="/reviews" className="block mt-2 text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1">
                 <ChevronRight className="w-3 h-3" /> All 18 Expert Reviews
               </Link>
             </div>
@@ -294,13 +294,13 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 <p className="text-[#555] line-clamp-4 leading-relaxed mb-1">
                   We travelled as a couple and made a mixture between tour operator for Serengeti tour and self organized. We had a rented car for 11 days, this was perfect, sometimes challenging, but we enjoyed the freedom. Trafic was not as bad as expected...
                 </p>
-                <Link href="/reviews" className="text-[#0070c0] hover:underline font-bold">Full Review</Link>
+                <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
               </div>
               <div className="flex items-center justify-between mt-2">
-                <Link href="/reviews" className="text-[12px] text-[#0070c0] hover:underline font-bold flex items-center gap-1">
+                <Link href="/reviews" className="text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1">
                   <ChevronRight className="w-3 h-3" /> All 2,156 User Reviews
                 </Link>
-                <Link href="/login" className="border border-[#0070c0] text-[#0070c0] font-bold px-3 py-1 rounded-sm text-[12px] hover:bg-[#f0f8ff] flex items-center">
+                <Link href="/login" className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-3 py-1 rounded-sm text-[12px] hover:bg-[var(--brand-soft)] flex items-center">
                   Write a Review &gt;
                 </Link>
               </div>

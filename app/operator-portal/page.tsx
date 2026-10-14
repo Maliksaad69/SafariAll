@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import AgencyReservationsTable from '@/components/AgencyReservationsTable';
-import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp } from 'lucide-react';
+import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, ImageIcon } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +28,7 @@ export default async function OperatorPortalPage() {
       include: {
         tours: {
           orderBy: { createdAt: 'desc' },
-          include: { _count: { select: { reservations: true } } },
+          include: { _count: { select: { reservations: true, media: true } } },
         },
       },
     });
@@ -37,7 +37,7 @@ export default async function OperatorPortalPage() {
       include: {
         tours: {
           orderBy: { createdAt: 'desc' },
-          include: { _count: { select: { reservations: true } } },
+          include: { _count: { select: { reservations: true, media: true } } },
         },
       },
     });
@@ -201,6 +201,7 @@ export default async function OperatorPortalPage() {
                     <th className="px-4">Price from</th>
                     <th className="px-4">Reservations</th>
                     <th className="px-4">Status</th>
+                    <th className="px-4">Photos</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -217,6 +218,15 @@ export default async function OperatorPortalPage() {
                         <span className={`badge ${tour.isPublished ? 'badge-success' : 'badge-neutral'}`}>
                           {tour.isPublished ? 'Live' : 'Draft'}
                         </span>
+                      </td>
+                      <td className="px-4 whitespace-nowrap">
+                        <Link
+                          href={`/operator-portal/tours/${tour.id}/images`}
+                          className="link inline-flex items-center gap-1.5 text-xs font-bold"
+                        >
+                          <ImageIcon className="h-3.5 w-3.5" />
+                          {tour._count.media > 0 ? `Manage (${tour._count.media})` : 'Upload'}
+                        </Link>
                       </td>
                     </tr>
                   ))}

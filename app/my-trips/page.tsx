@@ -7,6 +7,25 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Mail, Phone, Globe, Calendar, Users, Check, X, ArrowRight, Loader2, Send, MapPin } from 'lucide-react';
 
+const STATUS_BADGE: Record<string, string> = {
+  APPROVED: 'badge-success',
+  PENDING: 'badge-warning',
+  DECLINED: 'badge-danger',
+  CANCELLED: 'badge-neutral',
+  COMPLETED: 'badge-info',
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  APPROVED: 'Confirmed',
+  PENDING: 'Awaiting decision',
+  DECLINED: 'Declined',
+  CANCELLED: 'Cancelled',
+  COMPLETED: 'Trip completed',
+};
+
+const statusBadge = (s: string) => STATUS_BADGE[s] || 'badge-warning';
+const statusLabel = (s: string) => STATUS_LABEL[s] || s;
+
 export default function MyTripsPage() {
   const router = useRouter();
   const [trips, setTrips] = useState<any[]>([]);
@@ -85,7 +104,7 @@ export default function MyTripsPage() {
     return (
       <div className="min-h-screen flex flex-col bg-[#f8f5f0] text-[#1d1a17]">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-[#ff7a18]"/></main>
+        <main className="flex-1 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8 text-[var(--brand)]"/></main>
         <Footer />
       </div>
     );
@@ -104,7 +123,7 @@ export default function MyTripsPage() {
 
         {trips.length === 0 ? (
           <div className="text-center py-16">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#ff7a18]/20 text-[#ff7a18]">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-soft)] text-[var(--brand)]">
               <Calendar className="h-6 w-6" />
             </div>
             <h2 className="text-xl font-semibold mb-2">No trips yet</h2>
@@ -116,9 +135,9 @@ export default function MyTripsPage() {
             <div className="md:col-span-2 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {trips.map((t) => (
-                  <Link key={t.id} href={`/my-trips?trip=${t.id}`} onClick={() => setSelectedId(t.id)} className={`block rounded-xl border p-4 transition-colors ${trip?.id === t.id ? 'border-[#ff7a18] bg-[#fff5ed]' : 'border-gray-200 hover:bg-gray-50'}`}>
+                  <Link key={t.id} href={`/my-trips?trip=${t.id}`} onClick={() => setSelectedId(t.id)} className={`block rounded-xl border p-4 transition-colors ${trip?.id === t.id ? 'border-[var(--brand)] bg-[var(--brand-soft)]' : 'border-gray-200 hover:bg-gray-50'}`}>
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <span className={`badge ${t.status === 'APPROVED' ? 'badge-success' : t.status === 'DECLINED' ? 'badge-danger' : 'badge-warning'}`}>{t.status}</span>
+                      <span className={`badge ${statusBadge(t.status)}`}>{statusLabel(t.status)}</span>
                       <span className="text-xs text-gray-400">#{t.reference?.slice(-8)?.toUpperCase()}</span>
                     </div>
                     <h3 className="font-semibold text-gray-900 truncate mb-1">{t.tour?.title}</h3>
@@ -133,8 +152,8 @@ export default function MyTripsPage() {
                         </>
                       )}
                     </div>
-                    {t.operatorName && (
-                      <div className="mt-1 text-xs text-gray-400">{t.operatorName}</div>
+                    {t.operator?.companyName && (
+                      <div className="mt-1 text-xs text-gray-400">{t.operator?.companyName}</div>
                     )}
                   </Link>
                 ))}
@@ -148,9 +167,9 @@ export default function MyTripsPage() {
                     <div className="flex items-start justify-between gap-2 mb-4">
                       <div>
                         <h2 className="font-semibold text-gray-900">{trip.tour?.title}</h2>
-                        <p className="text-sm text-gray-500 mt-0.5">{trip.operatorName}</p>
+                        <p className="text-sm text-gray-500 mt-0.5">{trip.operator?.companyName}</p>
                       </div>
-                      <span className={`badge ${trip.status === 'APPROVED' ? 'badge-success' : trip.status === 'DECLINED' ? 'badge-danger' : 'badge-warning'}`}>{trip.status}</span>
+                      <span className={`badge ${statusBadge(trip.status)}`}>{statusLabel(trip.status)}</span>
                     </div>
 
                     <div className="grid gap-3 text-sm text-gray-600">
@@ -163,7 +182,7 @@ export default function MyTripsPage() {
                         <span>{trip.adultsCount + trip.childrenCount} travelers ({trip.adultsCount} adults, {trip.childrenCount} children)</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="h-4 w-4 rounded-full bg-[#ff7a18]/20 flex items-center justify-center text-xs text-[#b34a00] font-bold">$</span>
+                        <span className="h-4 w-4 rounded-full bg-[var(--brand-soft)] flex items-center justify-center text-xs text-[var(--brand-ink)] font-bold">$</span>
                         <span>Estimated total: ${Math.round(trip.estimatedTotalUsd || 0).toLocaleString()}</span>
                       </div>
                     </div>
@@ -182,6 +201,42 @@ export default function MyTripsPage() {
                       </div>
                     )}
 
+                    {trip.operator?.contact ? (
+                      <div className="mt-4 rounded-xl border border-[var(--brand)]/25 bg-[var(--brand-soft)] p-3">
+                        <span className="text-xs font-bold uppercase tracking-wider text-[var(--brand-ink)]">Your agency contact</span>
+                        <div className="mt-2 space-y-1.5 text-sm text-[var(--ink-body)]">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-3.5 w-3.5 text-[var(--brand)]" />
+                            <span className="font-semibold">{trip.operator.companyName}</span>
+                            {trip.operator.isVerified && <span className="badge badge-brand">Verified</span>}
+                          </div>
+                          {trip.operator.contact.email && (
+                            <a href={`mailto:${trip.operator.contact.email}`} className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors">
+                              <Mail className="h-3.5 w-3.5" />
+                              {trip.operator.contact.email}
+                            </a>
+                          )}
+                          {trip.operator.contact.phone && (
+                            <a href={`tel:${trip.operator.contact.phone}`} className="flex items-center gap-2 hover:text-[var(--brand-ink)] transition-colors">
+                              <Phone className="h-3.5 w-3.5" />
+                              {trip.operator.contact.phone}
+                            </a>
+                          )}
+                          {trip.operator.contact.address && (
+                            <div className="flex items-center gap-2">
+                              <Globe className="h-3.5 w-3.5" />
+                              {trip.operator.contact.address}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="mt-4 rounded-xl border border-dashed border-[var(--border)] p-3 text-xs text-[var(--ink-muted)]">
+                        Agency contact details are shared here as soon as your booking is confirmed.
+                      </p>
+                    )}
+
+                    {trip.traveler && (
                     <div className="mt-4 pt-4 border-t border-dashed border-gray-200">
                       <span className="text-xs font-semibold text-gray-500">Traveler</span>
                       <div className="mt-2 space-y-1.5">
@@ -192,13 +247,13 @@ export default function MyTripsPage() {
                           <span className="font-medium">{trip.traveler?.firstName} {trip.traveler?.lastName}</span>
                         </div>
                         {trip.traveler?.email && (
-                          <a href={`mailto:${trip.traveler.email}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#ff7a18] transition-colors">
+                          <a href={`mailto:${trip.traveler.email}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-[var(--brand-ink)] transition-colors">
                             <Mail className="h-3.5 w-3.5" />
                             {trip.traveler.email}
                           </a>
                         )}
                         {trip.traveler?.phone && (
-                          <a href={`tel:${trip.traveler.phone}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#ff7a18] transition-colors">
+                          <a href={`tel:${trip.traveler.phone}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-[var(--brand-ink)] transition-colors">
                             <Phone className="h-3.5 w-3.5" />
                             {trip.traveler.phone}
                           </a>
@@ -211,6 +266,7 @@ export default function MyTripsPage() {
                         )}
                       </div>
                     </div>
+                    )}
                   </div>
 
                   {trip.status === 'PENDING' && (
@@ -253,7 +309,7 @@ export default function MyTripsPage() {
                         value={msgBody}
                         onChange={(e) => setMsgBody(e.target.value)}
                         placeholder="Write a message…"
-                        className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-[#ff7a18]"
+                        className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-[var(--brand)]"
                         disabled={sending}
                       />
                       <button

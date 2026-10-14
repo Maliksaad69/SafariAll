@@ -139,7 +139,7 @@ export default async function ReviewsPage() {
                     {review.operator?.companyName && (
                       <Link
                         href={`/operators/${review.operator.slug}`}
-                        className="mt-3 inline-block text-[12px] font-bold text-[#0070c0] hover:underline"
+                        className="mt-3 inline-block text-[12px] font-bold text-[var(--brand-ink)] hover:underline"
                       >
                         Reviewed operator: {review.operator.companyName}
                       </Link>

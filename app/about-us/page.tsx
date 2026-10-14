@@ -30,12 +30,12 @@ export default function AboutUsPage() {
         <div className="mb-8 bg-[#efe7db] border border-[#e4dbc9] rounded-[18px] px-6 py-6 shadow-sm">
           <div className="text-[12px] text-[#6b5130] uppercase tracking-[0.12em] font-semibold mb-3">
             You are here:{' '}
-            <Link href="/" className="text-[#0070c0] hover:underline">Home</Link>
+            <Link href="/" className="text-[var(--brand-ink)] hover:underline">Home</Link>
             {' > '}
             <span className="text-[#2d1a12]">About Us</span>
           </div>
           <h1 className="text-[38px] md:text-[52px] leading-none text-[#1d1a18] tracking-[-0.05em]" style={{ fontFamily: 'Georgia, serif' }}>
-            About SafariAsili
+            About SafariRequest
           </h1>
         </div>
 
@@ -46,13 +46,13 @@ export default function AboutUsPage() {
           <div className="relative px-6 py-12 text-white md:px-10">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f5d27a]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#f9d98a]">
               <Compass className="h-3.5 w-3.5" />
-              About SafariAsili
+              About SafariRequest
             </div>
             <h1 className="max-w-[700px] text-3xl font-bold tracking-[-0.04em] text-white md:text-5xl" style={{ fontFamily: 'Georgia, serif' }}>
               A smarter way to compare African safari holidays
             </h1>
             <p className="mt-4 max-w-[720px] text-sm leading-relaxed text-white">
-              SafariAsili brings together the best safari operators, destinations, and itinerary options in one clear marketplace, making it easier to compare, discover, and book authentic African adventures.
+              SafariRequest brings together the best safari operators, destinations, and itinerary options in one clear marketplace, making it easier to compare, discover, and book authentic African adventures.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/tours" className="rounded-md bg-[#f4c45b] px-5 py-2.5 text-sm font-bold text-[#2d1a12] transition hover:brightness-105">
@@ -78,7 +78,7 @@ export default function AboutUsPage() {
         </section>
 
         <section className="mt-10 rounded-[16px] border border-[#d8d1c8] bg-white p-7 shadow-sm">
-          <h2 className="text-[2rem] font-bold tracking-[-0.04em] text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>Why travelers use SafariAsili</h2>
+          <h2 className="text-[2rem] font-bold tracking-[-0.04em] text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>Why travelers use SafariRequest</h2>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <div>
               <p className="text-sm leading-relaxed text-[#5a4e46]">
@@ -87,7 +87,7 @@ export default function AboutUsPage() {
             </div>
             <div>
               <p className="text-sm leading-relaxed text-[#5a4e46]">
-                Whether you want a classic Tanzania safari, a Botswana delta adventure, or a gorilla trek in Uganda, SafariAsili helps you filter by price, style, duration, and destination before requesting a quote.
+                Whether you want a classic Tanzania safari, a Botswana delta adventure, or a gorilla trek in Uganda, SafariRequest helps you filter by price, style, duration, and destination before requesting a quote.
               </p>
             </div>
           </div>

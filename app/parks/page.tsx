@@ -100,7 +100,7 @@ export default async function ParksPage() {
   const countries = fallbackCountries;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4f4f4] text-[#333] font-sans">
+    <div className="section-sand min-h-screen flex flex-col text-[var(--ink-body)] font-sans">
       <Navbar />
 
       <main className="flex-1 w-full mx-auto pb-10">
@@ -157,14 +157,14 @@ export default async function ParksPage() {
 
                 {/* Middle: Country Info (approx 50%) */}
                 <div className="flex-1 p-5 border-r border-[#ececec]">
-                  <h3 className="text-[22px] font-bold text-[#0070c0]" style={{ fontFamily: 'Georgia, serif' }}>
+                  <h3 className="text-[22px] font-bold text-[var(--brand-ink)]" style={{ fontFamily: 'Georgia, serif' }}>
                     <Link href={`/parks/${country.slug}`} className="hover:underline">{country.name}</Link>
                   </h3>
                   
                   <div className="flex items-center gap-1.5 mt-1 mb-3 text-[13px] flex-wrap">
                     <div className="flex text-[#ffc107] text-[12px]">★★★★★</div>
                     <span className="font-bold text-[#333]">{country.rating.toFixed(1)}</span>
-                    <span className="text-[#8a8a8a]">/5 - <Link href="/reviews" className="text-[#0070c0] hover:underline">{country.reviews} Reviews</Link></span>
+                    <span className="text-[#8a8a8a]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">{country.reviews} Reviews</Link></span>
                   </div>
 
                   <p className="text-[13px] text-[#444] mb-4 leading-relaxed">
@@ -196,10 +196,10 @@ export default async function ParksPage() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 text-[13px]">
-                    <Link href={`/parks/${country.slug}`} className="border border-[#0070c0] text-[#0070c0] font-bold px-4 py-1.5 rounded-sm hover:bg-[#f0f8ff] transition">
+                    <Link href={`/parks/${country.slug}`} className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition">
                       More About {country.name} &gt;
                     </Link>
-                    <Link href={`/tours?country=${country.name}`} className="border border-[#0070c0] text-[#0070c0] font-bold px-4 py-1.5 rounded-sm hover:bg-[#f0f8ff] transition">
+                    <Link href={`/tours?country=${country.name}`} className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition">
                       {country.toursCount.toLocaleString()} {country.name} Tours &gt;
                     </Link>
                   </div>
@@ -212,11 +212,11 @@ export default async function ParksPage() {
                     {country.parks.map((park) => (
                       <li key={park.slug} className="flex gap-1.5">
                         <span className="text-[#8a8a8a]"><span className="text-[#aaa]">&gt;</span>gt;</span>
-                        <Link href={`/parks/${park.slug}`} className="text-[#0070c0] hover:underline">{park.name}</Link>
+                        <Link href={`/parks/${park.slug}`} className="text-[var(--brand-ink)] hover:underline">{park.name}</Link>
                       </li>
                     ))}
                   </ul>
-                  <Link href={`/tours?country=${country.name}`} className="inline-block border border-[#0070c0] text-[#0070c0] font-bold px-4 py-1.5 rounded-sm hover:bg-[#f0f8ff] transition text-[13px]">
+                  <Link href={`/tours?country=${country.name}`} className="inline-block border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition text-[13px]">
                     All {country.totalParks} Parks & Reserves &gt;
                   </Link>
                 </div>

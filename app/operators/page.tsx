@@ -43,7 +43,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
           <div className="max-w-[1230px] mx-auto px-4">
             <nav className="text-[12px] text-[#6b5130] uppercase tracking-[0.12em] font-semibold mb-3 flex flex-wrap items-center gap-1.5" aria-label="Breadcrumb">
               <span>You are here:</span>
-              <Link href="/" className="text-[#0070c0] hover:underline normal-case">Home</Link>
+              <Link href="/" className="text-[var(--brand-ink)] hover:underline normal-case">Home</Link>
               <ChevronRight className="w-3 h-3" />
               <span className="text-[#2d1a12] normal-case">Tour Operators</span>
             </nav>
@@ -95,7 +95,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                 {operators.length === 0 ? (
                   <div className="rounded border border-dashed border-[#c9c9c9] bg-white p-8 text-center text-[#555]">
                     <p className="font-bold text-[#333] mb-1">No operators match your filters.</p>
-                    <p className="text-[13px]">Try removing a filter or <Link href="/operators" className="text-[#0070c0] hover:underline">view all operators</Link>.</p>
+                    <p className="text-[13px]">Try removing a filter or <Link href="/operators" className="text-[var(--brand-ink)] hover:underline">view all operators</Link>.</p>
                   </div>
                 ) : (
                   operators.map((op) => (
@@ -111,7 +111,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
 
                       <div className="flex justify-between items-start gap-3">
                         <div className="min-w-0">
-                          <Link href={`/operators/${op.slug}`} className="text-[18px] font-bold text-[#0070c0] hover:underline">
+                          <Link href={`/operators/${op.slug}`} className="text-[18px] font-bold text-[var(--brand-ink)] hover:underline">
                             {op.companyName}
                           </Link>
 
@@ -140,7 +140,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                           <span className="w-[100px] text-[#8a8a8a] shrink-0">Offices In:</span>
                           <span className="flex-1 flex gap-2 flex-wrap">
                             {op.officesIn.map((c: string) => (
-                              <Link key={c} href={`/operators?office=${encodeURIComponent(c)}`} className="inline-flex items-center gap-1 text-[#0070c0] hover:underline"><Building2 className="h-3 w-3" /> {c}</Link>
+                              <Link key={c} href={`/operators?office=${encodeURIComponent(c)}`} className="inline-flex items-center gap-1 text-[var(--brand-ink)] hover:underline"><Building2 className="h-3 w-3" /> {c}</Link>
                             ))}
                           </span>
                         </div>
@@ -156,7 +156,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                           <span className="w-[100px] text-[#8a8a8a] shrink-0">Destinations:</span>
                           <span className="flex-1 flex gap-2 flex-wrap">
                             {op.destinations.map((d: string) => (
-                              <Link key={d} href={`/tours?country=${encodeURIComponent(d)}`} className="inline-flex items-center gap-1 text-[#0070c0] hover:underline"><MapPin className="h-3 w-3" /> {d}</Link>
+                              <Link key={d} href={`/tours?country=${encodeURIComponent(d)}`} className="inline-flex items-center gap-1 text-[var(--brand-ink)] hover:underline"><MapPin className="h-3 w-3" /> {d}</Link>
                             ))}
                           </span>
                         </div>
@@ -166,7 +166,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                         <ul className="space-y-1 mb-3">
                           {op.topTours.map((t: any, i: number) => (
                             <li key={i}>
-                              <Link href={`/tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="text-[#0070c0] hover:underline mr-1">{t.name}</Link>
+                              <Link href={`/tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="text-[var(--brand-ink)] hover:underline mr-1">{t.name}</Link>
                               <span className="text-[#8a8a8a]">(from {t.price})</span>
                             </li>
                           ))}
@@ -175,7 +175,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                           <Link href={`/operators/${op.slug}`} className="bg-[#f4c45b] text-[#2d1a12] font-bold px-3 py-1.5 rounded-sm flex items-center gap-1 hover:brightness-105 transition">
                             View Operator <ChevronRight className="w-3 h-3" />
                           </Link>
-                          <Link href={`/tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="border border-[#0070c0] text-[#0070c0] font-bold px-3 py-1.5 rounded-sm hover:bg-[#f0f8ff] transition flex items-center gap-1">
+                          <Link href={`/tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-3 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition flex items-center gap-1">
                             All {op.toursCount} Tours <ChevronRight className="w-3 h-3" />
                           </Link>
                           <span className="text-[#8a8a8a]">- Offered by {op.companyName}</span>
