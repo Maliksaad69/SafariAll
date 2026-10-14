@@ -100,125 +100,124 @@ export default async function ParksPage() {
   const countries = fallbackCountries;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--surface-page)] text-[var(--ink-body)] font-sans antialiased">
+    <div className="section-sand min-h-screen flex flex-col text-[var(--ink-body)] font-sans">
       <Navbar />
 
-      <main className="flex-1 w-full mx-auto pb-12">
+      <main className="flex-1 w-full mx-auto pb-10">
         {/* Top Breadcrumbs */}
-        <div className="bg-white/80 border-b border-[var(--border-soft)] py-2.5">
-          <div className="max-w-[1230px] mx-auto px-4 text-[12px] text-[var(--ink-secondary)] flex items-center gap-1.5 font-medium">
-            <span>You are here:</span>
-            <Link href="/" className="text-[var(--brand)] hover:underline font-bold">Home</Link>
-            <span>&gt;</span>
-            <span className="text-[var(--ink)] font-bold">Countries &amp; Parks Directory</span>
+        <div className="bg-[#1f1a17] text-white py-2 border-b border-[#333]">
+          <div className="max-w-[1230px] mx-auto px-4 text-[12px] text-[#ccc]">
+            You are here:{' '}
+            <Link href="/" className="hover:underline">Home</Link>
+            {' > '}
+            <span className="text-white">Countries & Parks</span>
           </div>
         </div>
 
         {/* Hero Banner */}
         <div 
-          className="relative bg-slate-950 py-16"
+          className="relative bg-[#222] py-16"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')",
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
         >
-          <div className="absolute inset-0 bg-slate-950/65"></div>
+          <div className="absolute inset-0 bg-black/70"></div>
           <div className="relative max-w-[1230px] mx-auto px-4">
-            <span className="badge badge-brand mb-2">Safari Encyclopedia</span>
-            <h1 className="text-[34px] md:text-[46px] font-extrabold text-white mb-2 font-display">
-              African Countries &amp; National Parks Guide
+            <h1 className="text-[36px] font-bold text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+              Countries & Parks
             </h1>
-            <p className="text-[16px] font-medium text-slate-200 drop-shadow-sm max-w-2xl">
-              In-depth travel guides for top wildlife destinations across East &amp; Southern Africa.
+            <p className="text-[16px] font-medium text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)] max-w-2xl">
+              Learn more about the major safari countries, including their highlights, wildlife, best time to visit and more.
             </p>
           </div>
         </div>
 
-        <div className="max-w-[1230px] mx-auto px-4 py-10">
-          <h2 className="text-[26px] font-extrabold text-[var(--ink)] mb-6 font-display">
-            Top-rated Safari Destinations
+        <div className="max-w-[1230px] mx-auto px-4 py-8">
+          <h2 className="text-[22px] font-bold text-[#333] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+            Top-rated Safari Countries
           </h2>
 
           <div className="space-y-6">
             {countries.map(country => (
-              <div key={country.id} className="surface-card surface-card-hover bg-white rounded-2xl border border-[var(--border)] flex flex-col md:flex-row overflow-hidden">
+              <div key={country.id} className="bg-white border border-[#d5d5d5] rounded-sm flex flex-col md:flex-row shadow-sm overflow-hidden">
                 
                 {/* Left: Image (approx 25%) */}
-                <div className="w-full md:w-[270px] relative flex-shrink-0 min-h-[220px]">
+                <div className="w-full md:w-[250px] relative flex-shrink-0 min-h-[200px]">
                   <img src={country.image} alt={country.name} className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-slate-950/25"></div>
+                  <div className="absolute inset-0 bg-black/20"></div>
                   <div className="absolute bottom-3 left-3 text-white text-[12px] font-bold drop-shadow">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-950/60 px-3 py-1 backdrop-blur-md">
-                      <span className="w-4 h-4 rounded-full border border-white flex items-center justify-center bg-emerald-600 text-white"><Play className="h-2 w-2 fill-current" /></span>
+                    <span className="inline-flex items-center gap-2 rounded-full bg-black/45 px-2.5 py-1 backdrop-blur-sm">
+                      <span className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center bg-black/60 text-white"><Play className="h-2.5 w-2.5 fill-current" /></span>
                       {country.name}
                     </span>
                   </div>
                 </div>
 
                 {/* Middle: Country Info (approx 50%) */}
-                <div className="flex-1 p-6 border-r border-[var(--border-soft)]">
-                  <h3 className="text-[24px] font-extrabold text-[var(--ink)] font-display hover:text-[var(--brand)] transition-colors">
+                <div className="flex-1 p-5 border-r border-[#ececec]">
+                  <h3 className="text-[22px] font-bold text-[var(--brand-ink)]" style={{ fontFamily: 'Georgia, serif' }}>
                     <Link href={`/parks/${country.slug}`} className="hover:underline">{country.name}</Link>
                   </h3>
                   
                   <div className="flex items-center gap-1.5 mt-1 mb-3 text-[13px] flex-wrap">
-                    <div className="flex text-[var(--dark-gold)] text-[12px]">★★★★★</div>
-                    <span className="font-bold text-[var(--ink)]">{country.rating.toFixed(1)}</span>
-                    <span className="text-[var(--ink-muted)]">/5 - <Link href="/reviews" className="link">{country.reviews} Reviews</Link></span>
+                    <div className="flex text-[#ffc107] text-[12px]">★★★★★</div>
+                    <span className="font-bold text-[#333]">{country.rating.toFixed(1)}</span>
+                    <span className="text-[#8a8a8a]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">{country.reviews} Reviews</Link></span>
                   </div>
 
-                  <p className="text-[13px] text-[var(--ink-secondary)] mb-4 leading-relaxed">
+                  <p className="text-[13px] text-[#444] mb-4 leading-relaxed">
                     {country.description}
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[12px] mb-5">
                     <div className="flex gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[var(--gold-soft)] text-[var(--gold-ink)] flex items-center justify-center font-bold shrink-0 text-[10px]">$$</div>
+                      <div className="w-6 h-6 rounded-full bg-[#f4f4f4] text-[#6b5130] flex items-center justify-center font-bold shrink-0">$$</div>
                       <div>
-                        <div className="font-bold text-[var(--ink)]">Rates <span className="font-normal">(USD)</span></div>
-                        <div className="text-[var(--ink-secondary)]">{country.rates}</div>
+                        <div className="font-bold text-[#333]">Rates <span className="font-normal">(USD)</span></div>
+                        <div className="text-[#555]">{country.rates}</div>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[var(--gold-soft)] text-[var(--gold-ink)] flex items-center justify-center font-bold shrink-0"><Sun className="h-3.5 w-3.5" /></div>
+                      <div className="w-6 h-6 rounded-full bg-[#f4f4f4] text-[#6b5130] flex items-center justify-center font-bold shrink-0"><Sun className="h-3.5 w-3.5" /></div>
                       <div>
-                        <div className="font-bold text-[var(--ink)]">Best Time</div>
-                        <div className="text-[var(--ink-secondary)]">{country.bestTime}</div>
+                        <div className="font-bold text-[#333]">Best Time</div>
+                        <div className="text-[#555]">{country.bestTime}</div>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[var(--gold-soft)] text-[var(--gold-ink)] flex items-center justify-center font-bold shrink-0"><TrendingUp className="h-3.5 w-3.5" /></div>
+                      <div className="w-6 h-6 rounded-full bg-[#f4f4f4] text-[#6b5130] flex items-center justify-center font-bold shrink-0"><TrendingUp className="h-3.5 w-3.5" /></div>
                       <div>
-                        <div className="font-bold text-[var(--ink)]">High Season</div>
-                        <div className="text-[var(--ink-secondary)]">{country.highSeason}</div>
+                        <div className="font-bold text-[#333]">High Season</div>
+                        <div className="text-[#555]">{country.highSeason}</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 text-[13px]">
-                    <Link href={`/parks/${country.slug}`} className="btn btn-secondary btn-sm">
-                      More About {country.name}
+                    <Link href={`/parks/${country.slug}`} className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition">
+                      More About {country.name} &gt;
                     </Link>
-                    <Link href={`/tours?country=${country.name}`} className="btn btn-emerald btn-sm">
-                      {country.toursCount.toLocaleString()} {country.name} Tours
+                    <Link href={`/tours?country=${country.name}`} className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition">
+                      {country.toursCount.toLocaleString()} {country.name} Tours &gt;
                     </Link>
                   </div>
                 </div>
 
                 {/* Right: Parks List (approx 25%) */}
-                <div className="w-full md:w-[300px] p-5 flex-shrink-0 bg-[var(--surface-raised)]">
-                  <h4 className="text-[14px] font-bold text-[var(--ink)] mb-3">{country.name} Parks &amp; Reserves</h4>
+                <div className="w-full md:w-[300px] p-5 flex-shrink-0 bg-[#fbfbfb]">
+                  <h4 className="text-[14px] font-bold text-[#333] mb-3">{country.name} Parks & Reserves</h4>
                   <ul className="space-y-2 mb-4 text-[13px]">
                     {country.parks.map((park) => (
-                      <li key={park.slug} className="flex gap-1.5 items-center">
-                        <span className="text-[var(--gold)] font-bold text-[10px]">›</span>
-                        <Link href={`/parks/${park.slug}`} className="link">{park.name}</Link>
+                      <li key={park.slug} className="flex gap-1.5">
+                        <span className="text-[#8a8a8a]"><span className="text-[#aaa]">&gt;</span>gt;</span>
+                        <Link href={`/parks/${park.slug}`} className="text-[var(--brand-ink)] hover:underline">{park.name}</Link>
                       </li>
                     ))}
                   </ul>
-                  <Link href={`/tours?country=${country.name}`} className="btn btn-secondary btn-sm">
-                    All {country.totalParks} Parks &amp; Reserves
+                  <Link href={`/tours?country=${country.name}`} className="inline-block border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-4 py-1.5 rounded-sm hover:bg-[var(--brand-soft)] transition text-[13px]">
+                    All {country.totalParks} Parks & Reserves &gt;
                   </Link>
                 </div>
                 

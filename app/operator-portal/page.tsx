@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import AgencyReservationsTable from '@/components/AgencyReservationsTable';
-import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp } from 'lucide-react';
+import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, ImageIcon } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +28,7 @@ export default async function OperatorPortalPage() {
       include: {
         tours: {
           orderBy: { createdAt: 'desc' },
-          include: { _count: { select: { reservations: true } } },
+          include: { _count: { select: { reservations: true, media: true } } },
         },
       },
     });
@@ -37,7 +37,7 @@ export default async function OperatorPortalPage() {
       include: {
         tours: {
           orderBy: { createdAt: 'desc' },
-          include: { _count: { select: { reservations: true } } },
+          include: { _count: { select: { reservations: true, media: true } } },
         },
       },
     });
@@ -73,6 +73,17 @@ export default async function OperatorPortalPage() {
         },
       })
     : [];
+
+  // New booking alerts: unread traveler messages on active reservations
+  const travelerIds = new Set(reservations.map((r) => r.travelerId));
+  const reservationIds = reservations.map((r) => r.id);
+  const unreadMessages = reservationIds.length
+    ? await prisma.reservationMessage.findMany({
+        where: { reservationId: { in: reservationIds }, isRead: false, senderId: { in: Array.from(travelerIds) } },
+        select: { id: true },
+      })
+    : [];
+  const unreadBookingAlerts = unreadMessages.length;
 
   const pendingCount = reservations.filter((r) => r.status === 'PENDING').length;
   const approvedRes = reservations.filter((r) => r.status === 'APPROVED');
@@ -122,13 +133,30 @@ export default async function OperatorPortalPage() {
               {operatorName}
             </h1>
             <p className="mt-2 text-sm text-[var(--dark-text-soft)] max-w-xl">
-              Review reservation requests, manage your safari packages, and respond to traveler quote inquiries.
+              Review reservation requests, manage your safari packages, publish marketing stories, and respond to travelers.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className={`badge ${operator?.isVerified ? 'badge-success' : 'badge-warning'}`}>
               {operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}
             </span>
+            <Link href="/operator-portal/messages" className="btn btn-secondary relative">
+              <Mail className="h-4 w-4" />
+              Inbox
+              {unreadBookingAlerts > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
+                  {unreadBookingAlerts}
+                </span>
+              )}
+            </Link>
+            <Link href="/operator-portal/slots" className="btn btn-secondary">
+              <CalendarDays className="h-4 w-4" />
+              Departures
+            </Link>
+            <Link href="/operator-portal/blog/new" className="btn btn-secondary">
+              <Building2 className="h-4 w-4" />
+              Write Story
+            </Link>
             <Link href="/operator-portal/tours/new" className="btn btn-primary">
               <PlusCircle className="h-4 w-4" />
               Create Tour Package
@@ -173,6 +201,7 @@ export default async function OperatorPortalPage() {
                     <th className="px-4">Price from</th>
                     <th className="px-4">Reservations</th>
                     <th className="px-4">Status</th>
+                    <th className="px-4">Photos</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,6 +218,15 @@ export default async function OperatorPortalPage() {
                         <span className={`badge ${tour.isPublished ? 'badge-success' : 'badge-neutral'}`}>
                           {tour.isPublished ? 'Live' : 'Draft'}
                         </span>
+                      </td>
+                      <td className="px-4 whitespace-nowrap">
+                        <Link
+                          href={`/operator-portal/tours/${tour.id}/images`}
+                          className="link inline-flex items-center gap-1.5 text-xs font-bold"
+                        >
+                          <ImageIcon className="h-3.5 w-3.5" />
+                          {tour._count.media > 0 ? `Manage (${tour._count.media})` : 'Upload'}
+                        </Link>
                       </td>
                     </tr>
                   ))}

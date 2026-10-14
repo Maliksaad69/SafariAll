@@ -1,131 +1,75 @@
 import Link from 'next/link';
-import { Compass, ShieldCheck, Award, Lock, ArrowUpRight, CheckCircle2, Globe, Building2 } from 'lucide-react';
+import { ShieldCheck, Award, Lock, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   const columns = [
     {
-      heading: 'Top Destinations',
+      heading: 'Destinations',
       links: [
         { label: 'Tanzania Safaris', href: '/tours?country=Tanzania' },
         { label: 'Kenya Safaris', href: '/tours?country=Kenya' },
-        { label: 'South Africa Safaris', href: '/tours?country=South+Africa' },
-        { label: 'Uganda Gorillas', href: '/tours?country=Uganda' },
-        { label: 'Botswana Wilderness', href: '/tours?country=Botswana' },
-        { label: 'Rwanda Primate Safaris', href: '/tours?country=Rwanda' },
-        { label: 'All National Parks', href: '/parks' },
+        { label: 'South Africa', href: '/tours?country=South+Africa' },
+        { label: 'Uganda — Gorillas', href: '/tours?country=Uganda' },
+        { label: 'Botswana', href: '/tours?country=Botswana' },
+        { label: 'All Destinations', href: '/parks' },
       ],
     },
     {
-      heading: 'Safari Experiences',
+      heading: 'Safari Types',
       links: [
         { label: 'Luxury Tented Camps', href: '/tours?comfort=LUXURY' },
-        { label: 'Mid-Range Lodges', href: '/tours?comfort=MID_RANGE' },
-        { label: 'Budget Camping Safaris', href: '/tours?comfort=BUDGET' },
+        { label: 'Mid-Range Lodge', href: '/tours?comfort=MID_RANGE' },
+        { label: 'Budget Camping', href: '/tours?comfort=BUDGET' },
         { label: 'Fly-in Safaris', href: '/tours?comfort=FLY_IN' },
-        { label: 'Private Guided Tours', href: '/tours?tourType=PRIVATE' },
-        { label: 'All Safari Packages', href: '/tours' },
+        { label: 'Private Tailor-Made', href: '/tours?tourType=PRIVATE' },
+        { label: 'All Packages', href: '/tours' },
       ],
     },
     {
-      heading: 'Company & Support',
+      heading: 'Company',
       links: [
-        { label: 'About SafariBuilt', href: '/about-us' },
-        { label: 'Verified Operator Directory', href: '/operators' },
+        { label: 'About Us', href: '/about-us' },
         { label: 'Best Price Guarantee', href: '/best-price-guarantee' },
         { label: 'Traveler Reviews', href: '/reviews' },
+        { label: 'Contact Us', href: '/contact-us' },
+        { label: 'Search', href: '/search' },
         { label: 'How It Works', href: '/how-it-works' },
-        { label: 'Help & FAQ', href: '/faq' },
-        { label: 'Contact Support', href: '/contact-us' },
+        { label: 'FAQ', href: '/faq' },
       ],
     },
   ];
 
   return (
-    <footer className="bg-[#171512] text-stone-300 font-sans border-t border-stone-800">
-      {/* ── Top Prominent Callout Banner for Tour Agencies ── */}
-      <div className="border-b border-stone-800 bg-gradient-to-r from-stone-900 via-[#1C1813] to-stone-900 py-10">
-        <div className="max-w-[1230px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-stone-900 border border-amber-500/30 rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <footer className="mt-6 border-t border-[var(--glass-border)] bg-white/60 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl px-4 pt-16 pb-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 border-b border-[var(--border-soft)] pb-12 md:grid-cols-12">
+          <div className="space-y-5 md:col-span-4">
+            <img
+              src="/images/safaribuilt-logo.png"
+              alt="SafariRequest — One Marketplace for African Safari Tours"
+              className="h-[44px] w-auto"
+              style={{ mixBlendMode: 'multiply' }}
+            />
 
-            <div className="space-y-2 max-w-2xl text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-extrabold uppercase tracking-wider">
-                <Building2 className="w-3.5 h-3.5" /> For Safari Agencies &amp; Local Tour Operators
-              </div>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-white font-display tracking-tight">
-                Grow Your Safari Agency with Direct Traveler Requests
-              </h3>
-              <p className="text-sm text-stone-300 leading-relaxed">
-                Join Africa&apos;s verified safari marketplace. Receive direct traveler inquiries with zero middleman commissions, custom quote requests, and instant operator profile visibility.
-              </p>
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-1 text-xs font-semibold text-amber-200/90">
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-amber-400" /> 100% Free Agency Listing</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Direct Traveler Contact</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Verified Trust Badge</span>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto flex-shrink-0">
-              <Link
-                href="/register?role=OPERATOR"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-extrabold bg-[var(--gold)] text-stone-950 shadow-lg shadow-amber-500/20 transition-all hover:bg-amber-400 hover:scale-105"
-              >
-                <Award className="w-4 h-4" />
-                Register Your Agency
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/operator-portal"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl text-sm font-bold bg-stone-800 text-white border border-stone-700 hover:bg-stone-700 transition-colors"
-              >
-                Operator Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main Links Section ── */}
-      <div className="max-w-[1230px] mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-stone-800/80">
-          {/* Brand Identity Column */}
-          <div className="md:col-span-4 space-y-4">
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <img
-                src="/images/safaribuilt-logo.png"
-                alt="SafariBuilt Logo"
-                className="h-[42px] w-auto object-contain bg-white rounded-xl px-2.5 py-1.5 shadow-sm"
-              />
-              <div className="flex flex-col">
-                <span className="text-[22px] font-extrabold tracking-tight text-white font-display">
-                  Safari<span className="text-amber-400">Built</span>
-                </span>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-400">
-                  Safari Directory &amp; Marketplace
-                </span>
-              </div>
-            </Link>
-
-            <p className="text-xs text-stone-300 leading-relaxed max-w-sm">
-              Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators across Tanzania, Kenya, South Africa, Uganda, and Botswana. Transparent pricing, verified reviews, zero commission.
+            <p className="text-sm leading-relaxed text-[var(--ink-secondary)]">
+              Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators across Tanzania, Kenya, South Africa, Uganda, and beyond. Zero commission. Pure experience.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-stone-900 border border-stone-800 text-emerald-400">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/25 bg-[var(--brand-soft)] px-3 py-2 text-xs font-semibold text-[var(--brand-ink)]">
+              <ShieldCheck className="h-4 w-4" />
               100% Verified Local Operator Network
             </div>
           </div>
 
-          {/* Nav Columns */}
           {columns.map((col) => (
-            <div key={col.heading} className="md:col-span-2 sm:col-span-4">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest mb-4 text-amber-400 font-display">{col.heading}</h4>
+            <div key={col.heading} className="md:col-span-2">
+              <h4 className="mb-5 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">{col.heading}</h4>
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-xs text-stone-300 transition-colors hover:text-white hover:underline">
+                    <Link href={link.href} className="text-sm text-[var(--ink-secondary)] transition-colors hover:text-[var(--brand-ink)]">
                       {link.label}
                     </Link>
                   </li>
@@ -133,16 +77,33 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+
+          <div className="md:col-span-4">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">For Tour Operators</h4>
+            <p className="mb-5 text-sm leading-relaxed text-[var(--ink-secondary)]">
+              Are you a licensed African safari company? Join our verified operator network and receive direct traveler quote requests — free of charge.
+            </p>
+            <Link
+              href="/register?role=OPERATOR"
+              className="btn btn-primary"
+            >
+              <Award className="h-4 w-4" />
+              Register Your Agency
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+            <p className="mt-4 flex items-center gap-1.5 text-xs text-[var(--ink-muted)]">
+              <Lock className="h-3.5 w-3.5" />
+              Anti-scam verification · Direct booking · No hidden fees
+            </p>
+          </div>
         </div>
 
-        {/* ── Bottom Utility Bar ── */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400">
-          <p>© {year} SafariBuilt Marketplace. All rights reserved.</p>
-          <div className="flex items-center gap-6 font-semibold">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="/how-it-works" className="hover:text-white transition-colors">How It Works</Link>
-            <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-[var(--ink-muted)] sm:flex-row">
+          <p>© {year} SafariRequest. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy-policy" className="transition-colors hover:text-[var(--ink)]">Privacy Policy</Link>
+            <Link href="/faq" className="transition-colors hover:text-[var(--ink)]">FAQ</Link>
+            <Link href="/how-it-works" className="transition-colors hover:text-[var(--ink)]">How It Works</Link>
           </div>
         </div>
       </div>

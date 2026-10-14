@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
 
           <div className="mt-7 space-y-5 text-sm leading-relaxed text-[#5a4e46]">
             <p>
-              SafariAsili respects your privacy and handles personal information only for legitimate booking, service, and communication purposes. We use your data to help match you with suitable safari operators, answer inquiries, and improve the quality of the travel planning experience.
+              SafariRequest respects your privacy and handles personal information only for legitimate booking, service, and communication purposes. We use your data to help match you with suitable safari operators, answer inquiries, and improve the quality of the travel planning experience.
             </p>
             <p>
               We may use cookies to remember preferences, improve the site experience, and understand how visitors interact with our content. You can manage your consent settings at any time through the cookies popup or browser settings.

@@ -16,7 +16,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="flex items-center gap-0.5" aria-label={`Rated ${rating} out of 5`}>
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`h-4 w-4 ${i < rating ? 'fill-[var(--dark-gold)] text-[var(--dark-gold)]' : 'fill-[var(--border-strong)] text-[var(--border-strong)]'}`} />
+        <Star key={i} className={`h-4 w-4 ${i < rating ? 'fill-[#d4a435] text-[#d4a435]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
       ))}
     </span>
   );
@@ -56,51 +56,51 @@ export default async function ReviewsPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[var(--surface-page)] text-[var(--ink-body)]">
+    <div className="min-h-screen bg-[#f6f3ee] text-[#2d1a12]">
       <Navbar />
 
       <main className="mx-auto max-w-[1230px] px-4 py-10 sm:px-6">
-        <section className="rounded-[18px] border border-[var(--border-strong)] bg-[var(--surface-card)] p-7 shadow-sm md:p-10">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--gold-soft)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--gold-ink)]">
+        <section className="rounded-[18px] border border-[#d8d1c8] bg-white p-7 shadow-sm md:p-10">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#f4e7c5] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#b58927]">
             <Star className="h-3.5 w-3.5 fill-current" />
             Traveler reviews
           </div>
-          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-[var(--ink)] font-display">
+          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>
             What people say about their safari trips
           </h1>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
             {/* Summary panel */}
             <aside>
-              <div className="rounded-[14px] border border-[var(--border)] bg-[var(--surface-raised)] p-5 text-center">
-                <div className="text-[44px] font-bold leading-none text-[var(--ink)] font-display">
+              <div className="rounded-[14px] border border-[#e8e0d8] bg-[#faf7f2] p-5 text-center">
+                <div className="text-[44px] font-bold leading-none text-[#1d1a18]" style={{ fontFamily: 'Georgia, serif' }}>
                   {average.toFixed(1)}
                 </div>
                 <div className="mt-2 flex justify-center">
                   <Stars rating={Math.round(average)} />
                 </div>
-                <div className="mt-1 text-[12px] text-[var(--ink-secondary)]">
+                <div className="mt-1 text-[12px] text-[#6a574a]">
                   {reviews.length} verified {reviews.length === 1 ? 'review' : 'reviews'}
                 </div>
 
                 <div className="mt-5 space-y-1.5">
                   {distribution.map(({ star, count }) => (
                     <div key={star} className="flex items-center gap-2 text-[11px]">
-                      <span className="w-8 text-right font-bold text-[var(--ink-secondary)]">{star}★</span>
-                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--border)]">
+                      <span className="w-8 text-right font-bold text-[#4a4136]">{star}★</span>
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#e8e0d8]">
                         <div
-                          className="h-full rounded-full bg-[var(--gold)]"
+                          className="h-full rounded-full bg-[#d4a435]"
                           style={{ width: reviews.length ? `${(count / reviews.length) * 100}%` : '0%' }}
                         />
                       </div>
-                      <span className="w-5 text-left text-[var(--ink-muted)]">{count}</span>
+                      <span className="w-5 text-left text-[#6a574a]">{count}</span>
                     </div>
                   ))}
                 </div>
 
                 <Link
                   href="/login"
-                  className="mt-6 btn btn-primary w-full text-xs"
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#C85A17] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#a6470e]"
                 >
                   <PenLine className="h-4 w-4" />
                   Write a Review
@@ -111,35 +111,35 @@ export default async function ReviewsPage() {
             {/* Review cards */}
             <div>
               {usingFallback && (
-                <p className="mb-4 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 text-[12px] text-[var(--ink-secondary)]">
+                <p className="mb-4 rounded-xl border border-[#e8e0d8] bg-[#faf7f2] px-4 py-3 text-[12px] text-[#6a574a]">
                   Showing sample reviews. Recent verified traveler reviews will appear here as they are approved.
                 </p>
               )}
               <div className="grid gap-5 md:grid-cols-2">
                 {reviews.map((review) => (
-                  <article key={review.id} className="rounded-[14px] border border-[var(--border)] bg-[var(--surface-raised)] p-5">
+                  <article key={review.id} className="rounded-[14px] border border-[#e8e0d8] bg-[#faf7f2] p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="font-bold text-[var(--ink)] truncate">
+                        <div className="font-bold text-[#1d1a18] truncate">
                           {review.name ?? [review.traveler?.firstName, review.traveler?.lastName].filter(Boolean).join(' ') ?? 'Traveler'}
                         </div>
-                        <div className="text-[12px] text-[var(--ink-secondary)]">
+                        <div className="text-[12px] text-[#6a574a]">
                           {review.origin ?? review.traveler?.country ?? 'Africa traveler'}
                         </div>
                       </div>
                       <Stars rating={Math.round(review.rating ?? review.overallRating ?? 0)} />
                     </div>
-                    <div className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--brand)]">
+                    <div className="mt-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#2e6a64]">
                       <CheckCircle2 className="h-4 w-4 shrink-0" />
                       <span className="truncate">{review.title ?? review.reviewTitle}</span>
                     </div>
-                    <p className="mt-3 text-sm leading-relaxed text-[var(--ink-secondary)]">
+                    <p className="mt-3 text-sm leading-relaxed text-[#5a4e46]">
                       {review.text ?? review.reviewBody}
                     </p>
                     {review.operator?.companyName && (
                       <Link
                         href={`/operators/${review.operator.slug}`}
-                        className="mt-3 inline-block text-[12px] font-bold link"
+                        className="mt-3 inline-block text-[12px] font-bold text-[var(--brand-ink)] hover:underline"
                       >
                         Reviewed operator: {review.operator.companyName}
                       </Link>

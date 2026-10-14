@@ -71,3 +71,4 @@ Thumbs.db
 # Portable PostgreSQL data & logs
 tools/pgdata/
 tools/pg*.log
+tools/*.out

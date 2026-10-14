@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       user: sessionPayload,
-    });
+    }, { status: 201 });
   } catch (error: any) {
     console.error('Registration Error:', error);
     return NextResponse.json(

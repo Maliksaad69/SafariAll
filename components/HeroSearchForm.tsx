@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapPin, Calendar, Sun, Search, ChevronRight } from 'lucide-react';
+import { MapPin, Calendar, Users, ChevronRight, Minus, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function HeroSearchForm() {
   const router = useRouter();
   const [destination, setDestination] = useState('');
-  const [comfort, setComfort] = useState('');
-  const [travelDate, setTravelDate] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [travelers, setTravelers] = useState(2);
   const [tourCount, setTourCount] = useState<number | null>(null);
 
+  // Fetch the real number of published tours so the CTA is never a fake number
   useEffect(() => {
     let cancelled = false;
     fetch('/api/tours-count')
@@ -27,119 +28,105 @@ export default function HeroSearchForm() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (destination.trim()) params.set('country', destination.trim());
-    if (comfort) params.set('comfort', comfort);
-    if (travelDate) {
-      const date = new Date(`${travelDate}T00:00:00`);
+    if (destination.trim()) params.set('search', destination.trim());
+    if (startDate) {
+      const date = new Date(`${startDate}T00:00:00`);
       if (!Number.isNaN(date.getTime())) {
-        params.set('startDate', travelDate);
+        params.set('startDate', startDate);
         const month = date.toLocaleString('en-US', { month: 'long' });
         params.set('month', month);
       }
     }
+    if (travelers !== 2) params.set('travelers', String(travelers));
     const qs = params.toString();
     router.push(qs ? `/tours?${qs}` : '/tours');
   };
 
-  const destinationOptions = [
-    { label: 'Tanzania (1,313 safaris)', val: 'Tanzania' },
-    { label: 'Uganda (288 safaris)', val: 'Uganda' },
-    { label: 'Kenya (282 safaris)', val: 'Kenya' },
-    { label: 'Botswana (152 safaris)', val: 'Botswana' },
-    { label: 'Rwanda (84 safaris)', val: 'Rwanda' },
-    { label: 'South Africa (14 safaris)', val: 'South Africa' },
-    { label: 'Zimbabwe (44 safaris)', val: 'Zimbabwe' },
-    { label: 'Zambia (44 safaris)', val: 'Zambia' },
-  ];
+  const countries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe'];
 
   return (
-    <div className="absolute bottom-6 left-1/2 z-20 w-[min(94vw,1040px)] -translate-x-1/2 md:bottom-10">
-      <div className="rounded-2xl border border-amber-900/20 bg-white/95 backdrop-blur-md p-3 md:p-4 shadow-[0_24px_48px_rgba(28,25,23,0.28)]">
-        <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-          {/* 1. Destination Select */}
-          <div className="md:col-span-4 relative flex items-center rounded-xl bg-[var(--surface-raised)] border border-[var(--border)] px-3.5 py-2.5 transition-colors focus-within:bg-white focus-within:border-[var(--gold)]">
-            <div className="mr-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--gold-soft)] text-[var(--gold-ink)] font-bold">
-              <MapPin className="h-4 w-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label htmlFor="home-destination-select" className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--ink-muted)]">
-                Select Destination
-              </label>
-              <select
-                id="home-destination-select"
-                aria-label="Select destination"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                className="w-full bg-transparent text-[13.5px] font-bold text-[var(--ink)] outline-none cursor-pointer"
+    <div className="animate-fade-up absolute bottom-8 left-1/2 z-20 w-[min(94vw,1000px)] -translate-x-1/2 md:bottom-12">
+      <form
+        onSubmit={handleSearch}
+        className="glass flex flex-col gap-1.5 rounded-[22px] p-2 md:flex-row md:items-stretch"
+      >
+        {/* Destination */}
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors focus-within:bg-white/80 hover:bg-white/70">
+          <MapPin className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
+          <div className="flex-1 min-w-0">
+            <input
+              type="text"
+              list="hero-destinations"
+              placeholder="Where To..."
+              aria-label="Destination"
+              className="w-full bg-transparent text-[15px] font-bold text-[var(--ink)] outline-none placeholder:font-medium placeholder:text-[var(--ink-muted)]"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+            />
+            <datalist id="hero-destinations">
+              {countries.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+          </div>
+        </div>
+
+        {/* Start date — real date input */}
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors focus-within:bg-white/80 hover:bg-white/70">
+          <Calendar className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
+          <div className="flex-1 min-w-0">
+            <label htmlFor="hero-start-date" className="block text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+              Start Date
+            </label>
+            <input
+              id="hero-start-date"
+              type="date"
+              aria-label="Start date"
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full bg-transparent text-[15px] font-bold text-[var(--ink)] outline-none"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Travelers — interactive stepper */}
+        <div className="relative flex flex-1 items-center rounded-2xl bg-white/55 px-4 py-2.5 transition-colors hover:bg-white/70">
+          <Users className="mr-3 h-5 w-5 shrink-0 text-[var(--brand)]" />
+          <div className="flex-1 min-w-0">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">Travelers</div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Remove a traveler"
+                onClick={() => setTravelers((t) => Math.max(1, t - 1))}
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--ink-secondary)] transition hover:border-[var(--brand)] hover:text-[var(--brand-ink)]"
               >
-                <option value="">Any Destination (All Africa)</option>
-                {destinationOptions.map((opt) => (
-                  <option key={opt.val} value={opt.val}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* 2. Comfort Level */}
-          <div className="md:col-span-3 relative flex items-center rounded-xl bg-[var(--surface-raised)] border border-[var(--border)] px-3.5 py-2.5 transition-colors focus-within:bg-white focus-within:border-[var(--gold)]">
-            <div className="mr-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--gold-soft)] text-[var(--gold-ink)] font-bold">
-              <Sun className="h-4 w-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label htmlFor="home-comfort-select" className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--ink-muted)]">
-                Select Comfort
-              </label>
-              <select
-                id="home-comfort-select"
-                aria-label="Select comfort level"
-                value={comfort}
-                onChange={(e) => setComfort(e.target.value)}
-                className="w-full bg-transparent text-[13.5px] font-bold text-[var(--ink)] outline-none cursor-pointer"
+                <Minus className="h-3 w-3" />
+              </button>
+              <span className="min-w-[64px] text-center text-[15px] font-bold text-[var(--ink)]">
+                {travelers} {travelers === 1 ? 'Adult' : 'Adults'}
+              </span>
+              <button
+                type="button"
+                aria-label="Add a traveler"
+                onClick={() => setTravelers((t) => Math.min(15, t + 1))}
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--ink-secondary)] transition hover:border-[var(--brand)] hover:text-[var(--brand-ink)]"
               >
-                <option value="">Select Comfort</option>
-                <option value="BUDGET">Budget Tour</option>
-                <option value="MID_RANGE">Mid-Range Tour</option>
-                <option value="LUXURY">Luxury Tour</option>
-                <option value="LUXURY_PLUS">Ultra Luxury Tour</option>
-              </select>
+                <Plus className="h-3 w-3" />
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* 3. Travel Date */}
-          <div className="md:col-span-3 relative flex items-center rounded-xl bg-[var(--surface-raised)] border border-[var(--border)] px-3.5 py-2.5 transition-colors focus-within:bg-white focus-within:border-[var(--gold)]">
-            <div className="mr-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--gold-soft)] text-[var(--gold-ink)] font-bold">
-              <Calendar className="h-4 w-4" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <label htmlFor="home-travel-date" className="block text-[10px] font-extrabold uppercase tracking-wider text-[var(--ink-muted)]">
-                Travel Date
-              </label>
-              <input
-                id="home-travel-date"
-                type="date"
-                aria-label="Travel Date"
-                min={new Date().toISOString().split('T')[0]}
-                value={travelDate}
-                onChange={(e) => setTravelDate(e.target.value)}
-                className="w-full bg-transparent text-[13.5px] font-bold text-[var(--ink)] outline-none"
-              />
-            </div>
-          </div>
-
-          {/* 4. SEARCH Button */}
-          <div className="md:col-span-2">
-            <button
-              type="submit"
-              className="flex h-[52px] w-full items-center justify-center rounded-xl bg-[var(--gold)] px-4 text-[15px] font-extrabold tracking-wide text-white shadow-lg shadow-amber-900/20 transition-all hover:bg-[var(--gold-hover)] hover:shadow-xl cursor-pointer"
-            >
-              SEARCH
-              <ChevronRight className="ml-1 h-4 w-4 shrink-0" strokeWidth={3} />
-            </button>
-          </div>
-        </form>
-      </div>
+        <button
+          type="submit"
+          className="btn btn-primary h-14 w-full rounded-2xl px-5 text-[16px] md:w-[240px]"
+        >
+          Show {tourCount !== null ? tourCount.toLocaleString() : ''} Tours{' '}
+          <ChevronRight className="ml-1 h-5 w-5 shrink-0" />
+        </button>
+      </form>
     </div>
   );
 }

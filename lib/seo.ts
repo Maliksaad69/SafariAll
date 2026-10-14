@@ -2,7 +2,7 @@ export function buildOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'TravelAgency',
-    name: 'SafariAsili',
+    name: 'SafariRequest',
     description: 'African safari marketplace connecting travelers with verified local operators.',
     url: 'https://safariasili.com',
     logo: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
@@ -24,7 +24,7 @@ export function buildTourSchema(tour: any) {
     url: `https://safariasili.com/tours/${tour?.slug || ''}`,
     provider: {
       '@type': 'Organization',
-      name: tour?.operator?.companyName || 'SafariAsili',
+      name: tour?.operator?.companyName || 'SafariRequest',
     },
     itinerary: {
       '@type': 'ItemList',

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ShieldCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 interface TourCardProps {
   tour: {
@@ -51,8 +51,9 @@ export default function TourCard({ tour }: TourCardProps) {
   const bgImage = getTourImage(tour.primaryCountry, tour.slug);
   const destNames = tour.destinations.map((d) => d.destination.name).join(', ');
   const maxPrice = tour.minPriceUsd + Math.floor(tour.minPriceUsd * 0.15);
-  const typeStr = tour.tourType === 'PRIVATE' ? 'Private Tour' : 'Shared Group';
-  const comfortStr = tour.comfortLevel === 'MID_RANGE' ? 'Mid-Range' : tour.comfortLevel === 'BUDGET' ? 'Budget' : 'Luxury';
+  const typeStr = tour.tourType === 'PRIVATE' ? 'Private tour' : 'Shared tour (max 7 people)';
+  const comfortStr = tour.comfortLevel === 'MID_RANGE' ? 'Mid-range' : tour.comfortLevel === 'BUDGET' ? 'Budget' : 'Luxury';
+  const accomStr = tour.inclusions[0] || 'Lodge & Tented Camp';
   const [isFavorite, setIsFavorite] = useState(false);
   const [loadingFavorite, setLoadingFavorite] = useState(false);
 
@@ -96,44 +97,29 @@ export default function TourCard({ tour }: TourCardProps) {
   };
 
   return (
-    <article className="surface-card surface-card-hover bg-white rounded-2xl border border-[var(--border)] overflow-hidden flex flex-col font-sans transition-all duration-300 group hover:shadow-xl hover:border-amber-400/40">
-      <Link href={`/tours/${tour.slug}`} className="block relative">
+    <article className="surface-card surface-card-hover group/card flex flex-col overflow-hidden font-sans">
+      <Link href={`/tours/${tour.slug}`} className="block group">
         {/* ── Photo Header ── */}
-        <div className="relative h-[220px] overflow-hidden bg-stone-900">
+        <div className="relative h-[205px] overflow-hidden bg-[var(--dark)]">
           <div
-            className="absolute inset-0 bg-cover bg-center img-zoom-hover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="absolute inset-0 bg-cover bg-center opacity-95 transition-transform duration-700 group-hover:scale-105"
             style={{ backgroundImage: `url('${bgImage}')` }}
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
 
-          {/* Top badges */}
-          <div className="absolute top-3.5 left-3.5 flex flex-wrap gap-2 z-10">
-            <span className="badge bg-stone-900/80 backdrop-blur-md text-amber-300 font-bold px-3 py-1.5 text-xs rounded-xl border border-stone-700/50 shadow-xs flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-amber-400" />
-              {tour.durationDays} Days / {tour.durationNights} Nights
-            </span>
-            {tour.operator.isVerified && (
-              <span className="badge bg-emerald-950/80 backdrop-blur-md text-emerald-300 border border-emerald-800/40 font-bold px-2.5 py-1 text-xs rounded-xl shadow-xs flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Verified
-              </span>
-            )}
-          </div>
-
-          {/* Favorite button */}
           <button
             type="button"
             aria-label={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
             onClick={toggleFavorite}
             disabled={loadingFavorite}
-            className="absolute top-3.5 right-3.5 bg-white/90 backdrop-blur-md rounded-full p-2.5 shadow-md transition-all hover:scale-110 hover:bg-white disabled:opacity-60 z-10 cursor-pointer"
+            className="absolute top-3 right-3 rounded-full border border-white/60 bg-white/75 p-1.5 backdrop-blur-md transition hover:scale-105 hover:bg-white disabled:opacity-60"
           >
-            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-rose-500 text-rose-500' : 'text-stone-600'}`} />
+            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-[var(--brand)] text-[var(--brand)]' : 'text-[var(--ink-secondary)]'}`} />
           </button>
 
-          {/* Title on card image gradient */}
-          <div className="absolute bottom-3.5 left-4 right-4 z-10">
-            <h3 className="text-white font-extrabold text-[19px] leading-snug drop-shadow-md font-display group-hover:text-amber-200 transition-colors line-clamp-2">
+          <div className="absolute bottom-4 left-4 right-4">
+            <h3 className="text-white font-semibold text-[20px] leading-tight drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
               {tour.title}
             </h3>
           </div>
@@ -141,67 +127,49 @@ export default function TourCard({ tour }: TourCardProps) {
       </Link>
 
       {/* ── Card Body ── */}
-      <div className="flex flex-col flex-1 p-5">
-        {/* Price & Comfort level */}
-        <div className="mb-3.5 flex items-end justify-between border-b border-[var(--border-soft)] pb-3">
-          <div>
-            <span className="text-xs text-[var(--ink-muted)] block font-semibold uppercase tracking-wider mb-0.5">From</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-[var(--gold)] font-extrabold text-[24px] tracking-tight font-display">
-                ${tour.minPriceUsd.toLocaleString()}
-              </span>
-              <span className="text-[var(--ink-secondary)] font-medium text-[13px]">
-                - ${maxPrice.toLocaleString()}
-              </span>
-              <span className="text-[var(--ink-muted)] text-[11px] uppercase font-bold">
-                pp
-              </span>
-            </div>
-          </div>
-          <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
-            {comfortStr}
+      <div className="flex flex-col flex-1 p-4">
+        {/* Price */}
+        <div className="mb-2 flex items-baseline gap-1.5">
+          <span className="text-[var(--success)] font-extrabold text-[21px] tracking-tight">
+            ${tour.minPriceUsd.toLocaleString()}
+          </span>
+          <span className="text-[var(--ink-secondary)] font-bold text-[14px]">
+            to ${maxPrice.toLocaleString()}
+          </span>
+          <span className="text-[var(--ink-muted)] text-[12px] ml-0.5">
+            pp (USD)
           </span>
         </div>
 
-        {/* Attribute Pills */}
-        <div className="flex flex-wrap items-center gap-2 mb-3.5">
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-soft)] px-2.5 py-1 text-[12px] font-semibold text-[var(--ink-body)]">
-            <MapPin className="w-3.5 h-3.5 text-[var(--gold)]" />
-            {tour.primaryCountry}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-lg bg-[var(--surface-raised)] border border-[var(--border-soft)] px-2.5 py-1 text-[12px] font-semibold text-[var(--ink-body)]">
-            {typeStr}
-          </span>
-        </div>
-
-        {/* Destinations visited */}
-        <p className="text-[12.5px] text-[var(--ink-secondary)] line-clamp-2 mb-4 leading-relaxed flex-1">
-          <strong className="text-[var(--ink)] font-bold">Visits:</strong> {destNames}
+        {/* Features */}
+        <p className="text-[13px] text-[var(--ink-body)] mb-2 leading-snug">
+          <span className="font-bold text-[var(--ink)]">{tour.primaryCountry}:</span> {typeStr} • {comfortStr} • {accomStr}
         </p>
 
-        {/* Operator Info Row & View Tour Link */}
-        <div className="border-t border-[var(--border-soft)] pt-3.5 mt-auto flex items-center justify-between gap-3">
-          <Link href={`/operators/${tour.operator.slug}`} className="flex items-center gap-2.5 group/op min-w-0">
-            <div className="w-8 h-8 rounded-xl bg-[var(--gold-soft)] border border-amber-300/40 flex items-center justify-center flex-shrink-0 text-[var(--gold-ink)] font-bold text-xs shadow-2xs">
-              {tour.operator.companyName.charAt(0)}
+        {/* Destinations */}
+        <p className="text-[12px] text-[var(--ink-muted)] line-clamp-2 mb-4 leading-snug flex-1">
+          <strong className="text-[var(--ink-body)]">You Visit:</strong> {destNames}
+        </p>
+
+        {/* Divider */}
+        <div className="mt-auto border-t border-[var(--border-soft)] -mx-4 px-4 pt-3">
+          {/* Operator row — clickable link to operator profile */}
+          <Link href={`/operators/${tour.operator.slug}`} className="group/op -mx-1 flex items-center gap-3 rounded-xl px-1 py-1 transition-colors hover:bg-white/60">
+            <div className="flex h-8 w-11 flex-shrink-0 items-center justify-center rounded-lg border border-[var(--glass-border)] bg-white/70">
+              <span className="text-[var(--ink-muted)] text-[11px] font-extrabold">{tour.operator.companyName.charAt(0)}</span>
             </div>
             <div className="min-w-0">
-              <div className="text-[12.5px] font-bold text-[var(--ink)] group-hover/op:text-[var(--gold)] truncate transition-colors">
+              <div className="truncate text-[13px] font-bold text-[var(--ink)] transition-colors group-hover/op:text-[var(--brand-ink)] group-hover/op:underline">
                 {tour.operator.companyName}
               </div>
               <div className="flex items-center gap-1 mt-0.5">
-                <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                <span className="text-[11px] font-bold text-[var(--ink)]">{tour.operator.averageRating}</span>
-                <span className="text-[11px] text-[var(--ink-secondary)]">({tour.operator.totalReviews})</span>
+                <div className="flex text-[var(--gold)]">
+                  {'★★★★★'.split('').map((star, i) => <span key={i} className="text-[11px]">{star}</span>)}
+                </div>
+                <span className="text-[11px] font-bold text-[var(--ink)] ml-0.5">{tour.operator.averageRating}</span>
+                <span className="text-[11px] text-[var(--ink-muted)]">/5 - {tour.operator.totalReviews} Reviews</span>
               </div>
             </div>
-          </Link>
-
-          <Link
-            href={`/tours/${tour.slug}`}
-            className="inline-flex items-center gap-1 text-[12.5px] font-extrabold text-[var(--gold)] hover:text-amber-700 transition-colors flex-shrink-0 group/link"
-          >
-            Details <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
