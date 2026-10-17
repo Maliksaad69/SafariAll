@@ -123,10 +123,10 @@ export default function ReservationDetailPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <div className="bg-white rounded-2xl border border-[var(--border)] p-6">
+            <div className="surface-card p-6">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                  <h1 className="text-lg font-bold text-[var(--ink)]">{reservation.tour.title}</h1>
+                  <h1 className="text-xl font-bold text-[var(--ink)] font-display">{reservation.tour.title}</h1>
                   <p className="text-sm text-[var(--ink-secondary)] mt-1">{reservation.operatorName}</p>
                 </div>
                 {reservation.status === 'PENDING' && (
@@ -235,7 +235,7 @@ export default function ReservationDetailPage() {
               </div>
             </div>
 
-            <div className="rounded-xl bg-[var(--brand-soft)] border border-[var(--brand)] p-4 text-sm text-[var(--brand-soft)]">
+            <div className="rounded-xl bg-[var(--brand-soft)] border border-[var(--brand)] p-4 text-sm text-[var(--brand-ink)]">
               <span className="font-bold block mb-1">Next steps</span>
               {reservation.status === 'PENDING' ? (
                 <span className="leading-relaxed">Approve or decline to notify the traveler. You can message them after the decision.</span>

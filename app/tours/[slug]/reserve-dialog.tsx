@@ -108,7 +108,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Props)
             {success ? (
               <div className="text-center space-y-4 py-4">
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--success-soft)] text-[var(--success)]"><CheckCircle2 className="h-7 w-7"/></div>
-                <h3 className="text-xl font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>Request sent</h3>
+                <h3 className="text-xl font-bold text-[var(--ink)] font-display">Request sent</h3>
                 <p className="text-sm text-[var(--ink-secondary)]">The agency has received your reservation request and will confirm availability by email shortly.</p>
                 <div className="flex justify-center gap-3 pt-2">
                   <button type="button" onClick={close} className="btn btn-secondary btn-sm">Close</button>
@@ -119,7 +119,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Props)
               <>
                 <div className="mb-5 flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>Request Reservation</h3>
+                    <h3 className="text-lg font-bold text-[var(--ink)] font-display">Request Reservation</h3>
                     <p className="mt-0.5 line-clamp-1 text-xs text-[var(--ink-secondary)]">{tourTitle}</p>
                   </div>
                   <button type="button" onClick={close} aria-label="Close dialog" className="rounded-lg p-1.5 text-[var(--ink-secondary)] hover:bg-[var(--surface-sunk)] hover:text-[var(--ink)]"><X className="h-5 w-5"/></button>

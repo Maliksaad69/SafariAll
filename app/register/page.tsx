@@ -78,7 +78,7 @@ function RegisterFormContent() {
           <Compass className="h-3.5 w-3.5" />
           Join SafariRequest
         </div>
-        <h1 className="text-3xl font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+        <h1 className="text-3xl font-bold text-[var(--ink)] font-display">
           Create Your Account
         </h1>
         <p className="text-sm text-[var(--ink-secondary)]">

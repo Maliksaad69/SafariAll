@@ -73,76 +73,93 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
   const isCountry = park.type === 'COUNTRY' || !park.type;
   
   return (
-    <div className="min-h-screen flex flex-col bg-[#e9e9e9] text-[#333] font-sans">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
       {/* Top Breadcrumb Bar */}
-      <div className="bg-[#f4f4f4] border-b border-[#d5d5d5] py-2 text-[11px] text-[#666]">
-        <div className="max-w-[1230px] mx-auto px-4 flex items-center gap-1">
-          You are here: <Link href="/" className="text-[var(--brand-ink)] hover:underline">Home</Link>
-          <ChevronRight className="w-3 h-3" />
-          <Link href="/parks" className="text-[var(--brand-ink)] hover:underline">Countries & Parks</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-[#333]">{park.name} Travel Guide</span>
+      <div className="border-b border-black/5 py-2.5 text-xs text-[var(--ink-muted)] bg-[var(--canvas)]/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5 flex-wrap">
+          <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
+          <ChevronRight className="w-3 h-3 text-[var(--ink-muted)] opacity-60" />
+          <Link href="/parks" className="hover:text-[var(--brand)] transition-colors">Countries &amp; Parks</Link>
+          <ChevronRight className="w-3 h-3 text-[var(--ink-muted)] opacity-60" />
+          <span className="text-[var(--ink)] font-medium">{park.name} Travel Guide</span>
         </div>
       </div>
 
-      <main className="flex-1 w-full mx-auto pb-10">
+      <main className="flex-1 w-full mx-auto pb-16">
         
         {/* Hero Section */}
-        <div className="bg-[#222] relative border-b border-[#d5d5d5]">
+        <div className="relative bg-[var(--brand-deep)] text-white overflow-hidden border-b border-black/5">
           <div 
-            className="absolute inset-0 bg-cover bg-center opacity-60" 
+            className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" 
             style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')` }} 
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
           
-          <div className="relative max-w-[1230px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12 flex flex-col md:flex-row gap-8 items-start">
             {/* Left Nav Menu */}
-            <div className="w-[240px] shrink-0">
-              <div className="bg-white/95 rounded-sm overflow-hidden shadow-md">
-                <div className="bg-[#333] text-white p-3 font-bold flex items-center gap-2">
-                  <span>{park.name}</span>
+            <div className="w-full md:w-[250px] shrink-0">
+              <div className="surface-card rounded-2xl overflow-hidden border border-white/10 shadow-lg backdrop-blur-md">
+                <div className="bg-[var(--brand-deep)] text-white p-3.5 font-bold flex items-center justify-between border-b border-white/10">
+                  <span className="font-display tracking-tight text-sm">{park.name} Guide</span>
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-white/10">Index</span>
                 </div>
-                <ul className="text-[12px]">
+                <ul className="text-xs divide-y divide-black/5">
                   {sections.map((s: any, i: number) => (
-                    <li key={s.key} className="border-b border-[#eee] last:border-0">
-                      <a href={`#guide-${s.key}`} className={`block px-4 py-2 hover:bg-[#f9f9f9] ${i === 0 ? 'font-bold text-[var(--danger)] border-l-4 border-[var(--danger)] bg-[#f9f9f9]' : 'text-[#555]'}`}>
-                        <ChevronRight className="w-3 h-3 inline mr-1 text-[#8a8a8a]" /> {s.title}
+                    <li key={s.key}>
+                      <a 
+                        href={`#guide-${s.key}`} 
+                        className={`block px-4 py-2.5 transition-colors flex items-center gap-2 ${
+                          i === 0 
+                            ? 'font-bold text-[var(--brand-deep)] bg-[var(--brand-soft)] border-l-3 border-[var(--brand)]' 
+                            : 'text-[var(--ink-muted)] hover:text-[var(--brand-deep)] hover:bg-[var(--sand)]'
+                        }`}
+                      >
+                        <ChevronRight className="w-3 h-3 shrink-0 text-[var(--brand)]" />
+                        <span className="truncate">{s.title}</span>
                       </a>
                     </li>
                   ))}
                 </ul>
-                <div className="p-3 bg-[#f4f4f4] border-t border-[#eee]">
-                  <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="block w-full bg-[#8b6914] hover:bg-[#725510] text-white text-[13px] font-bold py-2 rounded-sm shadow-sm text-center">
-                    Safari Tours<br/>to {park.name}
+                <div className="p-3 bg-[var(--sand)] border-t border-black/5">
+                  <Link 
+                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} 
+                    className="btn btn-primary w-full text-center py-2.5 rounded-xl text-xs font-semibold shadow-sm flex items-center justify-center gap-1.5"
+                  >
+                    <span>Safari Tours to {park.name}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
             </div>
 
             {/* Right Hero Content */}
-            <div className="flex-1 pt-4 text-white">
-              <h1 className="text-[42px] font-bold mb-4" style={{ fontFamily: 'Georgia, serif', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                {park.name} <span className="text-[28px] font-normal text-white">— Overview</span>
+            <div className="flex-1 text-white">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-medium backdrop-blur-md mb-4 text-[var(--brand-light)]">
+                <MapPin className="w-3.5 h-3.5 text-[var(--brand-light)]" />
+                <span>Destination Guide</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-white mb-4">
+                {park.name} <span className="font-normal text-white/70 text-2xl sm:text-3xl block sm:inline">— Overview</span>
               </h1>
-              <p className="text-[14px] leading-relaxed text-white max-w-3xl" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+              <p className="text-sm sm:text-base leading-relaxed text-white/85 max-w-3xl font-light">
                 {park.description}
               </p>
               
               {/* Media Thumbnails */}
-              <div className="mt-8 flex gap-2 h-[80px]">
-                <div className="w-[140px] relative rounded-sm overflow-hidden border border-white/20">
-                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=400&q=80" className="w-full h-full object-cover" />
+              <div className="mt-8 flex flex-wrap gap-2.5">
+                <div className="w-28 h-16 relative rounded-xl overflow-hidden border border-white/20 shadow-sm shrink-0">
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=400&q=80" alt={park.name} className="w-full h-full object-cover" />
                 </div>
-                <Link href="/contact-us" className="w-[140px] bg-black/60 hover:bg-black/75 border border-white/25 rounded-sm flex items-center justify-center text-[12px] font-bold text-white transition">
-                  <Layout className="w-4 h-4 mr-1" /> Watch Video
+                <Link href="/contact-us" className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold text-white backdrop-blur-md transition-all shadow-sm">
+                  <Layout className="w-4 h-4 text-[var(--brand-light)]" /> Watch Video
                 </Link>
-                <Link href="/contact-us" className="w-[140px] bg-black/60 hover:bg-black/75 border border-white/25 rounded-sm flex items-center justify-center text-[12px] font-bold text-white transition">
-                  <Camera className="w-4 h-4 mr-1" /> View Photos (50)
+                <Link href="/contact-us" className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold text-white backdrop-blur-md transition-all shadow-sm">
+                  <Camera className="w-4 h-4 text-[var(--brand-light)]" /> Photos (50+)
                 </Link>
-                <Link href="/contact-us" className="w-[140px] bg-black/60 hover:bg-black/75 border border-white/25 rounded-sm flex items-center justify-center text-[12px] font-bold text-white transition">
-                  <Map className="w-4 h-4 mr-1" /> Open Map
+                <Link href="/contact-us" className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-semibold text-white backdrop-blur-md transition-all shadow-sm">
+                  <Map className="w-4 h-4 text-[var(--brand-light)]" /> Interactive Map
                 </Link>
               </div>
             </div>
@@ -150,158 +167,207 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
         </div>
 
         {/* Stats Bar */}
-        <div className="bg-white border-b border-[#d5d5d5] py-3 text-[12px]">
-          <div className="max-w-[1230px] mx-auto px-4 flex flex-wrap lg:pl-[288px] gap-6">
-            <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#f4f4f4] text-[#888] flex items-center justify-center font-bold">$$</div>
-              <div><strong className="text-[#333] block">Rates <span className="font-normal text-[#6b6b6b]">(USD)</span></strong><span className="text-[#666]">$229 to $659 pp/day</span></div>
+        <div className="surface-card border-y border-black/5 py-4 text-xs">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap lg:pl-[280px] gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[var(--brand-deep)] flex items-center justify-center font-bold text-xs shrink-0">$$</div>
+              <div>
+                <strong className="text-[var(--ink)] block font-semibold">Rates <span className="font-normal text-[var(--ink-muted)]">(USD)</span></strong>
+                <span className="text-[var(--ink-muted)]">$229 to $659 pp/day</span>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#f4f4f4] text-[#888] flex items-center justify-center font-bold"><Sun className="w-4 h-4"/></div>
-              <div><strong className="text-[#333] block">Best Time To Go</strong><span className="text-[#666]">June to October; Jan to Feb</span></div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] flex items-center justify-center font-bold shrink-0"><Sun className="w-4 h-4"/></div>
+              <div>
+                <strong className="text-[var(--ink)] block font-semibold">Best Time To Go</strong>
+                <span className="text-[var(--ink-muted)]">June to October; Jan to Feb</span>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#f4f4f4] text-[#6b5130] flex items-center justify-center font-bold shrink-0"><TrendingUp className="h-3.5 w-3.5" /></div>
-              <div><strong className="text-[#333] block">High Season</strong><span className="text-[#666]">July to March (North)</span></div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] flex items-center justify-center font-bold shrink-0"><TrendingUp className="h-4 w-4" /></div>
+              <div>
+                <strong className="text-[var(--ink)] block font-semibold">High Season</strong>
+                <span className="text-[var(--ink-muted)]">July to March (North)</span>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#f4f4f4] text-[#888] flex items-center justify-center font-bold"><MapPin className="w-4 h-4"/></div>
-              <div><strong className="text-[#333] block">Size <span className="text-[var(--brand-ink)] hover:underline cursor-pointer">ⓘ</span></strong><span className="text-[#666]">947,303km²</span></div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] flex items-center justify-center font-bold shrink-0"><MapPin className="w-4 h-4"/></div>
+              <div>
+                <strong className="text-[var(--ink)] block font-semibold">Size</strong>
+                <span className="text-[var(--ink-muted)]">947,303 km²</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main Content Layout */}
-        <div className="max-w-[1230px] mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row gap-8 items-start">
           
           {/* Left Column (Main) */}
-          <div className="flex-1 lg:pl-[256px]">
-            <section className="bg-white border border-[#d5d5d5] rounded-sm p-8 shadow-sm">
+          <div className="flex-1 w-full lg:pl-[250px]">
+            <section className="surface-card rounded-3xl p-6 sm:p-10 border border-black/5 shadow-sm space-y-10">
               {sections.map((s: any, idx: number) => (
-                <div key={s.key} id={`guide-${s.key}`} className={`${idx > 0 ? 'mt-10 pt-2' : ''} scroll-mt-16`}>
-                  <h2 className="text-[20px] font-bold text-[#333] mb-3 pb-2 border-b border-[#eee]" style={{ fontFamily: 'Georgia, serif' }}>{s.title}</h2>
-                  {s.body && <p className="text-[13px] text-[#444] leading-relaxed mb-3 whitespace-pre-line">{s.body}</p>}
+                <div key={s.key} id={`guide-${s.key}`} className={`${idx > 0 ? 'pt-6 border-t border-black/5' : ''} scroll-mt-24`}>
+                  <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--brand-deep)] mb-3 pb-2 border-b border-black/5">
+                    {s.title}
+                  </h2>
+                  {s.body && <p className="text-sm text-[var(--ink)]/80 leading-relaxed mb-4 whitespace-pre-line">{s.body}</p>}
                   {s.bulletItems?.length > 0 && (
-                    <ul className="space-y-2 mb-3 text-[13px] text-[#444]">
+                    <ul className="space-y-2 mb-4 text-sm text-[var(--ink)]/80">
                       {s.bulletItems.map((b: string, bi: number) => (
-                        <li key={bi} className="flex gap-2"><ChevronRight className={`w-4 h-4 shrink-0 mt-0.5 ${s.key === 'reviews' ? 'text-[var(--brand-ink)]' : 'text-[#35792c]'}`} /> {b}</li>
+                        <li key={bi} className="flex gap-2.5 items-start">
+                          <ChevronRight className="w-4 h-4 shrink-0 mt-0.5 text-[var(--brand)]" />
+                          <span>{b}</span>
+                        </li>
                       ))}
                     </ul>
                   )}
                   {idx < sections.length - 1 && (
-                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`} className="text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1 mb-4">
-                      <ChevronRight className="w-3 h-3" /> Find tours related to {s.title.toLowerCase()}
+                    <Link 
+                      href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`} 
+                      className="text-xs text-[var(--brand)] hover:text-[var(--brand-deep)] font-semibold inline-flex items-center gap-1 transition-colors"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" /> Find tours related to {s.title.toLowerCase()}
                     </Link>
                   )}
                 </div>
               ))}
 
               {/* Want To Visit? */}
-              <h2 className="text-[20px] font-bold text-[#333] mb-4 pb-2 border-b border-[#eee]" style={{ fontFamily: 'Georgia, serif' }}>Want To Visit {park.name}?</h2>
-              <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="bg-[#f4b400] hover:bg-[#e0a800] text-white font-bold py-2.5 px-6 rounded-sm shadow-sm flex items-center gap-2 text-[14px] mb-4">
-                7,503 {park.name} Safaris <ChevronRight className="w-4 h-4" />
-              </Link>
-              <ul className="space-y-1 text-[13px]">
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[var(--brand-ink)] hover:underline">{park.name} Safaris & Tours</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?search=${encodeURIComponent(park.name + ' chimp trekking')}`} className="text-[var(--brand-ink)] hover:underline">{park.name} Chimp Trekking Tours</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`} className="text-[var(--brand-ink)] hover:underline">{park.name} Budget Safaris</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`} className="text-[var(--brand-ink)] hover:underline">{park.name} Glamping Safaris</Link></li>
-                <li className="flex gap-1.5"><ChevronRight className="w-3 h-3 text-[var(--brand-ink)] mt-1" /> <Link href={`/operators?country=${encodeURIComponent(countryName(park.slug))}`} className="text-[var(--brand-ink)] hover:underline">Tour Operators for {park.name}</Link></li>
-              </ul>
+              <div className="pt-8 border-t border-black/5">
+                <div className="bg-[var(--brand-soft)]/50 border border-[var(--brand-pale)] rounded-2xl p-6 sm:p-8">
+                  <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--brand-deep)] mb-2">
+                    Want To Visit {park.name}?
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-5">
+                    Explore tailor-made itineraries, group departures, and top operators servicing {park.name}.
+                  </p>
+                  
+                  <Link 
+                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} 
+                    className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm shadow-sm mb-6"
+                  >
+                    <span>Browse All {park.name} Safaris</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="flex items-center gap-1.5 text-[var(--ink)] hover:text-[var(--brand)] font-medium p-1 transition-colors">
+                      <ChevronRight className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                      <span>{park.name} Safaris &amp; Tours</span>
+                    </Link>
+                    <Link href={`/tours?search=${encodeURIComponent(park.name + ' chimp trekking')}`} className="flex items-center gap-1.5 text-[var(--ink)] hover:text-[var(--brand)] font-medium p-1 transition-colors">
+                      <ChevronRight className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                      <span>{park.name} Chimp Trekking Tours</span>
+                    </Link>
+                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`} className="flex items-center gap-1.5 text-[var(--ink)] hover:text-[var(--brand)] font-medium p-1 transition-colors">
+                      <ChevronRight className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                      <span>{park.name} Budget Safaris</span>
+                    </Link>
+                    <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`} className="flex items-center gap-1.5 text-[var(--ink)] hover:text-[var(--brand)] font-medium p-1 transition-colors">
+                      <ChevronRight className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                      <span>{park.name} Luxury Glamping</span>
+                    </Link>
+                    <Link href={`/operators?country=${encodeURIComponent(countryName(park.slug))}`} className="flex items-center gap-1.5 text-[var(--ink)] hover:text-[var(--brand)] font-medium p-1 transition-colors sm:col-span-2">
+                      <ChevronRight className="w-3.5 h-3.5 text-[var(--brand)] shrink-0" />
+                      <span>Tour Operators for {park.name}</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
 
           {/* Right Column (Sidebar) */}
-          <div className="lg:w-[320px] shrink-0 space-y-6">
+          <div className="w-full lg:w-[320px] shrink-0 space-y-6">
             
             {/* Reviews Summary */}
-            <div className="bg-[#fbfbfb] border border-[#e1e1e1] rounded-sm p-5 shadow-sm text-[12px]">
-              <h3 className="text-[16px] font-bold text-[#333] mb-4">{park.name} Safari Reviews</h3>
+            <div className="surface-card rounded-2xl p-6 border border-black/5 shadow-sm text-xs">
+              <h3 className="text-base font-bold font-display text-[var(--brand-deep)] mb-4">{park.name} Safari Reviews</h3>
               
-              <div className="mb-4">
-                <div className="flex justify-between items-end border-b border-[#eee] pb-2 mb-2">
-                  <strong className="text-[13px]">Expert Rating</strong>
-                  <div className="flex gap-1 items-center">
-                    <span className="text-[#ffc107] tracking-tight">★★★★★</span>
-                    <strong className="text-[14px]">4.8</strong>
-                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">18 Reviews</Link></span>
+              <div className="mb-5 pb-4 border-b border-black/5">
+                <div className="flex justify-between items-center mb-2.5">
+                  <span className="font-semibold text-[var(--ink)]">Expert Rating</span>
+                  <div className="flex gap-1.5 items-center">
+                    <span className="text-amber-500 font-bold">★★★★★</span>
+                    <strong className="text-sm font-bold text-[var(--ink)]">4.8</strong>
+                    <span className="text-[var(--ink-muted)]">/ 5</span>
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between"><span>Wildlife</span><span className="text-[#ffc107]">★★★★★</span></div>
-                  <div className="flex justify-between"><span>Scenery</span><span className="text-[#ffc107]">★★★★★</span></div>
-                  <div className="flex justify-between"><span>Bush Vibe</span><span className="text-[#ffc107]">★★★★<span className="text-[#b5b5b5]">★</span></span></div>
-                  <div className="flex justify-between"><span>Birding</span><span className="text-[#ffc107]">★★★★<span className="text-[#b5b5b5]">★</span></span></div>
+                <div className="space-y-1.5 text-[var(--ink-muted)]">
+                  <div className="flex justify-between"><span>Wildlife</span><span className="text-amber-500">★★★★★</span></div>
+                  <div className="flex justify-between"><span>Scenery</span><span className="text-amber-500">★★★★★</span></div>
+                  <div className="flex justify-between"><span>Bush Vibe</span><span className="text-amber-500">★★★★<span className="opacity-30">★</span></span></div>
+                  <div className="flex justify-between"><span>Birding</span><span className="text-amber-500">★★★★<span className="opacity-30">★</span></span></div>
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between items-end border-b border-[#eee] pb-2 mb-2">
-                  <strong className="text-[13px]">User Rating</strong>
-                  <div className="flex gap-1 items-center">
-                    <span className="text-[#ffc107] tracking-tight">★★★★★</span>
-                    <strong className="text-[14px]">4.8</strong>
-                    <span className="text-[#6b6b6b]">/5 - <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">2,156 Reviews</Link></span>
+                <div className="flex justify-between items-center mb-2.5">
+                  <span className="font-semibold text-[var(--ink)]">User Rating</span>
+                  <div className="flex gap-1.5 items-center">
+                    <span className="text-amber-500 font-bold">★★★★★</span>
+                    <strong className="text-sm font-bold text-[var(--ink)]">4.8</strong>
+                    <span className="text-[var(--ink-muted)]">/ 5</span>
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between"><span>Wildlife</span><span className="text-[#ffc107]">★★★★★</span></div>
-                  <div className="flex justify-between"><span>Scenery</span><span className="text-[#ffc107]">★★★★★</span></div>
-                  <div className="flex justify-between"><span>Bush Vibe</span><span className="text-[#ffc107]">★★★★★</span></div>
-                  <div className="flex justify-between"><span>Birding</span><span className="text-[#ffc107]">★★★★<span className="text-[#b5b5b5]">★</span></span></div>
+                <div className="space-y-1.5 text-[var(--ink-muted)]">
+                  <div className="flex justify-between"><span>Wildlife</span><span className="text-amber-500">★★★★★</span></div>
+                  <div className="flex justify-between"><span>Scenery</span><span className="text-amber-500">★★★★★</span></div>
+                  <div className="flex justify-between"><span>Bush Vibe</span><span className="text-amber-500">★★★★★</span></div>
+                  <div className="flex justify-between"><span>Birding</span><span className="text-amber-500">★★★★<span className="opacity-30">★</span></span></div>
                 </div>
               </div>
             </div>
 
             {/* Most Helpful Expert Review */}
-            <div>
-              <h4 className="text-[14px] font-bold text-[#333] mb-3">Most Helpful Expert Review</h4>
-              <div className="flex gap-2 items-center mb-3">
-                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" className="w-10 h-10 rounded-full border border-[#ccc]" />
+            <div className="surface-card rounded-2xl p-5 border border-black/5 shadow-sm text-xs">
+              <h4 className="text-xs uppercase tracking-wider font-bold text-[var(--ink-muted)] mb-3">Most Helpful Expert Review</h4>
+              <div className="flex gap-3 items-center mb-3">
+                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" alt="Tim Bewer" className="w-10 h-10 rounded-full object-cover border border-black/10 shrink-0" />
                 <div>
-                  <div className="text-[12px] font-bold text-[#333]">Tim Bewer - <span className="font-normal">🇺🇸 US</span></div>
-                  <p className="text-[10px] text-[#6b6b6b] italic leading-tight mt-0.5">Tim is a travel writer who has covered 10 African countries for Lonely Planet\'s Africa, East Africa and West Africa guidebooks.</p>
+                  <div className="font-bold text-[var(--ink)]">Tim Bewer <span className="font-normal text-[var(--ink-muted)]">· 🇺🇸 US</span></div>
+                  <p className="text-[11px] text-[var(--ink-muted)] leading-tight mt-0.5">Author for Lonely Planet East Africa</p>
                 </div>
               </div>
-              <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5]">
-                <div className="absolute -top-[6px] left-6 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
-                <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">"Crowded Favorites and Well-Kept Secrets"</h4>
-                <div className="text-[var(--gold)] text-[11px] mb-2">★★★★★ <span className="text-[#333] font-bold">5</span><span className="text-[#777]"> /5</span></div>
-                <p className="text-[#555] line-clamp-4 leading-relaxed mb-1">
-                  {park.name} is home to Serengeti National Park and Ngorongoro Crater; and this fact alone makes a solid case for declaring it Africa\'s best safari country. But, of course, there\'s much more that just these two places. Most visitors stick...
+              <div className="bg-[var(--brand-soft)]/60 border border-[var(--brand-pale)] p-3.5 rounded-xl text-xs relative">
+                <h5 className="font-bold text-[var(--brand-deep)] text-xs mb-1">"Crowded Favorites and Well-Kept Secrets"</h5>
+                <div className="text-amber-500 text-[11px] mb-2">★★★★★ <span className="text-[var(--ink)] font-bold">5.0</span></div>
+                <p className="text-[var(--ink)]/80 line-clamp-3 leading-relaxed mb-2 text-[11px]">
+                  {park.name} is home to extraordinary wildlife circuits; this fact alone makes a solid case for declaring it Africa&apos;s premier safari destination...
                 </p>
-                <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
+                <Link href="/reviews" className="text-[var(--brand)] hover:text-[var(--brand-deep)] font-semibold inline-flex items-center gap-1">
+                  Read full review <ChevronRight className="w-3 h-3" />
+                </Link>
               </div>
-              <Link href="/reviews" className="block mt-2 text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1">
-                <ChevronRight className="w-3 h-3" /> All 18 Expert Reviews
-              </Link>
             </div>
 
             {/* Latest User Review */}
-            <div>
-              <h4 className="text-[14px] font-bold text-[#333] mb-3 border-t border-[#eee] pt-4">Latest User Review</h4>
-              <div className="flex gap-2 items-center mb-3">
-                <div className="w-10 h-10 rounded-full bg-[#eee] border border-[#ccc] flex items-center justify-center shrink-0 text-[#999]">MS</div>
+            <div className="surface-card rounded-2xl p-5 border border-black/5 shadow-sm text-xs">
+              <h4 className="text-xs uppercase tracking-wider font-bold text-[var(--ink-muted)] mb-3">Latest Traveler Review</h4>
+              <div className="flex gap-3 items-center mb-3">
+                <div className="w-10 h-10 rounded-full bg-[var(--sand)] border border-black/10 flex items-center justify-center shrink-0 font-bold text-xs text-[var(--brand-deep)]">MS</div>
                 <div>
-                  <div className="text-[12px] font-bold text-[#333]">Martin Sasse - <span className="font-normal">🇩🇪 DE</span></div>
-                  <div className="text-[10px] text-[#6b6b6b]"><strong>Reviewed:</strong> Sep 8, 2026</div>
+                  <div className="font-bold text-[var(--ink)]">Martin Sasse <span className="font-normal text-[var(--ink-muted)]">· 🇩🇪 DE</span></div>
+                  <div className="text-[11px] text-[var(--ink-muted)]">Reviewed: Sep 2026</div>
                 </div>
               </div>
-              <div className="relative border border-[#e1e1e1] p-3 text-[12px] rounded-sm bg-[#fcfcfc]">
-                <div className="absolute -top-[6px] left-6 w-3 h-3 bg-[#fcfcfc] border-t border-l border-[#e1e1e1] transform rotate-45"></div>
-                <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">"A good mixture between modern and tradition. Depends of course where you are"</h4>
-                <div className="text-[#ffc107] text-[11px] mb-2">★★★★<span className="text-[#b5b5b5]">★</span> <span className="text-[#333] font-bold">4</span><span className="text-[#777]"> /5</span></div>
-                <p className="text-[#555] line-clamp-4 leading-relaxed mb-1">
-                  We travelled as a couple and made a mixture between tour operator for Serengeti tour and self organized. We had a rented car for 11 days, this was perfect, sometimes challenging, but we enjoyed the freedom. Trafic was not as bad as expected...
+              <div className="bg-[var(--sand)] border border-black/5 p-3.5 rounded-xl text-xs relative mb-3">
+                <h5 className="font-bold text-[var(--ink)] text-xs mb-1">"A good mixture between modern and tradition"</h5>
+                <div className="text-amber-500 text-[11px] mb-2">★★★★<span className="opacity-30">★</span> <span className="text-[var(--ink)] font-bold">4.0</span></div>
+                <p className="text-[var(--ink)]/80 line-clamp-3 leading-relaxed mb-2 text-[11px]">
+                  We travelled as a couple and made a mixture between tour operators and self-guided segments. The wildlife sightings exceeded our expectations...
                 </p>
-                <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
-              </div>
-              <div className="flex items-center justify-between mt-2">
-                <Link href="/reviews" className="text-[12px] text-[var(--brand-ink)] hover:underline font-bold flex items-center gap-1">
-                  <ChevronRight className="w-3 h-3" /> All 2,156 User Reviews
+                <Link href="/reviews" className="text-[var(--brand)] hover:text-[var(--brand-deep)] font-semibold inline-flex items-center gap-1">
+                  Read full review <ChevronRight className="w-3 h-3" />
                 </Link>
-                <Link href="/login" className="border border-[var(--brand-ink)] text-[var(--brand-ink)] font-bold px-3 py-1 rounded-sm text-[12px] hover:bg-[var(--brand-soft)] flex items-center">
-                  Write a Review &gt;
+              </div>
+              <div className="flex items-center justify-between pt-1">
+                <Link href="/reviews" className="text-xs text-[var(--brand)] hover:text-[var(--brand-deep)] font-semibold inline-flex items-center gap-1">
+                  All Reviews <ChevronRight className="w-3 h-3" />
+                </Link>
+                <Link href="/login" className="btn btn-secondary text-xs px-3 py-1.5 rounded-lg">
+                  Write Review
                 </Link>
               </div>
             </div>
@@ -311,19 +377,34 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
         </div>
 
         {/* Safari Tours Grid (Bottom) */}
-        <div className="bg-[#f4f4f4] py-10 border-t border-[#d5d5d5]">
-          <div className="max-w-[1230px] mx-auto px-4">
-            <h2 className="text-[24px] font-bold text-[#333] mb-6" style={{ fontFamily: 'Georgia, serif' }}>Safari Tours to {park.name}</h2>
+        <div className="border-t border-black/5 py-16 bg-black/[0.01]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+              <div>
+                <span className="text-xs uppercase tracking-wider font-bold text-[var(--brand)] block mb-1">Available Departures</span>
+                <h2 className="text-2xl sm:text-3xl font-bold font-display text-[var(--brand-deep)]">Safari Tours to {park.name}</h2>
+              </div>
+              <Link 
+                href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} 
+                className="btn btn-secondary text-xs px-4 py-2 rounded-xl shrink-0"
+              >
+                View all tours
+              </Link>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
               {relatedTours.map((t: any) => (
                 <TourCard key={t.id} tour={t} />
               ))}
             </div>
 
             <div className="text-center">
-              <Link href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} className="bg-[#f4b400] hover:bg-[#e0a800] text-white font-bold py-3 px-12 rounded-sm shadow-sm inline-flex items-center justify-center gap-2 text-[16px]">
-                All 7,503 {park.name} Safaris <ChevronRight className="w-5 h-5" />
+              <Link 
+                href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`} 
+                className="btn btn-primary inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm shadow-md"
+              >
+                <span>Browse All {park.name} Safaris</span>
+                <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
           </div>

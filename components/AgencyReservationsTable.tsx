@@ -69,7 +69,7 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
       {/* Header with filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 sm:px-6 py-4 border-b border-[var(--border)]">
         <div>
-          <h2 className="text-lg font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+          <h2 className="text-lg font-bold text-[var(--ink)] font-display">
             Reservation Requests
           </h2>
           <p className="text-xs text-[var(--ink-secondary)] mt-0.5">

@@ -81,7 +81,7 @@ export default function LoginPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 border border-white/15">
                 <Compass className="h-6 w-6 text-[var(--dark-gold)]" />
               </div>
-              <h2 className="text-2xl font-bold leading-tight text-[var(--dark-text)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+              <h2 className="text-2xl font-bold leading-tight text-[var(--dark-text)] font-display">
                 Africa&apos;s Safari Marketplace
               </h2>
               <p className="text-sm leading-relaxed text-[var(--dark-text-soft)]">
@@ -125,7 +125,7 @@ export default function LoginPage() {
             <div className="mx-auto w-full max-w-sm space-y-6">
 
               <div>
-                <h1 className="text-3xl font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+                <h1 className="text-3xl font-bold text-[var(--ink)] font-display">
                   Sign In
                 </h1>
                 <p className="mt-1 text-sm text-[var(--ink-secondary)]">

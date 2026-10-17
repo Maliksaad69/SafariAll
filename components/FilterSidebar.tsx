@@ -74,28 +74,28 @@ export default function FilterSidebar({
   };
 
   const selectClass =
-    'w-full border border-[#ccc] p-2 text-[13px] bg-white text-[#333] rounded-sm focus:outline-none focus:border-[#666] cursor-pointer';
+    'form-control text-[13px] py-2 px-3 bg-white/80 border-[var(--border)] rounded-xl text-[var(--ink)] focus:border-[var(--brand)] cursor-pointer';
 
   return (
-    <aside className="w-full bg-[#f4f4f4] border border-[#d5d5d5] rounded-sm pb-4 font-sans text-[#333]">
+    <aside className="surface-card w-full rounded-2xl overflow-hidden border border-[var(--glass-border)] shadow-sm font-sans text-[var(--ink-body)]">
       {/* Header section */}
-      <div className="bg-[#e9e9e9] border-b border-[#d5d5d5] p-4 relative">
-        <h2 className="text-[22px] font-bold text-[#333]">Your Safari</h2>
+      <div className="bg-white/60 backdrop-blur-md border-b border-[var(--border-soft)] p-4 flex items-center justify-between">
+        <h2 className="text-[20px] font-bold font-display text-[var(--ink)]">Filter Safaris</h2>
         <button
           type="button"
           onClick={resetAll}
-          className="absolute top-4 right-4 text-[12px] text-[var(--brand-ink)] hover:underline cursor-pointer"
+          className="text-[12px] font-semibold text-[var(--brand-ink)] hover:underline cursor-pointer"
         >
           Reset all
         </button>
       </div>
 
-      <div className="p-4 space-y-5">
+      <div className="p-4 space-y-4">
         {/* Where To */}
         <div>
-          <div className="flex items-center gap-2 mb-1.5 text-[13px] font-bold">
-            <MapPin className="w-4 h-4 text-[#8a8a8a]" /> Where To
-          </div>
+          <label className="form-label flex items-center gap-1.5 mb-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Country
+          </label>
           <select
             value={currentCountry || ''}
             onChange={(e) => handleParamChange('country', e.target.value)}
@@ -114,11 +114,11 @@ export default function FilterSidebar({
           </select>
         </div>
 
-        {/* Start Date — real month filter wired to results */}
+        {/* Start Date */}
         <div>
-          <div className="flex items-center gap-2 mb-1.5 text-[13px] font-bold">
-            <Calendar className="w-4 h-4 text-[#8a8a8a]" /> Start Date
-          </div>
+          <label className="form-label flex items-center gap-1.5 mb-1.5">
+            <Calendar className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Start Date
+          </label>
           <select
             value={currentMonth || ''}
             onChange={(e) => handleParamChange('month', e.target.value)}
@@ -133,11 +133,11 @@ export default function FilterSidebar({
           </select>
         </div>
 
-        {/* Travelers — functional dropdown persisted in the URL */}
+        {/* Travelers */}
         <div>
-          <div className="flex items-center gap-2 mb-1.5 text-[13px] font-bold">
-            <Users className="w-4 h-4 text-[#8a8a8a]" /> Travelers
-          </div>
+          <label className="form-label flex items-center gap-1.5 mb-1.5">
+            <Users className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Travelers
+          </label>
           <select
             value={selectedTravelers || ''}
             onChange={(e) => handleParamChange('travelers', e.target.value === '2' ? '' : e.target.value)}
@@ -152,42 +152,48 @@ export default function FilterSidebar({
         </div>
       </div>
 
-      <div className="border-t border-[#d5d5d5] my-2"></div>
+      <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Tour Length */}
-      <div className="px-4 py-3">
-        <div className="flex justify-between items-center mb-3 text-[13px] font-bold">
+      <div className="px-4 py-3.5">
+        <div className="form-label mb-2.5">
           Tour Length
         </div>
-        <div className="px-2 space-y-3">
+        <div className="space-y-2">
           {durationOptions.map((option) => {
             const count = durationCounts?.[option.value];
             const checked = currentDuration === option.value;
             return (
-              <label key={option.value} className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="duration"
-                  checked={checked}
-                  onChange={() => handleParamChange('duration', checked ? '' : option.value)}
-                  className="w-3.5 h-3.5 text-[#444] focus:ring-[#444] cursor-pointer"
-                />
-                <span className={`text-[13px] ${checked ? 'font-bold text-[#222]' : 'text-[#555] group-hover:text-[#333]'}`}>
-                  {option.label}
-                  {typeof count === 'number' ? <span className="text-[#7a7263] text-[11px]"> ({count})</span> : null}
+              <label key={option.value} className="flex items-center justify-between gap-2 cursor-pointer group py-0.5">
+                <span className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="duration"
+                    checked={checked}
+                    onChange={() => handleParamChange('duration', checked ? '' : option.value)}
+                    className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
+                  />
+                  <span className={`text-[13px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>
+                    {option.label}
+                  </span>
                 </span>
+                {typeof count === 'number' && (
+                  <span className="text-[11px] font-semibold text-[var(--ink-secondary)] bg-[var(--surface-sunk)] px-2 py-0.5 rounded-full">
+                    {count}
+                  </span>
+                )}
               </label>
             );
           })}
         </div>
       </div>
 
-      <div className="border-t border-[#d5d5d5] my-2"></div>
+      <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Comfort Level */}
-      <div className="px-4 py-3">
-        <div className="flex items-center gap-1.5 mb-3 text-[13px] font-bold">
-          Comfort Level <Info className="w-3.5 h-3.5 text-[#8a8a8a]" />
+      <div className="px-4 py-3.5">
+        <div className="form-label mb-2.5 flex items-center gap-1.5">
+          Comfort Level <Info className="w-3 h-3 text-[var(--ink-muted)]" />
         </div>
         <div className="space-y-2">
           {[
@@ -199,58 +205,64 @@ export default function FilterSidebar({
             const count = comfortCounts?.[opt.val];
             const checked = currentComfort === opt.val;
             return (
-              <label key={opt.val} className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => handleParamChange('comfort', checked ? '' : opt.val)}
-                  className="w-3.5 h-3.5 border-[#ccc] rounded-sm text-[#444] focus:ring-[#444] cursor-pointer"
-                />
-                <span className={`text-[13px] ${checked ? 'font-bold text-[#222]' : 'text-[#555] group-hover:text-[#333]'}`}>
-                  {opt.label}
-                  {typeof count === 'number' ? <span className="text-[#7a7263] text-[11px]"> ({count.toLocaleString()})</span> : null}
+              <label key={opt.val} className="flex items-center justify-between gap-2 cursor-pointer group py-0.5">
+                <span className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => handleParamChange('comfort', checked ? '' : opt.val)}
+                    className="w-4 h-4 rounded accent-[var(--brand)] cursor-pointer"
+                  />
+                  <span className={`text-[13px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>
+                    {opt.label}
+                  </span>
                 </span>
+                {typeof count === 'number' && (
+                  <span className="text-[11px] font-semibold text-[var(--ink-secondary)] bg-[var(--surface-sunk)] px-2 py-0.5 rounded-full">
+                    {count.toLocaleString()}
+                  </span>
+                )}
               </label>
             );
           })}
         </div>
       </div>
 
-      <div className="border-t border-[#d5d5d5] my-2"></div>
+      <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Private or Shared Tour */}
-      <div className="px-4 py-3">
-        <div className="flex items-center gap-1.5 mb-3 text-[13px] font-bold">
-          Private or Shared Tour <Info className="w-3.5 h-3.5 text-[#8a8a8a]" />
+      <div className="px-4 py-3.5">
+        <div className="form-label mb-2.5 flex items-center gap-1.5">
+          Tour Format <Info className="w-3 h-3 text-[var(--ink-muted)]" />
         </div>
         <div className="space-y-2">
-          <label className="flex items-center gap-2 cursor-pointer group">
+          <label className="flex items-center gap-2 cursor-pointer group py-0.5">
             <input
               type="radio"
               name="tourType"
               checked={searchParams.get('tourType') === 'PRIVATE'}
               onChange={() => handleParamChange('tourType', 'PRIVATE')}
-              className="w-3.5 h-3.5 text-[#444] focus:ring-[#444] cursor-pointer"
+              className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
             />
-            <span className="text-[13px] text-[#555] group-hover:text-[#333]">Private tour</span>
+            <span className={`text-[13px] ${searchParams.get('tourType') === 'PRIVATE' ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>Private tour</span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer group">
+          <label className="flex items-center gap-2 cursor-pointer group py-0.5">
             <input
               type="radio"
               name="tourType"
               checked={searchParams.get('tourType') === 'SHARED_GROUP'}
               onChange={() => handleParamChange('tourType', 'SHARED_GROUP')}
-              className="w-3.5 h-3.5 text-[#444] focus:ring-[#444] cursor-pointer"
+              className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
             />
-            <span className="text-[13px] text-[#555] group-hover:text-[#333]">Shared tour</span>
+            <span className={`text-[13px] ${searchParams.get('tourType') === 'SHARED_GROUP' ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>Shared group tour</span>
           </label>
         </div>
       </div>
 
-      <div className="border-t border-[#d5d5d5] my-2"></div>
+      <div className="border-t border-[var(--border-soft)]"></div>
 
-      <div className="px-4 py-3">
-        <div className="flex items-center gap-1.5 mb-3 text-[13px] font-bold">Sort By</div>
+      <div className="p-4">
+        <label className="form-label mb-1.5">Sort Results</label>
         <select
           value={currentSort || 'recommended'}
           onChange={(e) => handleParamChange('sort', e.target.value === 'recommended' ? '' : e.target.value)}
@@ -263,7 +275,6 @@ export default function FilterSidebar({
           <option value="duration_asc">Shortest First</option>
         </select>
       </div>
-
     </aside>
   );
 }

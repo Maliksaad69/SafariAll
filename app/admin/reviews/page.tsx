@@ -12,13 +12,13 @@ export default async function AdminReviewsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F0] text-[#2C221E]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <div className="mb-8">
-          <p className="text-xs uppercase tracking-[0.18em] text-[#7A6A5C] font-bold">Admin</p>
-          <h1 className="mt-2 text-3xl font-bold font-serif text-[#1C2826]">Review Moderation Console</h1>
+          <span className="text-xs uppercase tracking-wider text-[var(--brand)] font-bold">Admin Console</span>
+          <h1 className="mt-1 text-3xl font-bold font-display text-[var(--brand-deep)]">Review Moderation Console</h1>
         </div>
 
         <ReviewModerationQueue />

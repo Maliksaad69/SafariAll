@@ -70,44 +70,44 @@ export default function ReviewModerationQueue() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-500">Loading review submissions...</p>
+        <p className="text-xs text-[var(--ink-muted)]">Loading review submissions...</p>
       ) : reviews.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#D8D1C7] bg-[#FAF7F0] p-8 text-center">
-          <ShieldAlert className="w-8 h-8 text-[#8B6914] mx-auto mb-3" />
-          <p className="text-sm font-medium text-[#1C2826]">No traveler reviews are waiting for moderation.</p>
+        <div className="surface-card rounded-2xl border border-dashed border-black/10 p-8 text-center shadow-sm">
+          <ShieldAlert className="w-8 h-8 text-[var(--brand)] mx-auto mb-3" />
+          <p className="text-xs sm:text-sm font-semibold text-[var(--brand-deep)]">No traveler reviews are waiting for moderation.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => (
-            <article key={review.id} className="rounded-2xl border border-[#E5E0D8] bg-[#FAF7F0] p-5">
+            <article key={review.id} className="surface-card rounded-2xl border border-black/5 p-6 shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-[#1C2826]">{review.operator.companyName}</span>
-                    <span className="text-xs text-gray-500">•</span>
-                    <span className="text-xs text-gray-500">{review.traveler.firstName} {review.traveler.lastName}</span>
+                    <span className="font-bold text-[var(--brand-deep)] font-display text-base">{review.operator.companyName}</span>
+                    <span className="text-xs text-[var(--ink-muted)]">•</span>
+                    <span className="text-xs text-[var(--ink-muted)]">{review.traveler.firstName} {review.traveler.lastName}</span>
                     {review.traveler.country && (
-                      <span className="text-xs text-gray-500">({review.traveler.country})</span>
+                      <span className="text-xs text-[var(--ink-muted)]">({review.traveler.country})</span>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 text-[#D4A373]">
+                  <div className="flex items-center gap-2 text-amber-500">
                     {Array.from({ length: Math.round(review.overallRating) }).map((_, index) => (
                       <span key={index} aria-label="star">★</span>
                     ))}
-                    <span className="text-xs font-bold text-[#1C2826]">{review.overallRating.toFixed(1)} / 5</span>
+                    <span className="text-xs font-bold text-[var(--ink)]">{review.overallRating.toFixed(1)} / 5</span>
                   </div>
 
-                  <h3 className="text-base font-bold text-[#1C2826]">{review.reviewTitle}</h3>
-                  <p className="text-sm text-gray-700 leading-relaxed">{review.reviewBody}</p>
+                  <h3 className="text-sm font-bold text-[var(--ink)]">{review.reviewTitle}</h3>
+                  <p className="text-xs sm:text-sm text-[var(--ink)]/80 leading-relaxed">{review.reviewBody}</p>
 
-                  <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-wide text-gray-500">
-                    {review.tour && <span className="rounded-full bg-white px-2 py-1">{review.tour.title}</span>}
-                    <span className="rounded-full bg-white px-2 py-1">{new Date(review.createdAt).toLocaleDateString()}</span>
+                  <div className="flex flex-wrap gap-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--ink-muted)]">
+                    {review.tour && <span className="rounded-full bg-[var(--sand)] px-2.5 py-1">{review.tour.title}</span>}
+                    <span className="rounded-full bg-[var(--sand)] px-2.5 py-1">{new Date(review.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   <button
                     type="button"
                     disabled={submittingId === review.id}

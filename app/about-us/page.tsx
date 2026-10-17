@@ -23,77 +23,84 @@ export default function AboutUsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f6f3ee] text-[#2d1a12]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
-      <main className="mx-auto max-w-[1230px] px-4 py-10 sm:px-6 lg:px-0">
-        <div className="mb-8 bg-[#efe7db] border border-[#e4dbc9] rounded-[18px] px-6 py-6 shadow-sm">
-          <div className="text-[12px] text-[#6b5130] uppercase tracking-[0.12em] font-semibold mb-3">
-            You are here:{' '}
-            <Link href="/" className="text-[var(--brand-ink)] hover:underline">Home</Link>
-            {' > '}
-            <span className="text-[#2d1a12]">About Us</span>
-          </div>
-          <h1 className="text-[38px] md:text-[52px] leading-none text-[#1d1a18] tracking-[-0.05em]" style={{ fontFamily: 'Georgia, serif' }}>
-            About SafariRequest
-          </h1>
+      {/* Top Breadcrumb Bar */}
+      <div className="border-b border-black/5 py-2.5 text-xs text-[var(--ink-muted)] bg-[var(--canvas)]/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
+          <span className="text-[var(--ink-muted)] opacity-60">/</span>
+          <span className="text-[var(--ink)] font-medium">About Us</span>
         </div>
+      </div>
 
-        <section className="relative overflow-hidden rounded-[18px] border border-[#d8d1c8] bg-[#1f1712] shadow-[0_12px_28px_rgba(10,8,6,0.25)]">
-          <div className="absolute inset-0 bg-cover bg-center opacity-35" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')" }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/50" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_45%)]" />
-          <div className="relative px-6 py-12 text-white md:px-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f5d27a]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#f9d98a]">
-              <Compass className="h-3.5 w-3.5" />
-              About SafariRequest
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--brand-deep)] text-white shadow-xl">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" 
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')" }} 
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
+          <div className="relative px-6 py-12 sm:px-12 sm:py-16 max-w-3xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-[var(--brand-light)]">
+              <Compass className="h-3.5 w-3.5 text-[var(--brand-light)]" />
+              <span>About SafariRequest</span>
             </div>
-            <h1 className="max-w-[700px] text-3xl font-bold tracking-[-0.04em] text-white md:text-5xl" style={{ fontFamily: 'Georgia, serif' }}>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-white mb-5 leading-tight">
               A smarter way to compare African safari holidays
             </h1>
-            <p className="mt-4 max-w-[720px] text-sm leading-relaxed text-white">
-              SafariRequest brings together the best safari operators, destinations, and itinerary options in one clear marketplace, making it easier to compare, discover, and book authentic African adventures.
+            <p className="text-sm sm:text-base leading-relaxed text-white/85 font-light mb-8 max-w-2xl">
+              SafariRequest connects travelers directly to verified safari operators, destinations, and custom itineraries across East, Southern, and Central Africa — transparently, with no hidden markups.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/tours" className="rounded-md bg-[#f4c45b] px-5 py-2.5 text-sm font-bold text-[#2d1a12] transition hover:brightness-105">
+            <div className="flex flex-wrap gap-3.5">
+              <Link href="/tours" className="btn btn-primary px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
                 Explore Safaris
               </Link>
-              <Link href="/operators" className="rounded-md border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white/10">
+              <Link href="/operators" className="btn bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-semibold backdrop-blur-md transition-all">
                 Meet Operators
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="mt-10 grid gap-6 md:grid-cols-3">
+        {/* Pillars Grid */}
+        <section className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map(({ title, text, icon: Icon }) => (
-            <article key={title} className="rounded-[16px] border border-[#d8d1c8] bg-white p-6 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#f4e7c5] text-[#b58927]">
+            <article key={title} className="surface-card rounded-2xl border border-black/5 p-7 shadow-sm hover:border-[var(--brand)]/30 hover:shadow-md transition-all">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--brand-soft)] text-[var(--brand)] shadow-sm">
                 <Icon className="h-6 w-6" />
               </div>
-              <h2 className="text-[1.65rem] font-bold leading-tight text-[#1d1a18]" style={{ fontFamily: 'Georgia, serif' }}>{title}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-[#5a4e46]">{text}</p>
+              <h2 className="text-xl font-bold font-display text-[var(--brand-deep)] mb-2.5">
+                {title}
+              </h2>
+              <p className="text-xs sm:text-sm leading-relaxed text-[var(--ink-muted)]">
+                {text}
+              </p>
             </article>
           ))}
         </section>
 
-        <section className="mt-10 rounded-[16px] border border-[#d8d1c8] bg-white p-7 shadow-sm">
-          <h2 className="text-[2rem] font-bold tracking-[-0.04em] text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>Why travelers use SafariRequest</h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            <div>
-              <p className="text-sm leading-relaxed text-[#5a4e46]">
-                Travelers use our marketplace to compare luxury lodges, mobile camps, private-guided itineraries, and conservation-led experiences without chasing dozens of operator websites.
-              </p>
-            </div>
-            <div>
-              <p className="text-sm leading-relaxed text-[#5a4e46]">
-                Whether you want a classic Tanzania safari, a Botswana delta adventure, or a gorilla trek in Uganda, SafariRequest helps you filter by price, style, duration, and destination before requesting a quote.
-              </p>
-            </div>
+        {/* Value Proposition */}
+        <section className="mt-12 surface-card rounded-3xl border border-black/5 p-8 sm:p-12 shadow-sm">
+          <h2 className="text-2xl sm:text-3xl font-bold font-display text-[var(--brand-deep)] mb-6">
+            Why travelers trust SafariRequest
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2 text-sm text-[var(--ink)]/80 leading-relaxed">
+            <p>
+              Travelers use our marketplace to compare luxury tented camps, private lodges, mobile expeditions, and conservation-led safaris without needing to manually inquire across dozens of fragmented websites.
+            </p>
+            <p>
+              Whether you are planning a classic Serengeti Great Migration safari, an Okavango Delta mokoro excursion in Botswana, or gorilla trekking in Rwanda, SafariRequest lets you filter by price, comfort style, duration, and seasonality before requesting tailored quotes.
+            </p>
           </div>
-          <div className="mt-8 flex justify-start">
-            <Link href="/quote/request" className="inline-flex items-center gap-2 rounded-md bg-[#2e6a64] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#275a54]">
-              Request a quote
+          <div className="mt-8 pt-6 border-t border-black/5 flex items-center justify-between flex-wrap gap-4">
+            <div className="text-xs text-[var(--ink-muted)]">
+              Ready to begin planning your safari adventure?
+            </div>
+            <Link href="/quote/request" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
+              <span>Request a Custom Quote</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

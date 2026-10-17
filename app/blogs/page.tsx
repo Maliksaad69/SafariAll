@@ -67,63 +67,88 @@ export default async function BlogPage() {
   const posts = await getPosts();
 
   return (
-    <div className="min-h-screen bg-[#f6f3ee] text-[#2d1a12]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
-      <main className="mx-auto max-w-[1230px] px-4 py-10 sm:px-6 lg:px-0">
-        <section className="rounded-[18px] border border-[#d8d1c8] bg-[#1f1712] p-7 shadow-[0_12px_28px_rgba(10,8,6,0.25)] md:p-10">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#f5d27a]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#f9d98a]">
-            <Newspaper className="h-3.5 w-3.5" />
-            Safari Journal
+      {/* Top Breadcrumb Bar */}
+      <div className="border-b border-black/5 py-2.5 text-xs text-[var(--ink-muted)] bg-[var(--canvas)]/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
+          <span className="text-[var(--ink-muted)] opacity-60">/</span>
+          <span className="text-[var(--ink)] font-medium">Safari Journal</span>
+        </div>
+      </div>
+
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--brand-deep)] text-white shadow-xl p-8 sm:p-14">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-overlay" 
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')" }} 
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
+          <div className="relative max-w-2xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-[var(--brand-light)]">
+              <Newspaper className="h-3.5 w-3.5 text-[var(--brand-light)]" />
+              <span>Safari Journal</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-white mb-4 leading-tight">
+              Latest safari stories and travel insights
+            </h1>
+            <p className="text-sm sm:text-base leading-relaxed text-white/85 font-light">
+              Discover expert tips, destination guides, and wildlife inspiration from verified African operators and local safari naturalists.
+            </p>
           </div>
-          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-white" style={{ fontFamily: 'Georgia, serif' }}>Latest safari stories and travel ideas</h1>
-          <p className="mt-3 max-w-[700px] text-sm leading-relaxed text-white">
-            Discover expert tips, destination guides, and wildlife inspiration from our verified local operators — read their stories to find the right agency for your trip.
-          </p>
         </section>
 
         {/* Agency story grid — real posts from operator accounts */}
         {posts.length > 0 && (
-          <section className="mt-8">
-            <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.12em] text-[#8a7563]">
-              From our operators
-            </h2>
-            <div className="grid gap-5 md:grid-cols-3">
+          <section className="mt-12">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <span className="text-xs uppercase tracking-wider font-bold text-[var(--brand)] block">Dispatches</span>
+                <h2 className="text-2xl font-bold font-display text-[var(--brand-deep)]">
+                  Stories from Our Operators
+                </h2>
+              </div>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
-                <article key={post.id} className="rounded-[16px] border border-[#d8d1c8] overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-md">
-                  <Link href={`/blogs/${post.slug}`} className="block">
-                    {post.coverImageUrl ? (
-                      <img src={post.coverImageUrl} alt="" className="block h-40 w-full object-cover" />
-                    ) : (
-                      <div className="flex h-40 w-full items-center justify-center bg-gradient-to-br from-[#2e6a64] to-[#1e4a46] text-4xl text-white/70">📝</div>
-                    )}
-                  </Link>
-                  <div className="p-5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-[12px] border border-[#e8e0d8] bg-[#f5efe9] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#b58927]">
-                        {post.tag || 'Travel Guides'}
-                      </span>
-                      <Link href={`/operators/${post.operator.slug}`} className="text-[11px] font-semibold text-[#2e6a64] hover:underline">
-                        by {post.operator.companyName}
-                      </Link>
-                    </div>
-                    <Link href={`/blogs/${post.slug}`}>
-                      <h3 className="mt-4 text-[1.25rem] font-bold leading-tight text-[#1e1a18] hover:text-[#2e6a64]" style={{ fontFamily: 'Georgia, serif' }}>{post.title}</h3>
+                <article key={post.id} className="surface-card rounded-2xl border border-black/5 overflow-hidden shadow-sm hover:border-[var(--brand)]/30 hover:shadow-md transition-all flex flex-col justify-between">
+                  <div>
+                    <Link href={`/blogs/${post.slug}`} className="block overflow-hidden">
+                      {post.coverImageUrl ? (
+                        <img src={post.coverImageUrl} alt="" className="block h-48 w-full object-cover transition-transform duration-300 hover:scale-105" />
+                      ) : (
+                        <div className="flex h-48 w-full items-center justify-center bg-[var(--brand-soft)] text-4xl text-[var(--brand)]">📝</div>
+                      )}
                     </Link>
-                    {post.excerpt && (
-                      <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[#5a4e46]">{post.excerpt}</p>
-                    )}
-                    <div className="mt-5 flex items-center justify-between">
-                      <span className="text-[11px] text-[#8a7563]">
-                        {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        {' · '}
-                        {post.viewCount} reads
-                      </span>
-                      <Link href={`/blogs/${post.slug}`} className="inline-flex items-center gap-2 text-sm font-semibold text-[#2e6a64] hover:underline">
-                        Read story
-                        <ArrowRight className="h-4 w-4" />
+                    <div className="p-6">
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <span className="rounded-full bg-[var(--brand-soft)] border border-[var(--brand-pale)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-deep)]">
+                          {post.tag || 'Travel Guides'}
+                        </span>
+                        <Link href={`/operators/${post.operator.slug}`} className="text-xs font-semibold text-[var(--ink-muted)] hover:text-[var(--brand)] transition-colors">
+                          by {post.operator.companyName}
+                        </Link>
+                      </div>
+                      <Link href={`/blogs/${post.slug}`}>
+                        <h3 className="text-lg font-bold font-display text-[var(--brand-deep)] hover:text-[var(--brand)] transition-colors leading-snug line-clamp-2">
+                          {post.title}
+                        </h3>
                       </Link>
+                      {post.excerpt && (
+                        <p className="mt-2.5 line-clamp-3 text-xs sm:text-sm leading-relaxed text-[var(--ink-muted)]">{post.excerpt}</p>
+                      )}
                     </div>
+                  </div>
+                  <div className="px-6 pb-6 pt-0 mt-auto border-t border-black/5 pt-4 flex items-center justify-between text-xs">
+                    <span className="text-[var(--ink-muted)]">
+                      {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                    <Link href={`/blogs/${post.slug}`} className="font-semibold text-[var(--brand)] hover:text-[var(--brand-deep)] inline-flex items-center gap-1 transition-colors">
+                      <span>Read story</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
                 </article>
               ))}
@@ -132,24 +157,31 @@ export default async function BlogPage() {
         )}
 
         {/* Evergreen editorial */}
-        <section className={`mt-8 ${posts.length > 0 ? 'pt-2' : ''}`}>
-          {posts.length > 0 && (
-            <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.12em] text-[#8a7563]">
-              Safari journal
+        <section className={`mt-12 ${posts.length > 0 ? 'pt-4' : ''}`}>
+          <div className="mb-6">
+            <span className="text-xs uppercase tracking-wider font-bold text-[var(--brand)] block">Editorial Guides</span>
+            <h2 className="text-2xl font-bold font-display text-[var(--brand-deep)]">
+              Essential Safari Planning Guides
             </h2>
-          )}
-          <div className="grid gap-5 md:grid-cols-3">
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {evergreenPosts.map((post) => (
-              <article key={post.title} className="rounded-[16px] border border-[#d8d1c8] bg-white p-5 shadow-sm">
-                <div className="rounded-[12px] border border-[#e8e0d8] bg-[#f5efe9] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#b58927]">
-                  {post.tag}
+              <article key={post.title} className="surface-card rounded-2xl border border-black/5 p-7 shadow-sm hover:border-[var(--brand)]/30 hover:shadow-md transition-all flex flex-col justify-between">
+                <div>
+                  <span className="inline-block rounded-full bg-[var(--brand-soft)] border border-[var(--brand-pale)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-deep)] mb-4">
+                    {post.tag}
+                  </span>
+                  <h3 className="text-xl font-bold font-display text-[var(--brand-deep)] leading-tight mb-3">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm leading-relaxed text-[var(--ink-muted)]">{post.text}</p>
                 </div>
-                <h2 className="mt-5 text-[1.8rem] font-bold leading-tight text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>{post.title}</h2>
-                <p className="mt-3 text-sm leading-relaxed text-[#5a4e46]">{post.text}</p>
-                <Link href={post.href} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#2e6a64]">
-                  Read article
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                <div className="pt-6 mt-6 border-t border-black/5">
+                  <Link href={post.href} className="font-semibold text-xs text-[var(--brand)] hover:text-[var(--brand-deep)] inline-flex items-center gap-1.5 transition-colors">
+                    <span>Read article</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

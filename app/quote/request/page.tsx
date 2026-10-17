@@ -67,42 +67,44 @@ function QuoteRequestForm() {
 
   if (submitted) {
     return (
-      <div className="bg-white rounded-3xl p-12 border border-[#E5E0D8] shadow-xl text-center space-y-6 max-w-2xl mx-auto my-12">
-        <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
-          <CheckCircle2 className="w-10 h-10" />
+      <div className="surface-card rounded-3xl p-8 sm:p-12 border border-black/5 shadow-xl text-center space-y-6 max-w-2xl mx-auto my-8">
+        <div className="w-16 h-16 rounded-2xl bg-[var(--brand-soft)] text-[var(--brand)] mx-auto flex items-center justify-center">
+          <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h2 className="text-3xl font-bold font-serif text-[#1C2826]">
+        <h2 className="text-2xl sm:text-3xl font-bold font-display text-[var(--brand-deep)]">
           Quote Request Submitted!
         </h2>
-        <p className="text-sm text-gray-600 leading-relaxed max-w-lg mx-auto">
-          Your inquiry for <span className="font-bold text-[#1C2826]">{preferredCountry}</span> has been dispatched to top-rated verified local tour operators.
+        <p className="text-sm text-[var(--ink-muted)] leading-relaxed max-w-lg mx-auto">
+          Your inquiry for <strong className="text-[var(--brand-deep)]">{preferredCountry}</strong> has been dispatched to top-rated verified local safari operators.
         </p>
-        <div className="bg-[#FAF7F0] p-4 rounded-2xl border border-[#E5E0D8] text-xs text-[#4a4136] font-medium max-w-md mx-auto">
-          Confirmation sent to <span className="font-bold text-[#1C2826]">{email}</span>. Expect direct proposals within 24 hours.
+        <div className="bg-[var(--sand)]/80 p-4 rounded-xl border border-black/5 text-xs text-[var(--ink)] font-medium max-w-md mx-auto">
+          Confirmation sent to <strong className="text-[var(--brand-deep)]">{email}</strong>. Expect direct proposals within 24 hours.
         </div>
-        <button
-          onClick={() => router.push('/tours')}
-          className="px-6 py-3.5 bg-[#C85A17] text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#a6470e] transition-all shadow-md"
-        >
-          Return to Safari Search
-        </button>
+        <div>
+          <button
+            onClick={() => router.push('/tours')}
+            className="btn btn-primary px-6 py-3 rounded-xl text-xs font-semibold shadow-sm"
+          >
+            Return to Safari Search
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8 sm:p-12 border border-[#E5E0D8] space-y-8 max-w-3xl mx-auto">
+    <div className="surface-card rounded-3xl shadow-xl p-8 sm:p-12 border border-black/5 space-y-8 max-w-3xl mx-auto">
       
       {/* Header */}
-      <div className="text-center max-w-xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C2826]/10 text-[#1C2826] text-xs font-bold uppercase tracking-wider">
-          <Compass className="w-4 h-4 text-[#C85A17]" />
-          Multi-Operator Quote Engine
+      <div className="text-center max-w-xl mx-auto space-y-2.5">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--brand-soft)] text-[var(--brand-deep)] text-xs font-semibold border border-[var(--brand-pale)]">
+          <Compass className="w-3.5 h-3.5 text-[var(--brand)]" />
+          <span>Multi-Operator Quote Engine</span>
         </div>
-        <h1 className="text-3xl font-bold font-serif text-[#1C2826]">
+        <h1 className="text-3xl sm:text-4xl font-bold font-display text-[var(--brand-deep)]">
           Request Custom Safari Quotes
         </h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-xs sm:text-sm text-[var(--ink-muted)]">
           Get direct, zero-markup proposals from licensed local African safari agencies.
         </p>
       </div>
@@ -111,19 +113,19 @@ function QuoteRequestForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* Step 1: Destination & Guests */}
-        <div className="space-y-4 pt-4 border-t border-gray-100">
-          <h3 className="font-bold text-base text-[#1C2826] flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-[#C85A17]" />
-            1. Destination & Travelers
+        <div className="space-y-4 pt-4 border-t border-black/5">
+          <h3 className="font-bold text-sm text-[var(--brand-deep)] flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[var(--brand)]" />
+            <span>1. Destination &amp; Travelers</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Preferred Destination</label>
+              <label className="form-label">Preferred Destination</label>
               <select
                 value={preferredCountry}
                 onChange={(e) => setPreferredCountry(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] cursor-pointer focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               >
                 {['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe'].map((c) => (
                   <option key={c} value={c}>{c}</option>
@@ -132,33 +134,33 @@ function QuoteRequestForm() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Number of Adults</label>
+              <label className="form-label">Number of Adults</label>
               <input
                 type="number"
                 min={1}
                 max={20}
                 value={adultsCount}
                 onChange={(e) => setAdultsCount(Math.max(1, Number(e.target.value) || 1))}
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
           </div>
         </div>
 
         {/* Step 2: Budget & Comfort */}
-        <div className="space-y-4 pt-4 border-t border-gray-100">
-          <h3 className="font-bold text-base text-[#1C2826] flex items-center gap-2">
-            <DollarSign className="w-5 h-5 text-[#C85A17]" />
-            2. Budget & Comfort Preference
+        <div className="space-y-4 pt-4 border-t border-black/5">
+          <h3 className="font-bold text-sm text-[var(--brand-deep)] flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-[var(--brand)]" />
+            <span>2. Budget &amp; Comfort Preference</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Comfort Level</label>
+              <label className="form-label">Comfort Level</label>
               <select
                 value={comfortPreference}
                 onChange={(e) => setComfortPreference(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] cursor-pointer focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               >
                 <option value="MID_RANGE">Mid-Range Safari Lodge</option>
                 <option value="LUXURY">Luxury Tented Camp</option>
@@ -167,96 +169,96 @@ function QuoteRequestForm() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Estimated Budget / Person ($USD)</label>
+              <label className="form-label">Estimated Budget / Person ($USD)</label>
               <input
                 type="number"
                 min={500}
                 step={250}
                 value={budgetPerPersonUsd}
                 onChange={(e) => setBudgetPerPersonUsd(Math.max(500, Number(e.target.value) || 500))}
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
           </div>
         </div>
 
         {/* Step 3: Contact Info */}
-        <div className="space-y-4 pt-4 border-t border-gray-100">
-          <h3 className="font-bold text-base text-[#1C2826] flex items-center gap-2">
-            <FileText className="w-5 h-5 text-[#C85A17]" />
-            3. Contact Information
+        <div className="space-y-4 pt-4 border-t border-black/5">
+          <h3 className="font-bold text-sm text-[var(--brand-deep)] flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[var(--brand)]" />
+            <span>3. Contact Information</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">First Name</label>
+              <label className="form-label">First Name</label>
               <input
                 type="text"
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="Sarah"
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Last Name</label>
+              <label className="form-label">Last Name</label>
               <input
                 type="text"
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Jenkins"
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Email Address</label>
+              <label className="form-label">Email Address</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="sarah@example.com"
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Phone / WhatsApp (optional)</label>
+              <label className="form-label">Phone / WhatsApp (optional)</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+1 555 000 1234"
-                className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] bg-white text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                className="form-control"
               />
             </div>
           </div>
 
           {departure && (
-            <div className="flex items-center gap-2 rounded-xl bg-[#FAF7F0] border border-[#E5E0D8] px-4 py-3 text-xs text-[#4a4136]">
-              <Calendar className="w-4 h-4 text-[#C85A17] shrink-0" />
+            <div className="flex items-center gap-2 rounded-xl bg-[var(--brand-soft)]/50 border border-[var(--brand-pale)] px-4 py-3 text-xs text-[var(--brand-deep)]">
+              <Calendar className="w-4 h-4 text-[var(--brand)] shrink-0" />
               <span>
                 Preferred departure:{' '}
-                <strong className="text-[#1C2826]">
+                <strong>
                   {new Date(`${departure}T00:00:00`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })}
                 </strong>
-                {travelersParam ? <> · <strong className="text-[#1C2826]">{travelersParam} travelers</strong></> : null}
+                {travelersParam ? <> · <strong>{travelersParam} travelers</strong></> : null}
               </span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold uppercase text-[#4a4136] mb-2">Custom Requests / Notes</label>
+            <label className="form-label">Custom Requests / Notes</label>
             <textarea
               rows={3}
               value={customNotes}
               onChange={(e) => setCustomNotes(e.target.value)}
               placeholder="e.g. Interested in balloon safari over Serengeti or specific dietary needs..."
-              className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+              className="form-control resize-none"
             />
           </div>
         </div>
@@ -264,7 +266,7 @@ function QuoteRequestForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 px-6 rounded-xl bg-[#C85A17] hover:bg-[#a6470e] text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2"
+          className="btn btn-primary w-full py-3.5 px-6 rounded-xl font-semibold text-sm shadow-md flex items-center justify-center gap-2"
         >
           {loading ? 'Submitting Inquiry...' : 'Broadcast Quote Request to Operators'}
           <Send className="w-4 h-4" />
@@ -278,11 +280,21 @@ function QuoteRequestForm() {
 
 export default function QuoteRequestPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F0] text-[#2C221E]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-12">
+      
+      {/* Top Breadcrumb Bar */}
+      <div className="border-b border-black/5 py-2.5 text-xs text-[var(--ink-muted)] bg-[var(--canvas)]/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5">
+          <a href="/" className="hover:text-[var(--brand)] transition-colors">Home</a>
+          <span className="text-[var(--ink-muted)] opacity-60">/</span>
+          <span className="text-[var(--ink)] font-medium">Request a Quote</span>
+        </div>
+      </div>
+
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <Suspense fallback={
-          <div className="bg-white rounded-3xl p-12 text-center text-gray-500 animate-pulse">
+          <div className="surface-card rounded-3xl p-12 text-center text-[var(--ink-muted)] animate-pulse">
             Loading Quote Form...
           </div>
         }>

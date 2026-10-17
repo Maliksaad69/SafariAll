@@ -111,8 +111,8 @@ export default function MessagesPage() {
                     key={t.id}
                     type="button"
                     onClick={() => setSelectedId(t.id)}
-                    className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm flex flex-wrap items-center gap-2 ${
-                      selectedId === t.id ? 'bg-[var(--brand-soft)] text-[var(--brand-soft)]' : 'bg-white hover:bg-[var(--surface-sunk)]'
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm flex flex-wrap items-center gap-2 border ${
+                      selectedId === t.id ? 'bg-[var(--brand-soft)] border-[var(--brand)] text-[var(--brand-deep)] shadow-sm' : 'border-transparent bg-white hover:bg-[var(--surface-sunk)]'
                     }`}
                   >
                     {t.status === 'PENDING' && <span className="badge badge-warning text-[10px]">Pending</span>}

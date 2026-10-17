@@ -36,8 +36,8 @@ export default async function AgencyBlogPage() {
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span className="badge badge-on-dark mb-2">Agency Portal</span>
-            <h1 className="text-3xl font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <span className="badge badge-brand mb-2">Agency Portal</span>
+            <h1 className="text-3xl font-bold text-[var(--ink)] font-display">
               Your Stories & Marketing
             </h1>
             <p className="mt-1 text-sm text-[var(--ink-secondary)] max-w-xl">

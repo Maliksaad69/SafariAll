@@ -31,21 +31,21 @@ export default function FAQPage() {
       <Navbar />
 
       <main className="mx-auto max-w-[980px] px-4 py-10 sm:px-6 lg:px-0">
-        <section className="rounded-[18px] border border-[var(--border-strong)] bg-[var(--dark)] p-7 shadow-[0_12px_28px_rgba(10,8,6,0.25)] md:p-10">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--dark-gold)]/30 bg-[#f5d27a]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--dark-gold)]">
+        <section className="surface-dark p-7 md:p-10 border border-white/10">
+          <div className="badge badge-on-dark mb-4">
             FAQ
           </div>
           <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-white font-display">
             Frequently asked safari questions
           </h1>
-          <p className="mt-3 max-w-[700px] text-sm leading-relaxed text-white">
+          <p className="mt-3 max-w-[700px] text-sm leading-relaxed text-white/85">
             Everything you need to know before planning your African safari trip.
           </p>
         </section>
 
         <section className="mt-8 space-y-4">
           {faqs.map((faq) => (
-            <article key={faq.question} className="rounded-[14px] border border-[var(--border-strong)] bg-[var(--surface-card)] p-5 shadow-sm">
+            <article key={faq.question} className="surface-card p-6">
               <div className="flex items-start justify-between gap-4">
                 <h2 className="text-[1.2rem] font-bold text-[var(--ink)] font-display">{faq.question}</h2>
                 <ChevronRight className="mt-1 h-4 w-4 flex-shrink-0 text-[var(--gold)]" />

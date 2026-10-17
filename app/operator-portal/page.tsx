@@ -129,7 +129,7 @@ export default async function OperatorPortalPage() {
         <div className="surface-dark p-7 sm:p-9 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div>
             <span className="badge badge-on-dark mb-3">Agency Portal</span>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[var(--dark-text)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <h1 className="text-3xl sm:text-4xl font-bold text-[var(--dark-text)] font-display">
               {operatorName}
             </h1>
             <p className="mt-2 text-sm text-[var(--dark-text-soft)] max-w-xl">
@@ -183,7 +183,7 @@ export default async function OperatorPortalPage() {
         {/* Published tours */}
         <section className="surface-card overflow-hidden">
           <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[var(--border)]">
-            <h2 className="text-lg font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <h2 className="text-lg font-bold text-[var(--ink)] font-display">
               Your Safari Packages
             </h2>
             <Link href="/operator-portal/tours/new" className="link text-xs inline-flex items-center gap-1">
@@ -244,7 +244,7 @@ export default async function OperatorPortalPage() {
         {/* Inquiry leads */}
         <section className="surface-card overflow-hidden">
           <div className="px-5 sm:px-6 py-4 border-b border-[var(--border)]">
-            <h2 className="text-lg font-bold text-[var(--ink)]" style={{ fontFamily: 'var(--font-display), Georgia, serif' }}>
+            <h2 className="text-lg font-bold text-[var(--ink)] font-display">
               Quote Inquiry Leads
             </h2>
             <p className="text-xs text-[var(--ink-secondary)] mt-0.5">Travelers who requested a custom quote routed to your agency.</p>

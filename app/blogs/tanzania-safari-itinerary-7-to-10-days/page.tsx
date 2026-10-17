@@ -5,30 +5,41 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function TanzaniaSafariBlogPage() {
   return (
-    <div className="min-h-screen bg-[#f6f3ee] text-[#2d1a12]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
-      <main className="mx-auto max-w-[900px] px-4 py-10 sm:px-6 lg:px-0">
-        <div className="mb-5">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-semibold text-[#2e6a64]">
+      {/* Top Breadcrumb Bar */}
+      <div className="border-b border-black/5 py-2.5 text-xs text-[var(--ink-muted)] bg-[var(--canvas)]/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
+          <span className="text-[var(--ink-muted)] opacity-60">/</span>
+          <Link href="/blog" className="hover:text-[var(--brand)] transition-colors">Journal</Link>
+          <span className="text-[var(--ink-muted)] opacity-60">/</span>
+          <span className="text-[var(--ink)] font-medium">Tanzania Safari Itinerary</span>
+        </div>
+      </div>
+
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <div className="mb-6">
+          <Link href="/blog" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--brand)] hover:text-[var(--brand-deep)] transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            Back to blog
+            Back to Journal
           </Link>
         </div>
 
-        <article className="rounded-[18px] border border-[#d8d1c8] bg-white p-7 shadow-sm md:p-10">
-          <div className="mb-4 inline-flex items-center rounded-full bg-[#f4e7c5] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#b58927]">
+        <article className="surface-card rounded-3xl border border-black/5 p-8 sm:p-12 shadow-sm">
+          <div className="mb-4 inline-flex items-center rounded-full bg-[var(--brand-soft)] border border-[var(--brand-pale)] px-3 py-1 text-xs font-semibold text-[var(--brand-deep)]">
             Travel Guides
           </div>
-          <h1 className="text-[2.5rem] font-bold tracking-[-0.04em] text-[#1e1a18]" style={{ fontFamily: 'Georgia, serif' }}>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-[var(--brand-deep)] tracking-tight mb-6">
             Tanzania Safari Itinerary: How to Spend 7 to 10 Days
           </h1>
 
-          <p className="mt-5 text-sm leading-relaxed text-[#5a4e46]">
+          <p className="text-base sm:text-lg text-[var(--ink-muted)] leading-relaxed font-light mb-8">
             A 7–10 day Tanzania safari delivers the ideal mix of iconic wildlife, comfortable accommodation, and time to enjoy the landscapes without rushing from one park to the next.
           </p>
 
-          <div className="mt-8 space-y-5 text-sm leading-relaxed text-[#5a4e46]">
+          <div className="space-y-6 text-sm sm:text-base leading-relaxed text-[var(--ink)]/80">
             <p>
               For most travelers, a classic itinerary starts in Arusha, then moves into the Serengeti for the famous Great Migration and sweeping grassland views. From there, a few nights in the Ngorongoro Crater region provide a high-density wildlife experience and exceptional scenery.
             </p>

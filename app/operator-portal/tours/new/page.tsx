@@ -128,23 +128,23 @@ export default function NewTourPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF7F0] text-[#2C221E]">
+    <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         
         {/* Header */}
         <div className="flex items-center justify-between">
-          <Link href="/operator-portal" className="inline-flex items-center gap-2 text-xs font-bold text-[#C85A17] hover:underline">
+          <Link href="/operator-portal" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--brand)] hover:text-[var(--brand-deep)] transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            Back to Portal
+            <span>Back to Portal</span>
           </Link>
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Operator Tour Builder</span>
+          <span className="text-xs font-semibold text-[var(--ink-muted)] uppercase tracking-wider">Operator Tour Builder</span>
         </div>
 
-        <div className="bg-[#1C2826] rounded-3xl p-8 text-white shadow-xl space-y-2">
-          <h1 className="text-3xl font-bold font-serif">Create New Safari Package</h1>
-          <p className="text-sm text-gray-300">
+        <div className="surface-dark rounded-3xl p-8 sm:p-10 text-white shadow-xl space-y-2 border border-white/10">
+          <h1 className="text-2xl sm:text-3xl font-bold font-display tracking-tight text-white">Create New Safari Package</h1>
+          <p className="text-xs sm:text-sm text-white/85 font-light">
             Publish a multi-day itinerary with pricing, comfort level, and day-by-day stops for travelers.
           </p>
         </div>
@@ -166,14 +166,14 @@ export default function NewTourPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* Section 1: Basic Information */}
-          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
-            <h2 className="text-xl font-bold font-serif text-[#1C2826] border-b border-gray-100 pb-3">
-              1. Tour Overview & Pricing
+          <div className="surface-card p-6 sm:p-8 space-y-6">
+            <h2 className="text-xl font-bold font-display text-[var(--ink)] border-b border-[var(--border)] pb-3">
+              1. Tour Overview &amp; Pricing
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Safari Title *
                 </label>
                 <input
@@ -182,18 +182,18 @@ export default function NewTourPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. 7-Day Serengeti Great Migration & Ngorongoro Luxury Safari"
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Destination Country *
                 </label>
                 <select
                   value={primaryCountry}
                   onChange={(e) => setPrimaryCountry(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 >
                   <option value="Tanzania">Tanzania</option>
                   <option value="Kenya">Kenya</option>
@@ -206,13 +206,13 @@ export default function NewTourPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Comfort Level *
                 </label>
                 <select
                   value={comfortLevel}
                   onChange={(e) => setComfortLevel(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 >
                   <option value="BUDGET">Budget / Basic Lodge</option>
                   <option value="MID_RANGE">Mid-Range (Standard Lodge / Camp)</option>
@@ -223,7 +223,7 @@ export default function NewTourPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Duration (Days) *
                 </label>
                 <input
@@ -232,12 +232,12 @@ export default function NewTourPage() {
                   min="1"
                   value={durationDays}
                   onChange={(e) => setDurationDays(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Duration (Nights)
                 </label>
                 <input
@@ -245,12 +245,12 @@ export default function NewTourPage() {
                   min="0"
                   value={durationNights}
                   onChange={(e) => setDurationNights(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Starting Price per Person (USD) *
                 </label>
                 <input
@@ -259,12 +259,12 @@ export default function NewTourPage() {
                   min="50"
                   value={minPriceUsd}
                   onChange={(e) => setMinPriceUsd(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Max Price per Person (USD)
                 </label>
                 <input
@@ -272,12 +272,12 @@ export default function NewTourPage() {
                   min="50"
                   value={maxPriceUsd}
                   onChange={(e) => setMaxPriceUsd(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Start Hub / City
                 </label>
                 <input
@@ -285,12 +285,12 @@ export default function NewTourPage() {
                   value={startLocation}
                   onChange={(e) => setStartLocation(e.target.value)}
                   placeholder="e.g. Arusha or JRO Airport"
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   End Hub / City
                 </label>
                 <input
@@ -298,55 +298,55 @@ export default function NewTourPage() {
                   value={endLocation}
                   onChange={(e) => setEndLocation(e.target.value)}
                   placeholder="e.g. Zanzibar or Kilimanjaro Airport"
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-sm text-[#1C2826] focus:outline-none focus:border-[#C85A17]"
+                  className="form-control"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 2: Inclusions & Exclusions */}
-          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
-            <h2 className="text-xl font-bold font-serif text-[#1C2826] border-b border-gray-100 pb-3">
-              2. What's Included & Excluded
+          <div className="surface-card p-6 sm:p-8 space-y-6">
+            <h2 className="text-xl font-bold font-display text-[var(--ink)] border-b border-[var(--border)] pb-3">
+              2. What's Included &amp; Excluded
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Inclusions (One per line)
                 </label>
                 <textarea
                   rows={5}
                   value={inclusionsText}
                   onChange={(e) => setInclusionsText(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-xs text-[#1C2826] focus:outline-none focus:border-[#C85A17] font-mono"
+                  className="form-control font-mono text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-600 mb-2">
+                <label className="form-label">
                   Exclusions (One per line)
                 </label>
                 <textarea
                   rows={5}
                   value={exclusionsText}
                   onChange={(e) => setExclusionsText(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E0D8] text-xs text-[#1C2826] focus:outline-none focus:border-[#C85A17] font-mono"
+                  className="form-control font-mono text-xs"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 3: Day-by-Day Itinerary Builder */}
-          <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h2 className="text-xl font-bold font-serif text-[#1C2826]">
+          <div className="surface-card p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+              <h2 className="text-xl font-bold font-display text-[var(--ink)]">
                 3. Day-by-Day Itinerary ({itineraries.length} Days)
               </h2>
               <button
                 type="button"
                 onClick={addDay}
-                className="px-4 py-2 bg-[#1C2826] text-white text-xs font-bold rounded-xl flex items-center gap-1 hover:bg-[#C85A17] transition-colors"
+                className="btn btn-secondary btn-sm"
               >
                 <Plus className="w-4 h-4" />
                 Add Day
@@ -355,16 +355,16 @@ export default function NewTourPage() {
 
             <div className="space-y-6">
               {itineraries.map((day, idx) => (
-                <div key={idx} className="p-6 rounded-2xl bg-[#FAF7F0] border border-[#E5E0D8] space-y-4 relative">
+                <div key={idx} className="p-6 rounded-2xl bg-[var(--sand)]/50 border border-black/5 space-y-4 relative shadow-sm">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-[#C85A17] uppercase tracking-wider">
+                    <span className="font-bold text-xs text-[var(--brand)] uppercase tracking-wider">
                       Day {day.dayNumber}
                     </span>
                     {itineraries.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeDay(idx)}
-                        className="text-xs text-red-600 hover:text-red-800 flex items-center gap-1 font-bold"
+                        className="text-xs text-rose-600 hover:text-rose-800 flex items-center gap-1 font-semibold transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         Remove Day
@@ -374,7 +374,7 @@ export default function NewTourPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)] mb-1">
                         Day Title
                       </label>
                       <input
@@ -382,25 +382,25 @@ export default function NewTourPage() {
                         value={day.title}
                         onChange={(e) => updateDay(idx, 'title', e.target.value)}
                         placeholder="e.g. Serengeti Central Game Drives"
-                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-black/10 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--brand)]"
                       />
                     </div>
 
                     <div className="md:col-span-2">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
-                        Day Narrative & Activities
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)] mb-1">
+                        Day Narrative &amp; Activities
                       </label>
                       <textarea
                         rows={3}
                         value={day.description}
                         onChange={(e) => updateDay(idx, 'description', e.target.value)}
                         placeholder="Describe morning game drives, wildlife sightings, landscape transitions, etc."
-                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-black/10 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--brand)]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)] mb-1">
                         Overnight Accommodation
                       </label>
                       <input
@@ -408,12 +408,12 @@ export default function NewTourPage() {
                         value={day.accommodationName}
                         onChange={(e) => updateDay(idx, 'accommodationName', e.target.value)}
                         placeholder="e.g. Four Seasons Safari Lodge"
-                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-black/10 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--brand)]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)] mb-1">
                         Meals Included
                       </label>
                       <input
@@ -421,7 +421,7 @@ export default function NewTourPage() {
                         value={day.mealsIncluded}
                         onChange={(e) => updateDay(idx, 'mealsIncluded', e.target.value)}
                         placeholder="Breakfast, Lunch, Dinner"
-                        className="w-full px-3 py-2 bg-white rounded-xl border border-gray-200 text-xs text-[#1C2826]"
+                        className="w-full px-3 py-2 bg-white rounded-xl border border-black/10 text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--brand)]"
                       />
                     </div>
                   </div>
@@ -435,7 +435,7 @@ export default function NewTourPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-8 py-4 bg-[#C85A17] hover:bg-[#a6470e] text-white font-bold text-sm rounded-2xl shadow-xl flex items-center gap-2 transition-all"
+              className="btn btn-primary px-8 py-3.5 rounded-xl text-sm font-semibold shadow-md flex items-center gap-2"
             >
               <span>{loading ? 'Publishing Package...' : 'Publish Safari Package'}</span>
               <ArrowRight className="w-4 h-4" />

@@ -65,37 +65,37 @@ export default function SearchAutocomplete() {
   return (
     <div ref={containerRef} className="relative w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="relative">
-        <div className="relative flex items-center bg-white/95 backdrop-blur-md rounded-2xl border-2 border-[#D4A373]/40 shadow-xl focus-within:border-[#C85A17] transition-all">
-          <Search className="w-5 h-5 text-gray-400 ml-4 shrink-0" />
+        <div className="relative flex items-center bg-white/95 backdrop-blur-md rounded-2xl border border-black/10 shadow-xl focus-within:border-[var(--brand)] focus-within:ring-2 focus-within:ring-[var(--brand)]/20 transition-all">
+          <Search className="w-5 h-5 text-[var(--ink-muted)] ml-4 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => query.trim().length >= 2 && setIsOpen(true)}
             placeholder="Search parks (Serengeti, Kruger), tours, or local operators..."
-            className="w-full py-4 pl-3 pr-12 bg-transparent text-[#1C2826] placeholder-gray-400 text-sm focus:outline-none rounded-2xl"
+            className="w-full py-3.5 sm:py-4 pl-3 pr-12 bg-transparent text-[var(--ink)] placeholder-[var(--ink-muted)] text-sm focus:outline-none rounded-2xl"
           />
           {loading && (
-            <Loader2 className="w-5 h-5 text-[#C85A17] animate-spin absolute right-4" />
+            <Loader2 className="w-5 h-5 text-[var(--brand)] animate-spin absolute right-4" />
           )}
         </div>
       </form>
 
       {/* Autocomplete Dropdown Panel */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-[#E5E0D8] shadow-2xl overflow-hidden z-50 divide-y divide-gray-100 max-h-[480px] overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 surface-card rounded-2xl border border-black/5 shadow-2xl overflow-hidden z-50 divide-y divide-black/5 max-h-[480px] overflow-y-auto">
           {!hasResults && !loading && (
-            <div className="p-6 text-center text-xs text-gray-500">
-              No matching parks, tours, or operators found for "<span className="font-bold text-[#1C2826]">{query}</span>".
+            <div className="p-6 text-center text-xs text-[var(--ink-muted)]">
+              No matching parks, tours, or operators found for &ldquo;<span className="font-bold text-[var(--brand-deep)]">{query}</span>&rdquo;.
             </div>
           )}
 
           {/* Destinations Group */}
           {results.destinations.length > 0 && (
             <div className="p-3">
-              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#C85A17]" />
-                National Parks & Destinations
+              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[var(--brand)]" />
+                <span>National Parks &amp; Destinations</span>
               </div>
               <div className="space-y-1 mt-1">
                 {results.destinations.map((park) => (
@@ -103,13 +103,13 @@ export default function SearchAutocomplete() {
                     key={park.id}
                     href={`/parks/${park.slug}`}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-2.5 hover:bg-[#FAF7F0] rounded-xl transition-colors text-xs"
+                    className="flex items-center justify-between p-2.5 hover:bg-[var(--brand-soft)]/50 rounded-xl transition-colors text-xs"
                   >
                     <div>
-                      <span className="font-bold text-[#1C2826] block">{park.name}</span>
-                      <span className="text-[10px] text-gray-500">{park.country} • {park.type.replace('_', ' ')}</span>
+                      <span className="font-bold text-[var(--brand-deep)] block">{park.name}</span>
+                      <span className="text-[10px] text-[var(--ink-muted)]">{park.country} • {park.type.replace('_', ' ')}</span>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 text-[var(--ink-muted)]" />
                   </Link>
                 ))}
               </div>
@@ -119,9 +119,9 @@ export default function SearchAutocomplete() {
           {/* Tours Group */}
           {results.tours.length > 0 && (
             <div className="p-3">
-              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5 text-[#1C2826]" />
-                Safari Packages
+              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-[var(--brand)]" />
+                <span>Safari Packages</span>
               </div>
               <div className="space-y-1 mt-1">
                 {results.tours.map((t) => (
@@ -129,13 +129,13 @@ export default function SearchAutocomplete() {
                     key={t.id}
                     href={`/tours/${t.slug}`}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-2.5 hover:bg-[#FAF7F0] rounded-xl transition-colors text-xs"
+                    className="flex items-center justify-between p-2.5 hover:bg-[var(--brand-soft)]/50 rounded-xl transition-colors text-xs"
                   >
                     <div>
-                      <span className="font-bold text-[#1C2826] block">{t.title}</span>
-                      <span className="text-[10px] text-gray-500">{t.durationDays} Days • {t.primaryCountry}</span>
+                      <span className="font-bold text-[var(--brand-deep)] block">{t.title}</span>
+                      <span className="text-[10px] text-[var(--ink-muted)]">{t.durationDays} Days • {t.primaryCountry}</span>
                     </div>
-                    <span className="font-bold text-[#C85A17] text-xs">From ${t.minPriceUsd}</span>
+                    <span className="font-bold text-emerald-700 text-xs">From ${t.minPriceUsd}</span>
                   </Link>
                 ))}
               </div>
@@ -145,9 +145,9 @@ export default function SearchAutocomplete() {
           {/* Operators Group */}
           {results.operators.length > 0 && (
             <div className="p-3">
-              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 text-[#E9C46A]" />
-                Verified Tour Operators
+              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 text-[var(--brand)]" />
+                <span>Verified Tour Operators</span>
               </div>
               <div className="space-y-1 mt-1">
                 {results.operators.map((op) => (
@@ -155,13 +155,13 @@ export default function SearchAutocomplete() {
                     key={op.id}
                     href={`/operators/${op.id}`}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-2.5 hover:bg-[#FAF7F0] rounded-xl transition-colors text-xs"
+                    className="flex items-center justify-between p-2.5 hover:bg-[var(--brand-soft)]/50 rounded-xl transition-colors text-xs"
                   >
                     <div>
-                      <span className="font-bold text-[#1C2826] block">{op.companyName}</span>
-                      <span className="text-[10px] text-gray-500">Based in {op.countryOfOrigin} • ★ {op.averageRating}</span>
+                      <span className="font-bold text-[var(--brand-deep)] block">{op.companyName}</span>
+                      <span className="text-[10px] text-[var(--ink-muted)]">Based in {op.countryOfOrigin} • ★ {op.averageRating}</span>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <ChevronRight className="w-4 h-4 text-[var(--ink-muted)]" />
                   </Link>
                 ))}
               </div>

@@ -45,35 +45,34 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
   const current = list ? list[page * PAGE_SIZE] : null;
 
   return (
-    <div className="bg-white border border-[#e1e1e1] rounded-sm p-4 shadow-sm">
-      <h3 className="text-[15px] font-bold text-[#333] mb-3">Customer Reviews</h3>
+    <div className="surface-card rounded-2xl p-5 border border-[var(--glass-border)] shadow-sm font-sans">
+      <h3 className="text-base font-bold font-display text-[var(--ink)] mb-3.5">Traveler Reviews</h3>
 
       {loading ? (
-        <div className="h-24 animate-pulse rounded-sm bg-[#f4f4f4]" />
+        <div className="h-24 animate-pulse rounded-xl bg-[var(--surface-sunk)]" />
       ) : current ? (
         <>
-          <div className="flex gap-2 items-center mb-3">
-            <div className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center bg-[#f9f9f9] text-[#8a8a8a]">
+          <div className="flex gap-2.5 items-center mb-3">
+            <div className="w-8 h-8 rounded-full border border-[var(--border)] flex items-center justify-center bg-[var(--brand-soft)] text-[var(--brand-ink)]">
               <Users className="w-4 h-4" />
             </div>
-            <div className="text-[12px] font-bold text-[#333]">
+            <div className="text-[12px] font-bold text-[var(--ink)]">
               {current.traveler?.firstName || 'Traveler'} {current.traveler?.lastName || ''}
-              {current.traveler?.country ? <span className="font-normal text-[#555]"> - {current.traveler.country}</span> : null}
+              {current.traveler?.country ? <span className="font-normal text-[var(--ink-secondary)]"> · {current.traveler.country}</span> : null}
             </div>
           </div>
 
-          <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
-            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
-            <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">&quot;{current.reviewTitle}&quot;</h4>
+          <div className="rounded-xl border border-[var(--border)] bg-white/80 p-3.5 text-[12px] mb-3.5 shadow-sm">
+            <h4 className="font-bold text-[var(--ink)] text-[13px] leading-snug mb-1">&quot;{current.reviewTitle}&quot;</h4>
             <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${current.overallRating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#ddd] text-[#ddd]'}`} />
+                <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
               ))}
-              <span className="text-[#333] font-bold ml-1">{current.overallRating}</span>
-              <span className="text-[#8a8a8a]">/5</span>
+              <span className="text-[var(--ink)] font-bold ml-1">{current.overallRating}</span>
+              <span className="text-[var(--ink-muted)]">/5</span>
             </div>
-            <p className="text-[#4a4a4a] line-clamp-4 leading-relaxed mb-1">{current.reviewBody}</p>
-            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
+            <p className="text-[var(--ink-body)] line-clamp-4 leading-relaxed mb-1.5">{current.reviewBody}</p>
+            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold text-[11px]">Full Review &rarr;</Link>
           </div>
 
           <div className="flex items-center justify-between">
@@ -82,17 +81,17 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
               aria-label="Previous review"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
-              className="border border-[#ccc] px-2 py-1 bg-white hover:bg-[#f4f4f4] text-[#555] rounded-sm disabled:text-[#ccc] disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-[12px] text-[#555]">{page + 1} of {pageCount}</span>
+            <span className="text-[12px] text-[var(--ink-secondary)]">{page + 1} of {pageCount}</span>
             <button
               type="button"
               aria-label="Next review"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={page >= pageCount - 1}
-              className="border border-[#ccc] px-2 py-1 bg-white hover:bg-[#f4f4f4] text-[#555] rounded-sm disabled:text-[#ccc] disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -100,20 +99,19 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
         </>
       ) : (
         <>
-          <div className="relative border border-[var(--gold)] p-3 text-[12px] rounded-sm bg-[#fffdf5] mb-3">
-            <div className="absolute -top-[6px] left-4 w-3 h-3 bg-[#fffdf5] border-t border-l border-[var(--gold)] transform rotate-45"></div>
-            <h4 className="font-bold text-[#333] text-[14px] leading-snug mb-1">&quot;{fallbackReview.title}&quot;</h4>
+          <div className="rounded-xl border border-[var(--border)] bg-white/80 p-3.5 text-[12px] mb-3.5 shadow-sm">
+            <h4 className="font-bold text-[var(--ink)] text-[13px] leading-snug mb-1">&quot;{fallbackReview.title}&quot;</h4>
             <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${fallbackReview.rating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < fallbackReview.rating ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#ddd] text-[#ddd]'}`} />
+                <Star key={i} className={`h-3.5 w-3.5 ${i < fallbackReview.rating ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
               ))}
-              <span className="text-[#333] font-bold ml-1">{fallbackReview.rating}</span>
-              <span className="text-[#8a8a8a]">/5</span>
+              <span className="text-[var(--ink)] font-bold ml-1">{fallbackReview.rating}</span>
+              <span className="text-[var(--ink-muted)]">/5</span>
             </div>
-            <p className="text-[#4a4a4a] line-clamp-4 leading-relaxed mb-1">{fallbackReview.body}</p>
-            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold">Full Review</Link>
+            <p className="text-[var(--ink-body)] line-clamp-4 leading-relaxed mb-1.5">{fallbackReview.body}</p>
+            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold text-[11px]">Full Review &rarr;</Link>
           </div>
-          <p className="text-[11px] text-[#8a8a8a] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">write one</Link>.</p>
+          <p className="text-[11px] text-[var(--ink-muted)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">write one</Link>.</p>
         </>
       )}
     </div>
