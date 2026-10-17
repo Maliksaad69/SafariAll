@@ -234,9 +234,9 @@
     "semantic_hash": "5cc028be0034c15914666e0a198af17b"
   },
   "next-env.d.ts": {
-    "mtime": 1792230669.9786572,
-    "seen": 1792239263.2934005,
-    "ast_hash": "8195d2c60ce847a459ae9d308d6a5724",
+    "mtime": 1792240488.2007687,
+    "seen": 1792255905.989686,
+    "ast_hash": "aa94238a90e7d04b7a47ecc3145ba6a0",
     "semantic_hash": ""
   },
   "next.config.ts": {
@@ -515,12 +515,6 @@
     "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
     "semantic_hash": ""
   },
-  "SAFARIBOOKINGS_CLONE_SPEC.md": {
-    "mtime": 1790617579.6744983,
-    "seen": 1790618939.9769177,
-    "ast_hash": "b48b0c7c8b9e9b60f07bbda1754c95d3",
-    "semantic_hash": ""
-  },
   "TECHNICAL_DOCUMENTATION.md": {
     "mtime": 1789401518.8123605,
     "seen": 1790618939.9769194,
@@ -783,6 +777,18 @@
     "mtime": 1792003613.6290662,
     "seen": 1792239263.294093,
     "ast_hash": "97b4db7ebf0b789003368e9ad5facf42",
+    "semantic_hash": ""
+  },
+  "ROADMAP.md": {
+    "mtime": 1792255888.370845,
+    "seen": 1792255905.9905849,
+    "ast_hash": "e8dbd6f5aca40d49bbd402461c0ac1dd",
+    "semantic_hash": ""
+  },
+  "SAFARIASILI_COMPREHENSIVE_AUDIT_AND_ROADMAP.md": {
+    "mtime": 1792256031.3837016,
+    "seen": 1792256047.7888,
+    "ast_hash": "e8dbd6f5aca40d49bbd402461c0ac1dd",
     "semantic_hash": ""
   }
 }
