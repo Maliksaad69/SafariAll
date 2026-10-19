@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { notifyChange } from '@/lib/live';
 
 async function resolveOperatorId(session: any): Promise<string | null> {
   if (session.operatorId) return session.operatorId;
@@ -98,6 +99,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       include: { sender: { select: { firstName: true, lastName: true } } },
     });
 
+    notifyChange(`operator:${reservation.operatorId}`, `user:${reservation.travelerId}`);
     return NextResponse.json({ success: true, message }, { status: 201 });
   } catch (error: any) {
     console.error('Create reservation message error:', error);

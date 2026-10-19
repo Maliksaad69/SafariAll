@@ -6,12 +6,6 @@ import { Star, CheckCircle2, PenLine } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-const fallbackReviews = [
-  { name: 'Emma C.', origin: 'United Kingdom', title: 'Perfectly organized and unforgettable', text: 'The itinerary was spot on, and the operator handled every detail seamlessly from airport pickup to the final game drive.', rating: 5 },
-  { name: 'Daniel M.', origin: 'United States', title: 'Worth every penny', text: 'Great value for a luxury safari. The lodge choices, timing, and wildlife sightings were all excellent.', rating: 5 },
-  { name: 'Maya T.', origin: 'Australia', title: 'The best safari planning experience', text: 'We compared several operators and ended up with a trip that matched our budget and expectations perfectly.', rating: 4 },
-];
-
 function Stars({ rating }: { rating: number }) {
   return (
     <span className="flex items-center gap-0.5" aria-label={`Rated ${rating} out of 5`}>
@@ -24,7 +18,6 @@ function Stars({ rating }: { rating: number }) {
 
 export default async function ReviewsPage() {
   let reviews: any[] = [];
-  let usingFallback = false;
 
   try {
     reviews = await prisma.review.findMany({
@@ -38,11 +31,6 @@ export default async function ReviewsPage() {
     });
   } catch {
     reviews = [];
-  }
-
-  if (reviews.length === 0) {
-    usingFallback = true;
-    reviews = fallbackReviews.map((r, i) => ({ id: `fallback-${i}`, ...r }));
   }
 
   const average =
@@ -122,9 +110,9 @@ export default async function ReviewsPage() {
 
             {/* Review cards */}
             <div>
-              {usingFallback && (
+              {reviews.length === 0 && (
                 <p className="mb-6 rounded-2xl border border-[var(--brand-pale)] bg-[var(--brand-soft)]/50 px-4 py-3 text-xs text-[var(--brand-deep)]">
-                  Showing sample reviews. Recent verified traveler reviews will appear here as they are submitted and approved.
+                  Verified traveler reviews will appear here as they are submitted and approved.
                 </p>
               )}
               <div className="grid gap-6 md:grid-cols-2">

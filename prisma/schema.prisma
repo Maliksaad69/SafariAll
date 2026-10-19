@@ -47,6 +47,11 @@ enum InquiryStatus {
   CLOSED
 }
 
+enum SlotStatus {
+  OPEN
+  CLOSED
+}
+
 enum ReservationStatus {
   PENDING
   APPROVED
@@ -115,6 +120,8 @@ model Operator {
   priceTier           ComfortLevel? @default(MID_RANGE) @map("price_tier")
   averageRating       Float         @default(0.00) @map("average_rating")
   totalReviews        Int           @default(0) @map("total_reviews")
+  officesIn           String[]      @default([]) @map("offices_in")
+  serviceSummary      String?       @map("service_summary")
   createdAt           DateTime      @default(now()) @map("created_at")
 
   // Relations
@@ -123,6 +130,7 @@ model Operator {
   reviews      Review[]
   reservations Reservation[]
   blogPosts    BlogPost[]
+  vehicles     Vehicle[]
 
   @@map("operators")
 }
@@ -140,6 +148,13 @@ model Destination {
   longitude        Float?
   bestTimeToVisit  Json?           @map("best_time_to_visit")
   wildlifePresent  Json?           @map("wildlife_present")
+  // Country cards (type COUNTRY): ranking on the home page and summary facts on /parks
+  popularityRank   Int?            @map("popularity_rank")
+  rating           Float?
+  reviewCount      Int             @default(0) @map("review_count")
+  dailyRates       String?         @map("daily_rates")
+  bestTimeSummary  String?         @map("best_time_summary")
+  highSeason       String?         @map("high_season")
   createdAt        DateTime        @default(now()) @map("created_at")
 
   // Relations
@@ -236,21 +251,32 @@ model TourDestination {
 }
 
 // 5b. Departure Slots Model (per-tour capacity management)
-// Agencies define departure slots; or leave datesOpen for unlimited open-dated bookings.
+// A slot is one scheduled departure of a tour: a date, a departure time and a
+// route, served by one or more of the agency's vehicles. Capacity
+// (maxTravelers) is the sum of the assigned vehicles' seats, or a manual figure
+// when no vehicles are assigned. bookedSeats is a counter that is only changed
+// inside locked transactions (lib/booking.ts); a CHECK constraint in the
+// database keeps it between 0 and maxTravelers so a slot can never be oversold.
 model TourSlot {
-  id             String   @id @default(uuid())
-  tourId         String   @map("tour_id")
-  tour           Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
-  startDate      DateTime @map("start_date")
-  maxTravelers   Int      @map("max_travelers")
+  id             String     @id @default(uuid())
+  tourId         String     @map("tour_id")
+  tour           Tour       @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  startDate      DateTime   @map("start_date")
+  departureTime  String     @default("08:00") @map("departure_time")
+  route          String?
+  maxTravelers   Int        @map("max_travelers")
+  bookedSeats    Int        @default(0) @map("booked_seats")
+  status         SlotStatus @default(OPEN)
   note           String?
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
 
   // Relations
   reservations Reservation[]
+  vehicles     SlotVehicle[]
+  inquiries    Inquiry[]
 
-  @@unique([tourId, startDate])
+  @@unique([tourId, startDate, departureTime])
   @@map("tour_slots")
 }
 
@@ -326,6 +352,8 @@ model Inquiry {
   traveler           User          @relation(fields: [travelerId], references: [id], onDelete: Cascade)
   tourId             String?       @map("tour_id")
   tour               Tour?         @relation(fields: [tourId], references: [id], onDelete: SetNull)
+  slotId             String?       @map("slot_id")
+  slot               TourSlot?     @relation(fields: [slotId], references: [id], onDelete: SetNull)
   preferredCountry   String?       @map("preferred_country")
   travelDateStart    DateTime?     @map("travel_date_start")
   travelDateEnd      DateTime?     @map("travel_date_end")
@@ -421,6 +449,8 @@ model Reservation {
   decidedAt         DateTime?         @map("decided_at")
   slotId            String?           @map("slot_id")
   slot              TourSlot?         @relation(fields: [slotId], references: [id], onDelete: SetNull)
+  vehicleId         String?           @map("vehicle_id")
+  vehicle           Vehicle?          @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   messages          ReservationMessage[]
   completedAt       DateTime?         @map("completed_at")
   createdAt         DateTime          @default(now()) @map("created_at")
@@ -443,4 +473,52 @@ model Notification {
 
   @@index([userId, isRead])
   @@map("notifications")
+}
+
+// 15. Safari Experts (independent writers shown on the home page and /experts/[id])
+model Expert {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  name        String
+  country     String
+  reviewCount Int      @default(0) @map("review_count")
+  biography   String   @db.Text
+  imageUrl    String?  @map("image_url")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("experts")
+}
+
+// 16. Agency fleet: vehicles that can be assigned to departures
+model Vehicle {
+  id          String   @id @default(uuid())
+  operatorId  String   @map("operator_id")
+  operator    Operator @relation(fields: [operatorId], references: [id], onDelete: Cascade)
+  name        String
+  vehicleType String   @default("4x4 Safari Vehicle") @map("vehicle_type")
+  seats       Int
+  plateNumber String?  @map("plate_number")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  slots        SlotVehicle[]
+  reservations Reservation[]
+
+  @@index([operatorId])
+  @@map("vehicles")
+}
+
+// 17. Vehicles assigned to a departure, with seats booked on each one.
+// bookedSeats is kept between 0 and the vehicle's seats by lib/booking.ts.
+model SlotVehicle {
+  slotId      String   @map("slot_id")
+  slot        TourSlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  vehicleId   String   @map("vehicle_id")
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  seats       Int
+  bookedSeats Int      @default(0) @map("booked_seats")
+
+  @@id([slotId, vehicleId])
+  @@map("slot_vehicles")
 }

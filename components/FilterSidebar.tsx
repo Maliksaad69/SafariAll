@@ -102,7 +102,7 @@ export default function FilterSidebar({
             className={selectClass}
           >
             <option value="">Any country</option>
-            {safariCountries.map((country) => {
+            {(countryCounts ? Object.keys(countryCounts) : safariCountries).map((country) => {
               const count = countryCounts?.[country];
               return (
                 <option key={country} value={country}>

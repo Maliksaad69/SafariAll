@@ -28,6 +28,7 @@ interface TourCardProps {
         name: string;
       };
     }[];
+    departures?: { total: number; open: number; nextOpen: string | null; seatsLeft: number };
   };
 }
 
@@ -117,6 +118,22 @@ export default function TourCard({ tour }: TourCardProps) {
           >
             <Heart className={`w-4 h-4 ${isFavorite ? 'fill-[var(--brand)] text-[var(--brand)]' : 'text-[var(--ink-secondary)]'}`} />
           </button>
+
+          {tour.departures && (
+            <span
+              className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[11px] font-bold shadow ${
+                tour.departures.total > 0 && tour.departures.open === 0
+                  ? 'bg-red-600 text-white'
+                  : 'bg-white/90 text-[var(--ink)]'
+              }`}
+            >
+              {tour.departures.total === 0
+                ? 'Dates on request'
+                : tour.departures.open === 0
+                  ? 'Fully booked'
+                  : `Next: ${new Date(`${tour.departures.nextOpen}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })} · ${tour.departures.seatsLeft} seats`}
+            </span>
+          )}
 
           <div className="absolute bottom-4 left-4 right-4">
             <h3 className="text-white font-semibold text-[20px] leading-tight drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">

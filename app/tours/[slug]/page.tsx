@@ -12,7 +12,7 @@ import TourCard from '@/components/TourCard';
 import FavoriteHeartButton from '@/components/FavoriteHeartButton';
 import BookingBox from '@/components/BookingBox';
 import TourReviewsWidget from '@/components/TourReviewsWidget';
-import { safariTours } from '@/lib/site-data';
+import { getTourCards } from '@/lib/catalog';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,27 +40,16 @@ function getTourImage(country: string, slug: string): string {
 export default async function TourDetailPage({ params }: TourDetailPageProps) {
   const { slug } = await params;
 
-  let tour: any = null;
+  const tour = await prisma.tour.findUnique({
+    where: { slug },
+    include: {
+      operator: true,
+      itineraries: { orderBy: { dayNumber: 'asc' } },
+      destinations: { include: { destination: true } },
+    },
+  });
 
-  try {
-    tour = await prisma.tour.findUnique({
-      where: { slug },
-      include: {
-        operator: true,
-        itineraries: { orderBy: { dayNumber: 'asc' } },
-        destinations: { include: { destination: true } },
-      },
-    });
-  } catch {
-    tour = null;
-  }
-
-  // Fallback to mock data if not in DB
-  if (!tour) {
-    tour = safariTours.find(t => t.slug === slug) || null;
-  }
-
-  if (!tour) notFound();
+  if (!tour || !tour.isPublished) notFound();
 
   // Agency-uploaded package photos, stored as blobs in Postgres.
   // Falls back to a stock hero image when the package has no uploads yet.
@@ -72,16 +61,11 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
   const heroImg = tourMedia.length > 0 ? `/api/media/${tourMedia[0].id}` : getTourImage(tour.primaryCountry, tour.slug);
   const destNames = tour.destinations.map((d: any) => d.destination.name).join(', ');
   
-  // Create an array of mock itineraries for visual display if the tour doesn't have them
-  const itineraryItems = tour.itineraries?.length > 0 ? tour.itineraries : [
-    { id: 'day-1', dayNumber: 1, title: 'Arrival & Briefing', description: 'Arrive and meet your guide.', accommodationName: 'Budget camping (Just outside)', mealsIncluded: 'Lunch & dinner', included: ['Airport pickup & safari briefing'] },
-    { id: 'day-2', dayNumber: 2, title: 'Game Drive', description: 'Full day game drive.', accommodationName: 'Budget camping (Inside NP)', mealsIncluded: 'All meals included', included: ['Full-day game drive with expert guide'] },
-    { id: 'day-3', dayNumber: 3, title: 'Departure', description: 'Morning game drive and transfer back.', accommodationName: 'End of tour (No accommodation)', mealsIncluded: 'Breakfast & lunch', included: ['Morning game drive'] },
-  ];
+  const itineraryItems: any[] = tour.itineraries;
 
-  const maxPrice = tour.minPriceUsd + Math.floor(tour.minPriceUsd * 0.15);
+  const maxPrice = tour.maxPriceUsd ?? tour.minPriceUsd;
 
-  const relatedTours = safariTours.filter(t => t.id !== tour.id).slice(0, 3);
+  const relatedTours = await getTourCards({ id: { not: tour.id }, primaryCountry: tour.primaryCountry }, 3);
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-[var(--ink-body)]">
@@ -397,11 +381,6 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
             <TourReviewsWidget
               operatorId={tour.operator?.id}
               operatorName={tour.operator?.companyName}
-              fallbackReview={{
-                title: `An unforgettable safari with ${tour.operator.companyName}`,
-                body: `We had an amazing experience with ${tour.operator.companyName}. Our guide was extremely knowledgeable about the animals and the landscape — every game drive felt like a private discovery tour.`,
-                rating: Math.round(tour.operator?.averageRating || 5),
-              }}
             />
 
           </div>

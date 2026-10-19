@@ -1,12 +1,12 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
+import { getTourCards } from '@/lib/catalog';
 import prisma from '@/lib/prisma';
 import { buildOperatorSchema } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, MapPin, CheckCircle2, Star, Award, Mail, Phone, Globe, Calendar, ArrowRight, MessageSquare, Building, FileText } from 'lucide-react';
-import { safariOperators } from '@/lib/site-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,96 +19,39 @@ interface OperatorProfilePageProps {
 export default async function OperatorProfilePage({ params }: OperatorProfilePageProps) {
   const { slug } = await params;
 
-  let operator: any = null;
-
-  try {
-    operator = await prisma.operator.findFirst({
-      where: {
-        OR: [
-          { id: slug },
-          { slug: slug },
-        ]
-      },
-      include: {
-        user: true,
-        tours: {
-          where: { isPublished: true },
-          include: {
-            operator: true,
-            destinations: {
-              include: { destination: true },
-            },
+  const operator: any = await prisma.operator.findFirst({
+    where: {
+      OR: [
+        { id: slug },
+        { slug: slug },
+      ]
+    },
+    include: {
+      user: true,
+      tours: {
+        where: { isPublished: true },
+        include: {
+          operator: true,
+          destinations: {
+            include: { destination: true },
           },
         },
-        reviews: {
-          include: {
-            traveler: { select: { firstName: true, lastName: true, country: true } }
-          },
-          orderBy: { createdAt: 'desc' }
-        }
       },
-    });
-  } catch {
-    operator = {
-      companyName: 'Safari Asili',
-      slug,
-      isVerified: true,
-      headquartersAddress: 'Arusha, Tanzania',
-      registrationNumber: 'TZA-OPS-1042',
-      averageRating: 4.9,
-      totalReviews: 142,
-      overviewText: 'Safari Asili designs private, conservation-focused journeys that bring travelers close to Africa’s most iconic wildlife.',
-      user: { email: 'hello@safariasili.com', phone: '+255 754 200 120' },
-      tours: [
-        { id: 'demo-op-tour-1', title: 'Serengeti Great Migration Explorer', slug: 'serengeti-great-migration-explorer', durationDays: 8, durationNights: 7, minPriceUsd: 2490, comfortLevel: 'MID_RANGE', tourType: 'PRIVATE', primaryCountry: 'Tanzania', inclusions: ['Game drives', 'Camp stay'], operator: { companyName: 'Safari Asili', slug: 'safari-asili', isVerified: true, averageRating: 4.9, totalReviews: 142 }, destinations: [{ destination: { name: 'Serengeti National Park' } }] },
-      ],
-      reviews: [
-        { id: 'r1', reviewTitle: 'Perfectly organized', reviewBody: 'Everything from the airport pickup to the game drives felt effortless and authentic.', overallRating: 5, createdAt: new Date(), traveler: { firstName: 'Emma', lastName: 'Clark', country: 'United Kingdom' } },
-      ],
-    };
-  }
-
-  if (!operator) {
-    // Fallback to the mock operator directory so every listed operator resolves
-    const mock = safariOperators.find(
-      (op) => op.slug === slug || op.companyName.toLowerCase().replace(/\s+/g, '-') === slug
-    );
-
-    if (mock) {
-      operator = {
-        companyName: mock.companyName,
-        slug: mock.slug,
-        isVerified: true,
-        countryOfOrigin: mock.officesIn?.[0] || 'Tanzania',
-        headquartersAddress: mock.officesIn?.join(', ') || 'Arusha, Tanzania',
-        registrationNumber: 'TZA-OPS-1042',
-        averageRating: mock.averageRating,
-        totalReviews: mock.totalReviews,
-        overviewText: `${mock.companyName} is a licensed local safari operator${mock.officesIn?.length ? ` with offices in ${mock.officesIn.join(', ')}` : ''}, offering ${mock.tourTypes?.toLowerCase() || 'private and group'} safaris across East and Southern Africa.`,
-        user: { email: 'hello@safariasili.com', phone: '+255 754 200 120' },
-        tours: (mock.topTours || []).map((t: any, i: number) => ({
-          id: `${mock.slug}-tour-${i + 1}`,
-          title: t.name,
-          slug: t.name.toLowerCase().replace(/\s+/g, '-'),
-          durationDays: 7,
-          durationNights: 6,
-          minPriceUsd: Number(String(t.price).replace(/[^0-9]/g, '')) || 1500,
-          comfortLevel: 'MID_RANGE',
-          tourType: 'PRIVATE',
-          primaryCountry: mock.officesIn?.[0] || 'Tanzania',
-          inclusions: ['Game drives', 'Park fees', 'Accommodation'],
-          operator: { companyName: mock.companyName, slug: mock.slug, isVerified: true, averageRating: mock.averageRating, totalReviews: mock.totalReviews },
-          destinations: (mock.destinations || []).map((d: string) => ({ destination: { name: d } })),
-          itineraries: [],
-        })),
-        reviews: [],
-      };
-    }
-  }
+      reviews: {
+        include: {
+          traveler: { select: { firstName: true, lastName: true, country: true } }
+        },
+        orderBy: { createdAt: 'desc' }
+      }
+    },
+  });
 
   if (!operator) {
     notFound();
   }
+
+  // Tour cards with live departure status (sold out / next open date)
+  operator.tours = await getTourCards({ operatorId: operator.id });
 
   const operatorSchema = buildOperatorSchema(operator);
 

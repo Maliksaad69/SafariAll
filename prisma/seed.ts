@@ -519,7 +519,7 @@ async function main() {
     const capacities = [6, 7, 8, 4];
     for (let i = 0; i < 4; i++) {
       await prisma.tourSlot.upsert({
-        where: { tourId_startDate: { tourId: tour.id, startDate: inDays(21 + i * 30) } },
+        where: { tourId_startDate_departureTime: { tourId: tour.id, startDate: inDays(21 + i * 30), departureTime: '08:00' } },
         update: {},
         create: {
           tourId: tour.id,

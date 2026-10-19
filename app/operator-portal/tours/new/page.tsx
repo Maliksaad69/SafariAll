@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Compass, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Calendar, MapPin, DollarSign, Award } from 'lucide-react';
+import { Bus, Compass, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Calendar, MapPin, DollarSign, Award } from 'lucide-react';
 
 interface ItineraryDay {
   dayNumber: number;
@@ -34,6 +34,27 @@ export default function NewTourPage() {
   const [endLocation, setEndLocation] = useState('Zanzibar');
   const [inclusionsText, setInclusionsText] = useState("All national park entrance fees\nProfessional safari driver/guide\n4x4 Land Cruiser transport\nMeals as specified\nAccommodations as listed");
   const [exclusionsText, setExclusionsText] = useState("International flights\nVisas & travel insurance\nPersonal tips & gratuities\nAlcoholic beverages");
+
+  // Fleet & departures: every package is sold per seat on scheduled departures
+  const isoIn = (days: number) => new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
+  const [today] = useState(() => isoIn(0));
+  const [fleet, setFleet] = useState<{ id: string; name: string; seats: number; vehicleType: string; isActive: boolean }[]>([]);
+  const [chosenVehicles, setChosenVehicles] = useState<string[]>([]);
+  const [newVehicles, setNewVehicles] = useState<{ name: string; vehicleType: string; seats: number; count: number }[]>([]);
+  const [scheduleOn, setScheduleOn] = useState(true);
+  const [schedule, setSchedule] = useState(() => ({ firstDate: isoIn(14), until: isoIn(104), everyDays: 7, departureTime: '07:30', vehiclesPerDeparture: 1, maxTravelers: 7 }));
+  useEffect(() => {
+    fetch('/api/operator/vehicles')
+      .then((r) => (r.ok ? r.json() : { vehicles: [] }))
+      .then((d) => {
+        const active = (d.vehicles ?? []).filter((v: { isActive: boolean }) => v.isActive);
+        setFleet(active);
+        if (active.length === 0) setNewVehicles([{ name: 'Land Cruiser', vehicleType: '4x4 Land Cruiser', seats: 7, count: 2 }]);
+      })
+      .catch(() => {});
+  }, []);
+  const newVehicleCount = newVehicles.reduce((n, v) => n + (Number(v.count) || 0), 0);
+  const vehiclePool = chosenVehicles.length + newVehicleCount;
 
   // Dynamic Day-by-Day Itineraries
   const [itineraries, setItineraries] = useState<ItineraryDay[]>([
@@ -106,6 +127,15 @@ export default function NewTourPage() {
           inclusions: inclusionsText.split('\n').filter(Boolean),
           exclusions: exclusionsText.split('\n').filter(Boolean),
           itineraries,
+          newVehicles: newVehicles.filter((v) => v.name.trim()),
+          schedule: scheduleOn
+            ? {
+                ...schedule,
+                vehicleIds: chosenVehicles,
+                useNewVehicles: true,
+                maxTravelers: vehiclePool === 0 ? schedule.maxTravelers : undefined,
+              }
+            : undefined,
         }),
       });
 
@@ -115,7 +145,11 @@ export default function NewTourPage() {
         throw new Error(data.error || 'Failed to publish safari package.');
       }
 
-      setSuccess('Safari tour package published successfully! Redirecting...');
+      setSuccess(
+        data.bookable
+          ? `Package published with ${data.departuresCreated} departure${data.departuresCreated === 1 ? '' : 's'}${data.skippedDates?.length ? ` (${data.skippedDates.length} date(s) skipped because no vehicle was free)` : ''}. Redirecting...`
+          : 'Package published, but it has no departures yet, so travellers can only request quotes. Add departures under Departures. Redirecting...'
+      );
       setTimeout(() => {
         router.push('/operator-portal');
         router.refresh();
@@ -428,6 +462,81 @@ export default function NewTourPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Section 4: Fleet & Departures */}
+          <div className="surface-card p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+              <h2 className="text-xl font-bold font-display text-[var(--ink)] flex items-center gap-2">
+                <Bus className="w-5 h-5 text-[var(--brand)]" /> 4. Vehicles &amp; Departures
+              </h2>
+              <label className="flex items-center gap-2 text-xs font-semibold">
+                <input type="checkbox" checked={scheduleOn} onChange={(e) => setScheduleOn(e.target.checked)} />
+                Schedule departures now
+              </label>
+            </div>
+            <p className="text-xs text-[var(--ink-muted)]">
+              Travellers book seats on scheduled departures. Capacity comes from the vehicles on each departure, and a vehicle
+              can only be on one trip at a time. When every seat is taken the departure shows as fully booked everywhere.
+            </p>
+
+            {fleet.length > 0 && (
+              <div>
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)] mb-2">Use vehicles from your fleet</span>
+                <div className="flex flex-wrap gap-2">
+                  {fleet.map((v) => {
+                    const on = chosenVehicles.includes(v.id);
+                    return (
+                      <button
+                        key={v.id}
+                        type="button"
+                        onClick={() => setChosenVehicles((c) => (on ? c.filter((x) => x !== v.id) : [...c, v.id]))}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${on ? 'border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-ink)]' : 'border-[var(--border)] text-[var(--ink-secondary)]'}`}
+                      >
+                        {on ? '✓ ' : ''}{v.name} · {v.seats} seats
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">Add new vehicles</span>
+              {newVehicles.map((v, i) => (
+                <div key={i} className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-end">
+                  <input className="form-control sm:col-span-2" placeholder="Name, e.g. Land Cruiser" value={v.name} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, name: e.target.value } : x)))} />
+                  <input className="form-control" placeholder="Type" value={v.vehicleType} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, vehicleType: e.target.value } : x)))} />
+                  <input className="form-control" type="number" min={1} max={100} title="Seats per vehicle" value={v.seats} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, seats: Number(e.target.value) } : x)))} />
+                  <div className="flex gap-2">
+                    <input className="form-control" type="number" min={1} max={10} title="How many of these" value={v.count} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, count: Number(e.target.value) } : x)))} />
+                    <button type="button" className="text-rose-600" onClick={() => setNewVehicles((l) => l.filter((_, k) => k !== i))}><Trash2 className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              ))}
+              <button type="button" className="btn btn-secondary btn-sm" onClick={() => setNewVehicles((l) => [...l, { name: '', vehicleType: '4x4 Land Cruiser', seats: 7, count: 1 }])}>
+                <Plus className="w-4 h-4" /> Add vehicle type
+              </button>
+            </div>
+
+            {scheduleOn && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <div><label className="form-label">First departure</label><input type="date" className="form-control" min={today} value={schedule.firstDate} onChange={(e) => setSchedule((x) => ({ ...x, firstDate: e.target.value }))} /></div>
+                <div><label className="form-label">Repeat until</label><input type="date" className="form-control" min={schedule.firstDate} value={schedule.until} onChange={(e) => setSchedule((x) => ({ ...x, until: e.target.value }))} /></div>
+                <div><label className="form-label">Every (days)</label><input type="number" min={1} max={90} className="form-control" value={schedule.everyDays} onChange={(e) => setSchedule((x) => ({ ...x, everyDays: Number(e.target.value) }))} /></div>
+                <div><label className="form-label">Departure time</label><input type="time" className="form-control" value={schedule.departureTime} onChange={(e) => setSchedule((x) => ({ ...x, departureTime: e.target.value }))} /></div>
+                {vehiclePool > 0 ? (
+                  <div><label className="form-label">Vehicles per departure</label><input type="number" min={1} max={vehiclePool} className="form-control" value={schedule.vehiclesPerDeparture} onChange={(e) => setSchedule((x) => ({ ...x, vehiclesPerDeparture: Number(e.target.value) }))} /></div>
+                ) : (
+                  <div><label className="form-label">Max group size</label><input type="number" min={1} className="form-control" value={schedule.maxTravelers} onChange={(e) => setSchedule((x) => ({ ...x, maxTravelers: Number(e.target.value) }))} /></div>
+                )}
+              </div>
+            )}
+            {scheduleOn && vehiclePool > 0 && schedule.vehiclesPerDeparture * Math.ceil((Number(durationDays) || 1) / Math.max(schedule.everyDays, 1)) > vehiclePool && (
+              <p className="text-xs font-semibold text-amber-700">
+                A {durationDays}-day trip every {schedule.everyDays} days needs more vehicles than selected, so some dates will be skipped.
+              </p>
+            )}
           </div>
 
           {/* Submit CTA */}

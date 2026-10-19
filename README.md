@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database (PostgreSQL in Docker)
+
+All site data (countries, parks, operators, tours, itineraries, reviews, blog posts,
+experts and demo accounts) lives in PostgreSQL. The database image in
+`docker/postgres` ships a full SQL dump (`docker/postgres/init/01-safaribookings.sql`)
+that creates the schema and loads the data the first time the container starts.
+It is exposed on host port **5433** (5432 is often taken by a locally installed
+PostgreSQL). Connection settings live in `.env` (copy `.env.example`).
+
+```bash
+npm install
+npm run db:start     # build the image and start Postgres (loads the data on first run)
+npm run dev
+```
+
+Other scripts: `db:stop`, `db:migrate` (apply new `prisma/migrations` to the running DB),
+`db:dump` (write the running DB back to the init SQL so it can be committed), and
+`db:reset` (**deletes the volume** and reloads from the SQL dump). pgAdmin is optional:
+`docker compose --profile tools up -d`. Demo logins are listed in `docker/postgres/README.md`.
+
 ## Getting Started
 
 First, run the development server:

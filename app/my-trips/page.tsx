@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Mail, Phone, Globe, Calendar, Users, Check, X, ArrowRight, Loader2, Send, MapPin } from 'lucide-react';
+import { Mail, Phone, Globe, Calendar, Users, X, ArrowRight, Loader2, Send, MapPin } from 'lucide-react';
 
 const STATUS_BADGE: Record<string, string> = {
   APPROVED: 'badge-success',
@@ -37,16 +38,18 @@ export default function MyTripsPage() {
   const [deciding, setDeciding] = useState<string | null>(null);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetch('/api/reservations')
+  const loadTrips = useCallback(() => {
+    fetch('/api/reservations', { cache: 'no-store' })
       .then((r) => r.json())
       .then(({ reservations }) => {
         setTrips(reservations || []);
-        if (reservations?.length > 0) setSelectedId(reservations[0].id);
+        setSelectedId((cur) => cur ?? (reservations?.length > 0 ? reservations[0].id : null));
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
+
+  useEffect(loadTrips, [loadTrips]);
 
   const loadMessages = (rid: string) => {
     fetch(`/api/reservations/${rid}/messages`)
@@ -54,6 +57,11 @@ export default function MyTripsPage() {
       .then(({ messages }) => setSelectedMessages(messages || []))
       .catch(() => {});
   };
+  // Agency decisions and replies show up on screen as soon as they happen.
+  useLiveRefresh('scope=me', () => {
+    loadTrips();
+    if (selectedId) loadMessages(selectedId);
+  });
 
   useEffect(() => {
     if (!selectedId) return;
@@ -82,8 +90,9 @@ export default function MyTripsPage() {
     }
   };
 
-  const decide = async (status: 'APPROVED' | 'DECLINED') => {
+  const decide = async (status: 'CANCELLED') => {
     if (!selectedId) return;
+    if (!window.confirm('Cancel this reservation? Your seats will be released to other travellers.')) return;
     setDeciding(selectedId);
     setError('');
     try {
@@ -94,7 +103,7 @@ export default function MyTripsPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update reservation.');
-      router.refresh();
+      loadTrips();
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
     } finally { setDeciding(null); }
@@ -201,7 +210,12 @@ export default function MyTripsPage() {
                     <div className="grid gap-3 text-xs sm:text-sm text-[var(--ink)]/80">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-[var(--brand)]" />
-                        <span>Starts {trip.startDate ? new Date(trip.startDate).toLocaleDateString() : '—'}</span>
+                        <span>
+                          Starts {trip.startDate ? new Date(trip.startDate).toLocaleDateString(undefined, { timeZone: 'UTC' }) : '—'}
+                          {trip.departureTime ? ` at ${trip.departureTime}` : ''}
+                          {trip.route ? ` · ${trip.route}` : ''}
+                          {trip.vehicle ? ` · ${trip.vehicle.name} (${trip.vehicle.vehicleType})` : ''}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="h-4 w-4 text-[var(--brand)]" />
@@ -295,19 +309,17 @@ export default function MyTripsPage() {
                     )}
                   </div>
 
-                  {trip.status === 'PENDING' && (
+                  {(trip.status === 'PENDING' || trip.status === 'APPROVED') && (
                     <div className="surface-card rounded-2xl border border-black/5 p-5 shadow-sm">
-                      <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-3">Awaiting agency decision — approve or decline to move forward.</p>
-                      <div className="flex gap-2">
-                        <button onClick={() => decide('APPROVED')} disabled={deciding === trip.id} className="btn btn-sm btn-success flex-1 rounded-xl">
-                          {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                          Approve
-                        </button>
-                        <button onClick={() => decide('DECLINED')} disabled={deciding === trip.id} className="btn btn-sm btn-danger flex-1 rounded-xl">
-                          {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
-                          Decline
-                        </button>
-                      </div>
+                      <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-3">
+                        {trip.status === 'PENDING'
+                          ? 'Your seats are held while the agency reviews the request. This page updates as soon as they respond.'
+                          : 'Confirmed. If your plans change, cancel here so the seats go to other travellers.'}
+                      </p>
+                      <button onClick={() => decide('CANCELLED')} disabled={deciding === trip.id} className="btn btn-sm btn-danger rounded-xl">
+                        {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+                        Cancel reservation
+                      </button>
                       {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
                     </div>
                   )}

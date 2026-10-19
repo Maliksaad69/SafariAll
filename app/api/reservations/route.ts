@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { completeElapsedTrips } from '@/lib/trips';
+import { BookingError, getTourAvailability, isSeatRuleViolation, reserveSeats, toUtcDay } from '@/lib/booking';
+import { notifyChange } from '@/lib/live';
 
 export async function GET(req: Request) {
   const session = await getSession();
@@ -31,7 +33,7 @@ export async function GET(req: Request) {
       const reservations = await prisma.reservation.findMany({
         where: {
           operatorId,
-          ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED'].includes(statusFilter)
+          ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED', 'COMPLETED'].includes(statusFilter)
             ? { status: statusFilter as any }
             : {}),
         },
@@ -49,6 +51,8 @@ export async function GET(req: Request) {
           },
           tour: { select: { id: true, title: true, slug: true, durationDays: true } },
           messages: { select: { id: true, isRead: true, senderId: true } },
+          slot: { select: { departureTime: true, route: true } },
+          vehicle: { select: { name: true, vehicleType: true, plateNumber: true } },
         },
       });
 
@@ -69,6 +73,9 @@ export async function GET(req: Request) {
         status: r.status,
         operatorNote: r.operatorNote,
         slotId: r.slotId,
+        departureTime: r.slot?.departureTime ?? null,
+        route: r.slot?.route ?? null,
+        vehicle: r.vehicle,
         decidedAt: r.decidedAt ? r.decidedAt.toISOString() : null,
         createdAt: r.createdAt.toISOString(),
         traveler: {
@@ -95,6 +102,8 @@ export async function GET(req: Request) {
       orderBy: { createdAt: 'desc' },
       include: {
         tour: { select: { id: true, title: true, slug: true, durationDays: true } },
+        slot: { select: { departureTime: true, route: true } },
+        vehicle: { select: { name: true, vehicleType: true } },
         operator: {
           select: {
             id: true,
@@ -123,6 +132,9 @@ export async function GET(req: Request) {
         status: r.status,
         operatorNote: r.operatorNote,
         slotId: r.slotId,
+        departureTime: r.slot?.departureTime ?? null,
+        route: r.slot?.route ?? null,
+        vehicle: r.vehicle,
         decidedAt: r.decidedAt ? r.decidedAt.toISOString() : null,
         completedAt: r.completedAt ? r.completedAt.toISOString() : null,
         createdAt: r.createdAt.toISOString(),
@@ -152,9 +164,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'You must be signed in to request a reservation.' }, { status: 401 });
   }
 
+  let requestedTourId: string | undefined;
   try {
     const body = await req.json();
     const { tourId, startDate, adultsCount, childrenCount, specialRequests, slotId } = body;
+    requestedTourId = tourId;
 
     if (!tourId || !startDate || !adultsCount) {
       return NextResponse.json({ error: 'Tour, start date and number of adults are required.' }, { status: 400 });
@@ -170,166 +184,83 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Tour not found.' }, { status: 404 });
     }
 
-    const start = new Date(startDate);
-    if (Number.isNaN(start.getTime())) {
-      return NextResponse.json({ error: 'Invalid start date.' }, { status: 400 });
-    }
-
     const adults = Math.max(1, parseInt(adultsCount, 10) || 1);
     const children = Math.max(0, parseInt(childrenCount, 10) || 0);
     const estimatedTotal = tour.minPriceUsd * adults + tour.minPriceUsd * 0.5 * children;
     const totalPax = adults + children;
-
-    // Slot capacity enforcement
-    let usedSlotId = slotId || null;
-    let foundSlot = null;
-
-    if (!usedSlotId) {
-      // Check if tour uses fixed-date slots
-      const slotCount = await prisma.tourSlot.count({ where: { tourId: tour.id } });
-
-      if (slotCount > 0) {
-        // Fixed-dates mode: find the specific slot for this date
-        foundSlot = await prisma.tourSlot.findFirst({
-          where: {
-            tourId: tour.id,
-            startDate: { gte: start, lt: new Date(start.getTime() + 86400000) },
-          },
-          include: {
-            _count: { select: { reservations: { where: { status: { in: ['PENDING', 'APPROVED'] } } } } },
-          },
-        });
-
-        if (foundSlot) {
-          const booked = foundSlot._count.reservations;
-          if (booked >= foundSlot.maxTravelers) {
-            return NextResponse.json({
-              error: `This departure is fully booked. ${booked} of ${foundSlot.maxTravelers} travelers already have this date and there are no other slots available for this tour. Try a different date or contact the agency directly.`,
-              status: 'fully_booked',
-            }, { status: 409 });
-          }
-          if (totalPax > foundSlot.maxTravelers - booked) {
-            const have = foundSlot.maxTravelers - booked;
-            return NextResponse.json({
-              error: `Not enough capacity on this departure. There are only ${have} spot${have === 1 ? '' : 's'} left and you are requesting ${totalPax} travelers.`,
-              status: 'capacity_exceeded',
-            }, { status: 409 });
-          }
-          usedSlotId = foundSlot.id;
-        } else {
-          return NextResponse.json({
-            error: `This tour departs on fixed dates only and there is no departure slot for ${startDate}. Choose one of the available departure dates.`,
-            status: 'no_slot',
-          }, { status: 409 });
-        }
-      }
+    if (totalPax > 60) {
+      return NextResponse.json({ error: 'For groups larger than 60 travelers please contact the agency directly.' }, { status: 400 });
     }
 
-    if (!usedSlotId) {
-      // Open-dated tour without fixed slots: accept any date but still enforce optional per-tour total capacity
-      const availability = await prisma.tourAvailability.findUnique({ where: { tourId: tour.id } });
-      if (availability && availability.totalCapacity) {
-        const booked = await prisma.reservation.count({
-          where: {
-            tourId: tour.id,
-            status: { in: ['PENDING', 'APPROVED'] },
-            startDate: {
-              gte: start,
-              lt: new Date(start.getTime() + 86400000),
-            },
-          },
-        });
-        const spotsLeft = availability.totalCapacity - booked;
-        if (spotsLeft < totalPax) {
-          return NextResponse.json({
-            error: `Not enough capacity on this date. There are only ${spotsLeft} spot${spotsLeft === 1 ? '' : 's'} left and you are requesting ${totalPax} travelers.`,
-            status: 'capacity_exceeded',
-          }, { status: 409 });
-        }
+    // Which departure is being booked? Tours with scheduled departures only accept those.
+    let usedSlotId: string | null = null;
+    const slotCount = await prisma.tourSlot.count({ where: { tourId: tour.id } });
+    if (slotId) {
+      const slot = await prisma.tourSlot.findFirst({ where: { id: slotId, tourId: tour.id }, select: { id: true } });
+      if (!slot) {
+        return NextResponse.json({ error: 'This departure is no longer available. Please pick another date.', status: 'no_slot' }, { status: 409 });
       }
+      usedSlotId = slot.id;
+    } else if (slotCount > 0) {
+      const day = toUtcDay(startDate);
+      const sameDay = day
+        ? await prisma.tourSlot.findMany({ where: { tourId: tour.id, startDate: day }, select: { id: true } })
+        : [];
+      if (sameDay.length !== 1) {
+        return NextResponse.json({
+          error: sameDay.length === 0
+            ? 'This tour runs on scheduled departures only. Choose one of the available departures.'
+            : 'There are several departures on this date. Choose a departure time.',
+          status: 'no_slot',
+        }, { status: 409 });
+      }
+      usedSlotId = sameDay[0].id;
+    }
+    if (!usedSlotId) {
+      // Seats are only sold on scheduled departures, so capacity is always enforced.
+      return NextResponse.json({
+        error: 'This tour has no scheduled departures yet. Request a quote and the operator will propose dates.',
+        status: 'no_slot',
+      }, { status: 409 });
     }
 
-    // Race-safe capacity + create: serialize against other concurrent bookings for the same slot/date.
-    // Without this, 10 simultaneous requests could all pass the read-then-write check and overbook.
-    let serializedSlot: { id: string; maxTravelers: number } | null = null;
+    const start = (await prisma.tourSlot.findUnique({ where: { id: usedSlotId }, select: { startDate: true } }))!.startDate;
+    const startDay = start;
+
+    // Take the seats and create the request in one transaction. reserveSeats locks the
+    // departure row, so simultaneous requests for the last seats are handled one at a time.
     const reservation = await prisma.$transaction(async (tx) => {
-      let slotForThisBooking: { id: string; maxTravelers: number } | null = null;
-
-      if (usedSlotId) {
-        // Re-read the slot INSIDE the transaction and lock it so concurrent bookings queue up.
-        const slot = await tx.$queryRaw<{ id: string; max_travelers: number }[]>`
-          SELECT id, max_travelers FROM "tour_slots" WHERE id = ${usedSlotId} FOR UPDATE
-        `;
-        if (slot.length === 0) {
-          throw new Error('SLOT_GONE');
-        }
-        slotForThisBooking = { id: slot[0].id, maxTravelers: slot[0].max_travelers };
-
-        const active = await tx.reservation.aggregate({
-          where: { slotId: usedSlotId, status: { in: ['PENDING', 'APPROVED'] } },
-          _sum: { adultsCount: true, childrenCount: true },
-        });
-        const bookedPax = (active._sum.adultsCount ?? 0) + (active._sum.childrenCount ?? 0);
-        const spotsLeft = slotForThisBooking.maxTravelers - bookedPax;
-
-        if (spotsLeft <= 0) {
-          throw new Error('SLOT_FULL');
-        }
-        if (totalPax > spotsLeft) {
-          throw new Error(`CAPACITY:${spotsLeft}`);
-        }
-      } else {
-        // Open-dated tour: enforce optional per-tour total capacity for this date
-        const availability = await tx.tourAvailability.findUnique({ where: { tourId: tour.id } });
-        if (availability && availability.totalCapacity) {
-          const agg = await tx.reservation.aggregate({
-            where: {
-              tourId: tour.id,
-              status: { in: ['PENDING', 'APPROVED'] },
-              startDate: { gte: start, lt: new Date(start.getTime() + 86400000) },
-            },
-            _sum: { adultsCount: true, childrenCount: true },
-          });
-          const bookedPax = (agg._sum.adultsCount ?? 0) + (agg._sum.childrenCount ?? 0);
-          const spotsLeft = availability.totalCapacity - bookedPax;
-          if (totalPax > spotsLeft) {
-            throw new Error(`CAPACITY:${Math.max(0, spotsLeft)}`);
-          }
-        }
-      }
-
-      serializedSlot = slotForThisBooking;
+      const { vehicleId } = await reserveSeats(tx, usedSlotId, totalPax);
 
       const created = await tx.reservation.create({
         data: {
           travelerId: session.userId,
           tourId: tour.id,
           operatorId: tour.operatorId,
-          startDate: start,
+          startDate: startDay,
           adultsCount: adults,
           childrenCount: children,
           specialRequests: specialRequests || null,
           estimatedTotalUsd: estimatedTotal,
           status: 'PENDING',
           slotId: usedSlotId,
+          vehicleId,
         },
       });
 
       // Log the request in the shared thread so the agency sees it immediately
-      try {
-        await tx.reservationMessage.create({
-          data: {
-            reservationId: created.id,
-            senderId: session.userId,
-            body: `Reservation request: ${adults} adult${adults !== 1 ? 's' : ''}${children ? `, ${children} children` : ''} · ${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · ${tour.title}. Estimated total $${estimatedTotal.toFixed(2)}.${specialRequests ? ` Special requests: ${specialRequests}` : ''}`,
-          },
-        });
-      } catch {
-        // best-effort — booking itself must still succeed
-      }
+      await tx.reservationMessage.create({
+        data: {
+          reservationId: created.id,
+          senderId: session.userId,
+          body: `Reservation request: ${adults} adult${adults !== 1 ? 's' : ''}${children ? `, ${children} children` : ''} · ${startDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} · ${tour.title}. Estimated total $${estimatedTotal.toFixed(2)}.${specialRequests ? ` Special requests: ${specialRequests}` : ''}`,
+        },
+      });
 
       return created;
-    }, { isolationLevel: 'Serializable' });
+    });
+
+    notifyChange(`tour:${tour.id}`, `operator:${tour.operatorId}`, `user:${session.userId}`);
 
     return NextResponse.json({
       success: true,
@@ -352,25 +283,23 @@ export async function POST(req: Request) {
       operatorNote: null,
     }, { status: 201 });
   } catch (error: any) {
-    // Translate capacity signals from the transaction into traveler-friendly errors
-    const msg: string = error?.message ?? '';
-    if (msg === 'SLOT_FULL') {
+    if (error instanceof BookingError) {
+      // Send the fresh availability back so the booking form can update without another request.
+      const availability = requestedTourId ? await getTourAvailability(requestedTourId).catch(() => null) : null;
       return NextResponse.json({
-        error: 'This departure is now fully booked — every seat on this date is taken. Please choose a different date or a similar package.',
-        status: 'fully_booked',
+        error: error.message,
+        status: error.code === 'SLOT_FULL' ? 'fully_booked' : error.code === 'CAPACITY' || error.code === 'NO_VEHICLE_FIT' ? 'capacity_exceeded' : 'unavailable',
+        code: error.code,
+        spotsLeft: error.spotsLeft,
+        availability,
       }, { status: 409 });
-    }
-    if (msg.startsWith('CAPACITY:')) {
-      const have = parseInt(msg.slice('CAPACITY:'.length), 10);
-      return NextResponse.json({
-        error: `Not enough capacity left. Only ${have} spot${have === 1 ? '' : 's'} remain${have === 1 ? 's' : ''} for this date. Reduce the group size or pick another date.`,
-        status: 'capacity_exceeded',
-      }, { status: 409 });
-    }
-    if (msg === 'SLOT_GONE') {
-      return NextResponse.json({ error: 'This departure is no longer available. Please pick another date.' }, { status: 409 });
     }
 
+    if (isSeatRuleViolation(error)) {
+      // Last line of defence: the database refused to oversell.
+      const availability = requestedTourId ? await getTourAvailability(requestedTourId).catch(() => null) : null;
+      return NextResponse.json({ error: 'This departure is now fully booked. Please choose another departure.', status: 'fully_booked', code: 'SLOT_FULL', availability }, { status: 409 });
+    }
     console.error('Create reservation error:', error);
     return NextResponse.json({ error: 'Failed to create reservation. Please try again.' }, { status: 500 });
   }

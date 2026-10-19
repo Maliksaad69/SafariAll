@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heart, User, ChevronDown, Menu, X, Calendar, Bell } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
-import { safariOperators, safariTours } from '@/lib/site-data';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -45,9 +44,18 @@ export default function Navbar() {
     router.refresh();
   };
 
-  // Dynamic country list from the actual tour data
-  const countries = Array.from(new Set(safariTours.map((t) => t.primaryCountry)));
-  const topOperators = safariOperators.slice(0, 5);
+  // Country list and top operators come from Postgres via /api/site/nav
+  const [countries, setCountries] = useState<string[]>([]);
+  const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
+  useEffect(() => {
+    fetch('/api/site/nav')
+      .then((r) => r.json())
+      .then((d) => {
+        setCountries(d.countries ?? []);
+        setTopOperators(d.operators ?? []);
+      })
+      .catch(() => {});
+  }, []);
 
   const navMenus = [
     {

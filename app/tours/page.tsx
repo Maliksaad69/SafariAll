@@ -2,8 +2,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FilterSidebar from '@/components/FilterSidebar';
 import TourCard from '@/components/TourCard';
-import prisma from '@/lib/prisma';
-import { safariTours } from '@/lib/site-data';
+import { getTourCards } from '@/lib/catalog';
 import Link from 'next/link';
 import { ChevronRight, Star } from 'lucide-react';
 
@@ -35,50 +34,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
   const params = await searchParams;
   const { country, comfort, duration, sort, search, tourType, month, travelers } = params;
 
-  // The DATABASE is the source of truth: every tour listed here must resolve to
-  // a real record on its detail page, otherwise the reserve dialog's slot lookup
-  // 404s and the reservation request fails with "Tour not found".
-  // Static sample data is only a fallback for an empty database.
-  const dbTours = await prisma.tour.findMany({
-    where: { isPublished: true },
-    orderBy: [{ createdAt: 'desc' }],
-    include: {
-      operator: {
-        select: {
-          companyName: true,
-          slug: true,
-          isVerified: true,
-          averageRating: true,
-          totalReviews: true,
-        },
-      },
-      destinations: { include: { destination: { select: { name: true } } } },
-    },
-  });
-
-  const tours = (dbTours.length > 0
-    ? dbTours.map((t) => ({
-        id: t.id,
-        title: t.title,
-        slug: t.slug,
-        durationDays: t.durationDays,
-        durationNights: t.durationNights,
-        minPriceUsd: t.minPriceUsd,
-        comfortLevel: t.comfortLevel,
-        tourType: t.tourType,
-        primaryCountry: t.primaryCountry,
-        startLocation: t.startLocation ?? '',
-        inclusions: t.inclusions,
-        operator: {
-          companyName: t.operator.companyName,
-          slug: t.operator.slug,
-          isVerified: t.operator.isVerified,
-          averageRating: t.operator.averageRating,
-          totalReviews: t.operator.totalReviews,
-        },
-        destinations: t.destinations.map((d) => ({ destination: { name: d.destination.name } })),
-      }))
-    : safariTours) as unknown as typeof safariTours;
+  const tours = await getTourCards();
 
   const matchesBase = (tour: (typeof tours)[number], opts: { ignore?: string } = {}) => {
     const q = (search || '').trim().toLowerCase();
@@ -102,7 +58,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
   const countryCounts: Record<string, number> = {};
   const comfortCounts: Record<string, number> = {};
   const durationCounts: Record<string, number> = {};
-  for (const c of ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe']) {
+  for (const c of Array.from(new Set(tours.map((t) => t.primaryCountry))).sort()) {
     countryCounts[c] = tours.filter((t) => matchesBase(t, { ignore: 'country' }) && t.primaryCountry.toLowerCase() === c.toLowerCase()).length;
   }
   for (const c of ['LUXURY_PLUS', 'LUXURY', 'MID_RANGE', 'BUDGET']) {

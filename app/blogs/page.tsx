@@ -42,27 +42,6 @@ async function getPosts(): Promise<Post[]> {
   }
 }
 
-const evergreenPosts = [
-  {
-    title: 'Tanzania Safari Itinerary: How to Spend 7 to 10 Days',
-    tag: 'Travel Guides',
-    text: 'A practical plan for moving between Serengeti, Ngorongoro, Tarangire, and the coast to balance iconic wildlife with relaxed downtime.',
-    href: '/blog/tanzania-safari-itinerary-7-to-10-days',
-  },
-  {
-    title: 'Guide to Visiting Ngorongoro Crater',
-    tag: 'Parks & Wildlife',
-    text: 'How to plan a crater day, what to expect from the road network, and the best times for wildlife viewing at sunrise and dusk.',
-    href: '/blog/guide-to-visiting-ngorongoro-crater',
-  },
-  {
-    title: 'Survey Reveals the World’s Polite Tourists',
-    tag: 'News & Insights',
-    text: 'Global travel habits and etiquette trends are reshaping how safari operators tailor guest experiences and group itineraries.',
-    href: '/blog/survey-reveals-the-worlds-polite-tourists',
-  },
-];
-
 export default async function BlogPage() {
   const posts = await getPosts();
 
@@ -156,36 +135,9 @@ export default async function BlogPage() {
           </section>
         )}
 
-        {/* Evergreen editorial */}
-        <section className={`mt-12 ${posts.length > 0 ? 'pt-4' : ''}`}>
-          <div className="mb-6">
-            <span className="text-xs uppercase tracking-wider font-bold text-[var(--brand)] block">Editorial Guides</span>
-            <h2 className="text-2xl font-bold font-display text-[var(--brand-deep)]">
-              Essential Safari Planning Guides
-            </h2>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {evergreenPosts.map((post) => (
-              <article key={post.title} className="surface-card rounded-2xl border border-black/5 p-7 shadow-sm hover:border-[var(--brand)]/30 hover:shadow-md transition-all flex flex-col justify-between">
-                <div>
-                  <span className="inline-block rounded-full bg-[var(--brand-soft)] border border-[var(--brand-pale)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--brand-deep)] mb-4">
-                    {post.tag}
-                  </span>
-                  <h3 className="text-xl font-bold font-display text-[var(--brand-deep)] leading-tight mb-3">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm leading-relaxed text-[var(--ink-muted)]">{post.text}</p>
-                </div>
-                <div className="pt-6 mt-6 border-t border-black/5">
-                  <Link href={post.href} className="font-semibold text-xs text-[var(--brand)] hover:text-[var(--brand-deep)] inline-flex items-center gap-1.5 transition-colors">
-                    <span>Read article</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        {posts.length === 0 && (
+          <p className="mt-12 text-sm text-[var(--ink-muted)]">No articles have been published yet.</p>
+        )}
       </main>
 
       <Footer />

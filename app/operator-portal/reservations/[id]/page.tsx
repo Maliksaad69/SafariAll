@@ -1,5 +1,6 @@
 'use client';
 
+import { useLiveRefresh } from '@/lib/use-live';
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -8,7 +9,7 @@ import Link from 'next/link';
 import { ArrowLeft, Mail, Phone, Globe, Check, X, Loader2, Send, Calendar, Users } from 'lucide-react';
 
 interface Message { id: string; body: string; createdAt: string; sender: { firstName: string; lastName: string }; isRead: boolean; }
-interface Reservation { id: string; reference: string; startDate: string; adultsCount: number; childrenCount: number; specialRequests: string | null; estimatedTotalUsd: number; status: string; operatorNote: string | null; decidedAt: string | null; createdAt: string; traveler: { firstName: string; lastName: string; email: string; phone: string | null; country: string | null; }; tour: { title: string; slug: string; durationDays: number; }; operatorName: string; }
+interface Reservation { id: string; reference: string; startDate: string; adultsCount: number; childrenCount: number; specialRequests: string | null; estimatedTotalUsd: number; status: string; operatorNote: string | null; decidedAt: string | null; createdAt: string; traveler: { firstName: string; lastName: string; email: string; phone: string | null; country: string | null; }; tour: { title: string; slug: string; durationDays: number; }; operatorName: string; slot?: { departureTime: string; route: string | null; bookedSeats: number; maxTravelers: number; spotsLeft: number } | null; vehicle?: { name: string; vehicleType: string; plateNumber?: string | null } | null; }
 
 export default function ReservationDetailPage() {
   const router = useRouter();
@@ -45,6 +46,13 @@ export default function ReservationDetailPage() {
   useEffect(() => {
     if (id) loadMessages(String(id));
   }, [id]);
+
+  // Traveller cancellations and replies appear without reloading.
+  useLiveRefresh(id ? 'scope=me' : null, () => {
+    if (!id) return;
+    loadReservation(String(id));
+    loadMessages(String(id));
+  });
 
   const loadMessages = async (rid: string) => {
     setLoadingMessages(true);
@@ -144,7 +152,13 @@ export default function ReservationDetailPage() {
 
               {reservation.tour.durationDays > 0 && (
                 <div className="flex gap-4 text-xs text-[var(--ink-secondary)] border-b border-dashed border-[var(--border)] pb-4 mb-4">
-                  <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/>Starts {new Date(reservation.startDate).toLocaleDateString()}</span>
+                  <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/>Starts {new Date(reservation.startDate).toLocaleDateString(undefined, { timeZone: 'UTC' })}{reservation.slot ? ` at ${reservation.slot.departureTime}` : ''}</span>
+                  {reservation.slot && (
+                    <span className="inline-flex items-center gap-1.5">
+                      {reservation.slot.route ? `${reservation.slot.route} · ` : ''}{reservation.vehicle ? `${reservation.vehicle.name}${reservation.vehicle.plateNumber ? ` (${reservation.vehicle.plateNumber})` : ''} · ` : ''}
+                      departure {reservation.slot.bookedSeats}/{reservation.slot.maxTravelers} seats booked
+                    </span>
+                  )}
                   <span className="inline-flex items-center gap-1.5"><Users className="h-3.5 w-3.5"/>{reservation.adultsCount + reservation.childrenCount} pax ({reservation.adultsCount} + {reservation.childrenCount})</span>
                   <span className="inline-flex items-center gap-1.5 font-semibold text-[var(--brand)]">{reservation.status}</span>
                 </div>
