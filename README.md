@@ -38,6 +38,26 @@ It picks the fastest transport the deployment supports, so it works on any host:
 
 `npm run dev:next` starts plain `next dev` (no socket.io), which uses the stream or Pusher.
 
+## Deploying to Vercel (or Netlify)
+
+Everything, including the chat, runs on Vercel without the custom server:
+
+1. **Put the database online.** Vercel cannot reach the Docker database on your computer.
+   Create a hosted PostgreSQL database (for example Neon, Supabase or Railway) and load the
+   data into it: `psql "<connection string>" -f docker/postgres/init/01-safaribookings.sql`.
+   Use the provider's *pooled* connection string, since every serverless function opens its
+   own connection.
+2. **Import the repo in Vercel** (framework: Next.js; build command `next build` is detected).
+   `npm install` runs `prisma generate` automatically.
+3. **Set environment variables** in Vercel → Settings → Environment Variables:
+   `DATABASE_URL` (the pooled string), `JWT_SECRET` (a long random string), and optionally
+   `PUSHER_APP_ID`, `PUSHER_KEY`, `PUSHER_SECRET`, `PUSHER_CLUSTER` for instant chat.
+4. Deploy. Without Pusher keys the chat uses the built-in live stream (about 1 second per
+   message). Streams close after 50 seconds, inside Vercel's time limit, and the browser
+   reconnects and resumes without losing messages. Chat photos and files are stored in
+   Postgres (not on disk), are shrunk in the browser, and are capped at 4 MB per message to
+   fit Vercel's 4.5 MB request limit.
+
 ## Getting Started
 
 First, run the development server:

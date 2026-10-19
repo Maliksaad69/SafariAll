@@ -204,6 +204,24 @@ function Linkified({ text }: { text: string }) {
 const ACCEPT = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt';
 const MAX_BYTES = 8 * 1024 * 1024;
 
+/** Shrink large photos in the browser (max 1920 px, JPEG) so uploads are fast and fit serverless limits. */
+async function compressImage(f: File): Promise<File> {
+  if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size < 600 * 1024) return f;
+  try {
+    const bitmap = await createImageBitmap(f);
+    const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob: Blob | null = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', 0.85));
+    if (!blob || blob.size >= f.size) return f;
+    return new File([blob], f.name.replace(/\.(png|webp|jpeg|jpg)$/i, '') + '.jpg', { type: 'image/jpeg' });
+  } catch {
+    return f;
+  }
+}
+
 /* ── Component ─────────────────────────────────────────────────────────── */
 
 /**
@@ -234,6 +252,7 @@ export default function ReservationChat({
   const [showQuick, setShowQuick] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState('');
+  const [maxUpload, setMaxUpload] = useState(MAX_BYTES);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -295,6 +314,7 @@ export default function ReservationChat({
       await loadHistory();
       const cfg = await fetch('/api/chat/config', { cache: 'no-store' }).then((r) => r.json()).catch(() => ({ transport: 'stream' }));
       if (cancelled) return;
+      if (cfg.maxUploadBytes) setMaxUpload(cfg.maxUploadBytes);
       let t: Transport;
       try {
         if (cfg.transport === 'socket') {
@@ -350,12 +370,15 @@ export default function ReservationChat({
     typingTimer.current = window.setTimeout(() => emitTyping(false), 3000);
   };
 
-  const addFiles = (list: FileList | File[] | null) => {
+  const addFiles = async (list: FileList | File[] | null) => {
     if (!list) return;
+    setError('');
     const next = [...files];
-    for (const f of Array.from(list)) {
-      if (f.size > MAX_BYTES) {
-        setError(`${f.name} is larger than 8 MB.`);
+    for (const raw of Array.from(list)) {
+      const f = await compressImage(raw);
+      const total = next.reduce((n, x) => n + x.size, 0) + f.size;
+      if (f.size > maxUpload || total > maxUpload) {
+        setError(`Files in one message can be up to ${Math.round(maxUpload / 1048576)} MB in total. ${f.name} doesn't fit; send it in a separate message.`);
         continue;
       }
       if (next.length < 5) next.push(f);
@@ -445,7 +468,7 @@ export default function ReservationChat({
       onDrop={(e) => {
         e.preventDefault();
         setDragging(false);
-        addFiles(e.dataTransfer.files);
+        void addFiles(e.dataTransfer.files);
       }}
     >
       {/* Header */}
@@ -616,12 +639,12 @@ export default function ReservationChat({
           multiple
           hidden
           onChange={(e) => {
-            addFiles(e.target.files);
+            void addFiles(e.target.files);
             e.target.value = '';
           }}
         />
         <div className="flex items-center gap-0.5">
-        <button type="button" title="Attach photos or files (max 8 MB each)" aria-label="Attach files" className="rounded-xl p-2 text-[var(--ink-secondary)] hover:bg-[var(--surface-sunk)]" onClick={() => fileRef.current?.click()}>
+        <button type="button" title="Attach photos or files" aria-label="Attach files" className="rounded-xl p-2 text-[var(--ink-secondary)] hover:bg-[var(--surface-sunk)]" onClick={() => fileRef.current?.click()}>
             <Paperclip className="h-4 w-4" />
           </button>
           <button
@@ -648,7 +671,7 @@ export default function ReservationChat({
           >
             <Zap className="h-4 w-4" />
           </button>
-          <span className="ml-auto pr-1 text-[10px] text-[var(--ink-muted)]">Photos, PDFs and documents up to 8 MB</span>
+          <span className="ml-auto pr-1 text-[10px] text-[var(--ink-muted)]">Photos, PDFs and documents up to {Math.round(maxUpload / 1048576)} MB</span>
         </div>
         <div className="flex items-end gap-1.5">
         <textarea
@@ -659,7 +682,7 @@ export default function ReservationChat({
             onChange={(e) => onDraft(e.target.value)}
             onPaste={(e) => {
               const pasted = Array.from(e.clipboardData.files);
-              if (pasted.length) addFiles(pasted);
+              if (pasted.length) void addFiles(pasted);
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {

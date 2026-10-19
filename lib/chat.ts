@@ -12,6 +12,8 @@ import { emitToReservation } from '@/lib/realtime';
 
 export const MAX_MESSAGE_LENGTH = 4000;
 export const MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
+/** Total upload size per message: serverless hosts limit request bodies (Vercel 4.5 MB). */
+export const MAX_UPLOAD_BYTES = process.env.VERCEL || process.env.NETLIFY ? 4 * 1024 * 1024 : MAX_ATTACHMENT_BYTES;
 export const MAX_ATTACHMENTS = 5;
 export const ALLOWED_TYPES = [
   'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic',
@@ -128,6 +130,9 @@ export async function postMessage(
   const body = String(rawBody ?? '').trim().slice(0, MAX_MESSAGE_LENGTH);
   if (!body && files.length === 0) throw new ChatError('Message is empty.');
   if (files.length > MAX_ATTACHMENTS) throw new ChatError(`You can attach up to ${MAX_ATTACHMENTS} files per message.`);
+  if (files.reduce((n, f) => n + f.data.length, 0) > MAX_UPLOAD_BYTES) {
+    throw new ChatError(`Files in one message can be up to ${Math.round(MAX_UPLOAD_BYTES / 1048576)} MB in total.`);
+  }
   for (const f of files) {
     if (f.data.length === 0) throw new ChatError(`${f.filename} is empty.`);
     if (f.data.length > MAX_ATTACHMENT_BYTES) throw new ChatError(`${f.filename} is larger than 8 MB.`);

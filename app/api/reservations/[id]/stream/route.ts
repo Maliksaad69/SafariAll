@@ -6,7 +6,8 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 const TICK_MS = 1000;
-const LIFETIME_MS = 50_000; // close before serverless time limits; the browser reconnects at once
+// Close before serverless time limits (Vercel, Netlify); the browser reconnects at once and resumes.
+const LIFETIME_MS = Number(process.env.CHAT_STREAM_LIFETIME_MS) || 50_000;
 
 /**
  * Server-sent events for one reservation chat. Works on any host (Vercel, Netlify,

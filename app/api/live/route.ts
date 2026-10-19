@@ -3,9 +3,12 @@ import prisma from '@/lib/prisma';
 import { fingerprint, liveBus } from '@/lib/live';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const POLL_MS = 3000;
 const HEARTBEAT_MS = 20000;
+// Close before serverless time limits (Vercel, Netlify); EventSource reconnects by itself.
+const LIFETIME_MS = Number(process.env.LIVE_STREAM_LIFETIME_MS) || 50_000;
 
 /**
  * Server-sent events stream. Sends `change` whenever the watched data changes:
@@ -68,12 +71,14 @@ export async function GET(req: Request) {
       liveBus.on('change', onChange);
       const poll = setInterval(check, POLL_MS);
       const beat = setInterval(() => send(`: ping\n\n`), HEARTBEAT_MS);
+      const end = setTimeout(() => cleanup(), LIFETIME_MS);
 
       cleanup = () => {
         if (closed) return;
         closed = true;
         clearInterval(poll);
         clearInterval(beat);
+        clearTimeout(end);
         liveBus.off('change', onChange);
         try {
           controller.close();
