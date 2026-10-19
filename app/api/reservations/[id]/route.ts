@@ -196,7 +196,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     notifyChange(`tour:${reservation.tourId}`, `operator:${reservation.operatorId}`, `user:${reservation.travelerId}`);
-    emitToReservation(id, 'chat:status', { reservationId: id, status: updated.status });
+    await emitToReservation(id, 'chat:status', { reservationId: id, status: updated.status });
 
     return NextResponse.json({
       success: true,

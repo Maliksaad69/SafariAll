@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict WzYNQFbB1S5bIdQpGvD7P8jJe0wVVfYR0I35cqSyegheuK0nnymTBNTi8ikvB3m
+\restrict C1C0yPgQYYEuohPscyDLHKBTnQjNc62rk6creYK0uLmB2qBx24g0ahnzeSxWMei
 
 -- Dumped from database version 17.11
 -- Dumped by pg_dump version 17.11
@@ -270,6 +270,19 @@ CREATE TABLE public.blog_posts (
 
 
 --
+-- Name: chat_presence; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chat_presence (
+    reservation_id text NOT NULL,
+    user_id text NOT NULL,
+    name text NOT NULL,
+    last_seen timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    typing_until timestamp(3) without time zone
+);
+
+
+--
 -- Name: destination_sections; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -385,6 +398,22 @@ CREATE TABLE public.media_assets (
 
 
 --
+-- Name: message_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.message_attachments (
+    id text NOT NULL,
+    message_id text NOT NULL,
+    filename text NOT NULL,
+    mime_type text NOT NULL,
+    size_bytes integer NOT NULL,
+    data bytea NOT NULL,
+    created_at timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT message_attachments_size_check CHECK (((size_bytes > 0) AND (size_bytes <= 8388608)))
+);
+
+
+--
 -- Name: messages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -453,7 +482,8 @@ CREATE TABLE public.reservation_messages (
     sender_id text NOT NULL,
     body text NOT NULL,
     is_read boolean DEFAULT false NOT NULL,
-    created_at timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    read_at timestamp(3) without time zone
 );
 
 
@@ -651,6 +681,7 @@ COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs,
 bd1cc9d2-e386-4db1-98c2-9f655b2b5037	40877f11f542ce16b355f852905fb4dfbe823a1a970c20f13a34985fe76f6afb	2026-10-19 19:11:42.505065+00	20261020090000_live_departure_capacity	\N	\N	2026-10-19 19:11:42.409207+00	1
 f581ca79-9633-4092-9bb1-02724654d724	ef03c189fb1f654c4620c69db5967efe8805f4fb0e926a81cfc40d904ec799ca	2026-10-19 19:36:05.351965+00	20261020120000_inquiry_departure	\N	\N	2026-10-19 19:36:05.32519+00	1
 a762c301-e19d-4f12-995c-12b24bd37f30	570c42cb4d49fb9dcb280324e78320a39530554382ae533be69fa1d8e770cf9b	2026-10-19 19:54:04.648976+00	20261020150000_db_enforced_seat_rules	\N	\N	2026-10-19 19:54:04.571836+00	1
+8e56a472-5968-4475-b2c9-1da2396add9d	9ba2c3ea42916005664f8fdfdef5cdf97d37a58277e9dd1ff2357848b23e7b0d	2026-10-19 20:38:19.770713+00	20261020200000_rich_chat	\N	\N	2026-10-19 20:38:19.706233+00	1
 \.
 
 
@@ -666,6 +697,14 @@ ce16b354-b58c-4f7f-a7a7-9c982c2bcfd9	786e8685-6f8c-4c7a-9856-885e39a7f030	830419
 2945c2d9-76b2-4c02-91b9-352d411a7b33	c08876d2-7864-432b-a440-5c4c1fc5af5d	7db4950e-301e-48c4-a275-56f398f34b92	Guide to Visiting Ngorongoro Crater – All You Need To Know	guide-to-visiting-ngorongoro-crater	Ngorongoro Crater is one of the premier wildlife sanctuaries in East Africa, with very high densities of game on a collapsed volcanic caldera floor.	<p>A full day in the crater usually starts early, with a guided drive down onto the crater floor before the heat rises. The road network is fairly easy to navigate, though it is best to keep your expectations flexible as wildlife movements can shift each day.</p><p>Most visitors focus on the central areas where the highest concentration of rhinos, elephants, buffalo, and lion activity can be seen. Sunrises and late afternoons are often the best times for spotting predators, while midday still offers rich grazing and birdlife.</p><p>It is worth planning ahead for permits, timing, and whether you want a private vehicle or a shared safari transfer. A well-paced day with an experienced guide is often the difference between a rushed drive and a truly memorable experience.</p>	https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=1200&q=80	Parks & Wildlife	PUBLISHED	0	2026-10-19 18:15:59.854	2026-10-19 18:20:34.262
 fe536ffe-7221-4b5d-b47c-04e632316381	c6d6c9c6-5f78-4ef0-917f-e988caff2d8e	079c1019-8c6f-4d2b-bc35-95c46884b4e0	Tanzania Safari Itinerary - How To Spend 7 to 10 Days	tanzania-safari-itinerary-7-to-10-days	A practical route through the northern circuit, balancing long game drives with enough rest to enjoy every park.	<p>Seven to ten days is the sweet spot for a first Tanzania safari. It is long enough to see the Serengeti properly without rushing between parks.</p><h2>Days 1 to 2: Tarangire</h2><p>Start in Tarangire for elephants and baobabs. It is close to Arusha, so you arrive in the park the same morning.</p><h2>Days 3 to 6: Serengeti</h2><p>Give the Serengeti at least three nights. Choose your camp by season: the south in January to March for calving, the centre all year, and the north from July to October for river crossings.</p><h2>Days 7 to 8: Ngorongoro Crater</h2><p>Finish with a full day on the crater floor, one of the best places in Africa to see black rhino.</p><p>With ten days, add Lake Manyara or a couple of nights on Zanzibar.</p>	https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80	Itineraries	PUBLISHED	0	2026-10-19 18:15:59.844	2026-10-19 18:20:34.253
 2f8319ca-ef86-4f5b-aeb1-8b41ceeb8d5e	e7914577-a3ca-4752-a51d-02f2dbc05e68	729f74ee-4cdc-4f60-806c-24c70d5c4be3	Survey Reveals the World's Politest Tourists	survey-reveals-the-worlds-polite-tourists	Safari guides and lodge staff shared which travellers leave the best impression, and what everyone can learn from them.	<p>We asked guides, lodge managers and camp staff across East and Southern Africa which guests leave the best impression.</p><p>The answers had less to do with nationality than with habits: greeting staff in the local language, keeping voices low at sightings, following the guide's lead on distance from animals, and tipping fairly.</p><p>Small courtesies matter on safari. A quiet vehicle gets better sightings, and a respectful guest often gets the extra effort that turns a good trip into a great one.</p>	https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=1200&q=80	Travel News	PUBLISHED	1	2026-10-19 18:15:59.861	2026-10-19 19:10:08.925
+\.
+
+
+--
+-- Data for Name: chat_presence; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.chat_presence (reservation_id, user_id, name, last_seen, typing_until) FROM stdin;
 \.
 
 
@@ -1058,6 +1097,14 @@ COPY public.media_assets (id, tour_id, filename, mime_type, size_bytes, data, al
 
 
 --
+-- Data for Name: message_attachments; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.message_attachments (id, message_id, filename, mime_type, size_bytes, data, created_at) FROM stdin;
+\.
+
+
+--
 -- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1099,17 +1146,17 @@ aad63409-b4e3-449b-ae96-72ddaec3ac94	02f98643-d032-4281-91d5-ede28ae07188	Mubala
 -- Data for Name: reservation_messages; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.reservation_messages (id, reservation_id, sender_id, body, is_read, created_at) FROM stdin;
-a66e804a-fa6b-4fce-ae2b-8a05382da090	608e3684-c002-442a-83cf-0e103dfee803	a2351356-9bdb-4985-b369-ce26f60239e6	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837249952. Estimated total $5600.00. Special requests: Honeymoon safari setup	f	2026-10-12 20:34:18.131
-221481f9-3d1a-472b-a25b-4b8235bd188d	be174175-912d-4aff-b0a2-22824399076b	3711fe75-62b2-43ba-82cf-79971ca2662b	Agency: approved your reservation cmv5pn0ry0001tzt8cw7x47jq. Note: Confirmed! Private safari 4x4 allocated with Guide John.	t	2026-10-12 20:34:20.35
-7f4eda59-e8a6-4d47-8e18-24be971ae05c	be174175-912d-4aff-b0a2-22824399076b	3711fe75-62b2-43ba-82cf-79971ca2662b	Hello Alice, welcome to SafariAsili! We have noted your vegetarian meals and confirmed your window seats.	t	2026-10-12 20:34:22.829
-9d8ec5a3-2591-44ff-a232-aa9e80747262	be174175-912d-4aff-b0a2-22824399076b	c0f0f7fa-197b-432b-ab93-b8b96cb0b70d	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837249952. Estimated total $5600.00. Special requests: Vegetarian meals, window seats requested	t	2026-10-12 20:34:17.938
-a219c446-08d6-41ea-af10-381743df85c4	be174175-912d-4aff-b0a2-22824399076b	c0f0f7fa-197b-432b-ab93-b8b96cb0b70d	Thank you Juma! Could you also let us know the exact airport pickup time at JRO?	t	2026-10-12 20:34:22.997
-d5732b1d-e71d-4fa8-9084-78fd17caa813	242947e3-47e6-40e0-8c31-c6ba851d952e	8ed21cca-720b-4430-9e8b-88cf51433402	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837299424. Estimated total $5600.00. Special requests: Honeymoon safari setup	f	2026-10-12 20:35:01.185
-5f5a4ee8-7691-47f1-bde3-de5498a65c24	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	11919b2d-abb9-4106-9f79-13dcb480440e	Agency: approved your reservation cmv5pny0d0005tzt8h5rbodar. Note: Confirmed! Private safari 4x4 allocated with Guide John.	t	2026-10-12 20:35:01.569
-9f87a6f2-eb87-4d83-b7a7-1af338d6d715	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	11919b2d-abb9-4106-9f79-13dcb480440e	Hello Alice, welcome to SafariAsili! We have noted your vegetarian meals and confirmed your window seats.	t	2026-10-12 20:35:01.654
-ec951e9b-97bb-457f-9c9e-67227f0e3f06	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	46ca9148-ac17-46d4-99c0-59c7e2a66b48	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837299424. Estimated total $5600.00. Special requests: Vegetarian meals, window seats requested	t	2026-10-12 20:35:00.978
-c4c31f61-f99f-46d8-a8fd-bd6c5eeb4cf4	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	46ca9148-ac17-46d4-99c0-59c7e2a66b48	Thank you Juma! Could you also let us know the exact airport pickup time at JRO?	t	2026-10-12 20:35:01.783
+COPY public.reservation_messages (id, reservation_id, sender_id, body, is_read, created_at, read_at) FROM stdin;
+a66e804a-fa6b-4fce-ae2b-8a05382da090	608e3684-c002-442a-83cf-0e103dfee803	a2351356-9bdb-4985-b369-ce26f60239e6	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837249952. Estimated total $5600.00. Special requests: Honeymoon safari setup	f	2026-10-12 20:34:18.131	\N
+d5732b1d-e71d-4fa8-9084-78fd17caa813	242947e3-47e6-40e0-8c31-c6ba851d952e	8ed21cca-720b-4430-9e8b-88cf51433402	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837299424. Estimated total $5600.00. Special requests: Honeymoon safari setup	f	2026-10-12 20:35:01.185	\N
+221481f9-3d1a-472b-a25b-4b8235bd188d	be174175-912d-4aff-b0a2-22824399076b	3711fe75-62b2-43ba-82cf-79971ca2662b	Agency: approved your reservation cmv5pn0ry0001tzt8cw7x47jq. Note: Confirmed! Private safari 4x4 allocated with Guide John.	t	2026-10-12 20:34:20.35	2026-10-12 20:34:20.35
+7f4eda59-e8a6-4d47-8e18-24be971ae05c	be174175-912d-4aff-b0a2-22824399076b	3711fe75-62b2-43ba-82cf-79971ca2662b	Hello Alice, welcome to SafariAsili! We have noted your vegetarian meals and confirmed your window seats.	t	2026-10-12 20:34:22.829	2026-10-12 20:34:22.829
+9d8ec5a3-2591-44ff-a232-aa9e80747262	be174175-912d-4aff-b0a2-22824399076b	c0f0f7fa-197b-432b-ab93-b8b96cb0b70d	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837249952. Estimated total $5600.00. Special requests: Vegetarian meals, window seats requested	t	2026-10-12 20:34:17.938	2026-10-12 20:34:17.938
+a219c446-08d6-41ea-af10-381743df85c4	be174175-912d-4aff-b0a2-22824399076b	c0f0f7fa-197b-432b-ab93-b8b96cb0b70d	Thank you Juma! Could you also let us know the exact airport pickup time at JRO?	t	2026-10-12 20:34:22.997	2026-10-12 20:34:22.997
+5f5a4ee8-7691-47f1-bde3-de5498a65c24	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	11919b2d-abb9-4106-9f79-13dcb480440e	Agency: approved your reservation cmv5pny0d0005tzt8h5rbodar. Note: Confirmed! Private safari 4x4 allocated with Guide John.	t	2026-10-12 20:35:01.569	2026-10-12 20:35:01.569
+9f87a6f2-eb87-4d83-b7a7-1af338d6d715	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	11919b2d-abb9-4106-9f79-13dcb480440e	Hello Alice, welcome to SafariAsili! We have noted your vegetarian meals and confirmed your window seats.	t	2026-10-12 20:35:01.654	2026-10-12 20:35:01.654
+ec951e9b-97bb-457f-9c9e-67227f0e3f06	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	46ca9148-ac17-46d4-99c0-59c7e2a66b48	Reservation request: 2 adults · Nov 20, 2026 · Serengeti Great Migration & Crater Odyssey 1791837299424. Estimated total $5600.00. Special requests: Vegetarian meals, window seats requested	t	2026-10-12 20:35:00.978	2026-10-12 20:35:00.978
+c4c31f61-f99f-46d8-a8fd-bd6c5eeb4cf4	8550172a-cc8f-4b44-b2ef-83fcb62fe4fb	46ca9148-ac17-46d4-99c0-59c7e2a66b48	Thank you Juma! Could you also let us know the exact airport pickup time at JRO?	t	2026-10-12 20:35:01.783	2026-10-12 20:35:01.783
 \.
 
 
@@ -2711,6 +2758,14 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
+-- Name: chat_presence chat_presence_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chat_presence
+    ADD CONSTRAINT chat_presence_pkey PRIMARY KEY (reservation_id, user_id);
+
+
+--
 -- Name: destination_sections destination_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2756,6 +2811,14 @@ ALTER TABLE ONLY public.inquiry_leads
 
 ALTER TABLE ONLY public.media_assets
     ADD CONSTRAINT media_assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: message_attachments message_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.message_attachments
+    ADD CONSTRAINT message_attachments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2913,6 +2976,13 @@ CREATE INDEX media_assets_tour_id_sort_order_idx ON public.media_assets USING bt
 
 
 --
+-- Name: message_attachments_message_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX message_attachments_message_id_idx ON public.message_attachments USING btree (message_id);
+
+
+--
 -- Name: notifications_user_id_is_read_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2931,6 +3001,13 @@ CREATE UNIQUE INDEX operators_slug_key ON public.operators USING btree (slug);
 --
 
 CREATE UNIQUE INDEX operators_user_id_key ON public.operators USING btree (user_id);
+
+
+--
+-- Name: reservation_messages_reservation_id_created_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reservation_messages_reservation_id_created_at_idx ON public.reservation_messages USING btree (reservation_id, created_at);
 
 
 --
@@ -3066,6 +3143,14 @@ ALTER TABLE ONLY public.inquiry_leads
 
 ALTER TABLE ONLY public.media_assets
     ADD CONSTRAINT media_assets_tour_id_fkey FOREIGN KEY (tour_id) REFERENCES public.tours(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: message_attachments message_attachments_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.message_attachments
+    ADD CONSTRAINT message_attachments_message_id_fkey FOREIGN KEY (message_id) REFERENCES public.reservation_messages(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -3256,5 +3341,5 @@ ALTER TABLE ONLY public.vehicles
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WzYNQFbB1S5bIdQpGvD7P8jJe0wVVfYR0I35cqSyegheuK0nnymTBNTi8ikvB3m
+\unrestrict C1C0yPgQYYEuohPscyDLHKBTnQjNc62rk6creYK0uLmB2qBx24g0ahnzeSxWMei
 

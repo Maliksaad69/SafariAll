@@ -22,13 +22,21 @@ Other scripts: `db:stop`, `db:migrate` (apply new `prisma/migrations` to the run
 
 ## Real-time reservation chat
 
-`npm run dev` / `npm start` run `server.ts`, a custom server that serves Next.js and a
-socket.io endpoint on `/socket.io`. After a reservation, the traveller (My Trips) and the
-tour operator (operator portal reservation page and inbox) chat in a room for that
-reservation: messages are stored in Postgres, with live delivery, typing and online status,
-and read receipts. Only the reservation's traveller and its operator can join the room.
-`npm run dev:next` starts plain `next dev` without socket.io; the chat then falls back to
-HTTP plus the `/api/live` stream.
+After a reservation, the traveller (My Trips) and the tour operator (operator portal
+reservation page and inbox) chat in a private room for that reservation. Messages,
+photos and files (up to 8 MB: images, PDF, Word, Excel, text) are stored in Postgres.
+The chat has emoji, quick replies, links, typing and online indicators and read ticks.
+Only the reservation's traveller and its operator can read or post.
+
+It picks the fastest transport the deployment supports, so it works on any host:
+
+| Where it runs | Transport | Setup |
+| --- | --- | --- |
+| Node server, Docker, VPS (`npm start`, `npm run dev`) | socket.io via `server.ts` | none |
+| Vercel, Netlify or any serverless host, with Pusher keys | Pusher Channels | set `PUSHER_APP_ID`, `PUSHER_KEY`, `PUSHER_SECRET`, `PUSHER_CLUSTER` |
+| Any host, no keys | live stream from Postgres (`/api/reservations/[id]/stream`, ~1 s) | none |
+
+`npm run dev:next` starts plain `next dev` (no socket.io), which uses the stream or Pusher.
 
 ## Getting Started
 

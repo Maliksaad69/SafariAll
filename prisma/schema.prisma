@@ -323,10 +323,42 @@ model ReservationMessage {
   sender        User       @relation(fields: [senderId], references: [id], onDelete: Cascade)
   body          String     @db.Text
   isRead        Boolean    @default(false) @map("is_read")
+  readAt        DateTime?  @map("read_at")
   createdAt     DateTime   @default(now()) @map("created_at")
 
+  attachments MessageAttachment[]
+
   @@index([reservationId])
+  @@index([reservationId, createdAt])
   @@map("reservation_messages")
+}
+
+// 18. Files and photos shared in a reservation chat (stored in Postgres, max 8 MB each)
+model MessageAttachment {
+  id        String             @id @default(uuid())
+  messageId String             @map("message_id")
+  message   ReservationMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename  String
+  mimeType  String             @map("mime_type")
+  sizeBytes Int                @map("size_bytes")
+  data      Bytes
+  createdAt DateTime           @default(now()) @map("created_at")
+
+  @@index([messageId])
+  @@map("message_attachments")
+}
+
+// 19. Who is looking at a reservation chat and who is typing. Used by the
+// stream transport that works on serverless hosts (no shared memory there).
+model ChatPresence {
+  reservationId String    @map("reservation_id")
+  userId        String    @map("user_id")
+  name          String
+  lastSeen      DateTime  @default(now()) @map("last_seen")
+  typingUntil   DateTime? @map("typing_until")
+
+  @@id([reservationId, userId])
+  @@map("chat_presence")
 }
 
 // 6. Tour Day-by-Day Itineraries Model
