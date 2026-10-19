@@ -1,12 +1,7 @@
 import bcrypt from 'bcryptjs';
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT } from 'jose';
 import { cookies } from 'next/headers';
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'safariasili-jwt-secret-key-2026-production'
-);
-
-const COOKIE_NAME = 'safariasili_session';
+import { COOKIE_NAME, JWT_SECRET, verifySessionToken } from '@/lib/session-token';
 
 export interface SessionPayload {
   userId: string;
@@ -45,17 +40,8 @@ export async function createSession(payload: SessionPayload) {
 }
 
 export async function getSession(): Promise<SessionPayload | null> {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIE_NAME)?.value;
-
-    if (!token) return null;
-
-    const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as unknown as SessionPayload;
-  } catch (error) {
-    return null;
-  }
+  const cookieStore = await cookies();
+  return verifySessionToken(cookieStore.get(COOKIE_NAME)?.value);
 }
 
 export async function logout() {

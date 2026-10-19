@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLiveRefresh } from '@/lib/use-live';
+import ReservationChat from '@/components/ReservationChat';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Mail, Phone, Globe, Calendar, Users, X, ArrowRight, Loader2, Send, MapPin } from 'lucide-react';
+import { Mail, Phone, Globe, Calendar, Users, X, Loader2, MapPin } from 'lucide-react';
 
 const STATUS_BADGE: Record<string, string> = {
   APPROVED: 'badge-success',
@@ -32,9 +33,6 @@ export default function MyTripsPage() {
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedMessages, setSelectedMessages] = useState<any[]>([]);
-  const [msgBody, setMsgBody] = useState('');
-  const [sending, setSending] = useState(false);
   const [deciding, setDeciding] = useState<string | null>(null);
   const [error, setError] = useState('');
 
@@ -51,44 +49,8 @@ export default function MyTripsPage() {
 
   useEffect(loadTrips, [loadTrips]);
 
-  const loadMessages = (rid: string) => {
-    fetch(`/api/reservations/${rid}/messages`)
-      .then((r) => r.json())
-      .then(({ messages }) => setSelectedMessages(messages || []))
-      .catch(() => {});
-  };
-  // Agency decisions and replies show up on screen as soon as they happen.
-  useLiveRefresh('scope=me', () => {
-    loadTrips();
-    if (selectedId) loadMessages(selectedId);
-  });
-
-  useEffect(() => {
-    if (!selectedId) return;
-    loadMessages(selectedId);
-  }, [selectedId]);
-
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!msgBody.trim() || !selectedId) return;
-    setSending(true);
-    setMsgBody('');
-    try {
-      const res = await fetch(`/api/reservations/${selectedId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: msgBody }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send message.');
-      loadMessages(selectedId);
-      router.refresh();
-    } catch (err: any) {
-      alert(err.message || 'Could not send message.');
-    } finally {
-      setSending(false);
-    }
-  };
+  // Reservation status changes appear as soon as they happen (chat has its own socket).
+  useLiveRefresh('scope=me', loadTrips);
 
   const decide = async (status: 'CANCELLED') => {
     if (!selectedId) return;
@@ -324,41 +286,7 @@ export default function MyTripsPage() {
                     </div>
                   )}
 
-                  <div className="surface-card rounded-2xl border border-black/5 p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs sm:text-sm font-bold font-display text-[var(--brand-deep)]">Message thread</span>
-                      <span className="text-xs text-[var(--ink-muted)]">{selectedMessages.length} messages</span>
-                    </div>
-                    {selectedMessages.length === 0 ? (
-                      <p className="text-xs text-[var(--ink-muted)]">No messages yet.</p>
-                    ) : (
-                      <div className="max-h-40 overflow-y-auto space-y-2 rounded-xl bg-[var(--sand)]/50 p-3">
-                        {selectedMessages.map((m, idx) => (
-                          <div key={m.id || idx} className="text-xs">
-                            <div className="text-[11px] font-semibold text-[var(--brand-deep)] mb-0.5">{m.sender?.firstName} {m.sender?.lastName}</div>
-                            <div className="text-[var(--ink)]">{m.body}</div>
-                            <div className="text-[10px] text-[var(--ink-muted)] mt-0.5">{new Date(m.createdAt).toLocaleTimeString()}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <form onSubmit={send} className="flex gap-2 mt-3">
-                      <input
-                        value={msgBody}
-                        onChange={(e) => setMsgBody(e.target.value)}
-                        placeholder="Write a message…"
-                        className="form-control text-xs flex-1"
-                        disabled={sending}
-                      />
-                      <button
-                        type="submit"
-                        disabled={sending || !msgBody.trim()}
-                        className="btn btn-sm btn-primary rounded-xl px-3"
-                      >
-                        {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                      </button>
-                    </form>
-                  </div>
+                  <ReservationChat key={trip.id} reservationId={trip.id} counterpartName={trip.operator?.companyName} />
                 </div>
               ) : (
                 <div className="surface-card rounded-2xl border border-black/5 p-8 text-center text-xs sm:text-sm text-[var(--ink-muted)] shadow-sm">

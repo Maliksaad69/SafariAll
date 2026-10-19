@@ -20,6 +20,16 @@ Other scripts: `db:stop`, `db:migrate` (apply new `prisma/migrations` to the run
 `db:reset` (**deletes the volume** and reloads from the SQL dump). pgAdmin is optional:
 `docker compose --profile tools up -d`. Demo logins are listed in `docker/postgres/README.md`.
 
+## Real-time reservation chat
+
+`npm run dev` / `npm start` run `server.ts`, a custom server that serves Next.js and a
+socket.io endpoint on `/socket.io`. After a reservation, the traveller (My Trips) and the
+tour operator (operator portal reservation page and inbox) chat in a room for that
+reservation: messages are stored in Postgres, with live delivery, typing and online status,
+and read receipts. Only the reservation's traveller and its operator can join the room.
+`npm run dev:next` starts plain `next dev` without socket.io; the chat then falls back to
+HTTP plus the `/api/live` stream.
+
 ## Getting Started
 
 First, run the development server:

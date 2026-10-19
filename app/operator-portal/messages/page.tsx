@@ -1,22 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import ReservationChat from '@/components/ReservationChat';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Calendar, Mail, Send, Loader2, Phone, Globe } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail, Loader2, Globe } from 'lucide-react';
 
 interface Thread { id: string; reference: string; tour: { title: string; slug: string; }; traveler: { firstName: string; lastName: string; email: string; phone: string | null; country: string | null; }; adultsCount: number; childrenCount: number; status: string; messages: any[]; }
 
 export default function MessagesPage() {
-  const router = useRouter();
   const [threads, setThreads] = useState<Thread[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
-  const [msgBody, setMsgBody] = useState('');
-  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -41,40 +37,6 @@ export default function MessagesPage() {
     }).catch(() => setLoading(false));
   }, []);
 
-  const loadMessages = (rid: string) => {
-    fetch(`/api/reservations/${rid}/messages`)
-      .then((r) => r.json())
-      .then(({ messages }) => setMessages(messages || []))
-      .catch(() => {});
-  };
-
-  useEffect(() => {
-    if (!selectedId) return;
-    loadMessages(selectedId);
-  }, [selectedId]);
-
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!msgBody.trim() || !selectedId) return;
-    setSending(true);
-    setMsgBody('');
-    try {
-      const res = await fetch(`/api/reservations/${selectedId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: msgBody }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send.');
-      loadMessages(selectedId);
-      router.refresh();
-    } catch (err: any) {
-      alert(err.message || 'Could not send message.');
-    } finally {
-      setSending(false);
-    }
-  };
-
   const thread = threads.find((t) => t.id === selectedId);
 
   return (
@@ -89,7 +51,7 @@ export default function MessagesPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-[var(--ink-muted)]">Client Messages</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-[var(--ink-secondary)]">
-            <Mail className="h-4 w-4"/> Exchanges with travelers appear here once a booking is requested, approved or declined.
+            <Mail className="h-4 w-4"/> Live chat with each traveller who has reserved one of your tours.
           </div>
         </div>
 
@@ -159,33 +121,7 @@ export default function MessagesPage() {
                   </div>
                 </div>
 
-                {/* Message list */}
-                <div className="flex-1 overflow-y-auto rounded-xl bg-white border border-[var(--border)] p-4 space-y-3">
-                  {messages.length === 0 ? (
-                    <div className="text-center text-sm text-[var(--ink-muted)] py-8">No messages yet. Write the first one below.</div>
-                  ) : (
-                    messages.map((m: { id: string; senderId?: string; body: string; createdAt: string; sender?: { firstName: string; lastName: string } }) => {
-                      const isAgency = m.senderId !== undefined && thread?.traveler?.firstName !== '' ? false : true;
-                      return (
-                        <div key={m.id} className={`flex flex-col ${isAgency ? 'items-end' : 'items-start'} gap-1 max-w-[80%]`}>
-                          <div className={`rounded-2xl px-3 py-2 ${isAgency ? 'bg-[var(--brand)] text-white rounded-br-sm' : 'bg-[var(--ink)] text-white rounded-bl-sm'}`}>
-                            <span className="text-xs font-semibold block mb-0.5 opacity-90">{isAgency ? 'Agency' : `${m.sender?.firstName ?? ''} ${m.sender?.lastName ?? ''}`}</span>
-                            <p className="text-sm leading-relaxed">{m.body}</p>
-                            <span className="text-[10px] opacity-70 mt-0.5 block">{new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-
-                {/* Compose */}
-                <form onSubmit={send} className="flex gap-2 mt-3">
-                  <input value={msgBody} onChange={(e) => setMsgBody(e.target.value)} placeholder="Write a message to the traveler…" className="form-control flex-1 rounded-xl" disabled={sending} />
-                  <button type="submit" disabled={sending || !msgBody.trim()} className="btn btn-primary px-4">
-                    {sending ? <Loader2 className="h-4 w-4 animate-spin"/> : <Send className="h-4 w-4"/>}
-                  </button>
-                </form>
+                <ReservationChat key={thread.id} reservationId={thread.id} counterpartName={`${thread.traveler.firstName} ${thread.traveler.lastName}`} heightClass="h-[420px]" />
               </div>
             )}
           </div>

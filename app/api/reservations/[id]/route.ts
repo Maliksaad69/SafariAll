@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { notifyChange } from '@/lib/live';
+import { emitToReservation } from '@/lib/realtime';
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
@@ -195,6 +196,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     notifyChange(`tour:${reservation.tourId}`, `operator:${reservation.operatorId}`, `user:${reservation.travelerId}`);
+    emitToReservation(id, 'chat:status', { reservationId: id, status: updated.status });
 
     return NextResponse.json({
       success: true,
