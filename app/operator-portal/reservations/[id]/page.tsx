@@ -1,7 +1,6 @@
 'use client';
 
 import { useLiveRefresh } from '@/lib/use-live';
-import ReservationChat from '@/components/ReservationChat';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -150,10 +149,9 @@ export default function ReservationDetailPage() {
               </div>
             </div>
 
-            {/* Real-time chat with the traveller */}
-            <div className="mt-6">
-              <ReservationChat reservationId={reservation.id} counterpartName={`${reservation.traveler.firstName} ${reservation.traveler.lastName}`} heightClass="h-96" />
-            </div>
+            <p className="mt-6 text-xs text-[var(--ink-muted)]">
+              To message {reservation.traveler.firstName}, use the chat button at the top of the page.
+            </p>
           </div>
 
           {/* Sidebar contact card */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heart, User, ChevronDown, Menu, X, Calendar, Bell } from 'lucide-react';
@@ -124,6 +124,17 @@ export default function Navbar() {
     window.addEventListener('favorites:updated', handleFavoritesUpdate);
     return () => window.removeEventListener('favorites:updated', handleFavoritesUpdate);
   }, [pathname]);
+
+  // Exactly one chat button is mounted: in the desktop action bar (right of the bell) or the mobile header.
+  const isDesktop = useSyncExternalStore<boolean | null>(
+    (onChange) => {
+      const mq = window.matchMedia('(min-width: 1024px)');
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    },
+    () => window.matchMedia('(min-width: 1024px)').matches,
+    () => null,
+  );
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
@@ -278,7 +289,7 @@ export default function Navbar() {
                 )}
               </div>
             )}
-            {sessionUser && <ChatLauncher />}
+            {sessionUser && isDesktop === true && <ChatLauncher />}
             <Link href="/favorites" className="flex items-center gap-1.5 text-[var(--ink-secondary)] transition-colors hover:text-[var(--ink)] group" aria-label="Favorites list">
               <div className="relative">
                 <Heart className="h-5 w-5 group-hover:fill-[var(--brand)]/25" strokeWidth={1.6} />
@@ -331,7 +342,7 @@ export default function Navbar() {
           </div>
 
           {/* Chat button + single hamburger for small and medium screens */}
-          {sessionUser && <ChatLauncher className="ml-auto lg:hidden" />}
+          {sessionUser && isDesktop === false && <ChatLauncher className="ml-auto lg:hidden" />}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="flex items-center justify-center rounded-full p-1.5 text-[var(--ink)] transition-colors hover:bg-[var(--brand-soft)] lg:hidden"

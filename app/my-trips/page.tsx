@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useLiveRefresh } from '@/lib/use-live';
-import ReservationChat from '@/components/ReservationChat';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -286,7 +285,9 @@ export default function MyTripsPage() {
                     </div>
                   )}
 
-                  <ReservationChat key={trip.id} reservationId={trip.id} counterpartName={trip.operator?.companyName} />
+                  <p className="px-1 text-xs text-[var(--ink-muted)]">
+                    To message {trip.operator?.companyName ?? 'the operator'}, use the chat button at the top of the page.
+                  </p>
                 </div>
               ) : (
                 <div className="surface-card rounded-2xl border border-black/5 p-8 text-center text-xs sm:text-sm text-[var(--ink-muted)] shadow-sm">
