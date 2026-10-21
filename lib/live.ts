@@ -37,14 +37,14 @@ export async function fingerprint(key: string): Promise<string> {
       SELECT
         (SELECT COUNT(*)::text || '|' || COALESCE(MAX(updated_at)::text, '') FROM reservations WHERE operator_id = ${id}) || '|' ||
         (SELECT COUNT(*)::text || '|' || COALESCE(MAX(s.updated_at)::text, '') FROM tour_slots s JOIN tours t ON t.id = s.tour_id WHERE t.operator_id = ${id}) || '|' ||
-        (SELECT COUNT(*)::text FROM reservation_messages m JOIN reservations r ON r.id = m.reservation_id WHERE r.operator_id = ${id}) AS fp`;
+        (SELECT COUNT(*)::text || ':' || (COUNT(*) FILTER (WHERE m.is_read))::text FROM reservation_messages m JOIN reservations r ON r.id = m.reservation_id WHERE r.operator_id = ${id}) AS fp`;
     return rows[0]?.fp ?? '';
   }
   if (kind === 'user') {
     const rows = await prisma.$queryRaw<Row[]>`
       SELECT
         (SELECT COUNT(*)::text || '|' || COALESCE(MAX(updated_at)::text, '') FROM reservations WHERE traveler_id = ${id}) || '|' ||
-        (SELECT COUNT(*)::text FROM reservation_messages m JOIN reservations r ON r.id = m.reservation_id WHERE r.traveler_id = ${id}) AS fp`;
+        (SELECT COUNT(*)::text || ':' || (COUNT(*) FILTER (WHERE m.is_read))::text FROM reservation_messages m JOIN reservations r ON r.id = m.reservation_id WHERE r.traveler_id = ${id}) AS fp`;
     return rows[0]?.fp ?? '';
   }
   return '';
