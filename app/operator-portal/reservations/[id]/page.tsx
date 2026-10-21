@@ -1,6 +1,7 @@
 'use client';
 
 import { useLiveRefresh } from '@/lib/use-live';
+import ChatWorkspace from '@/components/ChatWorkspace';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -149,9 +150,6 @@ export default function ReservationDetailPage() {
               </div>
             </div>
 
-            <p className="mt-6 text-xs text-[var(--ink-muted)]">
-              To message {reservation.traveler.firstName}, use the chat button at the top of the page.
-            </p>
           </div>
 
           {/* Sidebar contact card */}
@@ -179,6 +177,12 @@ export default function ReservationDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Chat with the traveller: same chats as the header chat button and the Inbox */}
+        <section className="mt-8">
+          <h2 className="mb-3 text-lg font-bold text-[var(--ink)]">Chat with {reservation.traveler.firstName} {reservation.traveler.lastName}</h2>
+          <ChatWorkspace onlyReservationId={reservation.id} heightClass="h-[560px]" />
+        </section>
       </main>
       <Footer />
     </div>

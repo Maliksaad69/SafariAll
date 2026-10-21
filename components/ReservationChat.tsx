@@ -234,10 +234,13 @@ export default function ReservationChat({
   reservationId,
   counterpartName,
   heightClass = 'h-80',
+  fill = false,
 }: {
   reservationId: string;
   counterpartName?: string;
   heightClass?: string;
+  /** Stretch to the parent's height (used inside the two-pane chat view). */
+  fill?: boolean;
 }) {
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [me, setMe] = useState('');
@@ -459,7 +462,7 @@ export default function ReservationChat({
 
   return (
     <div
-      className={`relative flex flex-col rounded-2xl border bg-white shadow-sm ${dragging ? 'border-[var(--brand)] ring-2 ring-[var(--brand)]/30' : 'border-black/5'}`}
+      className={`relative flex flex-col rounded-2xl border bg-white shadow-sm ${fill ? 'h-full min-h-0' : ''} ${dragging ? 'border-[var(--brand)] ring-2 ring-[var(--brand)]/30' : 'border-black/5'}`}
       onDragOver={(e) => {
         e.preventDefault();
         setDragging(true);
@@ -497,7 +500,7 @@ export default function ReservationChat({
       </div>
 
       {/* Messages */}
-      <div ref={listRef} className={`${heightClass} space-y-2 overflow-y-auto bg-[var(--sand)]/40 px-3 py-3`} aria-live="polite">
+      <div ref={listRef} className={`${fill ? 'min-h-0 flex-1' : heightClass} space-y-2 overflow-y-auto bg-[var(--sand)]/40 px-3 py-3`} aria-live="polite">
         {messages === null ? (
           <div className="flex h-full items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-[var(--ink-muted)]" /></div>
         ) : messages.length === 0 ? (

@@ -74,7 +74,12 @@ export default async function OperatorPortalPage() {
       })
     : [];
 
-  // New booking alerts: unread traveler messages on active reservations
+  // Unread chat messages from travellers (same count as the header chat button)
+  const unreadChats = operatorId
+    ? await prisma.reservationMessage.count({
+        where: { reservation: { operatorId }, isRead: false, senderId: { not: session.userId } },
+      })
+    : 0;
 
   const todayStart = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00.000Z');
   const [openByTour, fleetSize] = operator
@@ -143,6 +148,15 @@ export default async function OperatorPortalPage() {
             <span className={`badge ${operator?.isVerified ? 'badge-success' : 'badge-warning'}`}>
               {operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}
             </span>
+            <Link href="/operator-portal/messages" className="btn btn-secondary relative">
+              <Mail className="h-4 w-4" />
+              Inbox
+              {unreadChats > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
+                  {unreadChats}
+                </span>
+              )}
+            </Link>
             <Link href="/operator-portal/slots" className="btn btn-secondary">
               <CalendarDays className="h-4 w-4" />
               Departures
