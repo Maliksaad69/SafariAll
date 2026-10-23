@@ -1,5 +1,63 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database (PostgreSQL in Docker)
+
+All site data (countries, parks, operators, tours, itineraries, reviews, blog posts,
+experts and demo accounts) lives in PostgreSQL. The database image in
+`docker/postgres` ships a full SQL dump (`docker/postgres/init/01-safaribookings.sql`)
+that creates the schema and loads the data the first time the container starts.
+It is exposed on host port **5433** (5432 is often taken by a locally installed
+PostgreSQL). Connection settings live in `.env` (copy `.env.example`).
+
+```bash
+npm install
+npm run db:start     # build the image and start Postgres (loads the data on first run)
+npm run dev
+```
+
+Other scripts: `db:stop`, `db:migrate` (apply new `prisma/migrations` to the running DB),
+`db:dump` (write the running DB back to the init SQL so it can be committed), and
+`db:reset` (**deletes the volume** and reloads from the SQL dump). pgAdmin is optional:
+`docker compose --profile tools up -d`. Demo logins are listed in `docker/postgres/README.md`.
+
+## Real-time reservation chat
+
+After a reservation, the traveller (My Trips) and the tour operator (operator portal
+reservation page and inbox) chat in a private room for that reservation. Messages,
+photos and files (up to 8 MB: images, PDF, Word, Excel, text) are stored in Postgres.
+The chat has emoji, quick replies, links, typing and online indicators and read ticks.
+Only the reservation's traveller and its operator can read or post.
+
+It picks the fastest transport the deployment supports, so it works on any host:
+
+| Where it runs | Transport | Setup |
+| --- | --- | --- |
+| Node server, Docker, VPS (`npm start`, `npm run dev`) | socket.io via `server.ts` | none |
+| Vercel, Netlify or any serverless host, with Pusher keys | Pusher Channels | set `PUSHER_APP_ID`, `PUSHER_KEY`, `PUSHER_SECRET`, `PUSHER_CLUSTER` |
+| Any host, no keys | live stream from Postgres (`/api/reservations/[id]/stream`, ~1 s) | none |
+
+`npm run dev:next` starts plain `next dev` (no socket.io), which uses the stream or Pusher.
+
+## Deploying to Vercel (or Netlify)
+
+Everything, including the chat, runs on Vercel without the custom server:
+
+1. **Put the database online.** Vercel cannot reach the Docker database on your computer.
+   Create a hosted PostgreSQL database (for example Neon, Supabase or Railway) and load the
+   data into it: `psql "<connection string>" -f docker/postgres/init/01-safaribookings.sql`.
+   Use the provider's *pooled* connection string, since every serverless function opens its
+   own connection.
+2. **Import the repo in Vercel** (framework: Next.js; build command `next build` is detected).
+   `npm install` runs `prisma generate` automatically.
+3. **Set environment variables** in Vercel → Settings → Environment Variables:
+   `DATABASE_URL` (the pooled string), `JWT_SECRET` (a long random string), and optionally
+   `PUSHER_APP_ID`, `PUSHER_KEY`, `PUSHER_SECRET`, `PUSHER_CLUSTER` for instant chat.
+4. Deploy. Without Pusher keys the chat uses the built-in live stream (about 1 second per
+   message). Streams close after 50 seconds, inside Vercel's time limit, and the browser
+   reconnects and resumes without losing messages. Chat photos and files are stored in
+   Postgres (not on disk), are shrunk in the browser, and are capped at 4 MB per message to
+   fit Vercel's 4.5 MB request limit.
+
 ## Getting Started
 
 First, run the development server:

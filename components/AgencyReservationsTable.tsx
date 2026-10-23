@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLiveRefresh } from '@/lib/use-live';
 import { CalendarDays, Users, Mail, Phone, Globe, Check, X, Loader2, Inbox } from 'lucide-react';
 
 interface ReservationItem {
@@ -11,7 +13,10 @@ interface ReservationItem {
   childrenCount: number;
   specialRequests: string | null;
   estimatedTotalUsd: number;
-  status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'CANCELLED';
+  status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'CANCELLED' | 'COMPLETED';
+  departureTime?: string | null;
+  route?: string | null;
+  vehicle?: { name: string; vehicleType: string; plateNumber: string | null } | null;
   operatorNote: string | null;
   decidedAt: string | null;
   createdAt: string;
@@ -23,11 +28,16 @@ function StatusBadge({ status }: { status: ReservationItem['status'] }) {
   if (status === 'APPROVED') return <span className="badge badge-success">Approved</span>;
   if (status === 'DECLINED') return <span className="badge badge-danger">Declined</span>;
   if (status === 'CANCELLED') return <span className="badge badge-neutral">Cancelled</span>;
+  if (status === 'COMPLETED') return <span className="badge badge-neutral">Completed</span>;
   return <span className="badge badge-warning">Pending</span>;
 }
 
 export default function AgencyReservationsTable({ initialReservations }: { initialReservations: ReservationItem[] }) {
   const [reservations, setReservations] = useState(initialReservations);
+  const router = useRouter();
+  // New requests, traveller cancellations and messages appear without reloading the page.
+  useEffect(() => setReservations(initialReservations), [initialReservations]);
+  useLiveRefresh('scope=me', () => router.refresh());
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'DECLINED'>('ALL');

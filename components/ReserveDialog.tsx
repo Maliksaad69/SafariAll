@@ -1,17 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
 import { useRouter } from 'next/navigation';
 import { X, Loader2, CheckCircle2, AlertCircle, Calendar, Users, Minus, Plus, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
 
 interface Slot {
   slotId: string;
   startDate: string;
+  departureTime: string;
+  route: string | null;
   maxTravelers: number;
   bookedTravelers: number;
   spotsLeft: number;
+  maxGroup: number;
   isFull: boolean;
+  status: 'OPEN' | 'CLOSED';
   note: string | null;
+  vehicles: { vehicleId: string; name: string; vehicleType: string; seats: number; bookedSeats: number }[];
 }
 
 interface ReserveDialogProps {
@@ -45,7 +51,6 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
   const [success, setSuccess] = useState(false);
   const [confirmedRef, setConfirmedRef] = useState('');
 
-  const today = new Date().toISOString().split('T')[0];
   const requestedPax = adults + children;
   const estimate = minPriceUsd * adults + minPriceUsd * 0.5 * children;
 
@@ -54,31 +59,50 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
   const loadingSlots = open && slots === null;
   const activeSlot = hasSlots ? list.find((s) => s.slotId === selectedSlotId) ?? null : null;
 
-  /* Load departures when the dialog opens */
+  /* Apply a fresh availability list, keeping the traveller's choice when it is still bookable */
+  const selectedRef = useRef('');
   useEffect(() => {
-    if (!open || !tourId) return;
-    let cancelled = false;
-    fetch(`/api/tours/${tourId}/slots`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (cancelled) return;
-        const items: Slot[] = Array.isArray(d?.availability)
-          ? d.availability.map((a: Slot) => ({ ...a, startDate: a.startDate.slice(0, 10) }))
-          : [];
-        setSlots(items);
-        const first = items.find((s) => !s.isFull);
-        if (first) {
-          setSelectedSlotId(first.slotId);
-          setStartDate(first.startDate);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setSlots([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [open, tourId]);
+    selectedRef.current = selectedSlotId;
+  }, [selectedSlotId]);
+  const applySlots = useCallback((items: Slot[], initial = false) => {
+    setSlots(items);
+    const current = items.find((x) => x.slotId === selectedRef.current);
+    if (current && !current.isFull) return;
+    if (current && !initial) {
+      setError(
+        current.status === 'CLOSED'
+          ? 'The operator has just closed this departure. Please choose another one.'
+          : 'Sorry, the last seats on this departure were just booked. Please choose another departure.'
+      );
+      setStep(1);
+    }
+    const first = items.find((x) => !x.isFull);
+    selectedRef.current = first?.slotId ?? '';
+    setSelectedSlotId(first?.slotId ?? '');
+    setStartDate(first?.startDate ?? '');
+  }, []);
+
+  const loadSlots = useCallback(
+    (initial = false) => {
+      if (!tourId) return;
+      fetch(`/api/tours/${tourId}/slots`, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (Array.isArray(d?.availability)) applySlots(d.availability, initial);
+          else if (initial) setSlots([]);
+        })
+        .catch(() => {
+          if (initial) setSlots([]);
+        });
+    },
+    [tourId, applySlots]
+  );
+
+  /* Load departures when the dialog opens, then keep them live while it stays open */
+  useEffect(() => {
+    if (open) loadSlots(true);
+  }, [open, loadSlots]);
+  useLiveRefresh(open && !success ? `tour=${encodeURIComponent(tourId)}` : null, () => loadSlots());
 
   /* Lock scroll + close on Escape while open */
   useEffect(() => {
@@ -95,22 +119,22 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
     };
   }, [open]);
 
-  const stepOneValid = hasSlots
-    ? !!activeSlot && !activeSlot.isFull && requestedPax <= activeSlot.spotsLeft
-    : !!startDate;
+  const stepOneValid = hasSlots && !!activeSlot && !activeSlot.isFull && requestedPax <= activeSlot.maxGroup;
 
   const goNext = () => {
     setError('');
     if (hasSlots) {
       if (!activeSlot) return setError('Choose a departure date to continue.');
       if (activeSlot.isFull) return setError('That departure is fully booked — pick another date.');
-      if (requestedPax > activeSlot.spotsLeft) {
+      if (requestedPax > activeSlot.maxGroup) {
         return setError(
-          `Only ${activeSlot.spotsLeft} spot${activeSlot.spotsLeft === 1 ? '' : 's'} left on this departure — reduce your party to continue.`
+          activeSlot.maxGroup < activeSlot.spotsLeft
+            ? `${activeSlot.spotsLeft} seats are left, but at most ${activeSlot.maxGroup} can travel together in one vehicle. Reduce your party or pick another departure.`
+            : `Only ${activeSlot.spotsLeft} seat${activeSlot.spotsLeft === 1 ? '' : 's'} left on this departure. Reduce your party to continue.`
         );
       }
-    } else if (!startDate) {
-      return setError('Choose your preferred departure date.');
+    } else {
+      return setError('This tour has no scheduled departures yet. Request a quote instead.');
     }
     setStep(2);
   };
@@ -139,6 +163,11 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
       }
 
       const data = await res.json();
+      if (res.status === 409 && Array.isArray(data.availability)) {
+        // Someone else took the seats first: show the fresh numbers and go back to step 1.
+        applySlots(data.availability);
+        setStep(1);
+      }
       if (!res.ok) throw new Error(data.error || 'Failed to submit reservation request.');
 
       setConfirmedRef(data.reservation?.reference || '');
@@ -271,7 +300,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                             <div className="space-y-2">
                               {list.map((s) => {
                                 const selected = selectedSlotId === s.slotId;
-                                const room = s.spotsLeft >= requestedPax;
+                                const room = s.maxGroup >= requestedPax;
                                 return (
                                   <label
                                     key={s.slotId}
@@ -293,10 +322,12 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                                       </span>
                                       <span className="min-w-0">
                                         <span className="block truncate text-sm font-semibold text-[var(--ink)]">
-                                          {fmt(s.startDate)}
+                                          {fmt(s.startDate)} · {s.departureTime}
                                         </span>
                                         <span className="block text-[11px] text-[var(--ink-muted)]">
-                                          {s.bookedTravelers}/{s.maxTravelers} booked
+                                          {s.route ? `${s.route} · ` : ''}
+                                          {s.bookedTravelers}/{s.maxTravelers} seats booked
+                                          {s.vehicles.length ? ` · ${s.vehicles.length} vehicle${s.vehicles.length === 1 ? '' : 's'}` : ''}
                                           {s.note ? ` · ${s.note}` : ''}
                                         </span>
                                       </span>
@@ -322,21 +353,25 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                                             : 'bg-[var(--warning-soft)] text-[var(--warning)]'
                                       }`}
                                     >
-                                      {s.isFull ? 'Full' : room ? `${s.spotsLeft} left` : `Only ${s.spotsLeft}`}
+                                      {s.status === 'CLOSED' ? 'Closed' : s.isFull ? 'Fully booked' : room ? `${s.spotsLeft} left` : `Max ${s.maxGroup} together`}
                                     </span>
                                   </label>
                                 );
                               })}
                             </div>
                           ) : (
-                            <input
-                              type="date"
-                              min={today}
-                              value={startDate}
-                              onChange={(e) => setStartDate(e.target.value)}
-                              className="form-control"
-                              aria-label="Preferred departure date"
-                            />
+                            <div className="rounded-2xl border border-dashed border-[var(--border)] p-4 text-sm text-[var(--ink-secondary)]">
+                              No departures are scheduled for this tour yet.{' '}
+                              <a href={`/quote/request?tourId=${encodeURIComponent(tourId)}`} className="font-semibold text-[var(--brand-ink)] underline">
+                                Request a quote
+                              </a>{' '}
+                              and the operator will propose dates.
+                            </div>
+                          )}
+                          {hasSlots && list.every((s) => s.isFull) && (
+                            <p className="mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
+                              Every departure is fully booked or closed. New dates appear here as soon as the operator adds them.
+                            </p>
                           )}
                         </div>
 
@@ -438,7 +473,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                             <div className="flex justify-between gap-3">
                               <dt className="text-[var(--ink-secondary)]">Departure</dt>
                               <dd className="text-right font-semibold text-[var(--ink)]">
-                                {hasSlots && activeSlot ? fmt(activeSlot.startDate) : startDate ? fmt(startDate) : '—'}
+                                {hasSlots && activeSlot ? `${fmt(activeSlot.startDate)} · ${activeSlot.departureTime}` : startDate ? fmt(startDate) : '—'}
                               </dd>
                             </div>
                             <div className="flex justify-between gap-3">

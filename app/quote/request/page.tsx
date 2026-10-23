@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Compass, Send, CheckCircle2, ArrowRight, ShieldCheck, MapPin, Calendar, Users, DollarSign, FileText, Star } from 'lucide-react';
-import { safariTours } from '@/lib/site-data';
 
 function QuoteRequestForm() {
   const router = useRouter();
@@ -15,9 +15,27 @@ function QuoteRequestForm() {
   const travelersParam = searchParams.get('travelers');
 
   // If arriving from a specific tour page, preselect its country
-  const selectedTour = tourId ? safariTours.find((t) => t.id === tourId) : null;
+  const [selectedTour, setSelectedTour] = useState<{ id: string; title: string; primaryCountry: string } | null>(null);
+  const [countries, setCountries] = useState<string[]>(['Tanzania']);
+  const [preferredCountry, setPreferredCountry] = useState('Tanzania');
 
-  const [preferredCountry, setPreferredCountry] = useState(selectedTour?.primaryCountry || 'Tanzania');
+  useEffect(() => {
+    fetch('/api/site/nav')
+      .then((r) => r.json())
+      .then((d) => d.countries?.length && setCountries(d.countries))
+      .catch(() => {});
+    if (tourId) {
+      fetch(`/api/tours/${encodeURIComponent(tourId)}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d?.tour) {
+            setSelectedTour(d.tour);
+            setPreferredCountry(d.tour.primaryCountry);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [tourId]);
   const [adultsCount, setAdultsCount] = useState(Number(travelersParam) || 2);
   const [childrenCount, setChildrenCount] = useState(0);
   const [budgetPerPersonUsd, setBudgetPerPersonUsd] = useState(2000);
@@ -29,9 +47,43 @@ function QuoteRequestForm() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  // Departures of the selected tour, kept live so a sold-out date can never be chosen.
+  type Dep = { slotId: string; startDate: string; departureTime: string; route: string | null; spotsLeft: number; maxGroup: number; isFull: boolean; status: string };
+  const [departures, setDepartures] = useState<Dep[] | null>(null);
+  const [slotId, setSlotId] = useState('');
+  const loadDepartures = useCallback(() => {
+    if (!selectedTour) return;
+    fetch(`/api/tours/${selectedTour.id}/slots`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : { availability: [] }))
+      .then((d) => {
+        const list: Dep[] = d.availability ?? [];
+        setDepartures(list);
+        setSlotId((cur) => {
+          const still = list.find((x) => x.slotId === cur && !x.isFull);
+          if (still) return cur;
+          const byMonth = departure ? list.find((x) => !x.isFull && x.startDate.startsWith(departure.slice(0, 7))) : undefined;
+          return (byMonth ?? list.find((x) => !x.isFull))?.slotId ?? '';
+        });
+      })
+      .catch(() => setDepartures([]));
+  }, [selectedTour, departure]);
+  useEffect(loadDepartures, [loadDepartures]);
+  useLiveRefresh(selectedTour ? `tour=${encodeURIComponent(selectedTour.id)}` : null, loadDepartures);
+  const pax = Number(adultsCount) + Number(childrenCount);
+  const chosenDep = departures?.find((d) => d.slotId === slotId) ?? null;
+  const tourHasDepartures = !!departures && departures.length > 0;
+  const soldOut = tourHasDepartures && departures!.every((d) => d.isFull);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    if (selectedTour && tourHasDepartures) {
+      if (soldOut) return setError('Every departure of this tour is fully booked. Please choose another tour.');
+      if (!chosenDep) return setError('Choose one of the available departures.');
+      if (pax > chosenDep.maxGroup) return setError(`This departure can take at most ${chosenDep.maxGroup} more travellers together.`);
+    }
     setLoading(true);
 
     try {
@@ -39,7 +91,8 @@ function QuoteRequestForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tourId,
+          tourId: selectedTour?.id ?? tourId,
+          slotId: slotId || undefined,
           preferredCountry,
           adultsCount: Number(adultsCount),
           childrenCount: Number(childrenCount),
@@ -53,13 +106,15 @@ function QuoteRequestForm() {
         }),
       });
 
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setSubmitted(true);
       } else {
-        setSubmitted(true);
+        if (Array.isArray(data.availability)) setDepartures(data.availability);
+        setError(data.error || 'Could not submit your request. Please try again.');
       }
-    } catch (err) {
-      setSubmitted(true);
+    } catch {
+      setError('Could not reach the server. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -127,7 +182,7 @@ function QuoteRequestForm() {
                 onChange={(e) => setPreferredCountry(e.target.value)}
                 className="form-control"
               >
-                {['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe'].map((c) => (
+                {countries.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
@@ -238,7 +293,32 @@ function QuoteRequestForm() {
             </div>
           </div>
 
-          {departure && (
+          {selectedTour && departures && (
+            <div className="space-y-2">
+              <label className="form-label">Departure for {selectedTour.title}</label>
+              {departures.length === 0 ? (
+                <p className="text-xs text-[var(--ink-muted)]">No departures are scheduled yet. The operator will propose dates.</p>
+              ) : soldOut ? (
+                <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+                  Every departure of this tour is fully booked or closed. New dates appear here as soon as the operator adds them.
+                </p>
+              ) : (
+                <select value={slotId} onChange={(e) => setSlotId(e.target.value)} className="form-control">
+                  {departures.map((d) => (
+                    <option key={d.slotId} value={d.slotId} disabled={d.isFull}>
+                      {new Date(`${d.startDate}T00:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })} · {d.departureTime}
+                      {d.isFull ? (d.status === 'CLOSED' ? ' · Closed' : ' · Fully booked') : ` · ${d.spotsLeft} seats left`}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {chosenDep && pax > chosenDep.maxGroup && (
+                <p className="text-xs font-semibold text-red-700">This departure can take at most {chosenDep.maxGroup} more travellers together.</p>
+              )}
+            </div>
+          )}
+
+          {departure && !selectedTour && (
             <div className="flex items-center gap-2 rounded-xl bg-[var(--brand-soft)]/50 border border-[var(--brand-pale)] px-4 py-3 text-xs text-[var(--brand-deep)]">
               <Calendar className="w-4 h-4 text-[var(--brand)] shrink-0" />
               <span>
@@ -263,9 +343,10 @@ function QuoteRequestForm() {
           </div>
         </div>
 
+        {error && <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">{error}</p>}
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || soldOut || (!!chosenDep && pax > chosenDep.maxGroup)}
           className="btn btn-primary w-full py-3.5 px-6 rounded-xl font-semibold text-sm shadow-md flex items-center justify-center gap-2"
         >
           {loading ? 'Submitting Inquiry...' : 'Broadcast Quote Request to Operators'}

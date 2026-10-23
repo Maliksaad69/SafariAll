@@ -4,41 +4,49 @@ import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
 import HeroSearchForm from '@/components/HeroSearchForm';
 import prisma from '@/lib/prisma';
-import { safariTours, safariOperators, countryHighlights, blogPosts, safariExperts } from '@/lib/site-data';
+import { getTourCards, getOperatorCards, getCountries, getExperts, getLatestBlogPosts } from '@/lib/catalog';
 import { CheckCircle2, ChevronRight, Star, Calendar, Award } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 async function getRealStats() {
-  try {
-    const [tourCount, operatorCount, reviewAgg, destinationCount] = await Promise.all([
-      prisma.tour.count({ where: { isPublished: true } }),
-      prisma.operator.count({ where: { isVerified: true } }),
-      prisma.review.aggregate({ where: { status: 'APPROVED' }, _avg: { overallRating: true }, _count: { id: true } }),
-      prisma.destination.count(),
-    ]);
-    return {
-      tours: tourCount + safariTours.length,
-      operators: operatorCount + safariOperators.length,
-      reviews: reviewAgg._count.id,
-      rating: reviewAgg._avg.overallRating ? Math.round(reviewAgg._avg.overallRating * 10) / 10 : 4.9,
-      destinations: destinationCount,
-    };
-  } catch {
-    return { tours: safariTours.length, operators: safariOperators.length, reviews: 0, rating: 4.9, destinations: 0 };
-  }
+  const [tourCount, operatorCount, reviewAgg, destinationCount] = await Promise.all([
+    prisma.tour.count({ where: { isPublished: true } }),
+    prisma.operator.count({ where: { isVerified: true } }),
+    prisma.review.aggregate({ where: { status: 'APPROVED' }, _avg: { overallRating: true }, _count: { id: true } }),
+    prisma.destination.count(),
+  ]);
+  return {
+    tours: tourCount,
+    operators: operatorCount,
+    reviews: reviewAgg._count.id,
+    rating: reviewAgg._avg.overallRating ? Math.round(reviewAgg._avg.overallRating * 10) / 10 : 0,
+    destinations: destinationCount,
+  };
 }
 
 export default async function HomePage() {
-  const stats = await getRealStats();
+  const [stats, tours, operatorCards, countries, blogPosts, safariExperts] = await Promise.all([
+    getRealStats(),
+    getTourCards({}, 3),
+    getOperatorCards(),
+    getCountries(),
+    getLatestBlogPosts(3),
+    getExperts(),
+  ]);
 
-  const tours = safariTours.slice(0, 3);
-  const operators = safariOperators.slice(0, 4).map((op) => ({
+  const operators = operatorCards.slice(0, 4).map((op) => ({
     name: op.companyName,
     slug: op.slug,
     rating: op.averageRating,
     reviews: `${op.totalReviews.toLocaleString()} Reviews`,
+    image: op.image,
   }));
+  const countryHighlights = countries
+    .filter((c) => c.popularityRank)
+    .slice(0, 8)
+    .map((c, i) => ({ ...c, rank: `#${c.popularityRank}`, active: i === 0 }));
+  const featured = countryHighlights[0];
 
   return (
     <div className="min-h-screen font-sans text-[var(--ink-body)]">
@@ -96,7 +104,7 @@ export default async function HomePage() {
                   {countryHighlights.map((country) => (
                     <Link
                       key={country.name}
-                      href={`/parks/${country.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      href={`/parks/${country.slug}`}
                       className={`flex items-center px-5 py-3.5 text-[14px] transition-colors ${country.active ? 'bg-white/70 font-bold text-[var(--ink)]' : 'text-[var(--ink-secondary)] hover:bg-white/50 hover:text-[var(--ink)]'}`}
                     >
                       <span className={`mr-3 inline-block w-8 text-[12px] ${country.active ? 'text-[var(--brand-ink)]' : 'text-[var(--ink-muted)]'}`}>{country.rank}</span>
@@ -107,23 +115,24 @@ export default async function HomePage() {
                 </div>
 
                 {/* Featured country panel */}
+                {featured && (
                 <div className="relative flex-1 bg-[var(--dark)]">
-                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80')" }} />
+                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${featured.featuredImageUrl ?? ''}')` }} />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
 
                   <div className="relative z-10 flex min-h-[380px] flex-col justify-center px-8 py-8 text-white md:px-10 md:py-10">
                     <div className="mb-2 flex flex-wrap items-center gap-3">
-                      <h3 className="text-[30px] font-semibold text-white">Tanzania</h3>
-                      <div className="flex items-center gap-0.5 text-[var(--dark-gold)]" aria-label="Rated 4.8 out of 5">
+                      <h3 className="text-[30px] font-semibold text-white">{featured.name}</h3>
+                      <div className="flex items-center gap-0.5 text-[var(--dark-gold)]" aria-label={`Rated ${featured.rating ?? 0} out of 5`}>
                         {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
                       </div>
-                      <span className="text-[12px] font-semibold text-white">4.8/5 · 2,172 Reviews</span>
+                      <span className="text-[12px] font-semibold text-white">{(featured.rating ?? 0).toFixed(1)}/5 · {featured.reviewCount.toLocaleString()} Reviews</span>
                     </div>
 
-                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--dark-gold)]">#1 of 8 Major Safari Countries</p>
+                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--dark-gold)]">{featured.rank} of {countryHighlights.length} Major Safari Countries</p>
 
                     <p className="max-w-[560px] text-[14px] leading-relaxed text-white/95">
-                      Tanzania, with its three safari circuits, is one of Africa&apos;s top wildlife destinations. The popular Northern circuit incorporates bucket-list landmarks such as Serengeti National Park, Ngorongoro Crater and Mt Kilimanjaro. Repeat visitors might prefer the remote wilderness vibe of the Southern or Western circuits. For some beach time, the Spice Island of Zanzibar is only a short flight away.
+                      {featured.description}
                     </p>
 
                     <div className="mt-5 flex flex-wrap gap-6 text-[13px]">
@@ -131,28 +140,29 @@ export default async function HomePage() {
                         <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 font-bold text-white backdrop-blur-sm">$</div>
                         <div>
                           <div className="font-bold text-white">Rates (USD)</div>
-                          <div className="text-white/90">$229 to $659 pp/day</div>
+                          <div className="text-white/90">{featured.dailyRates?.replace('per day', 'pp/day')}</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
                         <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 text-white backdrop-blur-sm"><Calendar className="h-4 w-4" /></div>
                         <div>
                           <div className="font-bold text-white">Best Time to Go</div>
-                          <div className="text-white/90">June to October; January to February</div>
+                          <div className="text-white/90">{featured.bestTimeSummary?.split('(')[0].trim()}</div>
                         </div>
                       </div>
                     </div>
 
                     <div className="mt-6 flex flex-wrap gap-3">
-                      <Link href="/tours?country=Tanzania" className="btn btn-primary btn-sm">
-                        Tanzania Safaris <ChevronRight className="h-4 w-4" />
+                      <Link href={`/tours?country=${encodeURIComponent(featured.name)}`} className="btn btn-primary btn-sm">
+                        {featured.name} Safaris <ChevronRight className="h-4 w-4" />
                       </Link>
-                      <Link href="/operators?country=Tanzania" className="btn btn-ghost-dark btn-sm">
-                        Tanzania Operators <ChevronRight className="h-4 w-4" />
+                      <Link href={`/operators?country=${encodeURIComponent(featured.name)}`} className="btn btn-ghost-dark btn-sm">
+                        {featured.name} Operators <ChevronRight className="h-4 w-4" />
                       </Link>
                     </div>
                   </div>
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -196,7 +206,7 @@ export default async function HomePage() {
                   className="surface-card surface-card-hover block overflow-hidden"
                 >
                   <div className="relative h-32 bg-[var(--dark)]">
-                    <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&w=500&q=80')" }} />
+                    <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url('${op.image}')` }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-3">
                       <h3 className="text-[17px] font-semibold text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.5)]">{op.name}</h3>
@@ -230,8 +240,8 @@ export default async function HomePage() {
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {blogPosts.map((post) => (
-                <Link href={`/blog/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[200px] overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${post.image}')` }} />
+                <Link href={`/blogs/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[200px] overflow-hidden">
+                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${post.coverImageUrl ?? ''}')` }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5">
                     <h3 className="text-[19px] font-semibold leading-tight text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">{post.title}</h3>
@@ -259,10 +269,10 @@ export default async function HomePage() {
               {safariExperts.map((expert) => (
                 <div key={expert.id} className="surface-card surface-card-hover flex gap-4 p-5">
                   <div className="h-[64px] w-[64px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/70">
-                    <img src={expert.image} alt={expert.name} className="h-full w-full object-cover" />
+                    <img src={expert.imageUrl ?? ''} alt={expert.name} className="h-full w-full object-cover" />
                   </div>
                   <div className="min-w-0">
-                    <Link href={`/experts/${expert.id}`} className="link text-[15px] font-bold">
+                    <Link href={`/experts/${expert.slug}`} className="link text-[15px] font-bold">
                       {expert.name}
                     </Link>
                     <div className="text-xs text-[var(--ink-secondary)]">{expert.country}</div>

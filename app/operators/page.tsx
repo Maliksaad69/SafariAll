@@ -1,7 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import OperatorFilterSidebar from '@/components/OperatorFilterSidebar';
-import { safariOperators } from '@/lib/site-data';
+import { getOperatorCards } from '@/lib/catalog';
 import Link from 'next/link';
 import { Star, MapPin, ChevronRight, Building2 } from 'lucide-react';
 
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function OperatorsPage({ searchParams }: { searchParams: Promise<{ country?: string; rating?: string; office?: string; search?: string; travelers?: string; month?: string }> }) {
   const params = await searchParams;
-  let operators: any[] = safariOperators;
+  let operators = await getOperatorCards();
 
   if (params.search) {
     const q = params.search.trim().toLowerCase();

@@ -7,16 +7,11 @@ import { ChevronLeft, ChevronRight, Users, Star } from 'lucide-react';
 interface TourReviewsWidgetProps {
   operatorId?: string;
   operatorName: string;
-  fallbackReview: {
-    title: string;
-    body: string;
-    rating: number;
-  };
 }
 
 const PAGE_SIZE = 1;
 
-export default function TourReviewsWidget({ operatorId, operatorName, fallbackReview }: TourReviewsWidgetProps) {
+export default function TourReviewsWidget({ operatorId, operatorName }: TourReviewsWidgetProps) {
   const [reviews, setReviews] = useState<any[] | null>(null);
   const [page, setPage] = useState(0);
 
@@ -99,18 +94,6 @@ export default function TourReviewsWidget({ operatorId, operatorName, fallbackRe
         </>
       ) : (
         <>
-          <div className="rounded-xl border border-[var(--border)] bg-white/80 p-3.5 text-[12px] mb-3.5 shadow-sm">
-            <h4 className="font-bold text-[var(--ink)] text-[13px] leading-snug mb-1">&quot;{fallbackReview.title}&quot;</h4>
-            <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${fallbackReview.rating} out of 5`}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < fallbackReview.rating ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
-              ))}
-              <span className="text-[var(--ink)] font-bold ml-1">{fallbackReview.rating}</span>
-              <span className="text-[var(--ink-muted)]">/5</span>
-            </div>
-            <p className="text-[var(--ink-body)] line-clamp-4 leading-relaxed mb-1.5">{fallbackReview.body}</p>
-            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold text-[11px]">Full Review &rarr;</Link>
-          </div>
           <p className="text-[11px] text-[var(--ink-muted)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">write one</Link>.</p>
         </>
       )}

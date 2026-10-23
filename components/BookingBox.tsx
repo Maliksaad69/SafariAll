@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
 import Link from 'next/link';
 import { Calendar, ChevronRight, ShieldCheck, Users } from 'lucide-react';
 import ReserveDialog from '@/components/ReserveDialog';
@@ -16,6 +17,7 @@ interface BookingBoxProps {
 interface SlotInfo {
   slotId: string;
   startDate: string;
+  departureTime: string;
   maxTravelers: number;
   bookedTravelers: number;
   spotsLeft: number;
@@ -40,25 +42,20 @@ const fmtDate = (iso: string) =>
 export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, dbTourId }: BookingBoxProps) {
   const [slots, setSlots] = useState<SlotInfo[] | null>(null);
 
-  useEffect(() => {
-    const effectiveId = dbTourId || tourId;
+  const effectiveId = dbTourId || tourId;
+  const load = useCallback(() => {
     if (!effectiveId) return;
-    let cancelled = false;
-    fetch(`/api/tours/${effectiveId}/slots`)
+    fetch(`/api/tours/${effectiveId}/slots`, { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (cancelled) return;
-        const all: SlotInfo[] = Array.isArray(d?.availability) ? d.availability : [];
-        const future = all.filter((s) => new Date(s.startDate) >= new Date(new Date().toDateString()));
-        setSlots(future.length > 0 ? future : all);
-      })
-      .catch(() => {
-        if (!cancelled) setSlots([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [dbTourId, tourId]);
+      .then((d) => setSlots(Array.isArray(d?.availability) ? d.availability : []))
+      .catch(() => setSlots((prev) => prev ?? []));
+  }, [effectiveId]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+  // Seat counts update on screen as soon as anyone books, cancels or the agency changes a departure.
+  useLiveRefresh(effectiveId ? `tour=${encodeURIComponent(effectiveId)}` : null, load);
 
   const loadingSlots = slots === null;
   const openDepartures = (slots ?? []).filter((s) => !s.isFull);
@@ -104,7 +101,7 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
                 <div className="text-[11px] font-semibold uppercase tracking-wide text-[var(--ink-muted)]">
                   Next departure
                 </div>
-                <div className="truncate text-sm font-bold text-[var(--ink)]">{fmtDate(next.startDate)}</div>
+                <div className="truncate text-sm font-bold text-[var(--ink)]">{fmtDate(next.startDate)} · {next.departureTime}</div>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -125,15 +122,27 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
               )}
             </div>
           </>
+        ) : (slots ?? []).length > 0 ? (
+          <div className="flex items-center gap-3 rounded-2xl border border-[var(--danger)]/30 bg-[var(--danger-soft)] px-3.5 py-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[var(--danger)]">
+              <Calendar className="h-4 w-4" />
+            </span>
+            <div>
+              <div className="text-sm font-bold text-[var(--danger)]">All departures fully booked</div>
+              <div className="text-[11px] text-[var(--ink-muted)]">
+                Every scheduled departure is sold out or closed. New dates appear here as soon as the agency adds them.
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="flex items-center gap-3 rounded-2xl border border-dashed border-[var(--border)] px-3.5 py-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-sunk)] text-[var(--ink-secondary)]">
               <Calendar className="h-4 w-4" />
             </span>
             <div>
-              <div className="text-sm font-bold text-[var(--ink)]">Open-dated tour</div>
+              <div className="text-sm font-bold text-[var(--ink)]">No departures scheduled yet</div>
               <div className="text-[11px] text-[var(--ink-muted)]">
-                Pick any date — the agency confirms availability.
+                Request a quote and the operator will propose dates.
               </div>
             </div>
           </div>

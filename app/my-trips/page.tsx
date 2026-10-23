@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
+import ChatWorkspace from '@/components/ChatWorkspace';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Mail, Phone, Globe, Calendar, Users, Check, X, ArrowRight, Loader2, Send, MapPin } from 'lucide-react';
+import { Mail, Phone, Globe, Calendar, Users, X, Loader2, MapPin } from 'lucide-react';
 
 const STATUS_BADGE: Record<string, string> = {
   APPROVED: 'badge-success',
@@ -31,59 +33,28 @@ export default function MyTripsPage() {
   const [trips, setTrips] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedMessages, setSelectedMessages] = useState<any[]>([]);
-  const [msgBody, setMsgBody] = useState('');
-  const [sending, setSending] = useState(false);
   const [deciding, setDeciding] = useState<string | null>(null);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetch('/api/reservations')
+  const loadTrips = useCallback(() => {
+    fetch('/api/reservations', { cache: 'no-store' })
       .then((r) => r.json())
       .then(({ reservations }) => {
         setTrips(reservations || []);
-        if (reservations?.length > 0) setSelectedId(reservations[0].id);
+        setSelectedId((cur) => cur ?? (reservations?.length > 0 ? reservations[0].id : null));
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
-  const loadMessages = (rid: string) => {
-    fetch(`/api/reservations/${rid}/messages`)
-      .then((r) => r.json())
-      .then(({ messages }) => setSelectedMessages(messages || []))
-      .catch(() => {});
-  };
+  useEffect(loadTrips, [loadTrips]);
 
-  useEffect(() => {
+  // Reservation status changes appear as soon as they happen (chat has its own socket).
+  useLiveRefresh('scope=me', loadTrips);
+
+  const decide = async (status: 'CANCELLED') => {
     if (!selectedId) return;
-    loadMessages(selectedId);
-  }, [selectedId]);
-
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!msgBody.trim() || !selectedId) return;
-    setSending(true);
-    setMsgBody('');
-    try {
-      const res = await fetch(`/api/reservations/${selectedId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: msgBody }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send message.');
-      loadMessages(selectedId);
-      router.refresh();
-    } catch (err: any) {
-      alert(err.message || 'Could not send message.');
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const decide = async (status: 'APPROVED' | 'DECLINED') => {
-    if (!selectedId) return;
+    if (!window.confirm('Cancel this reservation? Your seats will be released to other travellers.')) return;
     setDeciding(selectedId);
     setError('');
     try {
@@ -94,7 +65,7 @@ export default function MyTripsPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update reservation.');
-      router.refresh();
+      loadTrips();
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
     } finally { setDeciding(null); }
@@ -201,7 +172,12 @@ export default function MyTripsPage() {
                     <div className="grid gap-3 text-xs sm:text-sm text-[var(--ink)]/80">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-[var(--brand)]" />
-                        <span>Starts {trip.startDate ? new Date(trip.startDate).toLocaleDateString() : '—'}</span>
+                        <span>
+                          Starts {trip.startDate ? new Date(trip.startDate).toLocaleDateString(undefined, { timeZone: 'UTC' }) : '—'}
+                          {trip.departureTime ? ` at ${trip.departureTime}` : ''}
+                          {trip.route ? ` · ${trip.route}` : ''}
+                          {trip.vehicle ? ` · ${trip.vehicle.name} (${trip.vehicle.vehicleType})` : ''}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users className="h-4 w-4 text-[var(--brand)]" />
@@ -295,58 +271,21 @@ export default function MyTripsPage() {
                     )}
                   </div>
 
-                  {trip.status === 'PENDING' && (
+                  {(trip.status === 'PENDING' || trip.status === 'APPROVED') && (
                     <div className="surface-card rounded-2xl border border-black/5 p-5 shadow-sm">
-                      <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-3">Awaiting agency decision — approve or decline to move forward.</p>
-                      <div className="flex gap-2">
-                        <button onClick={() => decide('APPROVED')} disabled={deciding === trip.id} className="btn btn-sm btn-success flex-1 rounded-xl">
-                          {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                          Approve
-                        </button>
-                        <button onClick={() => decide('DECLINED')} disabled={deciding === trip.id} className="btn btn-sm btn-danger flex-1 rounded-xl">
-                          {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
-                          Decline
-                        </button>
-                      </div>
+                      <p className="text-xs sm:text-sm text-[var(--ink-muted)] mb-3">
+                        {trip.status === 'PENDING'
+                          ? 'Your seats are held while the agency reviews the request. This page updates as soon as they respond.'
+                          : 'Confirmed. If your plans change, cancel here so the seats go to other travellers.'}
+                      </p>
+                      <button onClick={() => decide('CANCELLED')} disabled={deciding === trip.id} className="btn btn-sm btn-danger rounded-xl">
+                        {deciding === trip.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+                        Cancel reservation
+                      </button>
                       {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
                     </div>
                   )}
 
-                  <div className="surface-card rounded-2xl border border-black/5 p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs sm:text-sm font-bold font-display text-[var(--brand-deep)]">Message thread</span>
-                      <span className="text-xs text-[var(--ink-muted)]">{selectedMessages.length} messages</span>
-                    </div>
-                    {selectedMessages.length === 0 ? (
-                      <p className="text-xs text-[var(--ink-muted)]">No messages yet.</p>
-                    ) : (
-                      <div className="max-h-40 overflow-y-auto space-y-2 rounded-xl bg-[var(--sand)]/50 p-3">
-                        {selectedMessages.map((m, idx) => (
-                          <div key={m.id || idx} className="text-xs">
-                            <div className="text-[11px] font-semibold text-[var(--brand-deep)] mb-0.5">{m.sender?.firstName} {m.sender?.lastName}</div>
-                            <div className="text-[var(--ink)]">{m.body}</div>
-                            <div className="text-[10px] text-[var(--ink-muted)] mt-0.5">{new Date(m.createdAt).toLocaleTimeString()}</div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <form onSubmit={send} className="flex gap-2 mt-3">
-                      <input
-                        value={msgBody}
-                        onChange={(e) => setMsgBody(e.target.value)}
-                        placeholder="Write a message…"
-                        className="form-control text-xs flex-1"
-                        disabled={sending}
-                      />
-                      <button
-                        type="submit"
-                        disabled={sending || !msgBody.trim()}
-                        className="btn btn-sm btn-primary rounded-xl px-3"
-                      >
-                        {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                      </button>
-                    </form>
-                  </div>
                 </div>
               ) : (
                 <div className="surface-card rounded-2xl border border-black/5 p-8 text-center text-xs sm:text-sm text-[var(--ink-muted)] shadow-sm">
@@ -355,6 +294,14 @@ export default function MyTripsPage() {
               )}
             </div>
           </div>
+        )}
+
+        {/* Chat with the operator for the selected trip: same chats as the header chat button */}
+        {!loading && trip && (
+          <section className="mt-8">
+            <h2 className="mb-3 text-lg font-bold font-display text-[var(--brand-deep)]">Chat with {trip.operator?.companyName ?? 'your operator'}</h2>
+            <ChatWorkspace key={trip.id} onlyReservationId={trip.id} heightClass="h-[560px]" />
+          </section>
         )}
       </main>
       <Footer />

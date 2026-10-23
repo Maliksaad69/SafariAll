@@ -74,17 +74,25 @@ export default async function OperatorPortalPage() {
       })
     : [];
 
-  // New booking alerts: unread traveler messages on active reservations
-  const travelerIds = new Set(reservations.map((r) => r.travelerId));
-  const reservationIds = reservations.map((r) => r.id);
-  const unreadMessages = reservationIds.length
-    ? await prisma.reservationMessage.findMany({
-        where: { reservationId: { in: reservationIds }, isRead: false, senderId: { in: Array.from(travelerIds) } },
-        select: { id: true },
+  // Unread chat messages from travellers (same count as the header chat button)
+  const unreadChats = operatorId
+    ? await prisma.reservationMessage.count({
+        where: { reservation: { operatorId }, isRead: false, senderId: { not: session.userId } },
       })
-    : [];
-  const unreadBookingAlerts = unreadMessages.length;
+    : 0;
 
+  const todayStart = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00.000Z');
+  const [openByTour, fleetSize] = operator
+    ? await Promise.all([
+        prisma.tourSlot.groupBy({
+          by: ['tourId'],
+          where: { tour: { operatorId: operator.id }, startDate: { gte: todayStart }, status: 'OPEN' },
+          _count: { _all: true },
+        }),
+        prisma.vehicle.count({ where: { operatorId: operator.id, isActive: true } }),
+      ])
+    : [[], 0];
+  const needsDepartures = (operator?.tours ?? []).filter((t) => t.isPublished && !openByTour.some((o) => o.tourId === t.id));
   const pendingCount = reservations.filter((r) => r.status === 'PENDING').length;
   const approvedRes = reservations.filter((r) => r.status === 'APPROVED');
   const approvedCount = approvedRes.length;
@@ -143,9 +151,9 @@ export default async function OperatorPortalPage() {
             <Link href="/operator-portal/messages" className="btn btn-secondary relative">
               <Mail className="h-4 w-4" />
               Inbox
-              {unreadBookingAlerts > 0 && (
+              {unreadChats > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
-                  {unreadBookingAlerts}
+                  {unreadChats}
                 </span>
               )}
             </Link>
@@ -176,6 +184,23 @@ export default async function OperatorPortalPage() {
             </div>
           ))}
         </div>
+
+        {/* Fleet / departure gaps: tours without open departures can't be booked */}
+        {operator && fleetSize === 0 && needsDepartures.length === 0 && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+            <strong>Add your vehicles to start selling seats.</strong> Bookings are taken per seat on scheduled departures, so each
+            vehicle you add sets how many travellers a departure can carry.{' '}
+            <Link href="/operator-portal/slots" className="font-semibold underline">Set up your fleet</Link>
+          </div>
+        )}
+        {needsDepartures.length > 0 && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+            <strong>{needsDepartures.length} package{needsDepartures.length === 1 ? '' : 's'} cannot take bookings</strong> because there are no open
+            upcoming departures: {needsDepartures.map((t) => t.title).join(', ')}.{' '}
+            <Link href="/operator-portal/slots" className="font-semibold underline">Schedule departures</Link>
+            {fleetSize === 0 ? ' (add your vehicles there first).' : '.'}
+          </div>
+        )}
 
         {/* Reservation requests */}
         <AgencyReservationsTable initialReservations={reservations.map(serializeReservation)} />

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heart, User, ChevronDown, Menu, X, Calendar, Bell } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
-import { safariOperators, safariTours } from '@/lib/site-data';
+import ChatLauncher from '@/components/ChatLauncher';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -45,9 +45,18 @@ export default function Navbar() {
     router.refresh();
   };
 
-  // Dynamic country list from the actual tour data
-  const countries = Array.from(new Set(safariTours.map((t) => t.primaryCountry)));
-  const topOperators = safariOperators.slice(0, 5);
+  // Country list and top operators come from Postgres via /api/site/nav
+  const [countries, setCountries] = useState<string[]>([]);
+  const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
+  useEffect(() => {
+    fetch('/api/site/nav')
+      .then((r) => r.json())
+      .then((d) => {
+        setCountries(d.countries ?? []);
+        setTopOperators(d.operators ?? []);
+      })
+      .catch(() => {});
+  }, []);
 
   const navMenus = [
     {
@@ -116,9 +125,20 @@ export default function Navbar() {
     return () => window.removeEventListener('favorites:updated', handleFavoritesUpdate);
   }, [pathname]);
 
+  // Exactly one chat button is mounted: in the desktop action bar (right of the bell) or the mobile header.
+  const isDesktop = useSyncExternalStore<boolean | null>(
+    (onChange) => {
+      const mq = window.matchMedia('(min-width: 1024px)');
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    },
+    () => window.matchMedia('(min-width: 1024px)').matches,
+    () => null,
+  );
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
-  const [notifications, setNotifications] = useState<Array<{ id: string; title: string; body: string; link: string | null; isRead: boolean; createdAt: string }>>([]);
+  const [notifications, setNotifications] = useState<Array<{ id: string; type?: string; title: string; body: string; link: string | null; isRead: boolean; createdAt: string }>>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -242,26 +262,34 @@ export default function Navbar() {
                           No notifications yet.
                         </p>
                       ) : (
-                        notifications.map((n) => (
-                          <Link
-                            key={n.id}
-                            href={n.link || '#'}
-                            onClick={() => setNotifOpen(false)}
-                            className={`block border-b border-[var(--border-soft)] px-3 py-2.5 transition-colors last:border-b-0 hover:bg-[var(--brand-soft)] ${n.isRead ? '' : 'bg-[var(--brand-soft)]'}`}
-                          >
-                            <div className="text-[13px] font-bold text-[var(--ink)]">{n.title}</div>
-                            <div className="mt-0.5 text-[12px] font-normal leading-snug text-[var(--ink-secondary)]">{n.body}</div>
-                            <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[var(--ink-muted)]">
-                              {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                            </div>
-                          </Link>
-                        ))
+                        notifications.map((n) => {
+                          const inner = (
+                            <>
+                              <div className="text-[13px] font-bold text-[var(--ink)]">{n.title}</div>
+                              <div className="mt-0.5 text-[12px] font-normal leading-snug text-[var(--ink-secondary)]">{n.body}</div>
+                              <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[var(--ink-muted)]">
+                                {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                {n.type === 'CHAT_MESSAGE' ? ' · open it with the chat button' : ''}
+                              </div>
+                            </>
+                          );
+                          const cls = `block border-b border-[var(--border-soft)] px-3 py-2.5 last:border-b-0 ${n.isRead ? '' : 'bg-[var(--brand-soft)]'}`;
+                          // Chat messages are only announced here; the chat button next to the bell opens them.
+                          return n.type === 'CHAT_MESSAGE' || !n.link ? (
+                            <div key={n.id} className={cls}>{inner}</div>
+                          ) : (
+                            <Link key={n.id} href={n.link} onClick={() => setNotifOpen(false)} className={`${cls} transition-colors hover:bg-[var(--brand-soft)]`}>
+                              {inner}
+                            </Link>
+                          );
+                        })
                       )}
                     </div>
                   </div>
                 )}
               </div>
             )}
+            {sessionUser && isDesktop === true && <ChatLauncher />}
             <Link href="/favorites" className="flex items-center gap-1.5 text-[var(--ink-secondary)] transition-colors hover:text-[var(--ink)] group" aria-label="Favorites list">
               <div className="relative">
                 <Heart className="h-5 w-5 group-hover:fill-[var(--brand)]/25" strokeWidth={1.6} />
@@ -313,7 +341,8 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Single hamburger for small + medium screens */}
+          {/* Chat button + single hamburger for small and medium screens */}
+          {sessionUser && isDesktop === false && <ChatLauncher className="ml-auto lg:hidden" />}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="flex items-center justify-center rounded-full p-1.5 text-[var(--ink)] transition-colors hover:bg-[var(--brand-soft)] lg:hidden"
