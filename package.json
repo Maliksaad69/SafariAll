@@ -14,10 +14,14 @@
     "db:stop": "docker compose stop postgres",
     "studio": "prisma studio",
     "db:migrate": "prisma migrate deploy",
-    "db:setup": "npm run db:start && npm run db:migrate",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:setup": "npm run db:start && npm run db:migrate && npm run db:seed",
     "db:reset": "docker compose down -v && npm run db:start",
     "db:dump": "docker compose exec -T postgres pg_dump -U safari_admin -d safaribookings_db --no-owner --no-privileges --encoding=UTF8 > docker/postgres/init/01-safaribookings.sql",
     "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

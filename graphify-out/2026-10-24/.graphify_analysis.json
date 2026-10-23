@@ -1,0 +1,402 @@
+{
+  "communities": {
+    "0": [
+      "app_dashboard_page",
+      "app_favorites_page",
+      "app_favorites_page_favoritespage",
+      "app_login_page",
+      "app_login_page_loginpage",
+      "app_operator_portal_page",
+      "app_operator_portal_tours_new_page",
+      "app_operator_portal_tours_new_page_itineraryday",
+      "app_operator_portal_tours_new_page_newtourpage",
+      "app_operators_page",
+      "app_operators_page_operatorspage",
+      "app_operators_slug_page",
+      "app_operators_slug_page_operatorprofilepage",
+      "app_operators_slug_page_operatorprofilepageprops",
+      "app_page",
+      "app_page_homepage",
+      "app_parks_page",
+      "app_parks_page_parkspage",
+      "app_parks_slug_page",
+      "app_parks_slug_page_parkdetailpage",
+      "app_parks_slug_page_parkdetailpageprops",
+      "app_quote_request_page",
+      "app_quote_request_page_quoterequestform",
+      "app_quote_request_page_quoterequestpage",
+      "app_register_page",
+      "app_register_page_registerformcontent",
+      "app_register_page_registerpage",
+      "components_footer",
+      "components_footer_footer",
+      "components_navbar",
+      "components_navbar_navbar",
+      "components_searchautocomplete",
+      "components_searchautocomplete_searchautocomplete",
+      "components_tourcard",
+      "components_tourcard_comfortcolors",
+      "components_tourcard_comfortlabels",
+      "components_tourcard_gettourimage",
+      "components_tourcard_tourcard",
+      "components_tourcard_tourcardprops",
+      "ref_lucide_react",
+      "ref_next",
+      "ref_react"
+    ],
+    "1": [
+      "app_admin_page",
+      "app_admin_page_adminpage",
+      "app_api_admin_verify_operator_route",
+      "app_api_admin_verify_operator_route_post",
+      "app_api_auth_me_route",
+      "app_api_auth_me_route_get",
+      "app_api_favorites_route",
+      "app_api_favorites_route_get",
+      "app_api_favorites_route_post",
+      "app_api_operator_tours_route",
+      "app_api_operator_tours_route_post",
+      "app_api_reviews_route",
+      "app_api_reviews_route_post",
+      "app_api_search_route",
+      "app_api_search_route_get",
+      "app_dashboard_page_travelerdashboardpage",
+      "app_operator_portal_page_operatorportalpage",
+      "app_sitemap",
+      "app_sitemap_sitemap",
+      "components_operatorverificationtable",
+      "components_operatorverificationtable_operatoritem",
+      "components_operatorverificationtable_operatorverificationtable",
+      "lib_auth_getsession",
+      "lib_prisma",
+      "lib_prisma_globalforprisma",
+      "lib_prisma_prisma",
+      "ref_prisma_client"
+    ],
+    "2": [
+      "eslint_config",
+      "eslint_config_eslintconfig",
+      "package",
+      "package_name",
+      "package_prisma",
+      "package_prisma_seed",
+      "package_private",
+      "package_version",
+      "prisma_seed",
+      "prisma_seed_main",
+      "prisma_seed_prisma",
+      "ref_bcryptjs",
+      "ref_clsx",
+      "ref_eslint",
+      "ref_eslint_config_next",
+      "ref_prisma",
+      "ref_react_dom",
+      "ref_tailwind_merge",
+      "ref_tailwindcss",
+      "ref_tailwindcss_postcss",
+      "ref_tsx",
+      "ref_types_bcryptjs",
+      "ref_types_node",
+      "ref_types_react",
+      "ref_types_react_dom",
+      "ref_typescript"
+    ],
+    "3": [
+      "tsconfig",
+      "tsconfig_compileroptions",
+      "tsconfig_compileroptions_allowjs",
+      "tsconfig_compileroptions_esmoduleinterop",
+      "tsconfig_compileroptions_incremental",
+      "tsconfig_compileroptions_isolatedmodules",
+      "tsconfig_compileroptions_jsx",
+      "tsconfig_compileroptions_lib",
+      "tsconfig_compileroptions_module",
+      "tsconfig_compileroptions_moduleresolution",
+      "tsconfig_compileroptions_noemit",
+      "tsconfig_compileroptions_paths",
+      "tsconfig_compileroptions_plugins",
+      "tsconfig_compileroptions_resolvejsonmodule",
+      "tsconfig_compileroptions_skiplibcheck",
+      "tsconfig_compileroptions_strict",
+      "tsconfig_compileroptions_target",
+      "tsconfig_exclude",
+      "tsconfig_include"
+    ],
+    "4": [
+      "app_api_auth_login_route",
+      "app_api_auth_login_route_post",
+      "app_api_auth_logout_route",
+      "app_api_auth_logout_route_post",
+      "app_api_auth_register_route",
+      "app_api_auth_register_route_post",
+      "lib_auth",
+      "lib_auth_createsession",
+      "lib_auth_hashpassword",
+      "lib_auth_jwt_secret",
+      "lib_auth_logout",
+      "lib_auth_sessionpayload",
+      "lib_auth_verifypassword",
+      "ref_jose"
+    ],
+    "5": [
+      "package_devdependencies",
+      "package_devdependencies_eslint",
+      "package_devdependencies_eslint_config_next",
+      "package_devdependencies_prisma",
+      "package_devdependencies_tailwindcss",
+      "package_devdependencies_tailwindcss_postcss",
+      "package_devdependencies_tsx",
+      "package_devdependencies_types_bcryptjs",
+      "package_devdependencies_types_node",
+      "package_devdependencies_types_react",
+      "package_devdependencies_types_react_dom",
+      "package_devdependencies_typescript"
+    ],
+    "6": [
+      "app_tours_page",
+      "app_tours_page_comfortlabels",
+      "app_tours_page_tourspage",
+      "app_tours_page_tourspageprops",
+      "components_filtersidebar",
+      "components_filtersidebar_divider",
+      "components_filtersidebar_filterradio",
+      "components_filtersidebar_filtersection",
+      "components_filtersidebar_filtersidebar",
+      "components_filtersidebar_filtersidebarprops"
+    ],
+    "7": [
+      "package_dependencies",
+      "package_dependencies_bcryptjs",
+      "package_dependencies_clsx",
+      "package_dependencies_jose",
+      "package_dependencies_lucide_react",
+      "package_dependencies_next",
+      "package_dependencies_prisma_client",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_tailwind_merge"
+    ],
+    "8": [
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_db_push",
+      "package_scripts_db_seed",
+      "package_scripts_dev",
+      "package_scripts_dev_webpack",
+      "package_scripts_lint",
+      "package_scripts_start",
+      "package_scripts_studio"
+    ],
+    "9": [
+      "app_globals",
+      "app_layout",
+      "app_layout_cormorant",
+      "app_layout_dmsans",
+      "app_layout_metadata",
+      "app_layout_rootlayout"
+    ],
+    "10": [
+      "app_tours_slug_page",
+      "app_tours_slug_page_comfortlabel",
+      "app_tours_slug_page_contentcard",
+      "app_tours_slug_page_gettourimage",
+      "app_tours_slug_page_tourdetailpage",
+      "app_tours_slug_page_tourdetailpageprops"
+    ],
+    "11": [
+      "app_api_inquiries_route",
+      "app_api_inquiries_route_post",
+      "lib_email",
+      "lib_email_leademailpayload",
+      "lib_email_sendleadnotificationemail"
+    ],
+    "12": [
+      "next_dev_types_root_params_d",
+      "next_dev_types_routes_d",
+      "next_env_d",
+      "next_env_d_rationale_6"
+    ],
+    "13": [
+      "components_imagegallery",
+      "components_imagegallery_imagegallery",
+      "components_imagegallery_imagegalleryprops"
+    ],
+    "14": [
+      "app_robots",
+      "app_robots_robots"
+    ],
+    "15": [
+      "next_config",
+      "next_config_nextconfig"
+    ],
+    "16": [
+      "postcss_config",
+      "postcss_config_config"
+    ]
+  },
+  "cohesion": {
+    "0": 0.13937282229965156,
+    "1": 0.1225071225071225,
+    "2": 0.08,
+    "3": 0.10526315789473684,
+    "4": 0.25274725274725274,
+    "5": 0.16666666666666666,
+    "6": 0.2222222222222222,
+    "7": 0.2,
+    "8": 0.2222222222222222,
+    "9": 0.3333333333333333,
+    "10": 0.4,
+    "11": 0.6,
+    "12": 0.5,
+    "13": 0.6666666666666666,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0
+  },
+  "gods": [
+    {
+      "id": "ref_next",
+      "label": "next",
+      "degree": 36
+    },
+    {
+      "id": "ref_lucide_react",
+      "label": "lucide-react",
+      "degree": 23
+    },
+    {
+      "id": "lib_prisma_prisma",
+      "label": "prisma",
+      "degree": 19
+    },
+    {
+      "id": "components_footer_footer",
+      "label": "Footer()",
+      "degree": 16
+    },
+    {
+      "id": "components_navbar_navbar",
+      "label": "Navbar()",
+      "degree": 16
+    },
+    {
+      "id": "tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "degree": 16
+    },
+    {
+      "id": "lib_auth_getsession",
+      "label": "getSession()",
+      "degree": 15
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 10
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "degree": 9
+    },
+    {
+      "id": "components_tourcard_tourcard",
+      "label": "TourCard()",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "AdminPage()",
+      "target": "getSession()",
+      "source_files": [
+        "app/admin/page.tsx",
+        "lib/auth.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `AdminPage()` unexpectedly reaches hub `getSession()`"
+    },
+    {
+      "source": "POST()",
+      "target": "getSession()",
+      "source_files": [
+        "app/api/admin/verify-operator/route.ts",
+        "lib/auth.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `POST()` unexpectedly reaches hub `getSession()`"
+    },
+    {
+      "source": "GET()",
+      "target": "getSession()",
+      "source_files": [
+        "app/api/auth/me/route.ts",
+        "lib/auth.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `GET()` unexpectedly reaches hub `getSession()`"
+    },
+    {
+      "source": "POST()",
+      "target": "getSession()",
+      "source_files": [
+        "app/api/operator/tours/route.ts",
+        "lib/auth.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `POST()` unexpectedly reaches hub `getSession()`"
+    },
+    {
+      "source": "POST()",
+      "target": "getSession()",
+      "source_files": [
+        "app/api/reviews/route.ts",
+        "lib/auth.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; peripheral node `POST()` unexpectedly reaches hub `getSession()`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `next` connect `next` to `prisma.ts`, `package.json`, `auth.ts`, `tours/page.tsx`, `layout.tsx`, `tours/[slug]/page.tsx`, `inquiries/route.ts`, `robots.ts`, `next.config.ts`?",
+      "why": "High betweenness centrality (0.345) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `lucide-react` connect `next` to `prisma.ts`, `package.json`, `tours/page.tsx`, `tours/[slug]/page.tsx`, `ImageGallery.tsx`?",
+      "why": "High betweenness centrality (0.121) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `devDependencies` connect `devDependencies` to `package.json`?",
+      "why": "High betweenness centrality (0.094) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `ItineraryDay`, `OperatorProfilePageProps`, `ParkDetailPageProps` to the rest of the system?",
+      "why": "85 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `next` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13937282229965156 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `prisma.ts` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1225071225071225 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `package.json` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

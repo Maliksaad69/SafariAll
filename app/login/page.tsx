@@ -46,15 +46,14 @@ export default function LoginPage() {
 
       setSuccess(`Welcome back, ${data.user.name}! Redirecting...`);
       setTimeout(() => {
+        let destination = '/';
         if (data.user.role === 'OPERATOR') {
-          router.push('/operator-portal');
+          destination = '/operator-portal';
         } else if (data.user.role === 'ADMIN') {
-          router.push('/admin');
-        } else {
-          router.push('/');
+          destination = '/admin';
         }
-        router.refresh();
-      }, 900);
+        window.location.href = destination;
+      }, 700);
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
     } finally {

@@ -1,7 +1,7 @@
 {
   "app/admin/page.tsx": {
-    "mtime": 1792238758.1363173,
-    "seen": 1792239263.2921016,
+    "mtime": 1792600962.9996846,
+    "seen": 1792601407.8909893,
     "ast_hash": "1c6143ba934c7c39d363a4cc1a449b01",
     "semantic_hash": ""
   },
@@ -42,27 +42,27 @@
     "semantic_hash": "7ae1a8bd75607cfdf574d0dabea85ce9"
   },
   "app/api/inquiries/route.ts": {
-    "mtime": 1789409369.927439,
-    "seen": 1789829630.2831392,
-    "ast_hash": "806d6a595a5108b9280eb5283fd04ffb",
-    "semantic_hash": "806d6a595a5108b9280eb5283fd04ffb"
+    "mtime": 1792600963.001081,
+    "seen": 1792601407.8914378,
+    "ast_hash": "1854aecdee9a2c8dd9462e52eafa8410",
+    "semantic_hash": ""
   },
   "app/api/operator/tours/route.ts": {
-    "mtime": 1792003613.6121902,
-    "seen": 1792239263.292835,
-    "ast_hash": "d5868de8f13bb2e642a2d7386bf373b1",
+    "mtime": 1792600963.001081,
+    "seen": 1792601407.8915563,
+    "ast_hash": "45d06ff7d4a22da517e4a56ff69f392f",
     "semantic_hash": ""
   },
   "app/api/reviews/route.ts": {
-    "mtime": 1790617579.6752753,
-    "seen": 1790618939.9760036,
-    "ast_hash": "0b22fd295d49a53d132a03d65ae442ac",
+    "mtime": 1792792227.7592285,
+    "seen": 1792792611.4621491,
+    "ast_hash": "e8bc1096a396d9baee77f25f2a256e0a",
     "semantic_hash": ""
   },
   "app/api/search/route.ts": {
-    "mtime": 1790617579.6752753,
-    "seen": 1790618939.976006,
-    "ast_hash": "e2b2af4f53f17e10f7b2044c40248c13",
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.891662,
+    "ast_hash": "284542101261d3aa8f7eb2ed91901380",
     "semantic_hash": ""
   },
   "app/dashboard/page.tsx": {
@@ -72,8 +72,8 @@
     "semantic_hash": ""
   },
   "app/favorites/page.tsx": {
-    "mtime": 1792238340.5094497,
-    "seen": 1792239263.29301,
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8917706,
     "ast_hash": "8c1e7f8b3e0a407b93298fc014d14891",
     "semantic_hash": ""
   },
@@ -84,63 +84,63 @@
     "semantic_hash": ""
   },
   "app/login/page.tsx": {
-    "mtime": 1792239106.1027143,
-    "seen": 1792239263.293015,
-    "ast_hash": "1381cfe943eaa07bc6bceb803076cb97",
+    "mtime": 1792737643.416387,
+    "seen": 1792737751.4398556,
+    "ast_hash": "389dd99f2b95ba4808e3e4d80e50e673",
     "semantic_hash": ""
   },
   "app/operator-portal/page.tsx": {
-    "mtime": 1792239130.0028794,
-    "seen": 1792239263.2930255,
-    "ast_hash": "d03e4f591e332b7d5c9fc115a77782de",
+    "mtime": 1792792544.853687,
+    "seen": 1792792611.462951,
+    "ast_hash": "22de27d61bb3b22c45938b2955d6c3b5",
     "semantic_hash": ""
   },
   "app/operator-portal/tours/new/page.tsx": {
-    "mtime": 1792239221.3435097,
-    "seen": 1792239263.293031,
-    "ast_hash": "7f2d60555c776717cb7f54d8db4076dd",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919094,
+    "ast_hash": "ad92505798cd157298d494132329a98c",
     "semantic_hash": ""
   },
   "app/operators/[slug]/page.tsx": {
-    "mtime": 1792236723.2621756,
-    "seen": 1792239263.2930322,
-    "ast_hash": "0edfae7e6c3b57214b6d52d5d9b87db3",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919106,
+    "ast_hash": "bf335436c550b73be04b90556ce5a1f0",
     "semantic_hash": ""
   },
   "app/operators/page.tsx": {
-    "mtime": 1792236618.4213939,
-    "seen": 1792239263.2930355,
-    "ast_hash": "10f32b7cfdb96c2ac1591fbfe92df96a",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919427,
+    "ast_hash": "b7123b7aa50371f73dbb753cb106a6e0",
     "semantic_hash": ""
   },
   "app/page.tsx": {
-    "mtime": 1792003676.7275069,
-    "seen": 1792239263.2930374,
-    "ast_hash": "c925c33adaebd2d0f156573ba5df9d82",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919437,
+    "ast_hash": "24b2e617e769bd00bdc48abab3d3d565",
     "semantic_hash": ""
   },
   "app/parks/[slug]/page.tsx": {
-    "mtime": 1792238129.8960078,
-    "seen": 1792239263.2930386,
-    "ast_hash": "e6d9953fdf657d0180c554f86aa757f4",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919451,
+    "ast_hash": "41683ca26a64686b02f20368ea69e19c",
     "semantic_hash": ""
   },
   "app/parks/page.tsx": {
-    "mtime": 1792238923.5254557,
-    "seen": 1792239263.2930403,
-    "ast_hash": "ad19d93383f8703772fadf469a83929a",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8919463,
+    "ast_hash": "4834b03d7080ee28bd1673efb3a6664c",
     "semantic_hash": ""
   },
   "app/quote/request/page.tsx": {
-    "mtime": 1792238318.9013016,
-    "seen": 1792239263.2930436,
-    "ast_hash": "337c1dacded9a6112f5fca9c644d31a2",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.891949,
+    "ast_hash": "16ea4762d0c6634aa54cff5837f29db1",
     "semantic_hash": ""
   },
   "app/register/page.tsx": {
-    "mtime": 1792239113.2507637,
-    "seen": 1792239263.293045,
-    "ast_hash": "adba4c43b13f3860d4411b816a419a80",
+    "mtime": 1792737648.8563976,
+    "seen": 1792737751.4403284,
+    "ast_hash": "3b5b7347e3d24da6b9dfa9d970c5a6f9",
     "semantic_hash": ""
   },
   "app/robots.ts": {
@@ -156,21 +156,21 @@
     "semantic_hash": ""
   },
   "app/tours/[slug]/page.tsx": {
-    "mtime": 1792237180.5735385,
-    "seen": 1792239263.2931192,
-    "ast_hash": "2023331729679ca1973033186eac7c97",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8921363,
+    "ast_hash": "31b9ca8a236ed7fd89ec716c4c8cb571",
     "semantic_hash": ""
   },
   "app/tours/page.tsx": {
-    "mtime": 1792234317.9166808,
-    "seen": 1792239263.2931242,
-    "ast_hash": "95ccaf5c40d47bb1ea1ee131a09bde15",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.892139,
+    "ast_hash": "7931cc1a30dd47da0039649e8bdb139a",
     "semantic_hash": ""
   },
   "components/FilterSidebar.tsx": {
-    "mtime": 1792232431.2270803,
-    "seen": 1792239263.2931879,
-    "ast_hash": "b7175d9911714d620209b5ab29d7b212",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8923297,
+    "ast_hash": "ccf2b6086b9569fa3a68e82834eeb3aa",
     "semantic_hash": ""
   },
   "components/Footer.tsx": {
@@ -186,27 +186,27 @@
     "semantic_hash": "3da550f0d40bca9dfe3cf1f7c2ce2da8"
   },
   "components/Navbar.tsx": {
-    "mtime": 1792003676.7315068,
-    "seen": 1792239263.2932463,
-    "ast_hash": "db4c0932fb90fc6a3cc6ea93399d9925",
+    "mtime": 1792737653.4284065,
+    "seen": 1792737751.4408042,
+    "ast_hash": "a4ae0fcccddf9cf4507caed809b38f8c",
     "semantic_hash": ""
   },
   "components/OperatorVerificationTable.tsx": {
-    "mtime": 1792239069.9064646,
-    "seen": 1792239263.2932508,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8925138,
     "ast_hash": "697e83f3734f9791abe5118c62863e67",
     "semantic_hash": ""
   },
   "components/SearchAutocomplete.tsx": {
-    "mtime": 1792238727.0041032,
-    "seen": 1792239263.293258,
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8925629,
     "ast_hash": "131bb0cb5d17427281b86dfeeb038f22",
     "semantic_hash": ""
   },
   "components/TourCard.tsx": {
-    "mtime": 1792003676.7315068,
-    "seen": 1792239263.293262,
-    "ast_hash": "4876e24dd5adc9514a042cb2a81b4d1a",
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8925655,
+    "ast_hash": "af5eec6f40e39caa684facba1a607ebe",
     "semantic_hash": ""
   },
   "eslint.config.mjs": {
@@ -216,10 +216,10 @@
     "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
   },
   "lib/auth.ts": {
-    "mtime": 1789400000.6123345,
-    "seen": 1789829630.28317,
-    "ast_hash": "50fb719ab2141e38bf06585fd52f6ea9",
-    "semantic_hash": "50fb719ab2141e38bf06585fd52f6ea9"
+    "mtime": 1792737633.7123692,
+    "seen": 1792737751.4411151,
+    "ast_hash": "bbb60368204e730df1a233241679ac39",
+    "semantic_hash": ""
   },
   "lib/email.ts": {
     "mtime": 1792003613.6230445,
@@ -234,9 +234,9 @@
     "semantic_hash": "5cc028be0034c15914666e0a198af17b"
   },
   "next-env.d.ts": {
-    "mtime": 1792240488.2007687,
-    "seen": 1792255905.989686,
-    "ast_hash": "aa94238a90e7d04b7a47ecc3145ba6a0",
+    "mtime": 1792737729.1325808,
+    "seen": 1792737751.4414976,
+    "ast_hash": "8195d2c60ce847a459ae9d308d6a5724",
     "semantic_hash": ""
   },
   "next.config.ts": {
@@ -246,9 +246,9 @@
     "semantic_hash": "9b77af189a21a7a64e4bd7a426f64176"
   },
   "package.json": {
-    "mtime": 1792003613.6290662,
-    "seen": 1792239263.2934287,
-    "ast_hash": "db0df4d9726dc0d06f986310b8b5a7fa",
+    "mtime": 1792737699.9365082,
+    "seen": 1792737751.4415402,
+    "ast_hash": "6e994e4199a243fa85e9eeee2caac223",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -258,9 +258,9 @@
     "semantic_hash": "239f3ebf717465dc636818a1a619398d"
   },
   "prisma/seed.ts": {
-    "mtime": 1792003613.6290662,
-    "seen": 1792239263.2934859,
-    "ast_hash": "871630ffbc884331b652e0042af0680d",
+    "mtime": 1792737690.2444856,
+    "seen": 1792737751.4415965,
+    "ast_hash": "75fe5ff0e3ed7d23e83d8ddffdf82db2",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -270,14 +270,14 @@
     "semantic_hash": "02fc19ad21338c2ab820a70136310db4"
   },
   "app/about-us/page.tsx": {
-    "mtime": 1792238154.488176,
-    "seen": 1792239263.292061,
+    "mtime": 1792600962.9996846,
+    "seen": 1792601407.890983,
     "ast_hash": "7a3cf75c2eabbee292d3a3ecef3af124",
     "semantic_hash": ""
   },
   "app/admin/reviews/page.tsx": {
-    "mtime": 1792238771.7884111,
-    "seen": 1792239263.2921143,
+    "mtime": 1792600962.9996846,
+    "seen": 1792601407.8909924,
     "ast_hash": "3c4cac1adbefae874c09086282e445f8",
     "semantic_hash": ""
   },
@@ -288,15 +288,15 @@
     "semantic_hash": ""
   },
   "app/api/reservations/[id]/route.ts": {
-    "mtime": 1792003613.6133378,
-    "seen": 1792239263.2928417,
-    "ast_hash": "cd7b206e323745500d453ee704577cc3",
+    "mtime": 1792792217.3151474,
+    "seen": 1792792611.4620705,
+    "ast_hash": "174a6ff162faa61c2037f5b0d2c07840",
     "semantic_hash": ""
   },
   "app/api/reservations/route.ts": {
-    "mtime": 1792003613.6133378,
-    "seen": 1792239263.2928433,
-    "ast_hash": "60e900d2aae68b601b76bad93dbdc7eb",
+    "mtime": 1792792251.0074086,
+    "seen": 1792792611.4621475,
+    "ast_hash": "c7a07b0ed6b7a36e121892fad68eb92b",
     "semantic_hash": ""
   },
   "app/api/tours-count/route.ts": {
@@ -306,87 +306,87 @@
     "semantic_hash": ""
   },
   "app/best-price-guarantee/page.tsx": {
-    "mtime": 1792238200.7164924,
-    "seen": 1792239263.2929528,
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917298,
     "ast_hash": "4e7e9889162c0b14fcc85460140297f9",
     "semantic_hash": ""
   },
   "app/blog/guide-to-visiting-ngorongoro-crater/page.tsx": {
-    "mtime": 1792238587.5591447,
-    "seen": 1792239263.2929552,
-    "ast_hash": "7892c60b75797f6e9161719045621896",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.891731,
+    "ast_hash": "aff41096d317a78d4823994853901885",
     "semantic_hash": ""
   },
   "app/blog/page.tsx": {
-    "mtime": 1792238538.682809,
-    "seen": 1792239263.292957,
-    "ast_hash": "8fac82624c05f5c47fb3d8fec8d76204",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917322,
+    "ast_hash": "84f351441279af3b869b998c2a78ddb8",
     "semantic_hash": ""
   },
   "app/blog/survey-reveals-the-worlds-polite-tourists/page.tsx": {
-    "mtime": 1792238625.9434085,
-    "seen": 1792239263.2929587,
-    "ast_hash": "923ed3d88c6d3c2325bb196e2108481a",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917332,
+    "ast_hash": "2f001acc71bc80aef8fa814062862ff6",
     "semantic_hash": ""
   },
   "app/blog/tanzania-safari-itinerary-7-to-10-days/page.tsx": {
-    "mtime": 1792238608.1632862,
-    "seen": 1792239263.2929602,
-    "ast_hash": "2a506a092134a8ebd6a5d66bda96b2ca",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917346,
+    "ast_hash": "ccc81657157cc4c2ef10c901e15fdcea",
     "semantic_hash": ""
   },
   "app/contact-us/page.tsx": {
-    "mtime": 1792003613.4510431,
-    "seen": 1792239263.2929688,
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917384,
     "ast_hash": "670c32ed44f4778fcae6fd0534fc8257",
     "semantic_hash": ""
   },
   "app/experts/[id]/page.tsx": {
-    "mtime": 1792238443.3381548,
-    "seen": 1792239263.2930064,
-    "ast_hash": "6fb15043f8a485e5c96d2ac7f2cbe6ca",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.891768,
+    "ast_hash": "5ecf69224b41cb6e8688f281e96ae99d",
     "semantic_hash": ""
   },
   "app/faq/page.tsx": {
-    "mtime": 1792239234.0915978,
-    "seen": 1792239263.2930083,
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917694,
     "ast_hash": "26d0dd8071e0bf6c81f845a367404684",
     "semantic_hash": ""
   },
   "app/how-it-works/page.tsx": {
-    "mtime": 1792238176.112324,
-    "seen": 1792239263.2930114,
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8917718,
     "ast_hash": "99e5d55f0e4bbef725387ddfd8b23b60",
     "semantic_hash": ""
   },
   "app/privacy-policy/page.tsx": {
-    "mtime": 1792238424.3740246,
-    "seen": 1792239263.2930422,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8919477,
     "ast_hash": "1e24e743b2e5693c3325332301edf31c",
     "semantic_hash": ""
   },
   "app/reviews/page.tsx": {
-    "mtime": 1792238232.1047072,
-    "seen": 1792239263.2930462,
-    "ast_hash": "602055fb320d82da4ca7dc5231b7bc0f",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8919513,
+    "ast_hash": "b9e6d87050faf1370f27b3c03f9bdb32",
     "semantic_hash": ""
   },
   "app/search/page.tsx": {
-    "mtime": 1792238275.765006,
-    "seen": 1792239263.2930803,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8920794,
     "ast_hash": "28fdbab3563076e04ac825c768ffd8a6",
     "semantic_hash": ""
   },
   "components/AgencyReservationsTable.tsx": {
-    "mtime": 1792239082.6225524,
-    "seen": 1792239263.2931266,
-    "ast_hash": "464f8a086b500bd0c477488fda0f7261",
+    "mtime": 1792792409.2566357,
+    "seen": 1792792611.463661,
+    "ast_hash": "ea6f50bf172ae1ee5db3617e2f95f662",
     "semantic_hash": ""
   },
   "components/BookingBox.tsx": {
-    "mtime": 1792003613.6230445,
-    "seen": 1792239263.2931323,
-    "ast_hash": "26d16cb9126d3bfc8b1a8273d030cfa3",
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8922853,
+    "ast_hash": "9f544ce79c2aad56c0e3a48f1db6e20d",
     "semantic_hash": ""
   },
   "components/FavoriteHeartButton.tsx": {
@@ -402,33 +402,33 @@
     "semantic_hash": ""
   },
   "components/NavbarSearch.tsx": {
-    "mtime": 1792003613.4670434,
-    "seen": 1792239263.293248,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8925111,
     "ast_hash": "5515ba964e9de07fa44be07b142c5c8c",
     "semantic_hash": ""
   },
   "components/OperatorFilterSidebar.tsx": {
-    "mtime": 1792232810.709729,
-    "seen": 1792239263.2932498,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8925126,
     "ast_hash": "8e45622f2c2c3a08a255d9a3a3dac84f",
     "semantic_hash": ""
   },
   "components/ReserveDialog.tsx": {
-    "mtime": 1792003613.6230445,
-    "seen": 1792239263.2932534,
-    "ast_hash": "4d74c775a88478d15d9a299311d8d832",
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.892517,
+    "ast_hash": "cc5ef193f84d633e92b16c969909cf59",
     "semantic_hash": ""
   },
   "components/ReviewModerationQueue.tsx": {
-    "mtime": 1792238791.7885487,
-    "seen": 1792239263.2932546,
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8925183,
     "ast_hash": "079aabf9863c12a9e96d4e6e09d0330b",
     "semantic_hash": ""
   },
   "components/TourReviewsWidget.tsx": {
-    "mtime": 1792233618.259606,
-    "seen": 1792239263.2932642,
-    "ast_hash": "bf53076fa007bb6d4d2529b0c87e7074",
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8925674,
+    "ast_hash": "7b5a6b2f41a378f3eb113ecff7e706c7",
     "semantic_hash": ""
   },
   "lib/seo.ts": {
@@ -438,9 +438,9 @@
     "semantic_hash": ""
   },
   "lib/site-data.ts": {
-    "mtime": 1790617579.6764288,
-    "seen": 1790618939.9767196,
-    "ast_hash": "9fa59904074ad1bb0c7a2cd61538e7dc",
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.892805,
+    "ast_hash": "0812b106816dc81d5ab33c7605188313",
     "semantic_hash": ""
   },
   "prisma/seed-extracted.ts": {
@@ -510,9 +510,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1789398530.453226,
-    "seen": 1790618939.976911,
-    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "mtime": 1792600962.9991772,
+    "seen": 1792601407.8942833,
+    "ast_hash": "dd4133ebccc2d06130c69f8d0eba31d5",
     "semantic_hash": ""
   },
   "TECHNICAL_DOCUMENTATION.md": {
@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "docker-compose.yml": {
-    "mtime": 1789398368.4755287,
-    "seen": 1790618939.9769223,
-    "ast_hash": "203f765c38ab515d65e1ce8976b495a7",
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8943877,
+    "ast_hash": "3e1723bf7c32834c5e2218d7192c2585",
     "semantic_hash": ""
   },
   "public/file.svg": {
@@ -546,8 +546,8 @@
     "semantic_hash": ""
   },
   "public/images/safaribuilt-lo.png": {
-    "mtime": 1792003613.4910436,
-    "seen": 1792239263.294095,
+    "mtime": 1792600963.0341182,
+    "seen": 1792601407.8945627,
     "ast_hash": "fff6f9613f58181969c7653bdbd9e217",
     "semantic_hash": ""
   },
@@ -576,8 +576,8 @@
     "semantic_hash": ""
   },
   "components/SortSelect.tsx": {
-    "mtime": 1792003613.4670434,
-    "seen": 1792239263.29326,
+    "mtime": 1792600963.0122612,
+    "seen": 1792601407.8925643,
     "ast_hash": "b0ddb88d217df783c700af9404160b45",
     "semantic_hash": ""
   },
@@ -630,15 +630,15 @@
     "semantic_hash": ""
   },
   "app/api/reservations/[id]/messages/route.ts": {
-    "mtime": 1792003613.6133378,
-    "seen": 1792239263.2928395,
-    "ast_hash": "e346f33d42addc4155b5255b7965a7f9",
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.8916233,
+    "ast_hash": "992a619892a8a3ae98efe3360f98b1fc",
     "semantic_hash": ""
   },
   "app/api/tours/[id]/slots/route.ts": {
-    "mtime": 1792003613.6148736,
-    "seen": 1792239263.292949,
-    "ast_hash": "dffc1160088afbde2314af9c141d1b70",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8916962,
+    "ast_hash": "dd66df6ab1fb663d8b2ac715e0bf424a",
     "semantic_hash": ""
   },
   "app/api/tours/search/route.ts": {
@@ -648,39 +648,21 @@
     "semantic_hash": ""
   },
   "app/blogs/[slug]/page.tsx": {
-    "mtime": 1792238507.194593,
-    "seen": 1792239263.2929616,
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917358,
     "ast_hash": "ab45143d2df139460621a473c107b6a3",
     "semantic_hash": ""
   },
-  "app/blogs/guide-to-visiting-ngorongoro-crater/page.tsx": {
-    "mtime": 1792238639.2394998,
-    "seen": 1792239263.292963,
-    "ast_hash": "7892c60b75797f6e9161719045621896",
-    "semantic_hash": ""
-  },
   "app/blogs/page.tsx": {
-    "mtime": 1792238566.9750032,
-    "seen": 1792239263.2929645,
-    "ast_hash": "8fac82624c05f5c47fb3d8fec8d76204",
-    "semantic_hash": ""
-  },
-  "app/blogs/survey-reveals-the-worlds-polite-tourists/page.tsx": {
-    "mtime": 1792238666.475687,
-    "seen": 1792239263.2929657,
-    "ast_hash": "923ed3d88c6d3c2325bb196e2108481a",
-    "semantic_hash": ""
-  },
-  "app/blogs/tanzania-safari-itinerary-7-to-10-days/page.tsx": {
-    "mtime": 1792238653.4435973,
-    "seen": 1792239263.2929666,
-    "ast_hash": "2a506a092134a8ebd6a5d66bda96b2ca",
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8917375,
+    "ast_hash": "84f351441279af3b869b998c2a78ddb8",
     "semantic_hash": ""
   },
   "app/my-trips/page.tsx": {
-    "mtime": 1792238401.4498675,
-    "seen": 1792239263.293017,
-    "ast_hash": "94334a15936ef8c8faaa5ec77109f576",
+    "mtime": 1792792314.5879016,
+    "seen": 1792792611.4628196,
+    "ast_hash": "5bce7595e69ce70efd8f0ea6ac026670",
     "semantic_hash": ""
   },
   "app/operator-portal/blog/[id]/page.tsx": {
@@ -696,27 +678,27 @@
     "semantic_hash": ""
   },
   "app/operator-portal/blog/page.tsx": {
-    "mtime": 1792239135.9749205,
-    "seen": 1792239263.2930226,
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8918684,
     "ast_hash": "aa64dbb939599fc45d9a0da589cc7d3a",
     "semantic_hash": ""
   },
   "app/operator-portal/messages/page.tsx": {
-    "mtime": 1792239150.8070228,
-    "seen": 1792239263.2930238,
-    "ast_hash": "899dd14ab6cdd9fdbbd3bb1c74217c97",
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.439965,
+    "ast_hash": "1b62eabcca0a5a08bca37d4008ce6cfa",
     "semantic_hash": ""
   },
   "app/operator-portal/reservations/[id]/page.tsx": {
-    "mtime": 1792239170.243157,
-    "seen": 1792239263.293027,
-    "ast_hash": "7911fcd101a41c7d95b5bc26b84c9ce2",
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.4399674,
+    "ast_hash": "67156a91f5e14dbfe9d7463204dc93fe",
     "semantic_hash": ""
   },
   "app/operator-portal/slots/page.tsx": {
-    "mtime": 1792003613.6190445,
-    "seen": 1792239263.293028,
-    "ast_hash": "a372182faceec3ddc9b0c7ba9aecf275",
+    "mtime": 1792600963.004261,
+    "seen": 1792601407.8918734,
+    "ast_hash": "76f72b3ee629e28dbb17f3d812987db8",
     "semantic_hash": ""
   },
   "app/operator-portal/tours/[id]/images/page.tsx": {
@@ -732,8 +714,8 @@
     "semantic_hash": ""
   },
   "app/tours/[slug]/reserve-dialog.tsx": {
-    "mtime": 1792239092.7506223,
-    "seen": 1792239263.2931216,
+    "mtime": 1792600963.008261,
+    "seen": 1792601407.8921378,
     "ast_hash": "640b6a51385ca43b8c0d3b5ecd26ad97",
     "semantic_hash": ""
   },
@@ -755,12 +737,6 @@
     "ast_hash": "308c9da3f1eaaaf04497ec32d3edd311",
     "semantic_hash": ""
   },
-  "lib/slots.ts": {
-    "mtime": 1792003613.6270444,
-    "seen": 1792239263.2933972,
-    "ast_hash": "30b669c860f4ca181cad7f2e50093307",
-    "semantic_hash": ""
-  },
   "lib/trips.ts": {
     "mtime": 1792003613.6270444,
     "seen": 1792239263.2933989,
@@ -780,15 +756,201 @@
     "semantic_hash": ""
   },
   "ROADMAP.md": {
-    "mtime": 1792255888.370845,
-    "seen": 1792255905.9905849,
+    "mtime": 1792600962.999288,
+    "seen": 1792601407.894286,
     "ast_hash": "e8dbd6f5aca40d49bbd402461c0ac1dd",
     "semantic_hash": ""
   },
   "SAFARIASILI_COMPREHENSIVE_AUDIT_AND_ROADMAP.md": {
-    "mtime": 1792256031.3837016,
-    "seen": 1792256047.7888,
+    "mtime": 1792600962.9996846,
+    "seen": 1792601407.894288,
     "ast_hash": "e8dbd6f5aca40d49bbd402461c0ac1dd",
+    "semantic_hash": ""
+  },
+  "app/api/chat/attachments/[id]/route.ts": {
+    "mtime": 1792600963.001081,
+    "seen": 1792601407.891368,
+    "ast_hash": "661af17ca25113f33c2d072708f3e096",
+    "semantic_hash": ""
+  },
+  "app/api/chat/config/route.ts": {
+    "mtime": 1792600963.001081,
+    "seen": 1792601407.8913698,
+    "ast_hash": "d4e5c4536a2e44c1b3dd7652b4866936",
+    "semantic_hash": ""
+  },
+  "app/api/live/route.ts": {
+    "mtime": 1792600963.001081,
+    "seen": 1792601407.8914397,
+    "ast_hash": "9f591d8f2dadb934999465a0bec0f392",
+    "semantic_hash": ""
+  },
+  "app/api/operator/vehicles/[id]/route.ts": {
+    "mtime": 1792600963.0016828,
+    "seen": 1792601407.8915577,
+    "ast_hash": "9b29027cf82adbe6572421c89e83c798",
+    "semantic_hash": ""
+  },
+  "app/api/operator/vehicles/route.ts": {
+    "mtime": 1792792191.1749446,
+    "seen": 1792792611.4618857,
+    "ast_hash": "ee766fcfe13e11a4bfe602a5d563a222",
+    "semantic_hash": ""
+  },
+  "app/api/pusher/auth/route.ts": {
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.8916216,
+    "ast_hash": "5329fd7647acb129a8b68280cc06da34",
+    "semantic_hash": ""
+  },
+  "app/api/reservations/[id]/read/route.ts": {
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.8916242,
+    "ast_hash": "b5c9335f99b3d12a72b0ef7fe038d626",
+    "semantic_hash": ""
+  },
+  "app/api/reservations/[id]/stream/route.ts": {
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.8916268,
+    "ast_hash": "8637711c88b2dcca087439c702275d62",
+    "semantic_hash": ""
+  },
+  "app/api/reservations/[id]/typing/route.ts": {
+    "mtime": 1792600963.0018048,
+    "seen": 1792601407.891628,
+    "ast_hash": "19385ffa4aef73d95e58dcb2125fd1cc",
+    "semantic_hash": ""
+  },
+  "app/api/site/nav/route.ts": {
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8916628,
+    "ast_hash": "104d9e4d299c0b91602f0973512c7cdf",
+    "semantic_hash": ""
+  },
+  "app/api/tours/[id]/route.ts": {
+    "mtime": 1792600963.0024855,
+    "seen": 1792601407.8916945,
+    "ast_hash": "d1b70fcf9bffa5e6e5e8bf8acbbfcf57",
+    "semantic_hash": ""
+  },
+  "components/ReservationChat.tsx": {
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.4408927,
+    "ast_hash": "5cf063b2876738425261c0019d4a9733",
+    "semantic_hash": ""
+  },
+  "lib/booking.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8926384,
+    "ast_hash": "77051fb71bd8beaf99cf8f5850445695",
+    "semantic_hash": ""
+  },
+  "lib/catalog.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.89264,
+    "ast_hash": "550cd9ef5c4630db65345d611cae19cf",
+    "semantic_hash": ""
+  },
+  "lib/chat.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8926413,
+    "ast_hash": "d3faf298cea03f765dd5987042bfe459",
+    "semantic_hash": ""
+  },
+  "lib/departures.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8926423,
+    "ast_hash": "4b99d1d3cc85ad1de3f117157603945a",
+    "semantic_hash": ""
+  },
+  "lib/fleet.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8926878,
+    "ast_hash": "2da2f75718a0fdae5c501ab7ccdd94f1",
+    "semantic_hash": ""
+  },
+  "lib/live.ts": {
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.441301,
+    "ast_hash": "d84aa1a4fe653ce6607a519fb6c02d82",
+    "semantic_hash": ""
+  },
+  "lib/realtime.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8927593,
+    "ast_hash": "4fcea07e37bc422a5be81ce03defe107",
+    "semantic_hash": ""
+  },
+  "lib/session-token.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8928034,
+    "ast_hash": "6c13de2e9f9d4f1f3fcd28a0c4c57653",
+    "semantic_hash": ""
+  },
+  "lib/use-live.ts": {
+    "mtime": 1792600963.0282612,
+    "seen": 1792601407.8929613,
+    "ast_hash": "d2e9556c06987ff94fd689e9bfa0abe4",
+    "semantic_hash": ""
+  },
+  "server.ts": {
+    "mtime": 1792600963.0341182,
+    "seen": 1792601407.8935847,
+    "ast_hash": "8d86499cf9993dbc813bf22221ba836b",
+    "semantic_hash": ""
+  },
+  "docker/postgres/README.md": {
+    "mtime": 1792600963.0140982,
+    "seen": 1792601407.8943903,
+    "ast_hash": "cef027e250afad7daf94eb872b201be9",
+    "semantic_hash": ""
+  },
+  "docker/postgres/SOURCES.md": {
+    "mtime": 1792600963.0140982,
+    "seen": 1792601407.8943934,
+    "ast_hash": "e8195973266cea3a2ca28a1a222f8cd0",
+    "semantic_hash": ""
+  },
+  "app/api/chat/conversations/route.ts": {
+    "mtime": 1792681191.9095216,
+    "seen": 1792737751.4384878,
+    "ast_hash": "ab75aaaa5a6ee19e533796eb0ea6cae3",
+    "semantic_hash": ""
+  },
+  "components/ChatLauncher.tsx": {
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.4406598,
+    "ast_hash": "ed674facfeb7b7629493dbcff293ea5e",
+    "semantic_hash": ""
+  },
+  "components/ChatWorkspace.tsx": {
+    "mtime": 1792681191.9135215,
+    "seen": 1792737751.4406614,
+    "ast_hash": "efc4ab2768a3b62899e63b0240eaadc2",
+    "semantic_hash": ""
+  },
+  "app/api/operator/tours/[id]/route.ts": {
+    "mtime": 1792792136.9905853,
+    "seen": 1792792611.4618063,
+    "ast_hash": "f2d27ca3facfc308c63a93d3658b1e8d",
+    "semantic_hash": ""
+  },
+  "app/operator-portal/tours/[id]/edit/page.tsx": {
+    "mtime": 1792792180.26686,
+    "seen": 1792792611.4630163,
+    "ast_hash": "ac027e281b5838b2b8682c83cc9f1214",
+    "semantic_hash": ""
+  },
+  "components/AgencyFleetManager.tsx": {
+    "mtime": 1792792474.9971454,
+    "seen": 1792792611.4636595,
+    "ast_hash": "4529e628fd67f6d022ce02bef9086046",
+    "semantic_hash": ""
+  },
+  "components/AgencyToursTable.tsx": {
+    "mtime": 1792792444.8329115,
+    "seen": 1792792611.4636626,
+    "ast_hash": "e6f75ecec5c500f3c65f454c93a6175c",
     "semantic_hash": ""
   }
 }

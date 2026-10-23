@@ -55,13 +55,9 @@ function RegisterFormContent() {
 
       setSuccess('Account created successfully! Redirecting...');
       setTimeout(() => {
-        if (role === 'OPERATOR') {
-          router.push('/operator-portal');
-        } else {
-          router.push('/');
-        }
-        router.refresh();
-      }, 1200);
+        const destination = role === 'OPERATOR' ? '/operator-portal' : '/';
+        window.location.href = destination;
+      }, 800);
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
     } finally {

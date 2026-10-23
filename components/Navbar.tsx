@@ -41,8 +41,7 @@ export default function Navbar() {
     await fetch('/api/auth/logout', { method: 'POST' });
     setSessionUser(null);
     setUserMenuOpen(false);
-    router.push('/');
-    router.refresh();
+    window.location.href = '/';
   };
 
   // Country list and top operators come from Postgres via /api/site/nav
