@@ -143,6 +143,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (status === 'APPROVED' || status === 'DECLINED') {
       if (!isAgency) return NextResponse.json({ error: 'Only the agency can approve or decline this request.' }, { status: 403 });
       from = ['PENDING'];
+    } else if (status === 'COMPLETED') {
+      if (!isTraveler && !isAgency) return NextResponse.json({ error: 'Unauthorized.' }, { status: 403 });
+      from = ['APPROVED'];
     } else if (status === 'CANCELLED') {
       if (!isTraveler && !isAgency) return NextResponse.json({ error: 'Unauthorized.' }, { status: 403 });
       const today = new Date();
@@ -151,15 +154,46 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       }
       from = ['PENDING', 'APPROVED'];
     } else {
-      return NextResponse.json({ error: 'Status must be APPROVED, DECLINED or CANCELLED.' }, { status: 400 });
+      return NextResponse.json({ error: 'Status must be APPROVED, DECLINED, COMPLETED or CANCELLED.' }, { status: 400 });
     }
 
     const updated = await prisma.$transaction(async (tx) => {
+      // Automatic or manual vehicle assignment for APPROVED reservations
+      let assignedVehicleId = reservation.vehicleId;
+      if (status === 'APPROVED') {
+        if (body.vehicleId && isAgency) {
+          assignedVehicleId = String(body.vehicleId);
+        } else if (!assignedVehicleId) {
+          const totalPax = reservation.adultsCount + reservation.childrenCount;
+          // Automatically pick an available active vehicle from the operator's fleet fitting the group
+          const fitVehicle = await tx.vehicle.findFirst({
+            where: {
+              operatorId: reservation.operatorId,
+              isActive: true,
+              seats: { gte: totalPax },
+            },
+            orderBy: { seats: 'asc' },
+          }) || await tx.vehicle.findFirst({
+            where: {
+              operatorId: reservation.operatorId,
+              isActive: true,
+            },
+            orderBy: { seats: 'desc' },
+          });
+
+          if (fitVehicle) {
+            assignedVehicleId = fitVehicle.id;
+          }
+        }
+      }
+
       const res = await tx.reservation.updateMany({
         where: { id, status: { in: from } },
         data: {
-          status: status as 'APPROVED' | 'DECLINED' | 'CANCELLED',
-          ...(isAgency && status !== 'CANCELLED' ? { operatorNote: note || null, decidedAt: new Date() } : {}),
+          status: status as 'APPROVED' | 'DECLINED' | 'CANCELLED' | 'COMPLETED',
+          ...(status === 'COMPLETED' ? { completedAt: new Date() } : {}),
+          ...(assignedVehicleId ? { vehicleId: assignedVehicleId } : {}),
+          ...(isAgency && status !== 'CANCELLED' && status !== 'COMPLETED' ? { operatorNote: note || null, decidedAt: new Date() } : {}),
         },
       });
       if (res.count !== 1) return null;
@@ -167,7 +201,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       // Declined/cancelled seats are returned by the reservations trigger in the database.
 
       const who = isAgency && !isTraveler ? 'Agency' : 'Traveller';
-      const verb = status === 'APPROVED' ? 'approved' : status === 'DECLINED' ? 'declined' : 'cancelled';
+      const verb = status === 'APPROVED' ? 'approved' : status === 'DECLINED' ? 'declined' : status === 'COMPLETED' ? 'completed' : 'cancelled';
       await tx.reservationMessage.create({
         data: {
           reservationId: id,
@@ -175,16 +209,46 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
           body: `${who} ${verb} reservation ${reservation.reference.slice(-8).toUpperCase()} (${reservation.tour.title}).${note ? ` Note: ${note}` : ''}`,
         },
       });
-      await tx.notification.create({
-        data: {
-          userId: isAgency && !isTraveler ? reservation.travelerId : (await tx.operator.findUniqueOrThrow({ where: { id: reservation.operatorId }, select: { userId: true } })).userId,
-          type: `RESERVATION_${status}`,
-          title: `Reservation ${verb}`,
-          body: `${reservation.tour.title}: reservation ${reservation.reference.slice(-8).toUpperCase()} was ${verb}.`,
-          link: isAgency && !isTraveler ? '/my-trips' : `/operator-portal/reservations/${id}`,
-        },
-      });
-      return tx.reservation.findUnique({ where: { id } });
+
+      if (status === 'COMPLETED') {
+        // Notifications for completion & review invitation
+        await tx.notification.createMany({
+          data: [
+            {
+              userId: reservation.travelerId,
+              type: 'TRIP_COMPLETED',
+              title: `Safari Concluded — ${reservation.tour.title}`,
+              body: `Your safari trip (${reservation.reference.slice(-8).toUpperCase()}) is now marked as complete. Thank you for booking with us!`,
+              link: '/my-trips',
+            },
+            {
+              userId: reservation.travelerId,
+              type: 'REVIEW_INVITE',
+              title: 'Review your Safari Experience',
+              body: `We hope your tour was exceptional! Please take a moment to rate and review your safari.`,
+              link: '/my-trips',
+            },
+            {
+              userId: (await tx.operator.findUniqueOrThrow({ where: { id: reservation.operatorId }, select: { userId: true } })).userId,
+              type: 'TRIP_COMPLETED',
+              title: `Trip Completed — ${reservation.tour.title}`,
+              body: `Reservation ${reservation.reference.slice(-8).toUpperCase()} has concluded and is marked as completed.`,
+              link: '/operator-portal',
+            },
+          ],
+        });
+      } else {
+        await tx.notification.create({
+          data: {
+            userId: isAgency && !isTraveler ? reservation.travelerId : (await tx.operator.findUniqueOrThrow({ where: { id: reservation.operatorId }, select: { userId: true } })).userId,
+            type: `RESERVATION_${status}`,
+            title: `Reservation ${verb}`,
+            body: `${reservation.tour.title}: reservation ${reservation.reference.slice(-8).toUpperCase()} was ${verb}.`,
+            link: isAgency && !isTraveler ? '/my-trips' : `/operator-portal/reservations/${id}`,
+          },
+        });
+      }
+      return tx.reservation.findUnique({ where: { id }, include: { vehicle: true } });
     });
 
     if (!updated) {

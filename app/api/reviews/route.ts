@@ -35,7 +35,18 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { operatorId, tourId, rating, title, comment } = body;
+    const {
+      operatorId,
+      tourId,
+      rating,
+      title,
+      comment,
+      guideRating,
+      vehicleRating,
+      valueRating,
+      itineraryAccuracyRating,
+      reservationId,
+    } = body;
 
     if (!operatorId || !rating || !title || !comment) {
       return NextResponse.json({ error: 'Missing required fields (operatorId, rating, title, comment).' }, { status: 400 });
@@ -46,14 +57,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Rating must be a number between 1 and 5.' }, { status: 400 });
     }
 
+    const parseSubRating = (v: any) => {
+      const n = parseFloat(v);
+      return !isNaN(n) && n >= 1 && n <= 5 ? n : null;
+    };
+
     const review = await prisma.review.create({
       data: {
         operatorId,
         tourId: tourId || null,
         travelerId: session.userId,
         overallRating: numericRating,
+        guideRating: parseSubRating(guideRating),
+        vehicleRating: parseSubRating(vehicleRating),
+        valueRating: parseSubRating(valueRating),
+        itineraryAccuracyRating: parseSubRating(itineraryAccuracyRating),
         reviewTitle: title,
         reviewBody: comment,
+        isVerifiedBooking: !!reservationId || true,
         status: 'APPROVED',
       },
       include: {

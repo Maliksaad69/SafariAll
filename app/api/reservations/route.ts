@@ -92,35 +92,42 @@ export async function GET(req: Request) {
     }
 
     // Traveler view: only their own reservations (contact info belongs to them)
-    const reservations = await prisma.reservation.findMany({
-      where: {
-        travelerId: session.userId,
-        ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED', 'COMPLETED'].includes(statusFilter)
-          ? { status: statusFilter as any }
-          : {}),
-      },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        tour: { select: { id: true, title: true, slug: true, durationDays: true } },
-        slot: { select: { departureTime: true, route: true } },
-        vehicle: { select: { name: true, vehicleType: true } },
-        operator: {
-          select: {
-            id: true,
-            companyName: true,
-            slug: true,
-            isVerified: true,
-            headquartersAddress: true,
-            user: { select: { email: true, phone: true } },
+    const [reservations, userReviews] = await Promise.all([
+      prisma.reservation.findMany({
+        where: {
+          travelerId: session.userId,
+          ...(statusFilter && ['PENDING', 'APPROVED', 'DECLINED', 'CANCELLED', 'COMPLETED'].includes(statusFilter)
+            ? { status: statusFilter as any }
+            : {}),
+        },
+        orderBy: { createdAt: 'desc' },
+        include: {
+          tour: { select: { id: true, title: true, slug: true, durationDays: true } },
+          slot: { select: { departureTime: true, route: true } },
+          vehicle: { select: { name: true, vehicleType: true, plateNumber: true } },
+          operator: {
+            select: {
+              id: true,
+              companyName: true,
+              slug: true,
+              isVerified: true,
+              headquartersAddress: true,
+              user: { select: { email: true, phone: true } },
+            },
           },
         },
-      },
-    });
+      }),
+      prisma.review.findMany({
+        where: { travelerId: session.userId },
+        select: { id: true, tourId: true, operatorId: true, overallRating: true, reviewTitle: true, reviewBody: true },
+      }),
+    ]);
 
     const serialized = reservations.map((r) => {
       // Agency contact details are released to the traveller once the booking is
       // confirmed (APPROVED or COMPLETED) so they can reach their operator directly.
       const contactUnlocked = r.status === 'APPROVED' || r.status === 'COMPLETED';
+      const matchReview = userReviews.find((rw) => (r.tourId && rw.tourId === r.tourId) || rw.operatorId === r.operatorId);
       return {
         id: r.id,
         reference: r.reference,
@@ -139,6 +146,15 @@ export async function GET(req: Request) {
         completedAt: r.completedAt ? r.completedAt.toISOString() : null,
         createdAt: r.createdAt.toISOString(),
         tour: r.tour,
+        isReviewed: !!matchReview,
+        userReview: matchReview
+          ? {
+              id: matchReview.id,
+              rating: matchReview.overallRating,
+              title: matchReview.reviewTitle,
+              comment: matchReview.reviewBody,
+            }
+          : null,
         operator: {
           id: r.operator.id,
           companyName: r.operator.companyName,
