@@ -1,59 +1,24 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
-
-async function resolveOperatorId(session: any): Promise<string | null> {
-  if (session.operatorId) return session.operatorId;
-  const op = await prisma.operator.findUnique({ where: { userId: session.userId } });
-  return op?.id ?? null;
-}
+import { chatAccess, ChatError, listMessages, markRead, postMessage } from '@/lib/chat';
 
 /**
- * Reservation message thread.
- * Both the traveler who owns the reservation and the agency that owns it may read and write.
+ * Reservation chat over HTTP. GET returns the history (and marks the other side's
+ * messages read). POST sends a message: JSON { body } or multipart form data with
+ * a `body` field and up to 5 `files`. Only the reservation's traveller and its
+ * operator may use it; new messages are pushed to every realtime transport.
  */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
-  }
+  if (!session) return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
 
   const { id } = await params;
   try {
-    const reservation = await prisma.reservation.findUnique({
-      where: { id },
-      include: { tour: { select: { title: true, slug: true } } },
-    });
-    if (!reservation) {
-      return NextResponse.json({ error: 'Reservation not found.' }, { status: 404 });
-    }
-
-    const isTraveler = session.role === 'TRAVELER' && reservation.travelerId === session.userId;
-    const isOperator = session.role === 'OPERATOR' || session.role === 'ADMIN';
-    let operatorId = null;
-    if (isOperator) {
-      operatorId = await resolveOperatorId(session);
-    }
-    const isAgency = isOperator && operatorId && reservation.operatorId === operatorId;
-
-    if (!isTraveler && !isAgency) {
-      return NextResponse.json({ error: 'Not your reservation.' }, { status: 403 });
-    }
-
-    const messages = await prisma.reservationMessage.findMany({
-      where: { reservationId: id },
-      orderBy: { createdAt: 'asc' },
-      include: { sender: { select: { firstName: true, lastName: true } } },
-    });
-
-    // Mark messages from the counterpart as read for this viewer
-    await prisma.reservationMessage.updateMany({
-      where: { reservationId: id, isRead: false, senderId: { not: session.userId } },
-      data: { isRead: true },
-    });
-
-    return NextResponse.json({ messages });
-  } catch (error: any) {
+    const access = await chatAccess(session, id);
+    if (!access) return NextResponse.json({ error: 'Not your reservation.' }, { status: 403 });
+    await markRead(access, session.userId);
+    return NextResponse.json({ messages: await listMessages(id), side: access.side, status: access.status, me: session.userId });
+  } catch (error) {
     console.error('List reservation messages error:', error);
     return NextResponse.json({ error: 'Failed to load messages.' }, { status: 500 });
   }
@@ -61,46 +26,32 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
-  }
+  if (!session) return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
 
   const { id } = await params;
   try {
-    const reservation = await prisma.reservation.findUnique({ where: { id } });
-    if (!reservation) {
-      return NextResponse.json({ error: 'Reservation not found.' }, { status: 404 });
+    const access = await chatAccess(session, id);
+    if (!access) return NextResponse.json({ error: 'Not your reservation.' }, { status: 403 });
+
+    let body = '';
+    const files: { filename: string; mimeType: string; data: Buffer }[] = [];
+    if ((req.headers.get('content-type') ?? '').includes('multipart/form-data')) {
+      const form = await req.formData();
+      body = String(form.get('body') ?? '');
+      for (const f of form.getAll('files')) {
+        if (typeof f === 'object' && 'arrayBuffer' in f) {
+          files.push({ filename: f.name || 'file', mimeType: f.type || 'application/octet-stream', data: Buffer.from(await f.arrayBuffer()) });
+        }
+      }
+    } else {
+      body = String((await req.json()).body ?? '');
     }
 
-    const isTraveler = session.role === 'TRAVELER' && reservation.travelerId === session.userId;
-    const isOperator = session.role === 'OPERATOR' || session.role === 'ADMIN';
-    let operatorId = null;
-    if (isOperator) {
-      operatorId = await resolveOperatorId(session);
-    }
-    const isAgency = isOperator && operatorId && reservation.operatorId === operatorId;
-
-    if (!isTraveler && !isAgency) {
-      return NextResponse.json({ error: 'Not your reservation.' }, { status: 403 });
-    }
-
-    const { body } = await req.json();
-    if (!body || typeof body !== 'string' || !body.trim()) {
-      return NextResponse.json({ error: 'Message text is required.' }, { status: 400 });
-    }
-
-    const message = await prisma.reservationMessage.create({
-      data: {
-        reservationId: id,
-        senderId: session.userId,
-        body: body.trim().slice(0, 4000),
-      },
-      include: { sender: { select: { firstName: true, lastName: true } } },
-    });
-
+    const message = await postMessage(access, session.userId, body, files);
     return NextResponse.json({ success: true, message }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
+    if (error instanceof ChatError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error('Create reservation message error:', error);
-    return NextResponse.json({ error: error.message || 'Failed to send message.' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 });
   }
 }

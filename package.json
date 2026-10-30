@@ -3,17 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "tsx server.ts",
+    "dev:next": "next dev",
     "dev:webpack": "next dev --no-turbo",
     "build": "next build",
-    "start": "next start",
+    "start": "tsx server.ts --prod",
     "lint": "eslint",
     "db:push": "prisma db push",
-    "db:start": "bash scripts/setup-db.sh",
-    "db:stop": "bash scripts/stop-db.sh",
-    "db:seed": "prisma db seed",
-    "db:seed:extracted": "tsx prisma/seed-extracted.ts",
-    "studio": "prisma studio"
+    "db:start": "docker compose up -d --build --wait postgres",
+    "db:stop": "docker compose stop postgres",
+    "studio": "prisma studio",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:setup": "npm run db:start && npm run db:migrate && npm run db:seed",
+    "db:reset": "docker compose down -v && npm run db:start",
+    "db:dump": "docker compose exec -T postgres pg_dump -U safari_admin -d safaribookings_db --no-owner --no-privileges --encoding=UTF8 > docker/postgres/init/01-safaribookings.sql",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -32,6 +37,8 @@
     "next": "16.3.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {

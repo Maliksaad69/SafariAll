@@ -440,7 +440,7 @@ async function main() {
   /* Admin */
   await prisma.user.upsert({
     where: { email: 'admin@safariasili.com' },
-    update: {},
+    update: { role: Role.ADMIN, passwordHash: adminPw, emailVerified: true },
     create: { email: 'admin@safariasili.com', passwordHash: adminPw, firstName: 'System', lastName: 'Admin', role: Role.ADMIN, emailVerified: true, country: 'Kenya' },
   });
 
@@ -466,7 +466,7 @@ async function main() {
   for (const a of AGENCIES) {
     const u = await prisma.user.upsert({
       where: { email: a.email },
-      update: {},
+      update: { passwordHash: opPw, role: Role.OPERATOR, emailVerified: true },
       create: { email: a.email, passwordHash: opPw, firstName: a.first, lastName: a.last, role: Role.OPERATOR, emailVerified: true, country: a.country, phone: a.phone },
     });
     const op = await prisma.operator.upsert({
@@ -519,7 +519,7 @@ async function main() {
     const capacities = [6, 7, 8, 4];
     for (let i = 0; i < 4; i++) {
       await prisma.tourSlot.upsert({
-        where: { tourId_startDate: { tourId: tour.id, startDate: inDays(21 + i * 30) } },
+        where: { tourId_startDate_departureTime: { tourId: tour.id, startDate: inDays(21 + i * 30), departureTime: '08:00' } },
         update: {},
         create: {
           tourId: tour.id,
@@ -538,7 +538,7 @@ async function main() {
   for (const t of TRAVELERS) {
     const u = await prisma.user.upsert({
       where: { email: t.email },
-      update: {},
+      update: { passwordHash: trPw, role: Role.TRAVELER, emailVerified: true },
       create: { email: t.email, passwordHash: trPw, firstName: t.first, lastName: t.last, role: Role.TRAVELER, emailVerified: true, country: t.country, phone: t.phone },
     });
     trIds[t.email] = u.id;

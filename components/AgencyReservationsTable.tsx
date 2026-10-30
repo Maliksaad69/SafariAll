@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { CalendarDays, Users, Mail, Phone, Globe, Check, X, Loader2, Inbox } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLiveRefresh } from '@/lib/use-live';
+import { CalendarDays, Users, Mail, Phone, Globe, Check, X, Loader2, Inbox, Bus, Flag } from 'lucide-react';
 
 interface ReservationItem {
   id: string;
@@ -11,7 +13,10 @@ interface ReservationItem {
   childrenCount: number;
   specialRequests: string | null;
   estimatedTotalUsd: number;
-  status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'CANCELLED';
+  status: 'PENDING' | 'APPROVED' | 'DECLINED' | 'CANCELLED' | 'COMPLETED';
+  departureTime?: string | null;
+  route?: string | null;
+  vehicle?: { name: string; vehicleType: string; plateNumber: string | null } | null;
   operatorNote: string | null;
   decidedAt: string | null;
   createdAt: string;
@@ -23,18 +28,23 @@ function StatusBadge({ status }: { status: ReservationItem['status'] }) {
   if (status === 'APPROVED') return <span className="badge badge-success">Approved</span>;
   if (status === 'DECLINED') return <span className="badge badge-danger">Declined</span>;
   if (status === 'CANCELLED') return <span className="badge badge-neutral">Cancelled</span>;
+  if (status === 'COMPLETED') return <span className="badge badge-info">Completed</span>;
   return <span className="badge badge-warning">Pending</span>;
 }
 
 export default function AgencyReservationsTable({ initialReservations }: { initialReservations: ReservationItem[] }) {
   const [reservations, setReservations] = useState(initialReservations);
+  const router = useRouter();
+  // New requests, traveller cancellations and messages appear without reloading the page.
+  useEffect(() => setReservations(initialReservations), [initialReservations]);
+  useLiveRefresh('scope=me', () => router.refresh());
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'DECLINED'>('ALL');
+  const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'COMPLETED' | 'DECLINED'>('ALL');
   const [confirmDeclineId, setConfirmDeclineId] = useState<string | null>(null);
   const [successRef, setSuccessRef] = useState<string | null>(null);
 
-  const decide = async (id: string, status: 'APPROVED' | 'DECLINED') => {
+  const decide = async (id: string, status: 'APPROVED' | 'DECLINED' | 'COMPLETED') => {
     setBusyId(id);
     setError('');
     setSuccessRef(null);
@@ -48,7 +58,7 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
       if (!res.ok) throw new Error(data.error || 'Failed to update reservation.');
 
       setReservations((prev) =>
-        prev.map((r) => (r.id === id ? { ...r, status, operatorNote: data.reservation?.operatorNote ?? r.operatorNote, decidedAt: data.reservation?.decidedAt ?? r.decidedAt } : r))
+        prev.map((r) => (r.id === id ? { ...r, status, vehicle: data.reservation?.vehicle ?? r.vehicle, operatorNote: data.reservation?.operatorNote ?? r.operatorNote, decidedAt: data.reservation?.decidedAt ?? r.decidedAt } : r))
       );
       const decided = reservations.find((r) => r.id === id);
       setSuccessRef(decided ? decided.reference.slice(-8).toUpperCase() : null);
@@ -77,7 +87,7 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
           </p>
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          {(['ALL', 'PENDING', 'APPROVED', 'DECLINED'] as const).map((f) => (
+          {(['ALL', 'PENDING', 'APPROVED', 'COMPLETED', 'DECLINED'] as const).map((f) => (
             <button
               key={f}
               type="button"
@@ -124,6 +134,21 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                       {r.traveler.firstName} {r.traveler.lastName}
                     </span>
                     <StatusBadge status={r.status} />
+                    {(() => {
+                      if (r.status !== 'APPROVED') return null;
+                      const start = new Date(r.startDate);
+                      const dur = r.tour.durationDays || 1;
+                      const end = new Date(start.getTime() + dur * 86_400_000);
+                      const now = new Date();
+                      if (now >= start && now < end) {
+                        const dayNum = Math.min(dur, Math.max(1, Math.floor((now.getTime() - start.getTime()) / 86_400_000) + 1));
+                        return <span className="badge badge-brand animate-pulse">Tour Started · Day {dayNum}/{dur}</span>;
+                      }
+                      if (now >= end) {
+                        return <span className="badge badge-success">Target Days Complete</span>;
+                      }
+                      return null;
+                    })()}
                     <span className="font-mono text-[11px] text-[var(--ink-muted)]">#{r.reference.slice(-8).toUpperCase()}</span>
                   </div>
 
@@ -140,6 +165,12 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                       {r.adultsCount} adult{r.adultsCount !== 1 ? 's' : ''}
                       {r.childrenCount > 0 ? `, ${r.childrenCount} child${r.childrenCount !== 1 ? 'ren' : ''}` : ''}
                     </span>
+                    {r.vehicle && (
+                      <span className="inline-flex items-center gap-1.5 font-semibold text-[var(--brand)]">
+                        <Bus className="h-3.5 w-3.5" />
+                        Car: {r.vehicle.name} {r.vehicle.plateNumber ? `· ${r.vehicle.plateNumber}` : ''}
+                      </span>
+                    )}
                     <span className="inline-flex items-center gap-1.5">
                       <Mail className="h-3.5 w-3.5" />
                       {r.traveler.email}
@@ -218,9 +249,28 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                         </button>
                       </div>
                     )
+                  ) : r.status === 'APPROVED' ? (
+                    <div className="flex flex-col items-end gap-1">
+                      <button
+                        type="button"
+                        onClick={() => decide(r.id, 'COMPLETED')}
+                        disabled={busyId === r.id}
+                        className="btn btn-sm btn-primary inline-flex items-center gap-1.5"
+                      >
+                        {busyId === r.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Flag className="h-3.5 w-3.5" />}
+                        Complete Tour
+                      </button>
+                      <span className="text-[11px] text-[var(--ink-muted)]">
+                        {r.decidedAt ? `Approved ${new Date(r.decidedAt).toLocaleDateString()}` : ''}
+                      </span>
+                    </div>
                   ) : (
                     <span className="text-[11px] text-[var(--ink-muted)]">
-                      {r.decidedAt ? `Decided ${new Date(r.decidedAt).toLocaleDateString()}` : ''}
+                      {r.status === 'COMPLETED'
+                        ? 'Concluded & Complete'
+                        : r.decidedAt
+                        ? `Decided ${new Date(r.decidedAt).toLocaleDateString()}`
+                        : ''}
                     </span>
                   )}
                   {r.operatorNote && r.status !== 'PENDING' && (

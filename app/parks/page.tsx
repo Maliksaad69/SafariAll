@@ -1,103 +1,27 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import { getCountries } from '@/lib/catalog';
 import { Sun, TrendingUp, Play, ChevronRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-const fallbackCountries = [
-  {
-    id: 'c1',
-    name: 'Botswana',
-    slug: 'botswana',
-    reviews: 372,
-    rating: 4.8,
-    description: 'In and around the Okavango Delta, which can be discovered on an unforgettable game drive or mokoro trip. Elsewhere, Chobe National Park, Moremi Game Reserve and the Central Kalahari Game Reserve are world-class safari destinations, combining stunning landscapes with exceptional wildlife. Botswana is also excellent for self-drive safaris.',
-    rates: '$193 to $878 per day',
-    bestTime: 'April to October (Okavango, Moremi, Chobe), December to May (Central Kalahari, Khutse, Kgalagadi)',
-    highSeason: 'July to October (Only Chobe gets crowded)',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80',
-    toursCount: 557,
-    parks: [
-      { name: 'Chobe National Park', slug: 'chobe-national-park' },
-      { name: 'Okavango Delta', slug: 'okavango-delta' },
-      { name: 'Moremi Game Reserve', slug: 'moremi-game-reserve' },
-      { name: 'Central Kalahari Game Reserve', slug: 'central-kalahari-game-reserve' },
-      { name: 'Makgadikgadi Pans National Park', slug: 'makgadikgadi-pans-national-park' },
-      { name: 'Nxai Pan National Park', slug: 'nxai-pan-national-park' }
-    ],
-    totalParks: 15
-  },
-  {
-    id: 'c2',
-    name: 'Kenya',
-    slug: 'kenya',
-    reviews: 1752,
-    rating: 4.6,
-    description: 'Regardless of whether this is your first time on safari or you\'re a safari veteran, Kenya is a fantastic place to go looking for wildlife. The Masai Mara National Reserve and surrounding conservancies get all the attention for big cat sightings and the annual wildebeest migration. But Kenya has numerous world-class parks to explore, and it\'s also an excellent place to relax on a beach holiday once your safari is over.',
-    rates: '$173 to $696 per day',
-    bestTime: 'June to October and January and February',
-    highSeason: 'July to October and December to March',
-    image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=400&q=80',
-    toursCount: 3113,
-    parks: [
-      { name: 'Amboseli National Park', slug: 'amboseli-national-park' },
-      { name: 'Lake Nakuru National Park', slug: 'lake-nakuru-national-park' },
-      { name: 'Masai Mara National Reserve', slug: 'masai-mara-national-reserve' },
-      { name: 'Samburu National Reserve', slug: 'samburu-national-reserve' },
-      { name: 'Buffalo Springs National Reserve', slug: 'buffalo-springs-national-reserve' },
-      { name: 'Tsavo East National Park', slug: 'tsavo-east-national-park' }
-    ],
-    totalParks: 31
-  },
-  {
-    id: 'c3',
-    name: 'South Africa',
-    slug: 'south-africa',
-    reviews: 1320,
-    rating: 4.6,
-    description: 'South Africa is one of Africa\'s great wildlife destinations. Vast Kruger National Park has an abundance of animals and is one of the continent\'s iconic attractions. For outdoor adventure, the Blyde River Canyon is the third-largest canyon on the planet, and the jagged peaks of the Drakensberg Mountains punch into the sky. Cape Town hums with an urban beat and is fringed by white sandy beaches.',
-    rates: '$187 to $917 per day',
-    bestTime: 'May to September (Most parks), October to March (Cape Town)',
-    highSeason: 'October to March (Crowded during school holidays)',
-    image: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=400&q=80',
-    toursCount: 1086,
-    parks: [
-      { name: 'Kruger National Park', slug: 'kruger-national-park' },
-      { name: 'MalaMala Game Reserve', slug: 'malamala-game-reserve' },
-      { name: 'Phinda Private Game Reserve', slug: 'phinda-private-game-reserve' },
-      { name: 'Sabi Sand Nature Reserve', slug: 'sabi-sand-nature-reserve' },
-      { name: 'Hluhluwe-iMfolozi Park', slug: 'hluhluwe-imfolozi-park' },
-      { name: 'Addo Elephant National Park', slug: 'addo-elephant-national-park' }
-    ],
-    totalParks: 50
-  },
-  {
-    id: 'c4',
-    name: 'Tanzania',
-    slug: 'tanzania',
-    reviews: 2172,
-    rating: 4.8,
-    description: 'Tanzania, with its three safari circuits, is one of Africa\'s top wildlife destinations. The popular Northern circuit incorporates bucket-list landmarks such as Serengeti National Park, Ngorongoro Crater and Mt Kilimanjaro. Repeat visitors might prefer the remote wilderness vibe of the Southern or Western circuits. For some beach time, the \'Spice Island\' of Zanzibar is only a short flight away.',
-    rates: '$229 to $659 per day',
-    bestTime: 'June to October; January to February (For wildebeest calving)',
-    highSeason: 'July to March (North), June to October (South and West)',
-    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=400&q=80',
-    toursCount: 7503,
-    parks: [
-      { name: 'Ngorongoro Crater', slug: 'ngorongoro-crater' },
-      { name: 'Nyerere National Park', slug: 'nyerere-national-park' },
-      { name: 'Ruaha National Park', slug: 'ruaha-national-park' },
-      { name: 'Serengeti National Park', slug: 'serengeti-national-park' },
-      { name: 'Gombe National Park', slug: 'gombe-national-park' },
-      { name: 'Katavi National Park', slug: 'katavi-national-park' }
-    ],
-    totalParks: 15
-  },
-];
-
 export default async function ParksPage() {
-  const countries = fallbackCountries;
+  const countries = (await getCountries()).map((c) => ({
+    id: c.id,
+    name: c.name,
+    slug: c.slug,
+    reviews: c.reviewCount,
+    rating: c.rating ?? 0,
+    description: c.description ?? '',
+    rates: c.dailyRates ?? 'On request',
+    bestTime: c.bestTimeSummary ?? '',
+    highSeason: c.highSeason ?? '',
+    image: c.featuredImageUrl ?? '',
+    toursCount: c.toursCount,
+    parks: c.parks.slice(0, 6),
+    totalParks: c.parks.length,
+  }));
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-[var(--ink-body)]">

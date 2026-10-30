@@ -3,7 +3,7 @@ import Footer from '@/components/Footer';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Star, ChevronRight } from 'lucide-react';
-import { safariExperts } from '@/lib/site-data';
+import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +13,8 @@ interface ExpertPageProps {
 
 export default async function ExpertPage({ params }: ExpertPageProps) {
   const { id } = await params;
-  const expert = safariExperts.find((e) => e.id === id);
+  // [id] is the expert's slug (or database id)
+  const expert = await prisma.expert.findFirst({ where: { OR: [{ slug: id }, { id }] } });
 
   if (!expert) notFound();
 
@@ -37,7 +38,7 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
           <div className="shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={expert.image}
+              src={expert.imageUrl ?? ''}
               alt={expert.name}
               className="h-44 w-44 rounded-2xl object-cover border border-black/10 shadow-md"
             />

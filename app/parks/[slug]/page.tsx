@@ -4,14 +4,11 @@ import TourCard from '@/components/TourCard';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { safariTours } from '@/lib/site-data';
+import { getTourCards } from '@/lib/catalog';
 import { 
   ChevronRight, 
   MapPin, Clock, Sun, Layout, Camera, Map, TrendingUp 
 } from 'lucide-react';
-
-const countryName = (slug: string) =>
-  slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-+/g, ' ');
 
 export const dynamic = 'force-dynamic';
 
@@ -24,53 +21,33 @@ interface ParkDetailPageProps {
 export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
   const { slug } = await params;
 
-  let park: any = null;
-  let sections: any[] = [];
+  const park: any = await prisma.destination.findUnique({
+    where: { slug },
+    include: { sections: { orderBy: { sortOrder: 'asc' } } },
+  });
 
-  try {
-    park = await prisma.destination.findUnique({
-      where: { slug },
-      include: {
-        sections: { orderBy: { sortOrder: 'asc' } },
-        tours: {
-          include: {
-            tour: {
-              include: {
-                operator: true,
-                destinations: {
-                  include: { destination: true },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-  } catch {
-    park = null;
-  }
+  if (!park) notFound();
 
-  // Fallback data if no DB or not found
-  if (!park) {
-    park = {
-      name: slug.charAt(0).toUpperCase() + slug.slice(1).replace('-', ' '),
-      slug,
-      country: slug === 'kenya' ? 'Kenya' : 'Tanzania',
-      type: 'COUNTRY',
-      description: 'Tanzania, with its three safari circuits, is one of Africa’s top wildlife destinations. The popular Northern circuit incorporates bucket-list landmarks such as Serengeti National Park, Ngorongoro Crater and Mt Kilimanjaro. Repeat visitors might prefer the remote wilderness vibe of the Southern or Western circuits. For some beach time, the \'Spice Island\' of Zanzibar is only a short flight away.',
-      wildlifePresent: ['Lion', 'Elephant', 'Cheetah', 'Giraffe', 'Leopard'],
-      tours: safariTours.slice(0, 3).map(t => ({ tour: t })),
-      sections: [],
-    };
-  }
+  const isCountry = park.type === 'COUNTRY';
+  const countryName = (_slug: string) => park.country as string;
 
+  // Tours: every tour in the country for a country guide, linked tours for a park
+  const relatedTours = isCountry
+    ? await getTourCards({ primaryCountry: park.country }, 3)
+    : await getTourCards({ destinations: { some: { destinationId: park.id } } }, 3);
+
+  const childParks = isCountry
+    ? await prisma.destination.findMany({ where: { country: park.country, type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true } })
+    : [];
+
+  let sections: any[];
   // DB sections; fall back to a single Overview built from the description
   sections = park.sections?.length
     ? park.sections
     : [{ key: 'overview', title: 'Overview', body: park.description || '', bulletItems: [] }];
-
-  const relatedTours = park.tours.map((t: any) => t.tour).slice(0, 3);
-  const isCountry = park.type === 'COUNTRY' || !park.type;
+  if (isCountry && childParks.length && !sections.some((s: any) => s.key === 'parks-reserves')) {
+    sections = [...sections, { key: 'parks-reserves', title: `${park.name} Parks & Reserves`, body: `Safari parks and reserves in ${park.name}.`, bulletItems: childParks.map((p) => p.name) }];
+  }
   
   return (
     <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
@@ -93,7 +70,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
         <div className="relative bg-[var(--brand-deep)] text-white overflow-hidden border-b border-black/5">
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay" 
-            style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')` }} 
+            style={{ backgroundImage: `url('${park.featuredImageUrl ?? ''}')` }} 
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
           

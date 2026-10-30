@@ -1,34 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useLiveRefresh } from '@/lib/use-live';
+import ChatWorkspace from '@/components/ChatWorkspace';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { ArrowLeft, Mail, Phone, Globe, Check, X, Loader2, Send, Calendar, Users } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Globe, Check, X, Loader2, Calendar, Users } from 'lucide-react';
 
-interface Message { id: string; body: string; createdAt: string; sender: { firstName: string; lastName: string }; isRead: boolean; }
-interface Reservation { id: string; reference: string; startDate: string; adultsCount: number; childrenCount: number; specialRequests: string | null; estimatedTotalUsd: number; status: string; operatorNote: string | null; decidedAt: string | null; createdAt: string; traveler: { firstName: string; lastName: string; email: string; phone: string | null; country: string | null; }; tour: { title: string; slug: string; durationDays: number; }; operatorName: string; }
+interface Reservation { id: string; reference: string; startDate: string; adultsCount: number; childrenCount: number; specialRequests: string | null; estimatedTotalUsd: number; status: string; operatorNote: string | null; decidedAt: string | null; createdAt: string; traveler: { firstName: string; lastName: string; email: string; phone: string | null; country: string | null; }; tour: { title: string; slug: string; durationDays: number; }; operatorName: string; slot?: { departureTime: string; route: string | null; bookedSeats: number; maxTravelers: number; spotsLeft: number } | null; vehicle?: { name: string; vehicleType: string; plateNumber?: string | null } | null; }
 
 export default function ReservationDetailPage() {
   const router = useRouter();
   const { id } = useParams();
   const [reservation, setReservation] = useState<Reservation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [loadingReservation, setLoadingReservation] = useState(true);
-  const [loadingMessages, setLoadingMessages] = useState(false);
-  const [msgBody, setMsgBody] = useState('');
-  const [sending, setSending] = useState(false);
   const [deciding, setDeciding] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (id) loadReservation(String(id));
-  }, [id]);
-
-  const loadReservation = async (rid: string) => {
+  const loadReservation = useCallback(async (rid: string) => {
     try {
-      const res = await fetch(`/api/reservations/${rid}`);
+      const res = await fetch(`/api/reservations/${rid}`, { cache: 'no-store' });
       if (res.ok) {
         const j = await res.json();
         if (j.reservation) {
@@ -40,41 +33,16 @@ export default function ReservationDetailPage() {
       }
     } catch {}
     setLoadingReservation(false);
-  };
+  }, []);
 
   useEffect(() => {
-    if (id) loadMessages(String(id));
-  }, [id]);
+    if (id) void loadReservation(String(id));
+  }, [id, loadReservation]);
 
-  const loadMessages = async (rid: string) => {
-    setLoadingMessages(true);
-    try {
-      const res = await fetch(`/api/reservations/${rid}/messages`);
-      const { messages } = await res.json();
-      setMessages(messages || []);
-    } catch {}
-    setLoadingMessages(false);
-  };
-
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!msgBody.trim() || !id) return;
-    setSending(true);
-    setMsgBody('');
-    try {
-      const res = await fetch(`/api/reservations/${id}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body: msgBody }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to send message.');
-      loadMessages(String(id));
-      router.refresh();
-    } catch (err: any) {
-      alert(err.message || 'Could not send message.');
-    } finally { setSending(false); }
-  };
+  // Traveller cancellations appear without reloading (the chat below has its own socket).
+  useLiveRefresh(id ? 'scope=me' : null, () => {
+    if (id) void loadReservation(String(id));
+  });
 
   const decide = async (status: 'APPROVED' | 'DECLINED') => {
     if (!id) return;
@@ -89,7 +57,6 @@ export default function ReservationDetailPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update reservation.');
       loadReservation(String(id));
-      loadMessages(String(id));
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'Something went wrong.');
@@ -144,7 +111,13 @@ export default function ReservationDetailPage() {
 
               {reservation.tour.durationDays > 0 && (
                 <div className="flex gap-4 text-xs text-[var(--ink-secondary)] border-b border-dashed border-[var(--border)] pb-4 mb-4">
-                  <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/>Starts {new Date(reservation.startDate).toLocaleDateString()}</span>
+                  <span className="inline-flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5"/>Starts {new Date(reservation.startDate).toLocaleDateString(undefined, { timeZone: 'UTC' })}{reservation.slot ? ` at ${reservation.slot.departureTime}` : ''}</span>
+                  {reservation.slot && (
+                    <span className="inline-flex items-center gap-1.5">
+                      {reservation.slot.route ? `${reservation.slot.route} · ` : ''}{reservation.vehicle ? `${reservation.vehicle.name}${reservation.vehicle.plateNumber ? ` (${reservation.vehicle.plateNumber})` : ''} · ` : ''}
+                      departure {reservation.slot.bookedSeats}/{reservation.slot.maxTravelers} seats booked
+                    </span>
+                  )}
                   <span className="inline-flex items-center gap-1.5"><Users className="h-3.5 w-3.5"/>{reservation.adultsCount + reservation.childrenCount} pax ({reservation.adultsCount} + {reservation.childrenCount})</span>
                   <span className="inline-flex items-center gap-1.5 font-semibold text-[var(--brand)]">{reservation.status}</span>
                 </div>
@@ -177,47 +150,6 @@ export default function ReservationDetailPage() {
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="margin-top-6">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-bold text-[var(--ink)]">Message exchange</h2>
-                <span className="text-xs text-[var(--ink-muted)]">{messages.length} messages</span>
-              </div>
-              <div className="hx rounded-2xl">
-                {loadingMessages ? (
-                  <div className="flex justify-center py-8"><Loader2 className="animate-spin h-5 w-5 text-[var(--ink-muted)]" /></div>
-                ) : messages.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-sunk)] p-6 text-center text-sm text-[var(--ink-secondary)]">
-                    No messages yet. Start the conversation below.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {messages.map((m: any) => {
-                      const isMine = (m.senderId !== undefined && m.sender !== null && reservation.traveler !== null && m.sender?.firstName !== '' && reservation.traveler?.firstName !== '') ? false : true;
-                      return (
-                        <div key={m.id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'} gap-1 max-w-[80%]`}>
-                          <div className={`rounded-2xl px-3 py-2 ${isMine ? 'bg-[var(--brand)] text-white rounded-br-sm' : 'bg-[var(--ink)] text-white rounded-bl-sm'}`}>
-                            <span className="text-xs font-semibold block mb-0.5 opacity-80">{isMine ? 'to traveler' : `${m.sender?.firstName || '?'} ${m.sender?.lastName || ''}`}</span>
-                            <p className="text-sm leading-relaxed">{m.body}</p>
-                            <span className="text-[10px] opacity-70 mt-0.5 block">{new Date(m.createdAt).toLocaleTimeString()}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Compose */}
-              {isAgency && (
-                <form onSubmit={send} className="flex gap-2 mt-4">
-                  <input value={msgBody} onChange={(e) => setMsgBody(e.target.value)} placeholder="Write to traveler…" className="form-control flex-1 rounded-xl" disabled={sending} />
-                  <button type="submit" disabled={sending || !msgBody.trim()} className="btn btn-primary px-4">
-                    {sending ? <Loader2 className="h-4 w-4 animate-spin"/> : <Send className="h-4 w-4"/>}
-                  </button>
-                </form>
-              )}
-            </div>
           </div>
 
           {/* Sidebar contact card */}
@@ -245,6 +177,12 @@ export default function ReservationDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Chat with the traveller: same chats as the header chat button and the Inbox */}
+        <section className="mt-8">
+          <h2 className="mb-3 text-lg font-bold text-[var(--ink)]">Chat with {reservation.traveler.firstName} {reservation.traveler.lastName}</h2>
+          <ChatWorkspace onlyReservationId={reservation.id} heightClass="h-[560px]" />
+        </section>
       </main>
       <Footer />
     </div>

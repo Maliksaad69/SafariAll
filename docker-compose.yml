@@ -1,17 +1,18 @@
-version: '3.8'
-
 services:
-  # 1. Self-Hosted PostgreSQL Database (Latest PostgreSQL 17)
+  # 1. Self-Hosted PostgreSQL Database (PostgreSQL 17, pre-loaded with the app data)
   postgres:
-    image: postgres:17-alpine
+    # postgres:17-alpine plus docker/postgres/init/*.sql, which create and
+    # populate the database the first time the volume is empty
+    build: ./docker/postgres
+    image: safaribookings-postgres:latest
     container_name: safaribookings_postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-safari_admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SafariSecurePass2026!}
       POSTGRES_DB: ${POSTGRES_DB:-safaribookings_db}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -22,11 +23,13 @@ services:
     networks:
       - safari_network
 
-  # 2. Database Management GUI (Optional pgAdmin 4 at http://localhost:5050)
+  # 2. Database Management GUI (optional pgAdmin 4 at http://localhost:5050)
+  #    Start it with: docker compose --profile tools up -d
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: safaribookings_pgadmin
-    restart: always
+    restart: unless-stopped
+    profiles: ["tools"]
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@safaribookings.local}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-AdminSafariPass123!}

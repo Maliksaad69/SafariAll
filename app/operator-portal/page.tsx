@@ -5,7 +5,9 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import AgencyReservationsTable from '@/components/AgencyReservationsTable';
-import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, ImageIcon } from 'lucide-react';
+import AgencyToursTable from '@/components/AgencyToursTable';
+import AgencyFleetManager from '@/components/AgencyFleetManager';
+import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, Bus } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,6 +56,7 @@ export default async function OperatorPortalPage() {
         include: {
           traveler: { select: { firstName: true, lastName: true, email: true, phone: true, country: true } },
           tour: { select: { title: true, slug: true, durationDays: true } },
+          vehicle: { select: { name: true, vehicleType: true, plateNumber: true } },
         },
       })
     : [];
@@ -74,17 +77,39 @@ export default async function OperatorPortalPage() {
       })
     : [];
 
-  // New booking alerts: unread traveler messages on active reservations
-  const travelerIds = new Set(reservations.map((r) => r.travelerId));
-  const reservationIds = reservations.map((r) => r.id);
-  const unreadMessages = reservationIds.length
-    ? await prisma.reservationMessage.findMany({
-        where: { reservationId: { in: reservationIds }, isRead: false, senderId: { in: Array.from(travelerIds) } },
-        select: { id: true },
+  // Unread chat messages from travellers (same count as the header chat button)
+  const unreadChats = operatorId
+    ? await prisma.reservationMessage.count({
+        where: { reservation: { operatorId }, isRead: false, senderId: { not: session.userId } },
       })
-    : [];
-  const unreadBookingAlerts = unreadMessages.length;
+    : 0;
 
+  const todayStart = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00.000Z');
+  const [openByTour, vehicles] = operatorId
+    ? await Promise.all([
+        prisma.tourSlot.groupBy({
+          by: ['tourId'],
+          where: { tour: { operatorId }, startDate: { gte: todayStart }, status: 'OPEN' },
+          _count: { _all: true },
+        }),
+        prisma.vehicle.findMany({
+          where: { operatorId },
+          orderBy: [{ isActive: 'desc' }, { createdAt: 'desc' }],
+          include: {
+            _count: {
+              select: {
+                slots: {
+                  where: { slot: { startDate: { gte: todayStart } } },
+                },
+              },
+            },
+          },
+        }),
+      ])
+    : [[], []];
+
+  const fleetSize = vehicles.filter((v) => v.isActive).length;
+  const needsDepartures = (operator?.tours ?? []).filter((t) => t.isPublished && !openByTour.some((o) => o.tourId === t.id));
   const pendingCount = reservations.filter((r) => r.status === 'PENDING').length;
   const approvedRes = reservations.filter((r) => r.status === 'APPROVED');
   const approvedCount = approvedRes.length;
@@ -108,7 +133,36 @@ export default async function OperatorPortalPage() {
     createdAt: r.createdAt.toISOString(),
     traveler: r.traveler,
     tour: r.tour,
+    vehicle: r.vehicle
+      ? {
+          name: r.vehicle.name,
+          vehicleType: r.vehicle.vehicleType,
+          plateNumber: r.vehicle.plateNumber,
+        }
+      : null,
   });
+
+  const serializedVehicles = vehicles.map((v) => ({
+    id: v.id,
+    name: v.name,
+    vehicleType: v.vehicleType,
+    seats: v.seats,
+    plateNumber: v.plateNumber,
+    isActive: v.isActive,
+    upcomingDepartures: v._count.slots,
+  }));
+
+  const serializedTours = (operator?.tours ?? []).map((t) => ({
+    id: t.id,
+    title: t.title,
+    slug: t.slug,
+    primaryCountry: t.primaryCountry,
+    durationDays: t.durationDays,
+    minPriceUsd: t.minPriceUsd,
+    isPublished: t.isPublished,
+    reservationCount: t._count.reservations,
+    mediaCount: t._count.media,
+  }));
 
   const statCards = [
     { label: 'Pending approvals', value: String(pendingCount), icon: Clock, tint: 'text-[var(--warning)] bg-[var(--warning-soft)]' },
@@ -143,9 +197,9 @@ export default async function OperatorPortalPage() {
             <Link href="/operator-portal/messages" className="btn btn-secondary relative">
               <Mail className="h-4 w-4" />
               Inbox
-              {unreadBookingAlerts > 0 && (
+              {unreadChats > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
-                  {unreadBookingAlerts}
+                  {unreadChats}
                 </span>
               )}
             </Link>
@@ -177,69 +231,31 @@ export default async function OperatorPortalPage() {
           ))}
         </div>
 
+        {/* Fleet / departure gaps: tours without open departures can't be booked */}
+        {operator && fleetSize === 0 && needsDepartures.length === 0 && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+            <strong>Add your vehicles to start selling seats.</strong> Bookings are taken per seat on scheduled departures, so each
+            vehicle you add sets how many travellers a departure can carry.{' '}
+            <Link href="/operator-portal/slots" className="font-semibold underline">Set up your fleet</Link>
+          </div>
+        )}
+        {needsDepartures.length > 0 && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+            <strong>{needsDepartures.length} package{needsDepartures.length === 1 ? '' : 's'} cannot take bookings</strong> because there are no open
+            upcoming departures: {needsDepartures.map((t) => t.title).join(', ')}.{' '}
+            <Link href="/operator-portal/slots" className="font-semibold underline">Schedule departures</Link>
+            {fleetSize === 0 ? ' (add your vehicles there first).' : '.'}
+          </div>
+        )}
+
         {/* Reservation requests */}
         <AgencyReservationsTable initialReservations={reservations.map(serializeReservation)} />
 
-        {/* Published tours */}
-        <section className="surface-card overflow-hidden">
-          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-[var(--border)]">
-            <h2 className="text-lg font-bold text-[var(--ink)] font-display">
-              Your Safari Packages
-            </h2>
-            <Link href="/operator-portal/tours/new" className="link text-xs inline-flex items-center gap-1">
-              Add new <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-          {operator && operator.tours.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th className="px-5 sm:px-6">Package</th>
-                    <th className="px-4">Country</th>
-                    <th className="px-4">Duration</th>
-                    <th className="px-4">Price from</th>
-                    <th className="px-4">Reservations</th>
-                    <th className="px-4">Status</th>
-                    <th className="px-4">Photos</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {operator.tours.map((tour) => (
-                    <tr key={tour.id}>
-                      <td className="px-5 sm:px-6 font-semibold text-[var(--ink)]">
-                        <Link href={`/tours/${tour.slug}`} className="link">{tour.title}</Link>
-                      </td>
-                      <td className="px-4">{tour.primaryCountry}</td>
-                      <td className="px-4 whitespace-nowrap">{tour.durationDays} days</td>
-                      <td className="px-4 whitespace-nowrap font-semibold">${tour.minPriceUsd.toLocaleString()}</td>
-                      <td className="px-4">{tour._count.reservations}</td>
-                      <td className="px-4">
-                        <span className={`badge ${tour.isPublished ? 'badge-success' : 'badge-neutral'}`}>
-                          {tour.isPublished ? 'Live' : 'Draft'}
-                        </span>
-                      </td>
-                      <td className="px-4 whitespace-nowrap">
-                        <Link
-                          href={`/operator-portal/tours/${tour.id}/images`}
-                          className="link inline-flex items-center gap-1.5 text-xs font-bold"
-                        >
-                          <ImageIcon className="h-3.5 w-3.5" />
-                          {tour._count.media > 0 ? `Manage (${tour._count.media})` : 'Upload'}
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="px-6 py-10 text-center">
-              <p className="text-sm font-semibold text-[var(--ink)]">No packages published yet</p>
-              <p className="mt-1 text-xs text-[var(--ink-secondary)]">Create your first safari package to start receiving reservations.</p>
-            </div>
-          )}
-        </section>
+        {/* Fleet & Car Management Section */}
+        <AgencyFleetManager initialVehicles={serializedVehicles} />
+
+        {/* Published tours with Edit, Toggle Live/Draft, and Delete */}
+        <AgencyToursTable initialTours={serializedTours} />
 
         {/* Inquiry leads */}
         <section className="surface-card overflow-hidden">
