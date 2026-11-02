@@ -6,7 +6,9 @@ if [ -n "$DATABASE_URL" ] && [ "$SKIP_PRISMA_MIGRATION" != "true" ]; then
   echo "==> Preparing database connection..."
 
   # Locate Prisma CLI
-  if [ -f "./node_modules/prisma/build/index.js" ]; then
+  if command -v prisma >/dev/null 2>&1; then
+    PRISMA_CLI="prisma"
+  elif [ -f "./node_modules/prisma/build/index.js" ]; then
     PRISMA_CLI="node ./node_modules/prisma/build/index.js"
   elif [ -x "./node_modules/.bin/prisma" ]; then
     PRISMA_CLI="./node_modules/.bin/prisma"

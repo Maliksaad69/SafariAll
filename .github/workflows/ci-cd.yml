@@ -30,9 +30,9 @@ jobs:
 
             echo "Stopping existing containers..."
             docker compose down
-
-            echo "Building and starting containers..."
-            docker compose up -d --build
+            echo "Restarting new containers"
+            docker compose build --no-cache
+            docker compose up -d
 
             echo "Deployment completed!"
             docker compose ps
