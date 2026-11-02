@@ -36,3 +36,6 @@ jobs:
 
             echo "Deployment completed!"
             docker compose ps
+
+            echo "Old Images and containers removed"
+            docker system prune -f
