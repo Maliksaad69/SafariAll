@@ -1,0 +1,38 @@
+# Dependencies and build outputs
+node_modules
+.next
+.git
+.gitignore
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+*.db
+*.db-journal
+
+# Testing and coverage
+coverage
+tests
+
+# Environment variables
+.env*
+env/.env*
+!env/.env.example
+
+# Docker and CI
+Dockerfile*
+docker-compose*.yml
+compose*.yaml
+.dockerignore
+.github
+deploy.sh
+
+# Logs and debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Documentation and editors
+*.md
+.vscode
+.idea
