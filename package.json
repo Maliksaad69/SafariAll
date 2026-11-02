@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@prisma/client": "6.19.3",
+    "@prisma/orm-postgres": "^8.0.0-rc.22",
     "@tiptap/extension-image": "^3.31.4",
     "@tiptap/extension-link": "^3.31.4",
     "@tiptap/pm": "^3.31.4",
@@ -49,7 +50,7 @@
     "@types/react-dom": "^19",
     "eslint": "^4.0.0",
     "eslint-config-next": "^12.0.4",
-    "prisma": "6.19.3",
+    "prisma": "^8.0.0-rc.29",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
     "typescript": "^5"
