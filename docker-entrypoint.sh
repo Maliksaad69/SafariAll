@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+export PATH="/usr/local/bin:$PATH"
+
 # Run Prisma schema migration on startup if DATABASE_URL is provided
 if [ -n "$DATABASE_URL" ] && [ "$SKIP_PRISMA_MIGRATION" != "true" ]; then
   echo "==> Preparing database connection..."
