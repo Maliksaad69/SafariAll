@@ -459,3 +459,30 @@ select.form-control {
   50%      { transform: translateY(-10px); }
 }
 .animate-floaty { animation: floaty 7s ease-in-out infinite; }
+
+/* ── Hero Ken Burns & Cinematic Motion ── */
+@keyframes kenBurnsZoomIn {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.10) translate(-1%, -1%); }
+}
+@keyframes kenBurnsZoomOut {
+  0% { transform: scale(1.12) translate(1%, 0); }
+  100% { transform: scale(1.02) translate(0, 0); }
+}
+@keyframes kenBurnsPanRight {
+  0% { transform: scale(1.06) translate(-2%, 0); }
+  100% { transform: scale(1.12) translate(2%, -1%); }
+}
+@keyframes kenBurnsPanLeft {
+  0% { transform: scale(1.06) translate(2%, 0); }
+  100% { transform: scale(1.12) translate(-2%, 1%); }
+}
+@keyframes heroProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+.ken-burns-in { animation: kenBurnsZoomIn 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
+.ken-burns-out { animation: kenBurnsZoomOut 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
+.ken-burns-right { animation: kenBurnsPanRight 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
+.ken-burns-left { animation: kenBurnsPanLeft 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
+.hero-progress-bar { animation: heroProgress 4.8s linear forwards; }
