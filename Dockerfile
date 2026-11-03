@@ -27,6 +27,10 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Provide build-time fallback for Prisma schema validation during Next.js build
+ARG DATABASE_URL="postgresql://postgres:postgres@localhost:5432/safaribookings_db?schema=public"
+ENV DATABASE_URL=${DATABASE_URL}
+
 RUN npx prisma generate
 RUN npm run build
 

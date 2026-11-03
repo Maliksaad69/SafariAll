@@ -1,8 +1,35 @@
 import { MetadataRoute } from 'next';
 import prisma from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://safariasili.com';
+
+  const staticUrls = [
+    '',
+    '/tours',
+    '/operators',
+    '/parks',
+    '/login',
+    '/register',
+    '/reviews',
+    '/faq',
+    '/about-us',
+    '/how-it-works',
+    '/contact-us',
+    '/best-price-guarantee',
+  ].map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: route === '' ? 1.0 : 0.8,
+  }));
+
+  // If no database connection is configured (e.g. during Docker image build time), return static pages
+  if (!process.env.DATABASE_URL) {
+    return staticUrls;
+  }
 
   let tours: Array<{ slug: string; createdAt: Date }> = [];
   let destinations: Array<{ slug: string; createdAt: Date }> = [];
@@ -39,20 +66,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: op.createdAt,
     changeFrequency: 'monthly' as const,
     priority: 0.6,
-  }));
-
-  const staticUrls = [
-    '',
-    '/tours',
-    '/operators',
-    '/parks',
-    '/login',
-    '/register',
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 1.0,
   }));
 
   return [...staticUrls, ...tourUrls, ...parkUrls, ...operatorUrls];
