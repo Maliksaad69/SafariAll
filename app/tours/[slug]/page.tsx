@@ -12,6 +12,7 @@ import TourCard from '@/components/TourCard';
 import FavoriteHeartButton from '@/components/FavoriteHeartButton';
 import BookingBox from '@/components/BookingBox';
 import TourReviewsWidget from '@/components/TourReviewsWidget';
+import HeroBackgroundSlider, { HeroSlide } from '@/components/HeroBackgroundSlider';
 import { getTourCards } from '@/lib/catalog';
 
 export const dynamic = 'force-dynamic';
@@ -67,6 +68,30 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
 
   const relatedTours = await getTourCards({ id: { not: tour.id }, primaryCountry: tour.primaryCountry }, 3);
 
+  const tourSlides: HeroSlide[] = tourMedia.length > 0
+    ? tourMedia.map((m: any) => ({
+        url: `/api/media/${m.id}`,
+        location: `${tour.primaryCountry} · ${tour.title}`,
+        caption: m.altText || tour.title,
+      }))
+    : [
+        {
+          url: heroImg,
+          location: `${tour.primaryCountry} · Safari Expedition`,
+          caption: tour.title,
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2560&q=85',
+          location: `${tour.primaryCountry} · Golden Hour`,
+          caption: 'Authentic wildlife game drive',
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=2560&q=85',
+          location: `${tour.primaryCountry} · Wilderness`,
+          caption: 'Spectacular wildlife encounters',
+        },
+      ];
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-[var(--ink)]">
       <Navbar />
@@ -84,12 +109,14 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
         </div>
       </div>
 
-      {/* Hero Header */}
-      <div className="surface-dark relative min-h-[320px] md:min-h-[380px] overflow-hidden flex items-end">
-        <div className="absolute inset-0 bg-cover bg-center opacity-70" style={{ backgroundImage: `url('${heroImg}')` }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark)] via-black/40 to-transparent" />
+      {/* Hero Header with Switching Animated Backgrounds */}
+      <HeroBackgroundSlider
+        slides={tourSlides}
+        minHeightClass="min-h-[360px] md:min-h-[420px]"
+        className="flex items-end"
+      >
         <FavoriteHeartButton tourId={tour.id} />
-        <div className="relative p-6 md:p-10 max-w-[1230px] mx-auto w-full">
+        <div className="relative p-6 md:p-10 max-w-[1230px] mx-auto w-full flex flex-col justify-end h-full">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <span className="badge badge-brand bg-white/20 text-white border-white/30 backdrop-blur-md px-3 py-1 font-bold text-xs sm:text-sm">
               {tour.primaryCountry}
@@ -116,7 +143,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
             </div>
           </div>
         </div>
-      </div>
+      </HeroBackgroundSlider>
 
       {/* Sticky Tab Nav */}
       <div className="glass-nav sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-[var(--border-soft)]">

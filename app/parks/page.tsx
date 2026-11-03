@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { getCountries } from '@/lib/catalog';
 import { Sun, TrendingUp, Play, ChevronRight, MapPin, Compass } from 'lucide-react';
+import HeroBackgroundSlider from '@/components/HeroBackgroundSlider';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,19 +40,13 @@ export default async function ParksPage() {
           </div>
         </div>
 
-        {/* Hero Banner */}
-        <div
-          className="relative surface-dark py-14 sm:py-16 overflow-hidden border-b border-[var(--dark-border)]"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+        {/* Hero Banner with Switching Animated High-Quality Backgrounds */}
+        <HeroBackgroundSlider
+          minHeightClass="min-h-[340px] md:h-[380px]"
+          className="border-b border-[var(--dark-border)]"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--dark)] via-[var(--dark)]/90 to-[var(--dark)]/60" />
-          <div className="relative max-w-[1230px] mx-auto px-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/20 text-xs sm:text-sm font-bold text-[var(--gold)] backdrop-blur-md mb-3">
+          <div className="relative max-w-[1230px] mx-auto px-4 py-12 md:py-16 flex flex-col justify-center h-full">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/20 text-xs sm:text-sm font-bold text-[var(--gold)] backdrop-blur-md mb-3 self-start">
               <Compass className="w-4 h-4 text-[var(--gold)]" />
               <span>Comprehensive African Safari Guides</span>
             </div>
@@ -62,7 +57,7 @@ export default async function ParksPage() {
               Compare Africa&apos;s premier safari destinations. Explore seasonal wildlife concentrations, park guides, daily travel budgets, and verified local tour operators.
             </p>
           </div>
-        </div>
+        </HeroBackgroundSlider>
 
         <div className="max-w-[1230px] mx-auto px-4 py-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-3">

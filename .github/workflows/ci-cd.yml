@@ -1,9 +1,9 @@
-
+```yaml
 name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, master]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -23,23 +23,34 @@ jobs:
 
             cd /root/SafariAll
 
-            echo "Pulling latest changes..."
+            # Verify production environment exists
+            if [ ! -f .env ]; then
+              echo "ERROR: Production .env is missing!"
+              exit 1
+            fi
+
+            echo "Backing up production environment..."
+            cp -p .env /tmp/SafariAll.production.env
+
+            echo "Pulling latest code..."
             git fetch origin
-            git checkout ${{ github.ref_name }}
-            git pull origin ${{ github.ref_name }}
+            git checkout master
+            git reset --hard origin/master
 
-            echo "Stopping existing containers..."
-            docker compose down
-            echo "Restarting new containers"
+            # Restore environment file
+            cp -p /tmp/SafariAll.production.env .env
+            rm -f /tmp/SafariAll.production.env
+
+            echo "Building Docker images..."
             docker compose build --no-cache
-            docker compose up -d
 
-            echo "sleeping for a minute"
+            echo "Restarting containers..."
+            docker compose up -d --force-recreate
+
             sleep 60
 
             echo "Deployment completed!"
             docker compose ps
 
-            
-            echo "Old Images and containers removed"
             docker system prune -f
+```

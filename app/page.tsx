@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
 import HeroSearchForm from '@/components/HeroSearchForm';
+import HeroBackgroundSlider from '@/components/HeroBackgroundSlider';
 import FeaturedCountriesSection, { CountryHighlight } from '@/components/FeaturedCountriesSection';
 import prisma from '@/lib/prisma';
 import { getTourCards, getOperatorCards, getCountries, getExperts, getLatestBlogPosts } from '@/lib/catalog';
@@ -65,25 +66,17 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ── */}
-        <section
-          className="relative min-h-[720px] sm:min-h-[700px] md:h-[580px] w-full overflow-hidden bg-cover bg-center flex flex-col justify-between pt-10 pb-8 px-3 sm:px-4 md:py-0 md:px-0 md:block"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2200&q=80')" }}
-        >
-          {/* Subtle gradient scrims for optimal readability */}
-          <div className="absolute inset-0 bg-black/25" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/65" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand)]/25 via-transparent to-transparent" />
-
+        <HeroBackgroundSlider minHeightClass="min-h-[720px] sm:min-h-[700px] md:h-[600px]">
           {/* Hero text container */}
-          <div className="relative z-10 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center md:h-full md:pb-32 px-2 sm:px-4">
+          <div className="mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center md:h-full md:pb-32 px-2 sm:px-4">
             <div className="animate-fade-up max-w-3xl text-center text-white">
-              <span className="mb-3 sm:mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+              <span className="mb-3 sm:mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[13px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md shadow-sm">
                 Zero commission · Direct local quotes
               </span>
-              <h1 className="text-[30px] sm:text-[42px] md:text-[58px] font-semibold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]">
+              <h1 className="text-[32px] sm:text-[44px] md:text-[58px] font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
                 Compare {stats.tours.toLocaleString()} African<br className="hidden sm:inline" /> Safari Tours
               </h1>
-              <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-[15px] sm:text-[17px] md:text-[19px] font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
+              <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-base sm:text-lg md:text-xl font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
                 Booked directly from verified local operators
               </p>
             </div>
@@ -91,7 +84,7 @@ export default async function HomePage() {
 
           {/* Search Form — stacked naturally on mobile, anchored at bottom on desktop */}
           <HeroSearchForm />
-        </section>
+        </HeroBackgroundSlider>
 
         {/* ── Trust strip ── */}
         <div className="relative z-10 mx-auto mt-4 sm:mt-5 max-w-[1230px] px-3 sm:px-4">

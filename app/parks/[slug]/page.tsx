@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
+import HeroBackgroundSlider, { HeroSlide } from '@/components/HeroBackgroundSlider';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -78,6 +79,29 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
   const highSeasonDisplay = park.highSeason ? park.highSeason.split('(')[0].trim() : 'July to October & December';
   const ratingValue = park.rating ? Number(park.rating).toFixed(1) : '4.9';
 
+  const parkHeroSlides: HeroSlide[] = [
+    {
+      url: park.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2560&q=85',
+      location: `${park.name} · ${park.country}`,
+      caption: `${park.name} wildlife & savanna`,
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=2560&q=85',
+      location: `${park.name} · Big Game Plains`,
+      caption: 'Elephant herd traversing the open African plains',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=2560&q=85',
+      location: `${park.name} · Golden Hour`,
+      caption: 'Savanna sunset and wildlife silhouette',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1551887196-72e32bfc7bf3?auto=format&fit=crop&w=2560&q=85',
+      location: `${park.country} · Safari Circuit`,
+      caption: 'Big cat tracking and expert guided game drives',
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--canvas)] text-[var(--ink)]">
       <Navbar />
@@ -98,19 +122,14 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
       </div>
 
       <main className="flex-1 w-full mx-auto pb-16">
-        {/* Hero Section */}
-        <div
-          className="relative surface-dark text-white overflow-hidden border-b border-[var(--dark-border)]"
-          style={{
-            backgroundImage: `url('${park.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80'}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+        {/* Hero Section with Switching Animated Backgrounds */}
+        <HeroBackgroundSlider
+          slides={parkHeroSlides}
+          minHeightClass="min-h-[460px] md:min-h-[500px]"
+          className="border-b border-[var(--dark-border)]"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[var(--dark)] via-[var(--dark)]/90 to-[var(--dark)]/60" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/20 text-xs sm:text-sm font-bold text-[var(--gold)] backdrop-blur-md mb-4">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex flex-col justify-center h-full">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 border border-white/20 text-xs sm:text-sm font-bold text-[var(--gold)] backdrop-blur-md mb-4 self-start">
               <MapPin className="w-4 h-4 text-[var(--gold)]" />
               <span>{isCountry ? 'African Safari Country' : `${park.country} · ${park.type.replace('_', ' ')}`}</span>
             </div>
@@ -123,7 +142,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
             </h1>
 
             {/* Generous, highly readable hero description */}
-            <p className="text-base sm:text-lg lg:text-xl leading-relaxed text-white/95 max-w-5xl font-light mb-8">
+            <p className="text-base sm:text-lg lg:text-xl leading-relaxed text-white/95 max-w-5xl font-light mb-8 drop-shadow-sm">
               {park.description}
             </p>
 
@@ -150,7 +169,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
               </Link>
             </div>
           </div>
-        </div>
+        </HeroBackgroundSlider>
 
         {/* High-Contrast Quick Stats Strip across the full container width */}
         <div className="surface-card border-b border-[var(--border-soft)] py-5 text-xs bg-white/95 shadow-sm">
