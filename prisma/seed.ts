@@ -1,4 +1,4 @@
-import { PrismaClient, Role, ComfortLevel, TourType, DestinationType } from '@prisma/client';
+import { PrismaClient, Role, ComfortLevel, TourType, DestinationType, SlotStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -580,18 +580,42 @@ async function main() {
   const pendingTour = await tourBySlug('8-day-uganda-gorilla-wildlife-safari');
 
   const demoReservations: { ref: string; travelerId: string; tourId: string; operatorId: string; start: Date; adults: number; children: number; total: number; status: 'APPROVED' | 'PENDING' | 'COMPLETED' | 'DECLINED' }[] = [];
-  if (pastTour) demoReservations.push({ ref: 'SR-PAST0001', travelerId: sarah, tourId: pastTour.id, operatorId: pastTour.operatorId, start: inDays(-40), adults: 2, children: 0, total: 3300, status: 'APPROVED' });
-  if (upcomingTour) demoReservations.push({ ref: 'SR-UPCOM001', travelerId: sarah, tourId: upcomingTour.id, operatorId: upcomingTour.operatorId, start: inDays(35), adults: 2, children: 1, total: 3225, status: 'APPROVED' });
-  if (pendingTour) demoReservations.push({ ref: 'SR-PEND0001', travelerId: liam, tourId: pendingTour.id, operatorId: pendingTour.operatorId, start: inDays(70), adults: 2, children: 0, total: 6380, status: 'PENDING' });
-  if (pastTour) demoReservations.push({ ref: 'SR-DONE0001', travelerId: liam, tourId: pastTour.id, operatorId: pastTour.operatorId, start: inDays(-150), adults: 4, children: 0, total: 6600, status: 'COMPLETED' });
+  if (pastTour && sarah) demoReservations.push({ ref: 'SR-PAST0001', travelerId: sarah, tourId: pastTour.id, operatorId: pastTour.operatorId, start: inDays(-40), adults: 2, children: 0, total: 3300, status: 'APPROVED' });
+  if (upcomingTour && sarah) demoReservations.push({ ref: 'SR-UPCOM001', travelerId: sarah, tourId: upcomingTour.id, operatorId: upcomingTour.operatorId, start: inDays(35), adults: 2, children: 1, total: 3225, status: 'APPROVED' });
+  if (pendingTour && liam) demoReservations.push({ ref: 'SR-PEND0001', travelerId: liam, tourId: pendingTour.id, operatorId: pendingTour.operatorId, start: inDays(70), adults: 2, children: 0, total: 6380, status: 'PENDING' });
+  if (pastTour && liam) demoReservations.push({ ref: 'SR-DONE0001', travelerId: liam, tourId: pastTour.id, operatorId: pastTour.operatorId, start: inDays(-150), adults: 4, children: 0, total: 6600, status: 'COMPLETED' });
 
   for (const r of demoReservations) {
     const exists = await prisma.reservation.findUnique({ where: { reference: r.ref } });
     if (exists) continue;
+
+    // Database triggers require reservations to be attached to a valid scheduled departure (slot_id)
+    const resSlotDate = new Date(r.start);
+    resSlotDate.setUTCHours(8, 0, 0, 0);
+
+    const slot = await prisma.tourSlot.upsert({
+      where: {
+        tourId_startDate_departureTime: {
+          tourId: r.tourId,
+          startDate: resSlotDate,
+          departureTime: '08:00',
+        },
+      },
+      update: {},
+      create: {
+        tourId: r.tourId,
+        startDate: resSlotDate,
+        departureTime: '08:00',
+        maxTravelers: 12,
+        bookedSeats: 0,
+        status: SlotStatus.OPEN,
+        note: 'Reserved departure',
+      },
+    });
     await prisma.reservation.create({
       data: {
-        reference: r.ref, travelerId: r.travelerId, tourId: r.tourId, operatorId: r.operatorId,
-        startDate: r.start, adultsCount: r.adults, childrenCount: r.children,
+        reference: r.ref, travelerId: r.travelerId, tourId: r.tourId, operatorId: r.operatorId, slotId: slot.id,
+        startDate: resSlotDate, adultsCount: r.adults, childrenCount: r.children,
         estimatedTotalUsd: r.total, status: r.status,
         decidedAt: r.status === 'PENDING' ? null : r.start,
         completedAt: r.status === 'COMPLETED' ? new Date(r.start.getTime() + 5 * day) : null,
@@ -601,8 +625,8 @@ async function main() {
   console.log(`✅ ${demoReservations.length} demo reservations`);
 
   /* Seed a welcome notification so the bell is never empty for the demo traveller */
-  const existingNote = await prisma.notification.findFirst({ where: { userId: sarah } });
-  if (!existingNote) {
+  const existingNote = sarah ? await prisma.notification.findFirst({ where: { userId: sarah } }) : null;
+  if (sarah && !existingNote) {
     await prisma.notification.create({
       data: {
         userId: sarah, type: 'INFO', title: 'Welcome to SafariRequest',
