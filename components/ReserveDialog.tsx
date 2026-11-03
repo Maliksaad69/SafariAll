@@ -213,7 +213,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
 
       {open && (
         <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-[#012D32]/55 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-[#103B5C]/60 p-0 backdrop-blur-sm sm:items-center sm:p-4"
           role="dialog"
           aria-modal="true"
           aria-label="Request a reservation"
@@ -221,7 +221,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
             if (e.target === e.currentTarget) close();
           }}
         >
-          <div className="flex max-h-[94vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-[0_30px_80px_rgba(1,45,50,0.35)] sm:rounded-3xl">
+          <div className="flex max-h-[94vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-[0_30px_80px_rgba(16,59,92,0.35)] sm:rounded-3xl">
             {success ? (
               /* ── Success ── */
               <div className="space-y-4 px-6 py-12 text-center sm:px-10">
@@ -469,7 +469,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                         {/* Review */}
                         <div>
                           <span className="form-label">Your request</span>
-                          <dl className="space-y-2.5 rounded-2xl border border-[var(--border)] bg-[#FCFBF7] p-4 text-sm">
+                          <dl className="space-y-2.5 rounded-2xl border border-[var(--border)] bg-[#F5F8FB] p-4 text-sm">
                             <div className="flex justify-between gap-3">
                               <dt className="text-[var(--ink-secondary)]">Departure</dt>
                               <dd className="text-right font-semibold text-[var(--ink)]">

@@ -1,83 +1,95 @@
 @import "tailwindcss";
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN SYSTEM — SafariRequest  (v3 · "Teal Glass")
-   Brand: Deep Safari Teal #012D32 · Ocean Teal #009992
-   Light, airy, modern. Frosted glass over a pale-aqua canvas.
-   Rule #1 (kept): TEXT NEVER BLENDS — every ink/surface pair
-   clears WCAG AA. Ocean Teal is a FILL/accent; teal TEXT uses
-   the darker #00726D so links stay legible.
+   DESIGN SYSTEM — SafariRequest (Ocean Blue & Sunset Orange)
+   Brand Primary:   #103B5C (Deep Ocean Blue)
+   Brand Accent:    #F47735 (Sunset Orange)
+   Canvas Surface:  #F5F8FB (Ice Cloud Pale Blue)
+   Pristine White:  #FFFFFF (Crisp White Glass)
+
+   Rule #1: TEXT NEVER BLENDS — every ink/surface pair clears
+   WCAG AA/AAA. Sunset Orange is a vibrant FILL/accent;
+   orange text on light surfaces uses high-contrast #C85312 (≥4.6:1).
+   Deep Ocean Blue #103B5C / #0B253A provides authoritative ink,
+   hero cards, headers, and sleek maritime depth.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @layer base {
   :root {
-    /* ── Canvas — Safari Ivory field the glass blurs ── */
-    --canvas-1: #FBF7EC;   /* ivory highlight */
-    --canvas-2: #F1F6F4;   /* pale teal mist  */
-    --canvas-3: #F2EAD9;   /* warm sand       */
-    --canvas-base: #F7F3E8;/* Safari Ivory    */
+    /* ── Canvas — Pale Cloud Ice field the glass blurs ── */
+    --canvas-1: #FFFFFF;   /* pure white highlight */
+    --canvas-2: #E8F1F8;   /* soft ocean mist */
+    --canvas-3: #FDEFE6;   /* warm sunset glow mist */
+    --canvas-base: #F5F8FB;/* Clean Cool Ice Canvas */
 
     /* ── Named section tints (per-page identities) ── */
-    --ivory: #F7F3E8;      /* Safaris & Tours, Tour Operators */
-    --card-ivory: #FCFBF7; /* card fill        */
-    --sand: #EFE6D2;       /* Countries & Parks */
-    --blog-bg: #FCFBF7;    /* Blogs / editorial */
+    --ivory: #F5F8FB;      /* Safaris & Tours, Tour Operators */
+    --card-ivory: #FFFFFF; /* card fill */
+    --sand: #EDF4FA;       /* Countries & Parks tint */
+    --blog-bg: #FFFFFF;    /* Blogs / editorial */
 
     /* ── Surfaces (translucent — glassmorphism) ── */
     --surface-page:   transparent;
-    --surface-card:   rgba(252, 251, 247, 0.72);
-    --surface-raised: rgba(252, 251, 247, 0.55);
-    --surface-sunk:   rgba(240, 234, 220, 0.70);
+    --surface-card:   rgba(255, 255, 255, 0.82);
+    --surface-raised: rgba(255, 255, 255, 0.65);
+    --surface-sunk:   rgba(235, 243, 250, 0.75);
 
     /* ── Glass ── */
     --glass-blur: 18px;
-    --glass-bg:      rgba(252, 251, 247, 0.70);
-    --glass-bg-soft: rgba(252, 251, 247, 0.50);
-    --glass-border:  rgba(255, 255, 255, 0.78);
-    --glass-edge:    rgba(1, 45, 50, 0.06);
-    --glass-shadow:  0 1px 2px rgba(1, 45, 50, 0.04), 0 8px 24px rgba(1, 45, 50, 0.07);
-    --glass-shadow-lift: 0 2px 4px rgba(1, 45, 50, 0.05), 0 18px 40px rgba(1, 45, 50, 0.12);
+    --glass-bg:      rgba(255, 255, 255, 0.80);
+    --glass-bg-soft: rgba(255, 255, 255, 0.60);
+    --glass-border:  rgba(255, 255, 255, 0.85);
+    --glass-edge:    rgba(16, 59, 92, 0.08);
+    --glass-shadow:  0 1px 3px rgba(16, 59, 92, 0.04), 0 8px 24px rgba(16, 59, 92, 0.07);
+    --glass-shadow-lift: 0 3px 6px rgba(16, 59, 92, 0.06), 0 20px 40px rgba(16, 59, 92, 0.13);
 
     /* ── Borders ── */
-    --border-strong:  rgba(1, 45, 50, 0.16);
-    --border:         rgba(1, 45, 50, 0.09);
-    --border-soft:    rgba(1, 45, 50, 0.055);
+    --border-strong:  rgba(16, 59, 92, 0.20);
+    --border:         rgba(16, 59, 92, 0.10);
+    --border-soft:    rgba(16, 59, 92, 0.055);
 
     /* ── Ink (text on light) — all ≥ AA on the canvas ── */
-    --ink:            #032126;  /* Midnight Teal — headings     */
-    --ink-body:       #17464A;  /* body copy                    */
-    --ink-secondary:  #4E7176;  /* Safari Mist (darkened)       */
-    --ink-muted:      #6E8D90;  /* meta only, ≥12px             */
+    --ink:            #0B253A;  /* Midnight Ocean — headings */
+    --ink-body:       #163650;  /* Ocean Navy — body copy */
+    --ink-secondary:  #476582;  /* Ocean Slate — labels, meta */
+    --ink-muted:      #6F8FA8;  /* Soft Slate — timestamps, meta */
 
-    /* ── Brand ── */
-    --brand:          #009992;  /* Ocean Teal — fills, accents  */
-    --brand-strong:   #007A75;  /* gradient end / hover         */
-    --brand-deep:     #012D32;  /* Deep Safari Teal — CTA fills */
-    --brand-ink:      #00726D;  /* teal TEXT, AA 5.5            */
-    --brand-on:       #FFFFFF;
-    --brand-soft:     rgba(0, 153, 146, 0.12);
+    /* ── Brand (Sunset Orange & Ocean Blue) ── */
+    --brand:          #F47735;  /* Sunset Orange — fills, buttons, active highlights */
+    --brand-strong:   #DF611D;  /* Deep Sunset Orange — hover / gradient end */
+    --brand-deep:     #103B5C;  /* Ocean Blue — hero banners, titles, stats, prominent text */
+    --brand-ink:      #C85312;  /* Sunset Orange text for light surfaces (WCAG AA ≥ 4.6:1) */
+    --brand-on:       #FFFFFF;  /* White on brand */
+    --brand-soft:     rgba(244, 119, 53, 0.12); /* Sunset Orange tint */
+    --brand-pale:     rgba(244, 119, 53, 0.24);
 
-    /* ── Accent (stars, seals) ── */
-    --gold:           #009992;
-    --gold-soft:      rgba(0, 153, 146, 0.14);
+    /* ── Ocean Blue Specific Tokens ── */
+    --ocean:          #103B5C;  /* Primary Ocean Blue */
+    --ocean-strong:   #0B253A;  /* Midnight Ocean */
+    --ocean-light:    #1D5580;  /* Bright Ocean */
+    --ocean-soft:     rgba(16, 59, 92, 0.10);
+
+    /* ── Accent (stars, ratings, seals) ── */
+    --gold:           #F47735;  /* Sunset Orange / Gold glow for stars & badges */
+    --gold-soft:      rgba(244, 119, 53, 0.16);
 
     /* ── Semantic ── */
     --success:        #15803D;
     --success-soft:   rgba(21, 128, 61, 0.12);
     --danger:         #DC2626;
     --danger-soft:    rgba(220, 38, 38, 0.12);
-    --info:           #0E7490;
-    --info-soft:      rgba(14, 116, 144, 0.12);
-    --warning:        #B45309;
-    --warning-soft:   rgba(180, 83, 9, 0.12);
+    --info:           #103B5C;  /* Ocean Blue */
+    --info-soft:      rgba(16, 59, 92, 0.12);
+    --warning:        #F47735;  /* Sunset Orange */
+    --warning-soft:   rgba(244, 119, 53, 0.14);
 
-    /* ── Dark panels (hero scrim, footer) ── */
-    --dark:           #032126;  /* Midnight Teal */
-    --dark-raised:    #06363C;
-    --dark-border:    rgba(255, 255, 255, 0.14);
-    --dark-text:      #ECF5F5;
-    --dark-text-soft: #AECBCB;
-    --dark-gold:      #4FD8CE;  /* aqua accent on dark */
+    /* ── Dark panels (hero scrim, footer, dark banners) ── */
+    --dark:           #103B5C;  /* Ocean Blue */
+    --dark-raised:    #16466E;  /* Ocean Raised */
+    --dark-border:    rgba(255, 255, 255, 0.16);
+    --dark-text:      #F5F8FB;  /* Cool Ice White on dark */
+    --dark-text-soft: #B8D1E6;  /* Soft Ocean on dark */
+    --dark-gold:      #F47735;  /* Sunset Orange accent on dark */
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -118,10 +130,7 @@
   a { color: inherit; text-decoration: none; }
   img { display: block; max-width: 100%; }
 
-  /* Headings inside DARK panels must inherit the panel's light text colour —
-     otherwise the base `h1..h4 { color: var(--ink) }` paints them near-black
-     on a dark background (invisible). Legacy panels pair bg-[#hex] with
-     text-white, so match both that and the shared dark surfaces. */
+  /* Headings inside DARK panels must inherit the panel's light text colour */
   .surface-dark :is(h1, h2, h3, h4),
   .glass-card-light :is(h1, h2, h3, h4),
   [class*="text-white"] :is(h1, h2, h3, h4) {
@@ -179,7 +188,7 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BUTTONS — one system, four variants
+   BUTTONS — one system, styled for Ocean & Sunset
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .btn {
@@ -205,14 +214,14 @@
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .btn-primary {
-  background: linear-gradient(135deg, #0A5F5A 0%, var(--brand-deep) 55%, var(--brand-deep) 100%);
+  background: linear-gradient(135deg, #F47735 0%, #DF611D 100%);
   color: var(--brand-on);
-  box-shadow: 0 2px 6px rgba(1, 45, 50, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  box-shadow: 0 3px 10px rgba(244, 119, 53, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 100%);
-  box-shadow: 0 6px 18px rgba(0, 153, 146, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, #FF8947 0%, #F47735 100%);
+  box-shadow: 0 6px 22px rgba(244, 119, 53, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.32);
 }
 
 .btn-secondary {
@@ -227,6 +236,17 @@
   transform: translateY(-1px);
   border-color: var(--border-strong);
   box-shadow: var(--glass-shadow-lift);
+}
+
+.btn-ocean {
+  background: linear-gradient(135deg, #184B73 0%, var(--brand-deep) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(16, 59, 92, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.btn-ocean:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #103B5C 0%, #0A263D 100%);
+  box-shadow: 0 6px 20px rgba(16, 59, 92, 0.42);
 }
 
 .btn-ghost-dark {
@@ -263,7 +283,7 @@
 .form-control {
   width: 100%;
   padding: 0.72rem 0.95rem;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border);
@@ -278,7 +298,7 @@
 
 .form-control:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   border-color: var(--brand);
   box-shadow: 0 0 0 4px var(--brand-soft);
 }
@@ -287,7 +307,7 @@
 
 select.form-control {
   cursor: pointer;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234E7176' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23476582' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.85rem center;
   padding-right: 2.2rem;
@@ -311,11 +331,12 @@ select.form-control {
   white-space: nowrap;
 }
 
-.badge-brand   { background: var(--brand-soft);   color: var(--brand-ink);     border-color: rgba(0,153,146,0.24); }
+.badge-brand   { background: var(--brand-soft);   color: var(--brand-ink);     border-color: rgba(244,119,53,0.26); }
+.badge-ocean   { background: rgba(16,59,92,0.10); color: #103B5C;              border-color: rgba(16,59,92,0.22); }
 .badge-success { background: var(--success-soft); color: var(--success);       border-color: rgba(21,128,61,0.22); }
 .badge-danger  { background: var(--danger-soft);  color: var(--danger);        border-color: rgba(220,38,38,0.22); }
-.badge-warning { background: var(--warning-soft); color: var(--warning);       border-color: rgba(180,83,9,0.22); }
-.badge-info    { background: var(--info-soft);    color: var(--info);          border-color: rgba(14,116,144,0.22); }
+.badge-warning { background: var(--warning-soft); color: var(--brand-ink);     border-color: rgba(244,119,53,0.25); }
+.badge-info    { background: var(--info-soft);    color: var(--info);          border-color: rgba(16,59,92,0.22); }
 .badge-neutral { background: var(--surface-sunk); color: var(--ink-secondary); border-color: var(--border); }
 .badge-on-dark { background: rgba(255,255,255,0.12); color: var(--dark-gold); border-color: var(--dark-border); }
 
@@ -363,37 +384,37 @@ select.form-control {
   width: 3rem;
   height: 3px;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--brand) 0%, rgba(0,153,146,0) 100%);
+  background: linear-gradient(90deg, var(--brand) 0%, rgba(244,119,53,0) 100%);
   margin-bottom: 1.25rem;
 }
 
 .link { color: var(--brand-ink); font-weight: 600; }
-.link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; color: var(--brand); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(1, 45, 50, 0.16);
+  background: rgba(16, 59, 92, 0.18);
   border-radius: 6px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(1, 45, 50, 0.30); background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(16, 59, 92, 0.35); background-clip: content-box; }
 
 /* ── Frosted nav & inputs ── */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.82);
   -webkit-backdrop-filter: blur(20px) saturate(190%);
   backdrop-filter: blur(20px) saturate(190%);
   border-bottom: 1px solid var(--glass-border);
-  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 6px 24px rgba(1,45,50,0.06);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 6px 24px rgba(16,59,92,0.06);
 }
 
 .glass-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.65);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
@@ -406,30 +427,24 @@ select.form-control {
 .glass-input::placeholder { color: var(--ink-muted); }
 .glass-input:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   border-color: var(--brand);
   box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
-.glass-card-light { background: rgba(255,255,255,0.14); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); }
+.glass-card-light { background: rgba(255,255,255,0.16); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); }
 
-/* ── Per-page section identities (from the site colour map) ──
-   Safaris & Tours / Tour Operators : Safari Ivory
-   Countries & Parks                : Sand
-   Blogs                            : Editorial white
-   Applied as section backgrounds so each page reads as its own space
-   while the glass cards and teal accents stay constant. */
+/* ── Per-page section identities ── */
 .section-ivory     { background: var(--ivory); }
 .section-sand      { background: var(--sand); }
 .section-editorial { background: var(--blog-bg); }
 
-/* Opaque popovers/menus — menus must NEVER be see-through; content behind
-   them would bleed through and hurt readability. Glass is for large panels. */
+/* Opaque popovers/menus */
 .popover {
   background: #FFFFFF;
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 16px 40px rgba(1, 45, 50, 0.18), 0 2px 6px rgba(1, 45, 50, 0.08);
+  box-shadow: 0 16px 40px rgba(16, 59, 92, 0.18), 0 2px 6px rgba(16, 59, 92, 0.08);
 }
 
 /* ── Animations ── */

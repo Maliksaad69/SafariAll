@@ -117,7 +117,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                             <div className="flex items-center gap-2 mt-1.5 text-xs flex-wrap">
                               <span className="flex text-[var(--gold)]" aria-hidden="true">
                                 {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(op.averageRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
+                                  <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(op.averageRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#D5E2EC] text-[#D5E2EC]'}`} />
                                 ))}
                               </span>
                               <span className="font-bold text-[var(--ink)]">{op.averageRating.toFixed(1)}</span>

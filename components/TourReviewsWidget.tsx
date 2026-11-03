@@ -61,7 +61,7 @@ export default function TourReviewsWidget({ operatorId, operatorName }: TourRevi
             <h4 className="font-bold text-[var(--ink)] text-sm sm:text-[15px] leading-snug mb-1.5">&quot;{current.reviewTitle}&quot;</h4>
             <div className="flex items-center gap-1.5 mb-2.5" aria-label={`Rated ${current.overallRating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-4 w-4 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
+                <Star key={i} className={`h-4 w-4 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#D5E2EC] text-[#D5E2EC]'}`} />
               ))}
               <span className="text-[var(--ink)] font-extrabold text-sm ml-1">{current.overallRating}</span>
               <span className="text-[var(--ink-secondary)] font-semibold text-xs">/ 5</span>

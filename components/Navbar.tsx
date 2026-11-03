@@ -384,7 +384,7 @@ export default function Navbar() {
         <div
           role="dialog"
           aria-label="Mobile Navigation Menu"
-          className="fixed left-0 right-0 top-[64px] z-50 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain border-t border-[var(--glass-border)] bg-[#FCFBF7] shadow-2xl transition-all duration-300 lg:hidden"
+          className="fixed left-0 right-0 top-[64px] z-50 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain border-t border-[var(--glass-border)] bg-[#F5F8FB] shadow-2xl transition-all duration-300 lg:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
             {/* Quick search input */}

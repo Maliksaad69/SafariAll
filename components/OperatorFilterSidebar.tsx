@@ -135,7 +135,7 @@ export default function OperatorFilterSidebar({
               />
               <span className="flex text-[12px]" aria-hidden="true">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className={`h-3.5 w-3.5 ${i < stars ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
+                  <Star key={i} className={`h-3.5 w-3.5 ${i < stars ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#D5E2EC] text-[#D5E2EC]'}`} />
                 ))}
               </span>
               <span className="text-[13px] text-[var(--ink-secondary)] group-hover:text-[var(--ink)]">& up</span>
