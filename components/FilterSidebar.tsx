@@ -74,27 +74,30 @@ export default function FilterSidebar({
   };
 
   const selectClass =
-    'form-control text-[13px] py-2 px-3 bg-white/80 border-[var(--border)] rounded-xl text-[var(--ink)] focus:border-[var(--brand)] cursor-pointer';
+    'w-full text-sm font-semibold py-2.5 px-3 bg-white border border-[var(--border)] rounded-xl text-[var(--ink)] shadow-2xs focus:border-[var(--brand)] focus:ring-1 focus:ring-[var(--brand)] cursor-pointer outline-none transition-all';
+
+  const labelClass =
+    'text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-[var(--brand-deep)] flex items-center gap-1.5 mb-2';
 
   return (
-    <aside className="surface-card w-full rounded-2xl overflow-hidden border border-[var(--glass-border)] shadow-sm font-sans text-[var(--ink-body)]">
+    <aside className="surface-card w-full rounded-2xl overflow-hidden border border-[var(--glass-border)] shadow-sm font-sans text-[var(--ink)]">
       {/* Header section */}
-      <div className="bg-white/60 backdrop-blur-md border-b border-[var(--border-soft)] p-4 flex items-center justify-between">
-        <h2 className="text-[20px] font-bold font-display text-[var(--ink)]">Filter Safaris</h2>
+      <div className="bg-white/70 backdrop-blur-md border-b border-[var(--border-soft)] p-4 sm:p-5 flex items-center justify-between">
+        <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">Filter Safaris</h2>
         <button
           type="button"
           onClick={resetAll}
-          className="text-[12px] font-semibold text-[var(--brand-ink)] hover:underline cursor-pointer"
+          className="text-xs sm:text-sm font-bold text-[var(--brand-deep)] hover:underline cursor-pointer transition-colors"
         >
           Reset all
         </button>
       </div>
 
-      <div className="p-4 space-y-4">
+      <div className="p-4 sm:p-5 space-y-4">
         {/* Where To */}
         <div>
-          <label className="form-label flex items-center gap-1.5 mb-1.5">
-            <MapPin className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Country
+          <label className={labelClass}>
+            <MapPin className="w-4 h-4 text-[var(--brand-deep)]" /> Country
           </label>
           <select
             value={currentCountry || ''}
@@ -116,8 +119,8 @@ export default function FilterSidebar({
 
         {/* Start Date */}
         <div>
-          <label className="form-label flex items-center gap-1.5 mb-1.5">
-            <Calendar className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Start Date
+          <label className={labelClass}>
+            <Calendar className="w-4 h-4 text-[var(--brand-deep)]" /> Start Date
           </label>
           <select
             value={currentMonth || ''}
@@ -135,8 +138,8 @@ export default function FilterSidebar({
 
         {/* Travelers */}
         <div>
-          <label className="form-label flex items-center gap-1.5 mb-1.5">
-            <Users className="w-3.5 h-3.5 text-[var(--brand-ink)]" /> Travelers
+          <label className={labelClass}>
+            <Users className="w-4 h-4 text-[var(--brand-deep)]" /> Travelers
           </label>
           <select
             value={selectedTravelers || ''}
@@ -155,17 +158,17 @@ export default function FilterSidebar({
       <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Tour Length */}
-      <div className="px-4 py-3.5">
-        <div className="form-label mb-2.5">
+      <div className="p-4 sm:p-5">
+        <div className={labelClass}>
           Tour Length
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2.5 mt-2">
           {durationOptions.map((option) => {
             const count = durationCounts?.[option.value];
             const checked = currentDuration === option.value;
             return (
               <label key={option.value} className="flex items-center justify-between gap-2 cursor-pointer group py-0.5">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2.5">
                   <input
                     type="radio"
                     name="duration"
@@ -173,12 +176,12 @@ export default function FilterSidebar({
                     onChange={() => handleParamChange('duration', checked ? '' : option.value)}
                     className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
                   />
-                  <span className={`text-[13px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>
+                  <span className={`text-sm sm:text-[14.5px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'font-medium text-[var(--ink)] group-hover:text-[var(--brand-deep)]'}`}>
                     {option.label}
                   </span>
                 </span>
                 {typeof count === 'number' && (
-                  <span className="text-[11px] font-semibold text-[var(--ink-secondary)] bg-[var(--surface-sunk)] px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-bold text-[var(--ink)] bg-white border border-[var(--border)] px-2.5 py-0.5 rounded-full shadow-2xs">
                     {count}
                   </span>
                 )}
@@ -191,11 +194,11 @@ export default function FilterSidebar({
       <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Comfort Level */}
-      <div className="px-4 py-3.5">
-        <div className="form-label mb-2.5 flex items-center gap-1.5">
-          Comfort Level <Info className="w-3 h-3 text-[var(--ink-muted)]" />
+      <div className="p-4 sm:p-5">
+        <div className={labelClass}>
+          Comfort Level <Info className="w-3.5 h-3.5 text-[var(--ink-secondary)]" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2.5 mt-2">
           {[
             { label: 'Luxury+', val: 'LUXURY_PLUS' },
             { label: 'Luxury', val: 'LUXURY' },
@@ -206,19 +209,19 @@ export default function FilterSidebar({
             const checked = currentComfort === opt.val;
             return (
               <label key={opt.val} className="flex items-center justify-between gap-2 cursor-pointer group py-0.5">
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2.5">
                   <input
                     type="checkbox"
                     checked={checked}
                     onChange={() => handleParamChange('comfort', checked ? '' : opt.val)}
                     className="w-4 h-4 rounded accent-[var(--brand)] cursor-pointer"
                   />
-                  <span className={`text-[13px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>
+                  <span className={`text-sm sm:text-[14.5px] transition-colors ${checked ? 'font-bold text-[var(--ink)]' : 'font-medium text-[var(--ink)] group-hover:text-[var(--brand-deep)]'}`}>
                     {opt.label}
                   </span>
                 </span>
                 {typeof count === 'number' && (
-                  <span className="text-[11px] font-semibold text-[var(--ink-secondary)] bg-[var(--surface-sunk)] px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-bold text-[var(--ink)] bg-white border border-[var(--border)] px-2.5 py-0.5 rounded-full shadow-2xs">
                     {count.toLocaleString()}
                   </span>
                 )}
@@ -231,12 +234,12 @@ export default function FilterSidebar({
       <div className="border-t border-[var(--border-soft)]"></div>
 
       {/* Private or Shared Tour */}
-      <div className="px-4 py-3.5">
-        <div className="form-label mb-2.5 flex items-center gap-1.5">
-          Tour Format <Info className="w-3 h-3 text-[var(--ink-muted)]" />
+      <div className="p-4 sm:p-5">
+        <div className={labelClass}>
+          Tour Format <Info className="w-3.5 h-3.5 text-[var(--ink-secondary)]" />
         </div>
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 cursor-pointer group py-0.5">
+        <div className="space-y-2.5 mt-2">
+          <label className="flex items-center gap-2.5 cursor-pointer group py-0.5">
             <input
               type="radio"
               name="tourType"
@@ -244,9 +247,9 @@ export default function FilterSidebar({
               onChange={() => handleParamChange('tourType', 'PRIVATE')}
               className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
             />
-            <span className={`text-[13px] ${searchParams.get('tourType') === 'PRIVATE' ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>Private tour</span>
+            <span className={`text-sm sm:text-[14.5px] ${searchParams.get('tourType') === 'PRIVATE' ? 'font-bold text-[var(--ink)]' : 'font-medium text-[var(--ink)] group-hover:text-[var(--brand-deep)]'}`}>Private tour</span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer group py-0.5">
+          <label className="flex items-center gap-2.5 cursor-pointer group py-0.5">
             <input
               type="radio"
               name="tourType"
@@ -254,15 +257,15 @@ export default function FilterSidebar({
               onChange={() => handleParamChange('tourType', 'SHARED_GROUP')}
               className="w-4 h-4 accent-[var(--brand)] cursor-pointer"
             />
-            <span className={`text-[13px] ${searchParams.get('tourType') === 'SHARED_GROUP' ? 'font-bold text-[var(--ink)]' : 'text-[var(--ink-body)] group-hover:text-[var(--ink)]'}`}>Shared group tour</span>
+            <span className={`text-sm sm:text-[14.5px] ${searchParams.get('tourType') === 'SHARED_GROUP' ? 'font-bold text-[var(--ink)]' : 'font-medium text-[var(--ink)] group-hover:text-[var(--brand-deep)]'}`}>Shared group tour</span>
           </label>
         </div>
       </div>
 
       <div className="border-t border-[var(--border-soft)]"></div>
 
-      <div className="p-4">
-        <label className="form-label mb-1.5">Sort Results</label>
+      <div className="p-4 sm:p-5">
+        <label className={labelClass}>Sort Results</label>
         <select
           value={currentSort || 'recommended'}
           onChange={(e) => handleParamChange('sort', e.target.value === 'recommended' ? '' : e.target.value)}

@@ -3,9 +3,10 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
 import HeroSearchForm from '@/components/HeroSearchForm';
+import FeaturedCountriesSection, { CountryHighlight } from '@/components/FeaturedCountriesSection';
 import prisma from '@/lib/prisma';
 import { getTourCards, getOperatorCards, getCountries, getExperts, getLatestBlogPosts } from '@/lib/catalog';
-import { CheckCircle2, ChevronRight, Star, Calendar, Award } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Award } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,144 +43,117 @@ export default async function HomePage() {
     reviews: `${op.totalReviews.toLocaleString()} Reviews`,
     image: op.image,
   }));
-  const countryHighlights = countries
+
+  const countryHighlights: CountryHighlight[] = countries
     .filter((c) => c.popularityRank)
     .slice(0, 8)
-    .map((c, i) => ({ ...c, rank: `#${c.popularityRank}`, active: i === 0 }));
-  const featured = countryHighlights[0];
+    .map((c) => ({
+      name: c.name,
+      slug: c.slug,
+      rank: `#${c.popularityRank}`,
+      featuredImageUrl: c.featuredImageUrl,
+      rating: c.rating,
+      reviewCount: c.reviewCount,
+      description: c.description,
+      dailyRates: c.dailyRates,
+      bestTimeSummary: c.bestTimeSummary,
+    }));
 
   return (
-    <div className="min-h-screen font-sans text-[var(--ink-body)]">
+    <div className="min-h-screen font-sans text-[var(--ink-body)] overflow-x-hidden">
       <Navbar />
 
       <main>
         {/* ── Hero ── */}
         <section
-          className="relative h-[580px] w-full overflow-hidden bg-cover bg-center"
+          className="relative min-h-[720px] sm:min-h-[700px] md:h-[580px] w-full overflow-hidden bg-cover bg-center flex flex-col justify-between pt-10 pb-8 px-3 sm:px-4 md:py-0 md:px-0 md:block"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2200&q=80')" }}
         >
-          {/* Light, airy scrim — enough contrast for white text, no muddy slab */}
+          {/* Subtle gradient scrims for optimal readability */}
           <div className="absolute inset-0 bg-black/25" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/65" />
           <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand)]/25 via-transparent to-transparent" />
 
-          <div className="relative z-10 mx-auto flex h-full max-w-[1230px] items-center justify-center px-4 pb-28 md:pb-32">
-            <div className="animate-fade-up text-center text-white">
-              <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+          {/* Hero text container */}
+          <div className="relative z-10 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center md:h-full md:pb-32 px-2 sm:px-4">
+            <div className="animate-fade-up max-w-3xl text-center text-white">
+              <span className="mb-3 sm:mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
                 Zero commission · Direct local quotes
               </span>
-              <h1 className="text-[38px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)] sm:text-[48px] md:text-[62px]">
-                Compare {stats.tours.toLocaleString()} African<br />Safari Tours
+              <h1 className="text-[30px] sm:text-[42px] md:text-[58px] font-semibold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]">
+                Compare {stats.tours.toLocaleString()} African<br className="hidden sm:inline" /> Safari Tours
               </h1>
-              <p className="mx-auto mt-4 max-w-xl text-[16px] font-medium text-white/95 md:text-[19px] drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
+              <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-[15px] sm:text-[17px] md:text-[19px] font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.55)]">
                 Booked directly from verified local operators
               </p>
             </div>
           </div>
 
+          {/* Search Form — stacked naturally on mobile, anchored at bottom on desktop */}
           <HeroSearchForm />
         </section>
 
         {/* ── Trust strip ── */}
-        <div className="relative z-10 mx-auto mt-5 max-w-[1230px] px-4">
-          <div className="glass grid grid-cols-2 gap-y-3 rounded-2xl px-6 py-4 text-[13px] font-semibold text-[var(--ink-body)] md:grid-cols-4">
-            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.operators}</strong> Verified Operators</span>
-            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">Best Price</strong> Guarantee</span>
-            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.reviews}</strong> Traveler Reviews</span>
-            <span className="flex items-center justify-center gap-2 md:justify-start"><CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" /> <strong className="text-[var(--ink)]">{stats.destinations}</strong> Parks &amp; Reserves</span>
+        <div className="relative z-10 mx-auto mt-4 sm:mt-5 max-w-[1230px] px-3 sm:px-4">
+          <div className="glass grid grid-cols-2 gap-x-2 gap-y-3 sm:gap-x-4 rounded-2xl px-3 sm:px-6 py-3.5 sm:py-4 text-[12px] sm:text-[13px] font-semibold text-[var(--ink-body)] md:grid-cols-4">
+            <span className="flex items-center gap-2 justify-start sm:justify-center md:justify-start">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" />
+              <span className="leading-tight"><strong className="text-[var(--ink)]">{stats.operators}</strong> Verified Operators</span>
+            </span>
+            <span className="flex items-center gap-2 justify-start sm:justify-center md:justify-start">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" />
+              <span className="leading-tight"><strong className="text-[var(--ink)]">Best Price</strong> Guarantee</span>
+            </span>
+            <span className="flex items-center gap-2 justify-start sm:justify-center md:justify-start">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" />
+              <span className="leading-tight"><strong className="text-[var(--ink)]">{stats.reviews}</strong> Traveler Reviews</span>
+            </span>
+            <span className="flex items-center gap-2 justify-start sm:justify-center md:justify-start">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--success)]" />
+              <span className="leading-tight"><strong className="text-[var(--ink)]">{stats.destinations}</strong> Parks &amp; Reserves</span>
+            </span>
           </div>
         </div>
 
-        {/* ── Countries ── */}
-        <section className="pt-24 pb-16">
+        {/* ── Top-rated Safari Countries ── */}
+        <section className="pt-16 sm:pt-24 pb-14 sm:pb-16">
           <div className="mx-auto max-w-[1230px] px-4">
             <div className="section-rule" />
-            <h2 className="mb-6 text-[28px] font-semibold text-[var(--ink)]">
-              Top-rated Safari Countries
-            </h2>
-
-            <div className="surface-card overflow-hidden">
-              <div className="flex flex-col lg:flex-row">
-                <div className="w-full border-b border-[var(--border-soft)] bg-white/40 lg:w-[280px] lg:border-b-0 lg:border-r">
-                  {countryHighlights.map((country) => (
-                    <Link
-                      key={country.name}
-                      href={`/parks/${country.slug}`}
-                      className={`flex items-center px-5 py-3.5 text-[14px] transition-colors ${country.active ? 'bg-white/70 font-bold text-[var(--ink)]' : 'text-[var(--ink-secondary)] hover:bg-white/50 hover:text-[var(--ink)]'}`}
-                    >
-                      <span className={`mr-3 inline-block w-8 text-[12px] ${country.active ? 'text-[var(--brand-ink)]' : 'text-[var(--ink-muted)]'}`}>{country.rank}</span>
-                      <span>{country.name}</span>
-                      <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-40" />
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Featured country panel */}
-                {featured && (
-                <div className="relative flex-1 bg-[var(--dark)]">
-                  <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${featured.featuredImageUrl ?? ''}')` }} />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
-
-                  <div className="relative z-10 flex min-h-[380px] flex-col justify-center px-8 py-8 text-white md:px-10 md:py-10">
-                    <div className="mb-2 flex flex-wrap items-center gap-3">
-                      <h3 className="text-[30px] font-semibold text-white">{featured.name}</h3>
-                      <div className="flex items-center gap-0.5 text-[var(--dark-gold)]" aria-label={`Rated ${featured.rating ?? 0} out of 5`}>
-                        {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-current" />)}
-                      </div>
-                      <span className="text-[12px] font-semibold text-white">{(featured.rating ?? 0).toFixed(1)}/5 · {featured.reviewCount.toLocaleString()} Reviews</span>
-                    </div>
-
-                    <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.1em] text-[var(--dark-gold)]">{featured.rank} of {countryHighlights.length} Major Safari Countries</p>
-
-                    <p className="max-w-[560px] text-[14px] leading-relaxed text-white/95">
-                      {featured.description}
-                    </p>
-
-                    <div className="mt-5 flex flex-wrap gap-6 text-[13px]">
-                      <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 font-bold text-white backdrop-blur-sm">$</div>
-                        <div>
-                          <div className="font-bold text-white">Rates (USD)</div>
-                          <div className="text-white/90">{featured.dailyRates?.replace('per day', 'pp/day')}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-white/15 text-white backdrop-blur-sm"><Calendar className="h-4 w-4" /></div>
-                        <div>
-                          <div className="font-bold text-white">Best Time to Go</div>
-                          <div className="text-white/90">{featured.bestTimeSummary?.split('(')[0].trim()}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap gap-3">
-                      <Link href={`/tours?country=${encodeURIComponent(featured.name)}`} className="btn btn-primary btn-sm">
-                        {featured.name} Safaris <ChevronRight className="h-4 w-4" />
-                      </Link>
-                      <Link href={`/operators?country=${encodeURIComponent(featured.name)}`} className="btn btn-ghost-dark btn-sm">
-                        {featured.name} Operators <ChevronRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                )}
+            <div className="mb-6 flex items-end justify-between">
+              <div>
+                <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
+                  Top-rated Safari Countries
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
+                  Explore Africa&apos;s leading safari destinations and verified packages
+                </p>
               </div>
+              <Link href="/parks" className="link hidden sm:inline-flex items-center gap-1 text-sm font-semibold">
+                All {countries.length} countries <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
+
+            <FeaturedCountriesSection countries={countryHighlights} />
           </div>
         </section>
 
         {/* ── Popular tours ── */}
-        <section className="pb-14">
+        <section className="pb-14 sm:pb-16">
           <div className="mx-auto max-w-[1230px] px-4">
             <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
-                Popular Safari Tours
-              </h2>
-              <Link href="/tours" className="link inline-flex items-center gap-1 text-sm">
+              <div>
+                <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
+                  Popular Safari Tours
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
+                  Handpicked authentic itineraries by local safari operators
+                </p>
+              </div>
+              <Link href="/tours" className="link inline-flex items-center gap-1 text-sm font-semibold">
                 View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {tours.map((tour) => (
                 <TourCard key={tour.id} tour={tour} />
               ))}
@@ -188,38 +162,47 @@ export default async function HomePage() {
         </section>
 
         {/* ── Operators ── */}
-        <section className="pb-14">
+        <section className="pb-14 sm:pb-16">
           <div className="mx-auto max-w-[1230px] px-4">
             <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
-                Top Rated Tour Operators
-              </h2>
-              <Link href="/operators" className="link inline-flex items-center gap-1 text-sm">
+              <div>
+                <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
+                  Top Rated Tour Operators
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
+                  Licensed local agencies with verified track records
+                </p>
+              </div>
+              <Link href="/operators" className="link inline-flex items-center gap-1 text-sm font-semibold">
                 Browse all <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
               {operators.map((op) => (
                 <Link
                   key={op.slug}
                   href={`/operators/${op.slug}`}
-                  className="surface-card surface-card-hover block overflow-hidden"
+                  className="surface-card surface-card-hover block overflow-hidden rounded-2xl shadow-xs transition-all duration-300 hover:shadow-md"
                 >
-                  <div className="relative h-32 bg-[var(--dark)]">
+                  <div className="relative h-28 sm:h-32 bg-[var(--dark)]">
                     <div className="absolute inset-0 bg-cover bg-center opacity-80" style={{ backgroundImage: `url('${op.image}')` }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h3 className="text-[17px] font-semibold text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.5)]">{op.name}</h3>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-3">
+                      <h3 className="text-[14px] sm:text-[17px] font-semibold text-white drop-shadow-[0_1px_5px_rgba(0,0,0,0.6)] truncate">
+                        {op.name}
+                      </h3>
                     </div>
-                    <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-white/80 text-[var(--brand-ink)] backdrop-blur-md">
+                    <div className="absolute right-2.5 top-2.5 sm:right-3 sm:top-3 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full border border-white/60 bg-white/85 text-[var(--brand-ink)] backdrop-blur-md shadow-2xs">
                       <Award className="h-3.5 w-3.5" />
                     </div>
                   </div>
-                  <div className="flex flex-col items-center p-4">
-                    <div className="mb-1 flex text-[13px] text-[var(--gold)]" aria-hidden="true">
+                  <div className="flex flex-col items-center p-3 sm:p-4 text-center">
+                    <div className="mb-1 flex text-[12px] sm:text-[13px] text-[var(--gold)]" aria-hidden="true">
                       {'★★★★★'.split('').map((star, i) => <span key={i}>{star}</span>)}
                     </div>
-                    <div className="text-xs font-semibold text-[var(--ink-secondary)]">{op.reviews}</div>
+                    <div className="text-[11px] sm:text-xs font-semibold text-[var(--ink-secondary)] truncate w-full">
+                      {op.reviews}
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -228,23 +211,37 @@ export default async function HomePage() {
         </section>
 
         {/* ── Blog ── */}
-        <section className="pb-14">
+        <section className="pb-14 sm:pb-16">
           <div className="mx-auto max-w-[1230px] px-4">
             <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
-                Latest from the Blog
-              </h2>
-              <Link href="/blog" className="link inline-flex items-center gap-1 text-sm">
+              <div>
+                <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
+                  Latest from the Blog
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
+                  Insider safari guides, wildlife advice &amp; trip inspiration
+                </p>
+              </div>
+              <Link href="/blogs" className="link inline-flex items-center gap-1 text-sm font-semibold">
                 All articles <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {blogPosts.map((post) => (
-                <Link href={`/blogs/${post.slug}`} key={post.slug} className="surface-card surface-card-hover group relative block h-[200px] overflow-hidden">
-                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('${post.coverImageUrl ?? ''}')` }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="text-[19px] font-semibold leading-tight text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.6)]">{post.title}</h3>
+                <Link
+                  href={`/blogs/${post.slug}`}
+                  key={post.slug}
+                  className="surface-card surface-card-hover group relative block h-[190px] sm:h-[210px] overflow-hidden rounded-2xl shadow-xs"
+                >
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                    style={{ backgroundImage: `url('${post.coverImageUrl ?? ''}')` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                    <h3 className="text-[16px] sm:text-[18px] font-semibold leading-snug text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)] line-clamp-2">
+                      {post.title}
+                    </h3>
                   </div>
                 </Link>
               ))}
@@ -255,24 +252,23 @@ export default async function HomePage() {
         {/* ── Experts ── */}
         <section className="pb-20">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="mb-6 flex items-end justify-between">
-              <h2 className="text-[28px] font-semibold text-[var(--ink)]">
+            <div className="mb-6">
+              <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
                 SafariRequest Experts
               </h2>
+              <p className="mt-1 max-w-2xl text-xs sm:text-sm text-[var(--ink-secondary)]">
+                Independent travel writers and industry experts review destinations and operators across the continent, so you can book with confidence.
+              </p>
             </div>
 
-            <p className="mb-6 max-w-2xl text-[14px] text-[var(--ink-body)]">
-              Independent travel writers and industry experts review destinations and operators across the continent, so you can book with confidence.
-            </p>
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
               {safariExperts.map((expert) => (
-                <div key={expert.id} className="surface-card surface-card-hover flex gap-4 p-5">
-                  <div className="h-[64px] w-[64px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/70">
+                <div key={expert.id} className="surface-card surface-card-hover flex gap-3.5 sm:gap-4 p-4 sm:p-5 rounded-2xl shadow-xs">
+                  <div className="h-[56px] w-[56px] sm:h-[64px] sm:w-[64px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/70 shadow-2xs">
                     <img src={expert.imageUrl ?? ''} alt={expert.name} className="h-full w-full object-cover" />
                   </div>
-                  <div className="min-w-0">
-                    <Link href={`/experts/${expert.slug}`} className="link text-[15px] font-bold">
+                  <div className="min-w-0 flex-1">
+                    <Link href={`/experts/${expert.slug}`} className="link text-[15px] font-bold line-clamp-1">
                       {expert.name}
                     </Link>
                     <div className="text-xs text-[var(--ink-secondary)]">{expert.country}</div>

@@ -42,34 +42,44 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-6 border-t border-[var(--glass-border)] bg-white/60 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4 pt-16 pb-10 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 border-b border-[var(--border-soft)] pb-12 md:grid-cols-12">
-          <div className="space-y-5 md:col-span-4">
-            <img
-              src="/images/safaribuilt-logo.png"
-              alt="SafariRequest — One Marketplace for African Safari Tours"
-              className="h-[44px] w-auto"
-              style={{ mixBlendMode: 'multiply' }}
-            />
+    <footer className="mt-12 border-t border-[var(--glass-border)] bg-white/70 backdrop-blur-xl">
+      <div className="mx-auto max-w-[1230px] px-4 pt-14 pb-10 sm:px-6 lg:px-8">
+        {/* Responsive 5-column grid fixing the previous 14-col overflow */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-[var(--border-soft)] pb-12">
+          {/* Column 1: Brand overview */}
+          <div className="space-y-4 sm:col-span-2 lg:col-span-1">
+            <Link href="/" className="inline-block">
+              <img
+                src="/images/safaribuilt-logo.png"
+                alt="SafariRequest — One Marketplace for African Safari Tours"
+                className="h-[40px] w-auto"
+                style={{ mixBlendMode: 'multiply' }}
+              />
+            </Link>
 
             <p className="text-sm leading-relaxed text-[var(--ink-secondary)]">
-              Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators across Tanzania, Kenya, South Africa, Uganda, and beyond. Zero commission. Pure experience.
+              Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators. Zero commission. Pure experience.
             </p>
 
-            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/25 bg-[var(--brand-soft)] px-3 py-2 text-xs font-semibold text-[var(--brand-ink)]">
-              <ShieldCheck className="h-4 w-4" />
-              100% Verified Local Operator Network
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand)]/25 bg-[var(--brand-soft)] px-3 py-1.5 text-xs font-semibold text-[var(--brand-ink)]">
+              <ShieldCheck className="h-4 w-4 shrink-0" />
+              <span>100% Verified Local Operators</span>
             </div>
           </div>
 
+          {/* Columns 2-4: Categorized Links */}
           {columns.map((col) => (
-            <div key={col.heading} className="md:col-span-2">
-              <h4 className="mb-5 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">{col.heading}</h4>
-              <ul className="space-y-2.5">
+            <div key={col.heading} className="space-y-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">
+                {col.heading}
+              </h4>
+              <ul className="space-y-2">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-[var(--ink-secondary)] transition-colors hover:text-[var(--brand-ink)]">
+                    <Link
+                      href={link.href}
+                      className="inline-block py-1 text-sm text-[var(--ink-secondary)] transition-colors hover:text-[var(--brand-ink)]"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -78,32 +88,44 @@ export default function Footer() {
             </div>
           ))}
 
-          <div className="md:col-span-4">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--ink)]">For Tour Operators</h4>
-            <p className="mb-5 text-sm leading-relaxed text-[var(--ink-secondary)]">
-              Are you a licensed African safari company? Join our verified operator network and receive direct traveler quote requests — free of charge.
+          {/* Column 5: For Tour Operators CTA */}
+          <div className="space-y-3 sm:col-span-2 lg:col-span-1">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">
+              For Tour Operators
+            </h4>
+            <p className="text-sm leading-relaxed text-[var(--ink-secondary)]">
+              Are you a licensed African safari company? Join our verified network and receive direct traveler quote requests — free of charge.
             </p>
-            <Link
-              href="/register?role=OPERATOR"
-              className="btn btn-primary"
-            >
-              <Award className="h-4 w-4" />
-              Register Your Agency
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </Link>
-            <p className="mt-4 flex items-center gap-1.5 text-xs text-[var(--ink-muted)]">
-              <Lock className="h-3.5 w-3.5" />
-              Anti-scam verification · Direct booking · No hidden fees
+            <div className="pt-1">
+              <Link
+                href="/register?role=OPERATOR"
+                className="btn btn-primary w-full justify-center text-sm"
+              >
+                <Award className="h-4 w-4" />
+                Register Your Agency
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+            <p className="flex items-center gap-1.5 text-xs text-[var(--ink-muted)] pt-1">
+              <Lock className="h-3.5 w-3.5 shrink-0" />
+              <span>Anti-scam verification · No hidden fees</span>
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-[var(--ink-muted)] sm:flex-row">
+        {/* Bottom bar */}
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-[var(--ink-muted)] sm:flex-row text-center sm:text-left">
           <p>© {year} SafariRequest. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <Link href="/privacy-policy" className="transition-colors hover:text-[var(--ink)]">Privacy Policy</Link>
-            <Link href="/faq" className="transition-colors hover:text-[var(--ink)]">FAQ</Link>
-            <Link href="/how-it-works" className="transition-colors hover:text-[var(--ink)]">How It Works</Link>
+          <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6">
+            <Link href="/privacy-policy" className="py-1 transition-colors hover:text-[var(--ink)]">
+              Privacy Policy
+            </Link>
+            <Link href="/faq" className="py-1 transition-colors hover:text-[var(--ink)]">
+              FAQ
+            </Link>
+            <Link href="/how-it-works" className="py-1 transition-colors hover:text-[var(--ink)]">
+              How It Works
+            </Link>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Heart, User, ChevronDown, Menu, X, Calendar, Bell } from 'lucide-react';
+import { Heart, User, ChevronDown, Menu, X, Calendar, Bell, Compass } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import ChatLauncher from '@/components/ChatLauncher';
 
@@ -12,6 +12,7 @@ export default function Navbar() {
   const router = useRouter();
   const [sessionUser, setSessionUser] = useState<any>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +36,20 @@ export default function Navbar() {
   // Close the mobile menu whenever the route changes
   useEffect(() => {
     setMobileOpen(false);
+    setMobileExpandedMenu(null);
   }, [pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -178,8 +192,8 @@ export default function Navbar() {
 
   return (
     <header className="glass-nav sticky top-0 z-50 font-sans text-[var(--ink)]">
-      <div className="mx-auto max-w-[1230px] px-4">
-        <div className="flex h-[64px] items-center justify-between gap-4">
+      <div className="mx-auto max-w-[1230px] px-3 sm:px-4">
+        <div className="flex h-[64px] items-center justify-between gap-3 sm:gap-4">
           <Link href="/" className="flex items-center flex-shrink-0">
             <img
               src="/images/safaribuilt-logo.png"
@@ -340,77 +354,198 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Chat button + single hamburger for small and medium screens */}
-          {sessionUser && isDesktop === false && <ChatLauncher className="ml-auto lg:hidden" />}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex items-center justify-center rounded-full p-1.5 text-[var(--ink)] transition-colors hover:bg-[var(--brand-soft)] lg:hidden"
-            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Chat launcher + accessible 44px hamburger button for mobile/tablet */}
+          <div className="flex items-center gap-1 lg:hidden">
+            {sessionUser && isDesktop === false && <ChatLauncher className="mr-1" />}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--ink)] transition-colors hover:bg-[var(--brand-soft)] active:scale-95"
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Mobile / tablet drawer */}
-        {mobileOpen && (
-          <div className="absolute left-0 right-0 top-[64px] z-40 max-h-[calc(100vh-64px)] overflow-y-auto border-t border-[var(--glass-border)] bg-white shadow-xl lg:hidden">
-            <nav className="flex flex-col gap-1.5 p-3 text-[15px]">
-              {navMenus.map(({ href, label, items }) => (
-                <div key={href} className="rounded-2xl border border-[var(--glass-border)] bg-white/60">
-                  <Link href={href} onClick={() => setMobileOpen(false)} className="flex w-full items-center justify-between px-3 py-2.5 font-semibold text-[var(--ink)]">
-                    <span>{label}</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Link>
-                  <div className="space-y-0.5 border-t border-[var(--border-soft)] px-2 pb-2 pt-2">
-                    {items.map((item) => (
-                      <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-2 py-1.5 text-sm text-[var(--ink-secondary)] hover:bg-[var(--brand-soft)] hover:text-[var(--ink)]">
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <Link href="/favorites" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
-                <Heart className="h-4 w-4" /> Favorites List
-              </Link>
+      {/* Mobile Drawer Backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 top-[64px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Drawer Panel */}
+      {mobileOpen && (
+        <div
+          role="dialog"
+          aria-label="Mobile Navigation Menu"
+          className="fixed left-0 right-0 top-[64px] z-50 max-h-[calc(100vh-64px)] overflow-y-auto overscroll-contain border-t border-[var(--glass-border)] bg-[#FCFBF7] shadow-2xl transition-all duration-300 lg:hidden"
+        >
+          <div className="flex flex-col gap-3 p-4 text-[15px]">
+            {/* Quick search input */}
+            <div className="rounded-2xl border border-[var(--glass-border)] bg-white/80 p-1 shadow-xs">
               <NavbarSearch mobile onNavigate={() => setMobileOpen(false)} />
+            </div>
+
+            {/* Accordion Navigation Menus */}
+            <nav className="flex flex-col gap-2">
+              {navMenus.map(({ href, label, items }) => {
+                const isExpanded = mobileExpandedMenu === label;
+                const active = isActive(href);
+
+                return (
+                  <div
+                    key={href}
+                    className={`overflow-hidden rounded-2xl border transition-all ${
+                      isExpanded
+                        ? 'border-[var(--brand)]/30 bg-white shadow-sm ring-1 ring-[var(--brand)]/20'
+                        : 'border-[var(--border-soft)] bg-white/70 hover:bg-white/90'
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setMobileExpandedMenu(isExpanded ? null : label)}
+                      className="flex min-h-[48px] w-full items-center justify-between px-4 py-3 text-left font-bold text-[var(--ink)] transition-colors"
+                      aria-expanded={isExpanded}
+                    >
+                      <span className={`text-[14px] uppercase tracking-[0.05em] ${active ? 'text-[var(--brand-ink)] font-extrabold' : ''}`}>
+                        {label}
+                      </span>
+                      <ChevronDown
+                        className={`h-4 w-4 text-[var(--ink-secondary)] transition-transform duration-200 ${
+                          isExpanded ? 'rotate-180 text-[var(--brand-ink)]' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {isExpanded && (
+                      <div className="border-t border-[var(--border-soft)] bg-[var(--canvas-2)]/40 px-2 py-2">
+                        <Link
+                          href={href}
+                          onClick={() => setMobileOpen(false)}
+                          className="flex min-h-[42px] items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[var(--brand-ink)] transition-colors hover:bg-[var(--brand-soft)]"
+                        >
+                          <span>Explore All {label}</span>
+                          <span className="text-xs">→</span>
+                        </Link>
+                        <div className="grid grid-cols-1 gap-1 pt-1">
+                          {items.map((item) => (
+                            <Link
+                              key={item.href}
+                              href={item.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="flex min-h-[42px] items-center rounded-xl px-3 py-2 text-[13px] font-medium text-[var(--ink-secondary)] transition-colors hover:bg-[var(--brand-soft)] hover:text-[var(--ink)]"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
+
+            {/* Quick action bar */}
+            <div className="mt-2 space-y-2 border-t border-[var(--border-soft)] pt-3">
+              <Link
+                href="/favorites"
+                onClick={() => setMobileOpen(false)}
+                className="flex min-h-[46px] items-center justify-between rounded-2xl border border-[var(--border-soft)] bg-white/80 px-4 py-2.5 font-semibold text-[var(--ink)] shadow-xs transition-colors hover:bg-[var(--brand-soft)] active:scale-[0.99]"
+              >
+                <span className="flex items-center gap-2.5 text-[14px]">
+                  <Heart className="h-4 w-4 text-[var(--brand)]" />
+                  Saved Tours
+                </span>
+                {favoriteCount > 0 && (
+                  <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--brand)] px-1.5 text-[11px] font-bold text-white">
+                    {favoriteCount}
+                  </span>
+                )}
+              </Link>
+
               {sessionUser ? (
-                <>
+                <div className="space-y-1.5">
+                  <div className="rounded-2xl border border-[var(--glass-border)] bg-white/70 p-3">
+                    <div className="flex items-center gap-2.5 text-xs text-[var(--ink-muted)]">
+                      <User className="h-4 w-4 text-[var(--brand)]" />
+                      <span className="truncate font-semibold">{sessionUser.name || sessionUser.email}</span>
+                    </div>
+                  </div>
+
                   {sessionUser.role === 'OPERATOR' && (
-                    <Link href="/operator-portal" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
-                      <User className="h-4 w-4" /> Agency Dashboard
+                    <Link
+                      href="/operator-portal"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white/80 px-4 py-2.5 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]"
+                    >
+                      <User className="h-4 w-4 text-[var(--brand)]" /> Agency Dashboard
                     </Link>
                   )}
                   {sessionUser.role === 'ADMIN' && (
-                    <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
-                      <User className="h-4 w-4" /> Admin Panel
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white/80 px-4 py-2.5 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]"
+                    >
+                      <User className="h-4 w-4 text-[var(--brand)]" /> Admin Panel
                     </Link>
                   )}
                   {sessionUser.role === 'TRAVELER' && (
-                    <Link href="/my-trips" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
-                      <Calendar className="h-4 w-4" /> My Bookings
-                    </Link>
+                    <>
+                      <Link
+                        href="/my-trips"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white/80 px-4 py-2.5 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]"
+                      >
+                        <Calendar className="h-4 w-4 text-[var(--brand)]" /> My Bookings
+                      </Link>
+                      <Link
+                        href="/quote/request"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white/80 px-4 py-2.5 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]"
+                      >
+                        <Compass className="h-4 w-4 text-[var(--brand)]" /> Request a Custom Quote
+                      </Link>
+                    </>
                   )}
-                  {sessionUser.role === 'TRAVELER' && (
-                    <Link href="/favorites" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 rounded-xl px-2 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--brand-soft)]">
-                      <User className="h-4 w-4" /> Saved Tours
-                    </Link>
-                  )}
-                  <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl px-2 py-2 text-left font-semibold text-[var(--danger)] hover:bg-[var(--danger-soft)]">
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex min-h-[46px] w-full items-center gap-2.5 rounded-xl px-4 py-2.5 text-left font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)] active:scale-[0.99]"
+                  >
                     <X className="h-4 w-4" /> Sign Out
                   </button>
-                </>
+                </div>
               ) : (
-                <div className="flex gap-2 px-2 py-2">
-                  <Link href="/login" onClick={() => setMobileOpen(false)} className="btn btn-secondary flex-1">Sign In</Link>
-                  <Link href="/register" onClick={() => setMobileOpen(false)} className="btn btn-primary flex-1">Register</Link>
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="btn btn-secondary min-h-[48px] w-full justify-center text-[14px]"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMobileOpen(false)}
+                    className="btn btn-primary min-h-[48px] w-full justify-center text-[14px]"
+                  >
+                    Register
+                  </Link>
                 </div>
               )}
-            </nav>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   );
 }

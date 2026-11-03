@@ -34,8 +34,12 @@ jobs:
             docker compose build --no-cache
             docker compose up -d
 
+            echo "sleeping for a minute"
+            sleep 60
+
             echo "Deployment completed!"
             docker compose ps
 
+            
             echo "Old Images and containers removed"
             docker system prune -f

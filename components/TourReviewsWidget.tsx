@@ -40,53 +40,53 @@ export default function TourReviewsWidget({ operatorId, operatorName }: TourRevi
   const current = list ? list[page * PAGE_SIZE] : null;
 
   return (
-    <div className="surface-card rounded-2xl p-5 border border-[var(--glass-border)] shadow-sm font-sans">
-      <h3 className="text-base font-bold font-display text-[var(--ink)] mb-3.5">Traveler Reviews</h3>
+    <div className="surface-card rounded-2xl p-5 sm:p-6 border border-[var(--glass-border)] shadow-sm font-sans">
+      <h3 className="text-lg font-bold font-display text-[var(--ink)] mb-3.5">Traveler Reviews</h3>
 
       {loading ? (
         <div className="h-24 animate-pulse rounded-xl bg-[var(--surface-sunk)]" />
       ) : current ? (
         <>
           <div className="flex gap-2.5 items-center mb-3">
-            <div className="w-8 h-8 rounded-full border border-[var(--border)] flex items-center justify-center bg-[var(--brand-soft)] text-[var(--brand-ink)]">
+            <div className="w-9 h-9 rounded-full border border-[var(--brand)]/20 flex items-center justify-center bg-[var(--brand-soft)] text-[var(--brand-deep)] font-extrabold text-sm">
               <Users className="w-4 h-4" />
             </div>
-            <div className="text-[12px] font-bold text-[var(--ink)]">
+            <div className="text-sm font-bold text-[var(--ink)]">
               {current.traveler?.firstName || 'Traveler'} {current.traveler?.lastName || ''}
               {current.traveler?.country ? <span className="font-normal text-[var(--ink-secondary)]"> · {current.traveler.country}</span> : null}
             </div>
           </div>
 
-          <div className="rounded-xl border border-[var(--border)] bg-white/80 p-3.5 text-[12px] mb-3.5 shadow-sm">
-            <h4 className="font-bold text-[var(--ink)] text-[13px] leading-snug mb-1">&quot;{current.reviewTitle}&quot;</h4>
-            <div className="flex items-center gap-1 mb-2" aria-label={`Rated ${current.overallRating} out of 5`}>
+          <div className="rounded-xl border border-[var(--border)] bg-white/90 p-4 text-sm mb-3.5 shadow-2xs">
+            <h4 className="font-bold text-[var(--ink)] text-sm sm:text-[15px] leading-snug mb-1.5">&quot;{current.reviewTitle}&quot;</h4>
+            <div className="flex items-center gap-1.5 mb-2.5" aria-label={`Rated ${current.overallRating} out of 5`}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
+                <Star key={i} className={`h-4 w-4 ${i < Math.round(current.overallRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#e2ddd4] text-[#e2ddd4]'}`} />
               ))}
-              <span className="text-[var(--ink)] font-bold ml-1">{current.overallRating}</span>
-              <span className="text-[var(--ink-muted)]">/5</span>
+              <span className="text-[var(--ink)] font-extrabold text-sm ml-1">{current.overallRating}</span>
+              <span className="text-[var(--ink-secondary)] font-semibold text-xs">/ 5</span>
             </div>
-            <p className="text-[var(--ink-body)] line-clamp-4 leading-relaxed mb-1.5">{current.reviewBody}</p>
-            <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline font-bold text-[11px]">Full Review &rarr;</Link>
+            <p className="text-[var(--ink)] line-clamp-4 leading-relaxed mb-2 font-normal text-sm">{current.reviewBody}</p>
+            <Link href="/reviews" className="text-[var(--brand-deep)] hover:underline font-bold text-xs inline-flex items-center gap-1">Full Review &rarr;</Link>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pt-1">
             <button
               type="button"
               aria-label="Previous review"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
-              className="p-1.5 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-2 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-[12px] text-[var(--ink-secondary)]">{page + 1} of {pageCount}</span>
+            <span className="text-xs font-semibold text-[var(--ink)]">{page + 1} of {pageCount}</span>
             <button
               type="button"
               aria-label="Next review"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={page >= pageCount - 1}
-              className="p-1.5 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-2 rounded-lg border border-[var(--border)] bg-white hover:bg-[var(--surface-sunk)] text-[var(--ink)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -94,7 +94,7 @@ export default function TourReviewsWidget({ operatorId, operatorName }: TourRevi
         </>
       ) : (
         <>
-          <p className="text-[11px] text-[var(--ink-muted)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-ink)] hover:underline">write one</Link>.</p>
+          <p className="text-sm text-[var(--ink-secondary)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-deep)] hover:underline font-bold">write one</Link>.</p>
         </>
       )}
     </div>
