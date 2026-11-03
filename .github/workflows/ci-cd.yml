@@ -1,4 +1,4 @@
-```yaml
+
 name: CI/CD Pipeline
 
 on:
@@ -53,4 +53,3 @@ jobs:
             docker compose ps
 
             docker system prune -f
-```
