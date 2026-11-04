@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ChevronRight,
@@ -15,6 +15,8 @@ import {
   LayoutGrid,
   Layers,
   CheckCircle2,
+  Play,
+  Pause,
 } from 'lucide-react';
 
 export interface CountryHighlight {
@@ -142,6 +144,12 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
   const [selectedCircuit, setSelectedCircuit] = useState<CircuitFilter>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('spotlight');
   const [selectedSlug, setSelectedSlug] = useState<string>(countries[0]?.slug ?? 'tanzania');
+  const [isPaused, setIsPaused] = useState(false);
+  const [userHovered, setUserHovered] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 5-second auto-advance interval as requested
+  const AUTO_PLAY_INTERVAL = 5000;
 
   // Filter countries according to active circuit
   const filteredCountries = useMemo(() => {
@@ -158,6 +166,42 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
     return found ?? filteredCountries[0] ?? countries[0];
   }, [filteredCountries, selectedSlug, countries]);
 
+  const currentIndex = filteredCountries.findIndex((c) => c.slug === activeCountry?.slug);
+
+  const nextDestination = useCallback(() => {
+    if (filteredCountries.length <= 1) return;
+    setSelectedSlug((prev) => {
+      const idx = filteredCountries.findIndex((c) => c.slug === prev);
+      const nextIdx = (idx + 1) % filteredCountries.length;
+      return filteredCountries[nextIdx].slug;
+    });
+  }, [filteredCountries]);
+
+  const prevDestination = useCallback(() => {
+    if (filteredCountries.length <= 1) return;
+    setSelectedSlug((prev) => {
+      const idx = filteredCountries.findIndex((c) => c.slug === prev);
+      const prevIdx = (idx - 1 + filteredCountries.length) % filteredCountries.length;
+      return filteredCountries[prevIdx].slug;
+    });
+  }, [filteredCountries]);
+
+  // Auto-play timer effect: advances every 5 seconds unless paused or hovered
+  useEffect(() => {
+    if (viewMode !== 'spotlight' || isPaused || userHovered || filteredCountries.length <= 1) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      nextDestination();
+    }, AUTO_PLAY_INTERVAL);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [viewMode, isPaused, userHovered, filteredCountries, nextDestination]);
+
   if (!countries || countries.length === 0) return null;
 
   const currentMeta = DESTINATION_META[activeCountry?.slug] ?? {
@@ -171,20 +215,6 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
     activeCountry?.parks && activeCountry.parks.length > 0
       ? activeCountry.parks.slice(0, 4)
       : currentMeta.topParksFallback;
-
-  const currentIndex = filteredCountries.findIndex((c) => c.slug === activeCountry?.slug);
-
-  const handlePrev = () => {
-    if (filteredCountries.length <= 1) return;
-    const prevIndex = (currentIndex - 1 + filteredCountries.length) % filteredCountries.length;
-    setSelectedSlug(filteredCountries[prevIndex].slug);
-  };
-
-  const handleNext = () => {
-    if (filteredCountries.length <= 1) return;
-    const nextIndex = (currentIndex + 1) % filteredCountries.length;
-    setSelectedSlug(filteredCountries[nextIndex].slug);
-  };
 
   return (
     <div className="space-y-6">
@@ -267,12 +297,30 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          MODE 1: INTERACTIVE SPOTLIGHT SHOWCASE (Default Experience)
+          MODE 1: INTERACTIVE SPOTLIGHT SHOWCASE (Auto-advances every 5s)
           ══════════════════════════════════════════════════════════════════════ */}
       {viewMode === 'spotlight' && (
-        <div className="space-y-4">
+        <div
+          className="space-y-4"
+          onMouseEnter={() => setUserHovered(true)}
+          onMouseLeave={() => setUserHovered(false)}
+          onTouchStart={() => setUserHovered(true)}
+          onTouchEnd={() => setUserHovered(false)}
+        >
           {/* Main Stage: Cinematic Country Hero Canvas */}
           <div className="relative rounded-3xl overflow-hidden shadow-lg border border-[var(--border)] bg-[#0B253A] text-white">
+            {/* Top 5-second animated progress bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20 overflow-hidden">
+              <div
+                key={activeCountry.slug}
+                className="h-full bg-gradient-to-r from-[var(--brand)] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(244,119,53,0.8)]"
+                style={{
+                  animationDuration: `${AUTO_PLAY_INTERVAL}ms`,
+                  animationPlayState: isPaused || userHovered ? 'paused' : 'running',
+                }}
+              />
+            </div>
+
             {/* Background Panorama with Atmospheric Gradients */}
             <div
               className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out transform scale-100"
@@ -301,22 +349,37 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   )}
                 </div>
 
-                {/* Desktop Prev/Next Controls */}
-                <div className="hidden sm:flex items-center gap-1.5 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/20">
+                {/* Autoplay Controls + Prev/Next Buttons */}
+                <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/20">
                   <button
                     type="button"
-                    onClick={handlePrev}
+                    onClick={prevDestination}
                     aria-label="Previous destination"
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
-                  <span className="text-[11px] font-bold text-white/70 px-1">
-                    {currentIndex + 1} / {filteredCountries.length}
-                  </span>
+
                   <button
                     type="button"
-                    onClick={handleNext}
+                    onClick={() => setIsPaused((prev) => !prev)}
+                    title={isPaused ? 'Resume 5s auto-play' : 'Pause 5s auto-play'}
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
+                  >
+                    {isPaused || userHovered ? (
+                      <Play className="w-3.5 h-3.5 fill-current text-[var(--brand)]" />
+                    ) : (
+                      <Pause className="w-3.5 h-3.5 fill-current" />
+                    )}
+                  </button>
+
+                  <span className="text-[11px] font-bold text-white/80 px-1 min-w-[36px] text-center">
+                    {currentIndex + 1} / {filteredCountries.length}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={nextDestination}
                     aria-label="Next destination"
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
                   >
@@ -441,7 +504,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 Select Destination to Inspect ({filteredCountries.length})
               </span>
               <span className="text-xs font-medium text-[var(--ink-muted)] hidden sm:inline">
-                Click any country to explore safari routes &amp; rates
+                Auto-advances every 5s · Hover or click any card to inspect
               </span>
             </div>
 
@@ -452,7 +515,9 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   <button
                     key={country.slug}
                     type="button"
-                    onClick={() => setSelectedSlug(country.slug)}
+                    onClick={() => {
+                      setSelectedSlug(country.slug);
+                    }}
                     className={`group relative overflow-hidden rounded-xl p-2 text-left transition-all duration-300 flex flex-col justify-between ${
                       isSelected
                         ? 'bg-[var(--brand-deep)] text-white shadow-md ring-2 ring-[var(--brand)] -translate-y-0.5'
