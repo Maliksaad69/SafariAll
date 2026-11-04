@@ -1,5 +1,6 @@
 import { PrismaClient, Role, ComfortLevel, TourType, DestinationType, SlotStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { CATALOG_DESTINATIONS, CATALOG_SECTIONS, CATALOG_EXPERTS } from './catalog-data';
 
 const prisma = new PrismaClient();
 
@@ -112,39 +113,7 @@ const AGENCIES = [
   },
 ];
 
-/* ── Destinations ───────────────────────────────────────────────────── */
-const DESTINATIONS = [
-  ['serengeti-national-park', 'Serengeti National Park', 'Tanzania', DestinationType.NATIONAL_PARK, -2.3333, 34.8333,
-    'World-famous for the annual Great Wildebeest Migration and endless savanna plains teeming with lion, leopard and cheetah.', ['Lion', 'Leopard', 'Elephant', 'Rhino', 'Buffalo', 'Cheetah', 'Wildebeest']],
-  ['ngorongoro-crater', 'Ngorongoro Crater', 'Tanzania', DestinationType.GAME_RESERVE, -3.2081, 35.5397,
-    'The largest intact volcanic caldera on earth, holding the highest density of large mammals in Africa including rare black rhino.', ['Black Rhino', 'Lion', 'Elephant', 'Hippo', 'Flamingo', 'Hyena']],
-  ['tarangire-national-park', 'Tarangire National Park', 'Tanzania', DestinationType.NATIONAL_PARK, -3.8333, 36.0,
-    'Baobab-studded park famous for its dry-season elephant herds and river-valley birdlife.', ['Elephant', 'Lion', 'Zebra', 'Giraffe', 'Baobab']],
-  ['lake-manyara-national-park', 'Lake Manyara National Park', 'Tanzania', DestinationType.NATIONAL_PARK, -3.5833, 35.8333,
-    'Groundwater forest and soda lake below the Rift escarpment, known for tree-climbing lions.', ['Tree-climbing Lion', 'Elephant', 'Flamingo', 'Baboon']],
-  ['zanzibar', 'Zanzibar Archipelago', 'Tanzania', DestinationType.ISLAND, -6.1659, 39.2026,
-    'Spice-island beaches, Stone Town heritage and reef diving — the classic safari-and-beach add-on.', ['Reef Fish', 'Dolphin', 'Sea Turtle']],
-  ['masai-mara-national-reserve', 'Masai Mara National Reserve', 'Kenya', DestinationType.NATIONAL_PARK, -1.4833, 35.1433,
-    'Iconic Kenyan reserve celebrated for the Mara River crossings of the Great Migration.', ['Lion', 'Leopard', 'Elephant', 'Rhino', 'Buffalo', 'Giraffe']],
-  ['amboseli-national-park', 'Amboseli National Park', 'Kenya', DestinationType.NATIONAL_PARK, -2.6527, 37.2606,
-    'Big-tusker elephant country beneath the snows of Mount Kilimanjaro.', ['Elephant', 'Lion', 'Cheetah', 'Hippo']],
-  ['lake-nakuru-national-park', 'Lake Nakuru National Park', 'Kenya', DestinationType.NATIONAL_PARK, -0.3667, 36.0833,
-    'Rift Valley soda lake ringed by flamingo flocks and a fenced rhino sanctuary.', ['White Rhino', 'Flamingo', 'Rothschild Giraffe', 'Leopard']],
-  ['okavango-delta', 'Okavango Delta', 'Botswana', DestinationType.NATIONAL_PARK, -19.2833, 22.9167,
-    'An inland delta of channels and islands where the Kalahari meets permanent water.', ['Elephant', 'Wild Dog', 'Lion', 'Lechwe', 'Hippo']],
-  ['chobe-national-park', 'Chobe National Park', 'Botswana', DestinationType.NATIONAL_PARK, -18.6667, 24.5,
-    'Home to Africa’s largest elephant concentrations along the Chobe riverfront.', ['Elephant', 'Buffalo', 'Lion', 'Sable Antelope']],
-  ['kalahari-desert', 'Kalahari Desert', 'Botswana', DestinationType.NATURE_RESERVE, -23.0, 22.0,
-    'Fossil riverbeds and red dunes supporting black-maned Kalahari lions and meerkats.', ['Black-maned Lion', 'Cheetah', 'Meerkat', 'Oryx']],
-  ['bwindi-impenetrable-national-park', 'Bwindi Impenetrable National Park', 'Uganda', DestinationType.NATIONAL_PARK, -1.05, 29.6167,
-    'Ancient montane rainforest sheltering roughly half the world’s mountain gorillas.', ['Mountain Gorilla', 'L’Hoest Monkey', 'African Green Broadbill']],
-  ['queen-elizabeth-national-park', 'Queen Elizabeth National Park', 'Uganda', DestinationType.NATIONAL_PARK, -0.2, 30.0,
-    'Crater lakes, the Kazinga Channel and the famous tree-climbing lions of Ishasha.', ['Tree-climbing Lion', 'Elephant', 'Hippo', 'Uganda Kob']],
-  ['kruger-national-park', 'Kruger National Park', 'South Africa', DestinationType.NATIONAL_PARK, -23.9884, 31.5547,
-    'South Africa’s flagship park and private reserves — the most accessible Big Five destination.', ['Lion', 'Leopard', 'Elephant', 'Rhino', 'Buffalo']],
-  ['victoria-falls', 'Victoria Falls', 'Zimbabwe', DestinationType.NATURAL_WONDER, -17.9243, 25.8572,
-    'The Smoke That Thunders — the world’s largest sheet of falling water on the Zambezi.', ['Zambezi', 'Adventure Capital']],
-] as const;
+/* == Destinations, Guide Sections & Experts are imported from catalog-data.ts (48 Destinations, 286 Sections, 3 Experts) == */
 
 /* ── Programmes ─────────────────────────────────────────────────────── */
 type Prog = {
@@ -444,22 +413,116 @@ async function main() {
     create: { email: 'admin@safariasili.com', passwordHash: adminPw, firstName: 'System', lastName: 'Admin', role: Role.ADMIN, emailVerified: true, country: 'Kenya' },
   });
 
-  /* Destinations */
+  /* Destinations, Sections & Experts from Safari Catalog */
   const destIds: Record<string, string> = {};
-  for (const [slug, name, country, type, lat, lng, description, wildlife] of DESTINATIONS) {
-    const d = await prisma.destination.upsert({
-      where: { slug },
-      update: {},
+  const oldIdToActualId: Record<string, string> = {};
+
+  for (const d of CATALOG_DESTINATIONS) {
+    const dest = await prisma.destination.upsert({
+      where: { slug: d.slug },
+      update: {
+        name: d.name,
+        country: d.country,
+        type: d.type as DestinationType,
+        description: d.description,
+        featuredImageUrl: d.featuredImageUrl,
+        latitude: d.latitude,
+        longitude: d.longitude,
+        bestTimeToVisit: d.bestTimeToVisit ?? undefined,
+        wildlifePresent: d.wildlifePresent ?? undefined,
+        bestTimeSummary: d.bestTimeSummary,
+        dailyRates: d.dailyRates,
+        highSeason: d.highSeason,
+        popularityRank: d.popularityRank,
+        rating: d.rating,
+        reviewCount: d.reviewCount,
+      },
       create: {
-        name, slug, country, type, description,
-        latitude: lat as number, longitude: lng as number,
-        bestTimeToVisit: { jan: 'GOOD', feb: 'GOOD', mar: 'GOOD', apr: 'FAIR', may: 'GOOD', jun: 'EXCELLENT', jul: 'EXCELLENT', aug: 'EXCELLENT', sep: 'EXCELLENT', oct: 'EXCELLENT', nov: 'GOOD', dec: 'GOOD' },
-        wildlifePresent: wildlife as unknown as string[],
+        id: d.id,
+        name: d.name,
+        slug: d.slug,
+        country: d.country,
+        type: d.type as DestinationType,
+        description: d.description,
+        featuredImageUrl: d.featuredImageUrl,
+        latitude: d.latitude,
+        longitude: d.longitude,
+        bestTimeToVisit: d.bestTimeToVisit ?? undefined,
+        wildlifePresent: d.wildlifePresent ?? undefined,
+        bestTimeSummary: d.bestTimeSummary,
+        dailyRates: d.dailyRates,
+        highSeason: d.highSeason,
+        popularityRank: d.popularityRank,
+        rating: d.rating,
+        reviewCount: d.reviewCount,
       },
     });
-    destIds[slug] = d.id;
+    destIds[dest.slug] = dest.id;
+    oldIdToActualId[d.id] = dest.id;
   }
-  console.log(`✅ ${DESTINATIONS.length} destinations`);
+
+  // Aliases for tour linking compatibility
+  if (destIds['central-kalahari-game-reserve']) {
+    destIds['kalahari-desert'] = destIds['central-kalahari-game-reserve'];
+  }
+
+  console.log(`✅ ${CATALOG_DESTINATIONS.length} destinations (countries + parks)`);
+
+  /* Destination Guide Sections */
+  for (const s of CATALOG_SECTIONS) {
+    const destId = oldIdToActualId[s.destinationId];
+    if (!destId) continue;
+    await prisma.destinationSection.upsert({
+      where: {
+        destinationId_key: {
+          destinationId: destId,
+          key: s.key,
+        },
+      },
+      update: {
+        title: s.title,
+        body: s.body,
+        bulletItems: s.bulletItems as unknown as string[],
+        sortOrder: s.sortOrder,
+      },
+      create: {
+        id: s.id,
+        destinationId: destId,
+        key: s.key,
+        title: s.title,
+        body: s.body,
+        bulletItems: s.bulletItems as unknown as string[],
+        sortOrder: s.sortOrder,
+      },
+    });
+  }
+  console.log(`✅ ${CATALOG_SECTIONS.length} destination travel guide sections`);
+
+  /* Experts */
+  for (const exp of CATALOG_EXPERTS) {
+    await prisma.expert.upsert({
+      where: { slug: exp.slug },
+      update: {
+        name: exp.name,
+        country: exp.country,
+        reviewCount: exp.reviewCount,
+        biography: exp.biography,
+        imageUrl: exp.imageUrl,
+        sortOrder: exp.sortOrder,
+      },
+      create: {
+        id: exp.id,
+        slug: exp.slug,
+        name: exp.name,
+        country: exp.country,
+        reviewCount: exp.reviewCount,
+        biography: exp.biography,
+        imageUrl: exp.imageUrl,
+        sortOrder: exp.sortOrder,
+      },
+    });
+  }
+  console.log(`✅ ${CATALOG_EXPERTS.length} safari experts`);
 
   /* Agencies */
   const opIds: Record<string, string> = {};
@@ -497,7 +560,7 @@ async function main() {
         comfortLevel: p.comfort, tourType: p.type, primaryCountry: p.country,
         startLocation: p.start, endLocation: p.end,
         inclusions: p.incl, exclusions: p.excl,
-        destinations: { create: p.dests.map((s) => ({ destinationId: destIds[s] })) },
+        destinations: { create: p.dests.map((s) => ({ destinationId: destIds[s] })).filter((x) => Boolean(x.destinationId)) },
         itineraries: {
           create: p.plan.map(([title, accommodationName], i) => ({
             dayNumber: i + 1, title,

@@ -103,6 +103,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
       exclusions,
       isPublished,
       itineraries,
+      destinationIds,
     } = body;
 
     const tourId = existingTour.id;
@@ -150,6 +151,34 @@ export async function PATCH(req: Request, { params }: RouteContext) {
               mealsIncluded: day.mealsIncluded || 'Breakfast, Lunch, Dinner',
             })),
           });
+        }
+      }
+
+      // 3. Update destinations if provided
+      if (Array.isArray(destinationIds)) {
+        await tx.tourDestination.deleteMany({ where: { tourId } });
+        if (destinationIds.length > 0) {
+          await tx.tourDestination.createMany({
+            data: destinationIds.map((destinationId: string) => ({
+              tourId,
+              destinationId: String(destinationId),
+            })),
+            skipDuplicates: true,
+          });
+        }
+        const targetCountry = primaryCountry || existingTour.primaryCountry;
+        if (targetCountry) {
+          const countryDest = await tx.destination.findFirst({
+            where: { name: { equals: targetCountry, mode: 'insensitive' }, type: 'COUNTRY' },
+            select: { id: true },
+          });
+          if (countryDest) {
+            await tx.tourDestination.upsert({
+              where: { tourId_destinationId: { tourId, destinationId: countryDest.id } },
+              update: {},
+              create: { tourId, destinationId: countryDest.id },
+            });
+          }
         }
       }
 

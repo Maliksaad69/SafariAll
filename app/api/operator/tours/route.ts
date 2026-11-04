@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, durationDays, durationNights, minPriceUsd, maxPriceUsd, comfortLevel, tourType, primaryCountry, startLocation, endLocation, inclusions, exclusions, itineraries, newVehicles, schedule } = body;
+    const { title, durationDays, durationNights, minPriceUsd, maxPriceUsd, comfortLevel, tourType, primaryCountry, startLocation, endLocation, inclusions, exclusions, itineraries, newVehicles, schedule, destinationIds } = body;
 
     if (!title || !durationDays || !minPriceUsd || !primaryCountry) {
       return NextResponse.json({ error: 'Title, duration, minimum price and country are required.' }, { status: 400 });
@@ -100,6 +100,28 @@ export async function POST(req: Request) {
       },
       include: { itineraries: true },
     });
+
+      if (Array.isArray(destinationIds) && destinationIds.length > 0) {
+        await tx.tourDestination.createMany({
+          data: destinationIds.map((destinationId: string) => ({
+            tourId: tour.id,
+            destinationId: String(destinationId),
+          })),
+          skipDuplicates: true,
+        });
+      }
+
+      const countryDest = await tx.destination.findFirst({
+        where: { name: { equals: primaryCountry, mode: 'insensitive' }, type: 'COUNTRY' },
+        select: { id: true },
+      });
+      if (countryDest) {
+        await tx.tourDestination.upsert({
+          where: { tourId_destinationId: { tourId: tour.id, destinationId: countryDest.id } },
+          update: {},
+          create: { tourId: tour.id, destinationId: countryDest.id },
+        });
+      }
 
 
       const created = vehiclesToAdd.length

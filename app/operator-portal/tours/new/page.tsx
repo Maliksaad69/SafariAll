@@ -35,6 +35,29 @@ export default function NewTourPage() {
   const [inclusionsText, setInclusionsText] = useState("All national park entrance fees\nProfessional safari driver/guide\n4x4 Land Cruiser transport\nMeals as specified\nAccommodations as listed");
   const [exclusionsText, setExclusionsText] = useState("International flights\nVisas & travel insurance\nPersonal tips & gratuities\nAlcoholic beverages");
 
+  // National parks selection
+  const [availableParks, setAvailableParks] = useState<{ id: string; name: string; slug: string }[]>([]);
+  const [selectedParkIds, setSelectedParkIds] = useState<string[]>([]);
+  const [loadingParks, setLoadingParks] = useState(false);
+
+  useEffect(() => {
+    setLoadingParks(true);
+    fetch(`/api/destinations?country=${encodeURIComponent(primaryCountry)}&type=parks`)
+      .then((r) => (r.ok ? r.json() : { destinations: [] }))
+      .then((data) => {
+        setAvailableParks(data.destinations || []);
+        setSelectedParkIds((prev) => prev.filter((id) => (data.destinations || []).some((p: any) => p.id === id)));
+      })
+      .catch(() => setAvailableParks([]))
+      .finally(() => setLoadingParks(false));
+  }, [primaryCountry]);
+
+  const togglePark = (parkId: string) => {
+    setSelectedParkIds((prev) =>
+      prev.includes(parkId) ? prev.filter((id) => id !== parkId) : [...prev, parkId]
+    );
+  };
+
   // Fleet & departures: every package is sold per seat on scheduled departures
   const isoIn = (days: number) => new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
   const [today] = useState(() => isoIn(0));
@@ -127,6 +150,7 @@ export default function NewTourPage() {
           inclusions: inclusionsText.split('\n').filter(Boolean),
           exclusions: exclusionsText.split('\n').filter(Boolean),
           itineraries,
+          destinationIds: selectedParkIds,
           newVehicles: newVehicles.filter((v) => v.name.trim()),
           schedule: scheduleOn
             ? {
@@ -236,7 +260,59 @@ export default function NewTourPage() {
                   <option value="Botswana">Botswana</option>
                   <option value="Zimbabwe">Zimbabwe</option>
                   <option value="Rwanda">Rwanda</option>
+                  <option value="Namibia">Namibia</option>
+                  <option value="Zambia">Zambia</option>
                 </select>
+              </div>
+              {/* National Parks & Game Reserves Multi-Select */}
+              <div className="md:col-span-2">
+                <label className="form-label flex items-center justify-between">
+                  <span>National Parks &amp; Reserves Visited</span>
+                  <span className="text-xs text-[var(--ink-secondary)] font-normal">
+                    Check the parks included in this safari itinerary
+                  </span>
+                </label>
+                {loadingParks ? (
+                  <div className="py-2.5 text-xs text-[var(--ink-secondary)] flex items-center gap-2">
+                    <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-[var(--brand)] border-t-transparent rounded-full" />
+                    Loading parks for {primaryCountry}...
+                  </div>
+                ) : availableParks.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-3 bg-white/60 border border-[var(--border)] rounded-xl max-h-52 overflow-y-auto">
+                    {availableParks.map((park) => {
+                      const checked = selectedParkIds.includes(park.id);
+                      return (
+                        <label
+                          key={park.id}
+                          className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer border text-xs font-semibold transition-all ${
+                            checked
+                              ? 'bg-[var(--brand-deep)] text-white border-[var(--brand-deep)] shadow-xs'
+                              : 'bg-white hover:bg-[var(--canvas)] border-[var(--border-soft)] text-[var(--ink)]'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => togglePark(park.id)}
+                            className="sr-only"
+                          />
+                          <span
+                            className={`w-3.5 h-3.5 rounded flex items-center justify-center border text-[9px] ${
+                              checked ? 'bg-white text-[var(--brand-deep)] font-extrabold' : 'border-[var(--border)] bg-white'
+                            }`}
+                          >
+                            {checked ? '✓' : ''}
+                          </span>
+                          <span className="truncate">{park.name}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-[var(--ink-secondary)] italic p-2">
+                    No specific parks cataloged for {primaryCountry} yet. Your package will still be listed under {primaryCountry}.
+                  </p>
+                )}
               </div>
 
               <div>
