@@ -66,23 +66,11 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ── */}
-        <HeroBackgroundSlider minHeightClass="min-h-[720px] sm:min-h-[700px] md:h-[600px]">
-          {/* Hero text container */}
-          <div className="mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center md:h-full md:pb-32 px-2 sm:px-4">
-            <div className="animate-fade-up max-w-3xl text-center text-white">
-              <span className="mb-3 sm:mb-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 sm:px-4 py-1.5 text-xs sm:text-[13px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md shadow-sm">
-                Zero commission · Direct local quotes
-              </span>
-              <h1 className="text-[32px] sm:text-[44px] md:text-[58px] font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
-                Compare {stats.tours.toLocaleString()} African<br className="hidden sm:inline" /> Safari Tours
-              </h1>
-              <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-base sm:text-lg md:text-xl font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
-                Booked directly from verified local operators
-              </p>
-            </div>
-          </div>
-
-          {/* Search Form — stacked naturally on mobile, anchored at bottom on desktop */}
+        <HeroBackgroundSlider
+          tourCount={stats.tours}
+          minHeightClass="min-h-[460px] sm:min-h-[450px] md:h-[460px] lg:h-[480px]"
+        >
+          {/* Search Form — anchored at bottom on desktop, stacked on mobile */}
           <HeroSearchForm />
         </HeroBackgroundSlider>
 

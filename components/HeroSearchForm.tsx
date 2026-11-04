@@ -45,10 +45,10 @@ export default function HeroSearchForm() {
   const countries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe', 'Namibia'];
 
   return (
-    <div className="animate-fade-up relative z-20 w-full max-w-[1020px] mx-auto md:absolute md:bottom-10 md:left-1/2 md:-translate-x-1/2 md:w-[min(94vw,1020px)] px-0 sm:px-2 md:px-0">
+    <div className="animate-fade-up relative z-20 w-full max-w-[1020px] mx-auto md:absolute md:bottom-3.5 md:left-1/2 md:-translate-x-1/2 md:w-[min(94vw,1020px)] px-0 sm:px-2 md:px-0">
       <form
         onSubmit={handleSearch}
-        className="glass-nav md:glass flex flex-col gap-2 rounded-2xl sm:rounded-[22px] p-2.5 sm:p-3 md:flex-row md:items-stretch shadow-2xl border border-white/60 bg-white/90 md:bg-white/70 backdrop-blur-xl"
+        className="glass-nav md:glass flex flex-col gap-2 rounded-2xl sm:rounded-[22px] p-2 sm:p-2.5 md:p-2 md:flex-row md:items-stretch shadow-2xl border border-white/60 bg-white/90 md:bg-white/70 backdrop-blur-xl"
       >
         {/* Destination */}
         <div className="relative flex flex-1 items-center rounded-2xl bg-white/65 px-4 py-2.5 sm:py-3 transition-colors focus-within:bg-white/95 focus-within:ring-2 focus-within:ring-[var(--brand)]/30 hover:bg-white/80">
