@@ -47,17 +47,22 @@ export default async function HomePage() {
 
   const countryHighlights: CountryHighlight[] = countries
     .filter((c) => c.popularityRank)
-    .slice(0, 8)
+    .sort((a, b) => (a.popularityRank ?? 99) - (b.popularityRank ?? 99))
+    .slice(0, 9)
     .map((c) => ({
       name: c.name,
       slug: c.slug,
       rank: `#${c.popularityRank}`,
+      popularityRank: c.popularityRank,
       featuredImageUrl: c.featuredImageUrl,
       rating: c.rating,
       reviewCount: c.reviewCount,
       description: c.description,
       dailyRates: c.dailyRates,
       bestTimeSummary: c.bestTimeSummary,
+      highSeason: c.highSeason,
+      toursCount: c.toursCount,
+      parks: (c.parks || []).map((p) => ({ name: p.name, slug: p.slug })),
     }));
 
   return (
@@ -96,24 +101,10 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* ── Top-rated Safari Countries ── */}
-        <section className="pt-16 sm:pt-24 pb-14 sm:pb-16">
+        {/* ── Top-rated Safari Countries (Interactive Circuit & Spotlight) ── */}
+        <section className="pt-16 sm:pt-24 pb-14 sm:pb-16 relative">
           <div className="mx-auto max-w-[1230px] px-4">
-            <div className="section-rule" />
-            <div className="mb-6 flex items-end justify-between">
-              <div>
-                <h2 className="text-[24px] sm:text-[28px] font-semibold text-[var(--ink)]">
-                  Top-rated Safari Countries
-                </h2>
-                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
-                  Explore Africa&apos;s leading safari destinations and verified packages
-                </p>
-              </div>
-              <Link href="/parks" className="link hidden sm:inline-flex items-center gap-1 text-sm font-semibold">
-                All {countries.length} countries <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-
+            <div className="section-rule mb-8" />
             <FeaturedCountriesSection countries={countryHighlights} />
           </div>
         </section>
