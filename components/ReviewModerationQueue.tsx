@@ -58,13 +58,13 @@ export default function ReviewModerationQueue() {
   }
 
   return (
-    <section className="bg-white rounded-3xl border border-[#E5E0D8] shadow-sm p-6 sm:p-8">
-      <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#E5E0D8] mb-6">
+    <section className="bg-white rounded-3xl border border-[#DEDCCF] shadow-sm p-6 sm:p-8">
+      <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#DEDCCF] mb-6">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-[#7A6A5C] font-bold">Moderation Queue</p>
-          <h2 className="text-2xl font-bold font-serif text-[#1C2826]">Traveler Review Approvals</h2>
+          <p className="text-xs uppercase tracking-[0.18em] text-[#8C9F91] font-bold">Moderation Queue</p>
+          <h2 className="text-2xl font-bold font-serif text-[#193A38]">Traveler Review Approvals</h2>
         </div>
-        <div className="rounded-full bg-[#E9C46A]/20 text-[#8B6914] px-3 py-1 text-xs font-bold">
+        <div className="rounded-full bg-[#E4DBB4]/40 text-[#193A38] px-3 py-1 text-xs font-bold">
           {reviews.length} pending
         </div>
       </div>

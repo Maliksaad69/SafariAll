@@ -221,7 +221,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
       {/* ── Section Title & Creative Control Bar ── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--brand-soft)] border border-[rgba(244,119,53,0.22)] text-xs font-bold text-[var(--brand-ink)] mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--brand-soft)] border border-[#8C9F91]/30 text-xs font-bold text-[var(--brand-ink)] mb-2">
             <Compass className="w-3.5 h-3.5 text-[var(--brand)]" />
             <span>Curated Safari Circuits</span>
           </div>
@@ -308,12 +308,12 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
           onTouchEnd={() => setUserHovered(false)}
         >
           {/* Main Stage: Cinematic Country Hero Canvas */}
-          <div className="relative rounded-3xl overflow-hidden shadow-lg border border-[var(--border)] bg-[#0B253A] text-white">
+          <div className="relative rounded-3xl overflow-hidden shadow-lg border border-[var(--border)] bg-[#193A38] text-white">
             {/* Top 5-second animated progress bar */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20 overflow-hidden">
               <div
                 key={activeCountry.slug}
-                className="h-full bg-gradient-to-r from-[var(--brand)] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(244,119,53,0.8)]"
+                className="h-full bg-gradient-to-r from-[var(--brand)] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
                 style={{
                   animationDuration: `${AUTO_PLAY_INTERVAL}ms`,
                   animationPlayState: isPaused || userHovered ? 'paused' : 'running',
@@ -328,8 +328,8 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 backgroundImage: `url('${activeCountry.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80'}')`,
               }}
             />
-            {/* Rich multi-stage overlay for contrast: Ocean Blue deep tint into sunset warmth */}
-            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0B253A]/95 via-[#0B253A]/80 md:via-[#0B253A]/70 to-black/35" />
+            {/* Rich multi-stage overlay for contrast: Forest Shadow deep tint into natural warmth */}
+            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#193A38]/95 via-[#193A38]/85 md:via-[#193A38]/70 to-black/35" />
 
             {/* Stage Content */}
             <div className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between">

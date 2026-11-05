@@ -155,7 +155,7 @@ export default function HeroBackgroundSlider({
       <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
         <div
           key={currentIndex}
-          className="h-full bg-gradient-to-r from-[var(--brand)] via-[#ff9b53] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(244,119,53,0.8)]"
+          className="h-full bg-gradient-to-r from-[var(--brand)] via-[#8C9F91] to-[#E4DBB4] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
           style={{ animationDuration: `${autoPlayInterval}ms` }}
         />
       </div>
@@ -245,7 +245,7 @@ export default function HeroBackgroundSlider({
           {/* Dynamic Headline with Vibrant Accent */}
           <h1 className="text-[21px] sm:text-[30px] md:text-[38px] lg:text-[42px] font-bold leading-[1.14] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
             {currentSlide.title}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffa463] via-[#F47735] to-[#ffbe8a] drop-shadow-[0_2px_12px_rgba(244,119,53,0.45)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFDF5] via-[#E4DBB4] to-[#C9B98A] drop-shadow-[0_2px_12px_rgba(25,58,56,0.5)]">
               {currentSlide.titleHighlight}
             </span>
           </h1>

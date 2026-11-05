@@ -26,12 +26,12 @@ export default function TopRatedOperatorsBanner({
   totalOperatorsCount = 120,
 }: TopRatedOperatorsBannerProps) {
   return (
-    <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#143250] text-white p-4 sm:p-6 md:p-10 border border-[#143250] shadow-md">
+    <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#214446] text-white p-4 sm:p-6 md:p-10 border border-[#193A38] shadow-md">
       {/* ── Banner Header Row ── */}
       <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-5 sm:pb-6 border-b border-white/15">
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-0.5 sm:px-3.5 sm:py-1 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-white backdrop-blur-md shadow-xs">
-            <Award className="h-3.5 w-3.5 text-[#E46924]" />
+            <Award className="h-3.5 w-3.5 text-[#E4DBB4]" />
             <span>100% Vetted Local Outfitters</span>
           </div>
 
@@ -47,13 +47,13 @@ export default function TopRatedOperatorsBanner({
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full md:w-auto shrink-0">
           <div className="flex items-center justify-center gap-2 text-xs font-semibold text-white/90 bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-md border border-white/10">
-            <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+            <ShieldCheck className="h-4 w-4 text-[#8C9F91] shrink-0" />
             <span>Guaranteed Direct Quotes</span>
           </div>
 
           <Link
             href="/operators"
-            className="btn btn-primary inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold bg-[#E46924] hover:bg-[#C85312] text-white shadow-sm transition-all active:scale-95 w-full sm:w-auto"
+            className="btn btn-secondary inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold bg-[#E4DBB4] hover:bg-[#D8CDA1] text-[#193A38] shadow-sm transition-all active:scale-95 w-full sm:w-auto border-transparent"
           >
             <span>Explore All {totalOperatorsCount.toLocaleString()} Operators</span>
             <ChevronRight className="h-4 w-4" />
@@ -72,7 +72,7 @@ export default function TopRatedOperatorsBanner({
             <Link
               key={op.slug}
               href={`/operators/${op.slug}`}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl bg-white/10 p-3.5 sm:p-5 backdrop-blur-md border border-white/15 transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 hover:border-[#E46924]/60 active:scale-[0.99]"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl bg-white/10 p-3.5 sm:p-5 backdrop-blur-md border border-white/15 transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 hover:border-[#E4DBB4]/80 active:scale-[0.99]"
             >
               {/* Top Visual Vignette with Rank Badge */}
               <div className="relative h-28 sm:h-36 w-full rounded-lg sm:rounded-xl overflow-hidden mb-3 bg-black/40">
@@ -85,7 +85,7 @@ export default function TopRatedOperatorsBanner({
 
                 {/* Rank / Verified Badge */}
                 <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/65 px-2 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-white backdrop-blur-md border border-white/20">
-                  <Sparkles className="h-2.5 w-2.5 text-[#E46924] fill-[#E46924]" />
+                  <Sparkles className="h-2.5 w-2.5 text-[#E4DBB4] fill-[#E4DBB4]" />
                   <span>Rank #{idx + 1}</span>
                 </div>
 
@@ -95,7 +95,7 @@ export default function TopRatedOperatorsBanner({
 
                 {/* Company Initials Avatar floating at bottom edge */}
                 <div className="absolute bottom-2 left-2 flex items-center gap-1.5 sm:gap-2">
-                  <div className="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-white/95 text-[#143250] font-extrabold text-xs sm:text-sm shadow-md border border-white">
+                  <div className="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-white/95 text-[#214446] font-extrabold text-xs sm:text-sm shadow-md border border-white">
                     {op.name.charAt(0)}
                   </div>
                   <span className="text-[10px] sm:text-[11px] font-extrabold text-white/90 drop-shadow uppercase tracking-wide">
@@ -107,12 +107,12 @@ export default function TopRatedOperatorsBanner({
               {/* Content Details */}
               <div className="flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-[15px] sm:text-[17px] font-bold text-white group-hover:text-[#FFA86F] transition-colors line-clamp-1 font-display">
+                  <h3 className="text-[15px] sm:text-[17px] font-bold text-white group-hover:text-[#E4DBB4] transition-colors line-clamp-1 font-display">
                     {op.name}
                   </h3>
 
                   <div className="mt-1 flex items-center gap-1.5 sm:gap-2 text-xs flex-wrap">
-                    <div className="flex text-[#E46924]" aria-hidden="true">
+                    <div className="flex text-[#E4DBB4]" aria-hidden="true">
                       {'★★★★★'.split('').map((star, i) => (
                         <span key={i} className="text-[11px] sm:text-xs">{star}</span>
                       ))}
@@ -125,7 +125,7 @@ export default function TopRatedOperatorsBanner({
                 {/* Bottom Quick Action Strip */}
                 <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-white/90 group-hover:text-white">
                   <span className="text-[10.5px] sm:text-[11px] text-white/70">Direct Quotes</span>
-                  <span className="inline-flex items-center gap-1 text-[#E46924] group-hover:translate-x-0.5 transition-transform text-xs">
+                  <span className="inline-flex items-center gap-1 text-[#E4DBB4] group-hover:translate-x-0.5 transition-transform text-xs">
                     View Tours <ChevronRight className="h-3 w-3" />
                   </span>
                 </div>

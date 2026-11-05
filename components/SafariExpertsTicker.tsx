@@ -77,11 +77,11 @@ export default function SafariExpertsTicker({ experts }: SafariExpertsTickerProp
         {!prefersReduced && (
           <>
             <div
-              className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-r from-[#F5F8FB] to-transparent z-10"
+              className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-r from-[#F7F6F1] to-transparent z-10"
               aria-hidden="true"
             />
             <div
-              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-l from-[#F5F8FB] to-transparent z-10"
+              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-l from-[#F7F6F1] to-transparent z-10"
               aria-hidden="true"
             />
           </>

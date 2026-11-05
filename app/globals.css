@@ -1,99 +1,121 @@
 @import "tailwindcss";
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN SYSTEM — SafariRequest (Navy Blue & Matte Sunset Orange)
-   Header Navy Blue:      #143250
-   Safari Sunset Orange:  #E46924
-   Soft Sky Blue:         #DDEAF5
-   Pale Ice Blue:         #E3EDF6
-   Dark Navy Text:        #0B1736
-   Pure White:            #FFFFFF
+   DESIGN SYSTEM — SafariRequest (Global UI Color System)
+   Primary:        #214446 – Deep Safari Teal
+   Primary Dark:   #193A38 – Forest Shadow
+   Background:     #F7F6F1 – Warm Ivory
+   Secondary:      #E4DBB4 – Savannah Sand
+   Accent:         #8C9F91 – Safari Sage
+   White:          #FFFFFF – Pure White
+   Body Text:      #344C49 – Dark Muted Teal
+   Borders:        #DEDCCF – Warm Safari Border
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@theme {
+  --color-safari-primary: #214446;
+  --color-safari-dark: #193A38;
+  --color-safari-ivory: #F7F6F1;
+  --color-safari-sand: #E4DBB4;
+  --color-safari-sage: #8C9F91;
+  --color-safari-body: #344C49;
+  --color-safari-border: #DEDCCF;
+}
 
 @layer base {
   :root {
-    /* ── Exact User Requested Color Tokens ── */
-    --header-navy:    #143250;
-    --primary-orange: #E46924;
-    --soft-sky-blue:  #DDEAF5;
-    --section-blue:   #E3EDF6;
-    --heading-navy:   #0B1736;
-    --white:          #FFFFFF;
+    /* ── Mandatory Safari Brand Color Tokens ── */
+    --primary:          #214446;  /* Deep Safari Teal */
+    --primary-dark:     #193A38;  /* Forest Shadow */
+    --bg-ivory:         #F7F6F1;  /* Warm Ivory */
+    --secondary-sand:   #E4DBB4;  /* Savannah Sand */
+    --accent-sage:      #8C9F91;  /* Safari Sage */
+    --white:            #FFFFFF;  /* White */
+    --text-body:        #344C49;  /* Dark Muted Teal */
+    --border-color:     #DEDCCF;  /* Borders */
+
+    /* ── Typography & Ink Tokens ── */
+    --ink:              #193A38;  /* Forest Shadow — headings and emphasis */
+    --ink-body:         #344C49;  /* Dark Muted Teal — body copy */
+    --ink-secondary:    #516D6A;  /* Muted Teal — secondary labels, meta */
+    --ink-muted:        #788E8B;  /* Soft Muted Teal */
+
+    /* ── Brand Action Tokens ── */
+    --brand:            #214446;  /* Deep Safari Teal — primary buttons & active actions */
+    --brand-strong:     #193A38;  /* Forest Shadow — hover / active state */
+    --brand-deep:       #214446;  /* Deep Safari Teal */
+    --brand-ink:        #214446;  /* Deep Safari Teal text */
+    --brand-on:         #FFFFFF;  /* White on brand */
+    --brand-soft:       rgba(140, 159, 145, 0.20); /* Safari Sage soft tint */
+    --brand-pale:       rgba(228, 219, 180, 0.40); /* Savannah Sand soft tint */
 
     /* ── Canvas Surfaces ── */
-    --canvas-1:       #FFFFFF;
-    --canvas-2:       #E3EDF6;
-    --canvas-3:       #DDEAF5;
-    --canvas-base:    #F5F8FB;
+    --canvas-base:      #F7F6F1;  /* Warm Ivory */
+    --canvas-1:         #FFFFFF;  /* Crisp White */
+    --canvas-2:         #E4DBB4;  /* Savannah Sand */
+    --canvas-3:         #F7F6F1;  /* Warm Ivory */
 
-    /* ── Named section tints ── */
-    --ivory:          #F5F8FB;
-    --card-ivory:     #FFFFFF;
-    --sand:           #E3EDF6;
-    --blog-bg:        #FFFFFF;
+    /* ── Named Section Tints ── */
+    --ivory:            #F7F6F1;  /* Warm Ivory section */
+    --card-ivory:       #FFFFFF;  /* Card fill */
+    --sand:             #E4DBB4;  /* Savannah Sand section */
+    --blog-bg:          #FFFFFF;
 
     /* ── Surfaces (Cards & Containers) ── */
-    --surface-page:   transparent;
-    --surface-card:   #FFFFFF;
-    --surface-raised: #FFFFFF;
-    --surface-sunk:   #E3EDF6;
+    --surface-page:     #F7F6F1;  /* Warm Ivory */
+    --surface-card:     #FFFFFF;  /* White card */
+    --surface-card-sand:#E4DBB4;  /* Savannah Sand card */
+    --surface-raised:   #FFFFFF;
+    --surface-sunk:     #E4DBB4;  /* Savannah Sand */
+
+    /* ── Component Aliases (Backwards-compatibility) ── */
+    --header-navy:      #214446;  /* Deep Safari Teal */
+    --heading-navy:     #193A38;  /* Forest Shadow */
+    --primary-orange:   #214446;  /* Primary button = Deep Safari Teal */
+    --soft-sky-blue:    #E4DBB4;  /* Savannah Sand */
+    --section-blue:     #E4DBB4;  /* Savannah Sand */
+    --ocean:            #214446;  /* Deep Safari Teal */
+    --ocean-strong:     #193A38;  /* Forest Shadow */
+    --ocean-light:      #2D5B5E;
+    --ocean-soft:       rgba(33, 68, 70, 0.12);
+
+    /* ── Accents & Ratings ── */
+    --accent:           #8C9F91;  /* Safari Sage */
+    --secondary:        #E4DBB4;  /* Savannah Sand */
+    --gold:             #8C9F91;  /* Safari Sage accent */
+    --gold-soft:        rgba(140, 159, 145, 0.22);
+
+    /* ── Borders ── */
+    --border:           #DEDCCF;  /* Warm Safari Border */
+    --border-strong:    #C5C2B1;
+    --border-soft:      #EBE9DF;
 
     /* ── Glass & Panels ── */
     --glass-blur:        16px;
-    --glass-bg:          rgba(255, 255, 255, 0.94);
-    --glass-bg-soft:     rgba(255, 255, 255, 0.85);
-    --glass-border:      rgba(20, 50, 80, 0.12);
-    --glass-edge:        rgba(20, 50, 80, 0.08);
-    --glass-shadow:      0 1px 3px rgba(20, 50, 80, 0.04), 0 6px 16px rgba(20, 50, 80, 0.05);
-    --glass-shadow-lift: 0 4px 12px rgba(20, 50, 80, 0.07), 0 12px 28px rgba(20, 50, 80, 0.10);
+    --glass-bg:          rgba(255, 255, 255, 0.96);
+    --glass-bg-soft:     rgba(247, 246, 241, 0.92);
+    --glass-border:      #DEDCCF;
+    --glass-edge:        rgba(33, 68, 70, 0.08);
+    --glass-shadow:      0 1px 3px rgba(25, 58, 56, 0.04), 0 6px 16px rgba(25, 58, 56, 0.05);
+    --glass-shadow-lift: 0 4px 12px rgba(25, 58, 56, 0.07), 0 12px 28px rgba(25, 58, 56, 0.10);
 
-    /* ── Borders ── */
-    --border-strong:  rgba(20, 50, 80, 0.22);
-    --border:         rgba(20, 50, 80, 0.12);
-    --border-soft:    rgba(20, 50, 80, 0.07);
+    /* ── Semantic Status Tokens ── */
+    --success:          #2A5944;  /* Forest Green */
+    --success-soft:     rgba(42, 89, 68, 0.14);
+    --danger:           #A83838;
+    --danger-soft:      rgba(168, 56, 56, 0.12);
+    --info:             #214446;
+    --info-soft:        rgba(33, 68, 70, 0.14);
+    --warning:          #B88728;
+    --warning-soft:     rgba(184, 135, 40, 0.14);
 
-    /* ── Ink (text on light) ── */
-    --ink:            #0B1736;  /* Dark Navy Text — headings and important text */
-    --ink-body:       #143250;  /* Deep Safari Navy Blue — body copy */
-    --ink-secondary:  #3D5A80;  /* Slate Navy — labels, meta */
-    --ink-muted:      #6A86A4;  /* Muted Slate */
-
-    /* ── Brand (Matte Sunset Orange & Deep Navy) ── */
-    --brand:          #E46924;  /* Safari Sunset Orange — buttons, logo accent, highlights */
-    --brand-strong:   #C85312;  /* Deep Sunset Orange hover */
-    --brand-deep:     #143250;  /* Header Navy Blue */
-    --brand-ink:      #C85312;  /* Sunset Orange text for light surfaces (WCAG AA ≥ 4.6:1) */
-    --brand-on:       #FFFFFF;  /* White on brand */
-    --brand-soft:     rgba(228, 105, 36, 0.12);
-    --brand-pale:     rgba(228, 105, 36, 0.22);
-
-    /* ── Navy Blue Specific Tokens ── */
-    --ocean:          #143250;  /* Header Navy Blue */
-    --ocean-strong:   #0B1736;  /* Dark Navy */
-    --ocean-light:    #204B73;  /* Bright Navy */
-    --ocean-soft:     rgba(20, 50, 80, 0.10);
-
-    /* ── Accent (stars, ratings, seals) ── */
-    --gold:           #E46924;
-    --gold-soft:      rgba(228, 105, 36, 0.16);
-
-    /* ── Semantic ── */
-    --success:        #15803D;
-    --success-soft:   rgba(21, 128, 61, 0.12);
-    --danger:         #DC2626;
-    --danger-soft:    rgba(220, 38, 38, 0.12);
-    --info:           #143250;
-    --info-soft:      rgba(20, 50, 80, 0.12);
-    --warning:        #E46924;
-    --warning-soft:   rgba(228, 105, 36, 0.14);
-
-    /* ── Dark panels (hero scrim, footer, dark banners) ── */
-    --dark:           #143250;  /* Header Navy Blue */
-    --dark-raised:    #1A3E62;
-    --dark-border:    rgba(255, 255, 255, 0.16);
-    --dark-text:      #FFFFFF;
-    --dark-text-soft: #DDEAF5;
-    --dark-gold:      #E46924;
+    /* ── Dark Panels (Navigation, Footer, Hero Banners) ── */
+    --dark:             #214446;  /* Deep Safari Teal */
+    --dark-raised:      #193A38;  /* Forest Shadow */
+    --dark-border:      rgba(255, 255, 255, 0.16);
+    --dark-text:        #FFFFFF;
+    --dark-text-soft:   #E4DBB4;  /* Savannah Sand on dark */
+    --dark-gold:        #E4DBB4;  /* Savannah Sand accent on dark */
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -112,13 +134,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    background-color: var(--canvas-base);
-    background-image:
-      radial-gradient(1200px 620px at 8% -6%,  var(--canvas-1) 0%, transparent 58%),
-      radial-gradient(1050px 560px at 100% 0%, var(--canvas-2) 0%, transparent 52%),
-      radial-gradient(1000px 700px at 50% 112%, var(--canvas-3) 0%, transparent 58%),
-      linear-gradient(180deg, #FFFFFF 0%, var(--canvas-base) 100%);
-    background-attachment: fixed;
+    background-color: var(--bg-ivory, #F7F6F1);
   }
 
   h1, h2, h3, h4 {
@@ -168,7 +184,14 @@
   background: var(--white, #FFFFFF);
   border: 1px solid var(--border);
   border-radius: 18px;
-  box-shadow: 0 1px 3px rgba(20, 50, 80, 0.04), 0 4px 14px rgba(20, 50, 80, 0.04);
+  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.04), 0 4px 14px rgba(25, 58, 56, 0.04);
+}
+
+.surface-card-sand {
+  background: var(--secondary-sand, #E4DBB4);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.04), 0 4px 14px rgba(25, 58, 56, 0.04);
 }
 
 .surface-card-hover {
@@ -179,8 +202,8 @@
 
 .surface-card-hover:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(20, 50, 80, 0.08), 0 12px 24px rgba(20, 50, 80, 0.08);
-  border-color: rgba(20, 50, 80, 0.22);
+  box-shadow: 0 4px 12px rgba(25, 58, 56, 0.08), 0 12px 24px rgba(25, 58, 56, 0.08);
+  border-color: rgba(33, 68, 70, 0.25);
 }
 
 .surface-dark {
@@ -190,7 +213,7 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   BUTTONS — one system, styled for Ocean & Sunset
+   BUTTONS — Safari Design System
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .btn {
@@ -215,40 +238,59 @@
 
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
+/* Primary Button: Deep Safari Teal with white text */
 .btn-primary {
-  background-color: var(--primary-orange, #E46924);
+  background-color: var(--primary, #214446);
   color: var(--white, #FFFFFF);
-  box-shadow: 0 2px 4px rgba(228, 105, 36, 0.22);
+  box-shadow: 0 2px 4px rgba(25, 58, 56, 0.22);
   border: 1px solid transparent;
 }
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  background-color: #C85312;
-  box-shadow: 0 4px 10px rgba(228, 105, 36, 0.28);
+  background-color: var(--primary-dark, #193A38);
+  box-shadow: 0 4px 10px rgba(25, 58, 56, 0.28);
 }
 
+/* Secondary Button: Savannah Sand with dark teal text */
 .btn-secondary {
-  background: #FFFFFF;
-  color: var(--ink);
+  background-color: var(--secondary-sand, #E4DBB4);
+  color: var(--primary-dark, #193A38);
   border: 1px solid var(--border);
-  box-shadow: 0 1px 2px rgba(20, 50, 80, 0.05);
+  box-shadow: 0 1px 2px rgba(25, 58, 56, 0.05);
 }
 .btn-secondary:hover:not(:disabled) {
   transform: translateY(-1px);
-  border-color: var(--border-strong);
-  box-shadow: 0 3px 8px rgba(20, 50, 80, 0.08);
+  background-color: #D8CDA1;
+  border-color: var(--primary, #214446);
+  color: var(--primary-dark, #193A38);
+  box-shadow: 0 3px 8px rgba(25, 58, 56, 0.08);
+}
+
+/* Accent Button: Safari Sage with white text */
+.btn-sage,
+.btn-accent {
+  background-color: var(--accent-sage, #8C9F91);
+  color: var(--white, #FFFFFF);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.12);
+}
+.btn-sage:hover:not(:disabled),
+.btn-accent:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background-color: #798C7E;
+  box-shadow: 0 3px 8px rgba(25, 58, 56, 0.18);
 }
 
 .btn-ocean {
-  background-color: var(--header-navy, #143250);
+  background-color: var(--primary, #214446);
   color: #FFFFFF;
-  box-shadow: 0 2px 4px rgba(20, 50, 80, 0.22);
+  box-shadow: 0 2px 4px rgba(25, 58, 56, 0.22);
   border: 1px solid transparent;
 }
 .btn-ocean:hover:not(:disabled) {
   transform: translateY(-1px);
-  background-color: #0B1736;
-  box-shadow: 0 4px 10px rgba(20, 50, 80, 0.28);
+  background-color: var(--primary-dark, #193A38);
+  box-shadow: 0 4px 10px rgba(25, 58, 56, 0.28);
 }
 
 .btn-ghost-dark {
@@ -333,14 +375,16 @@ select.form-control {
   white-space: nowrap;
 }
 
-.badge-brand   { background: var(--brand-soft);   color: var(--brand-ink);     border-color: rgba(244,119,53,0.26); }
-.badge-ocean   { background: rgba(16,59,92,0.10); color: #103B5C;              border-color: rgba(16,59,92,0.22); }
-.badge-success { background: var(--success-soft); color: var(--success);       border-color: rgba(21,128,61,0.22); }
-.badge-danger  { background: var(--danger-soft);  color: var(--danger);        border-color: rgba(220,38,38,0.22); }
-.badge-warning { background: var(--warning-soft); color: var(--brand-ink);     border-color: rgba(244,119,53,0.25); }
-.badge-info    { background: var(--info-soft);    color: var(--info);          border-color: rgba(16,59,92,0.22); }
-.badge-neutral { background: var(--surface-sunk); color: var(--ink-secondary); border-color: var(--border); }
-.badge-on-dark { background: rgba(255,255,255,0.12); color: var(--dark-gold); border-color: var(--dark-border); }
+.badge-brand   { background: var(--brand-soft);   color: var(--primary, #214446);     border-color: rgba(140, 159, 145, 0.40); }
+.badge-ocean   { background: rgba(33, 68, 70, 0.12); color: var(--primary, #214446); border-color: rgba(33, 68, 70, 0.25); }
+.badge-sage    { background: rgba(140, 159, 145, 0.22); color: var(--primary-dark, #193A38); border-color: rgba(140, 159, 145, 0.45); }
+.badge-sand    { background: var(--secondary-sand, #E4DBB4); color: var(--primary-dark, #193A38); border-color: var(--border, #DEDCCF); }
+.badge-success { background: var(--success-soft); color: var(--success);       border-color: rgba(42, 89, 68, 0.25); }
+.badge-danger  { background: var(--danger-soft);  color: var(--danger);        border-color: rgba(168, 56, 56, 0.22); }
+.badge-warning { background: var(--warning-soft); color: var(--warning);       border-color: rgba(184, 135, 40, 0.25); }
+.badge-info    { background: var(--info-soft);    color: var(--info);          border-color: rgba(33, 68, 70, 0.22); }
+.badge-neutral { background: var(--surface-sunk); color: var(--ink-body);      border-color: var(--border); }
+.badge-on-dark { background: rgba(255, 255, 255, 0.15); color: var(--dark-gold); border-color: var(--dark-border); }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    TABLES — clean, glass-friendly
@@ -379,36 +423,36 @@ select.form-control {
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brand-ink);
+  color: var(--primary, #214446);
 }
 
 .section-rule {
   width: 3rem;
   height: 3px;
   border-radius: 3px;
-  background: linear-gradient(90deg, var(--brand) 0%, rgba(244,119,53,0) 100%);
+  background: linear-gradient(90deg, #214446 0%, rgba(33, 68, 70, 0) 100%);
   margin-bottom: 1.25rem;
 }
 
-.link { color: var(--brand-ink); font-weight: 600; }
-.link:hover { text-decoration: underline; text-underline-offset: 3px; color: var(--brand); }
+.link { color: var(--primary, #214446); font-weight: 600; }
+.link:hover { text-decoration: underline; text-underline-offset: 3px; color: var(--primary-dark, #193A38); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 59, 92, 0.18);
+  background: rgba(33, 68, 70, 0.20);
   border-radius: 6px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(16, 59, 92, 0.35); background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(33, 68, 70, 0.38); background-clip: content-box; }
 
 /* ── Frosted nav & inputs ── */
 .glass-nav {
-  background-color: var(--header-navy, #143250);
+  background-color: var(--primary, #214446);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 2px 8px rgba(11, 23, 54, 0.15);
+  box-shadow: 0 2px 8px rgba(25, 58, 56, 0.15);
 }
 
 .glass-input {

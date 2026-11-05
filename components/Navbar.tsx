@@ -230,13 +230,13 @@ export default function Navbar() {
                         isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
                       }`}
                     >
-                      <div className="popover w-[240px] p-2 bg-white text-[#0B1736] border border-[#DDEAF5] shadow-xl rounded-xl">
+                      <div className="popover w-[240px] p-2 bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl rounded-xl">
                         {items.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
                             onClick={() => setOpenMenu(null)}
-                            className="block rounded-lg px-3 py-2 text-[13px] font-medium normal-case tracking-normal text-[#143250] transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]"
+                            className="block rounded-lg px-3 py-2 text-[13px] font-medium normal-case tracking-normal text-[#344C49] transition-colors hover:bg-[#E4DBB4]/40 hover:text-[#193A38]"
                           >
                             {item.label}
                           </Link>
@@ -260,37 +260,37 @@ export default function Navbar() {
                 >
                   <Bell className="h-5 w-5" strokeWidth={1.6} />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#E46924] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
+                    <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#8C9F91] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
                   )}
                 </button>
                 {notifOpen && (
-                  <div className="popover absolute right-0 mt-3 w-[330px] overflow-hidden bg-white text-[#0B1736] border border-[#DDEAF5] shadow-xl">
-                    <div className="border-b border-[#DDEAF5] px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#6A86A4]">
+                  <div className="popover absolute right-0 mt-3 w-[330px] overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
+                    <div className="border-b border-[#DEDCCF] px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#344C49]/70">
                       Travel notifications
                     </div>
                     <div className="max-h-[380px] overflow-y-auto">
                       {notifications.length === 0 ? (
-                        <p className="px-3 py-6 text-center text-[13px] font-normal text-[#6A86A4]">
+                        <p className="px-3 py-6 text-center text-[13px] font-normal text-[#344C49]/70">
                           No notifications yet.
                         </p>
                       ) : (
                         notifications.map((n) => {
                           const inner = (
                             <>
-                              <div className="text-[13px] font-bold text-[#0B1736]">{n.title}</div>
-                              <div className="mt-0.5 text-[12px] font-normal leading-snug text-[#143250]">{n.body}</div>
-                              <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[#6A86A4]">
+                              <div className="text-[13px] font-bold text-[#193A38]">{n.title}</div>
+                              <div className="mt-0.5 text-[12px] font-normal leading-snug text-[#344C49]">{n.body}</div>
+                              <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[#344C49]/70">
                                 {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 {n.type === 'CHAT_MESSAGE' ? ' · open it with the chat button' : ''}
                               </div>
                             </>
                           );
-                          const cls = `block border-b border-[#DDEAF5] px-3 py-2.5 last:border-b-0 ${n.isRead ? '' : 'bg-[#DDEAF5]/40'}`;
+                          const cls = `block border-b border-[#DEDCCF] px-3 py-2.5 last:border-b-0 ${n.isRead ? '' : 'bg-[#E4DBB4]/30'}`;
                           // Chat messages are only announced here; the chat button next to the bell opens them.
                           return n.type === 'CHAT_MESSAGE' || !n.link ? (
                             <div key={n.id} className={cls}>{inner}</div>
                           ) : (
-                            <Link key={n.id} href={n.link} onClick={() => setNotifOpen(false)} className={`${cls} transition-colors hover:bg-[#DDEAF5]`}>
+                            <Link key={n.id} href={n.link} onClick={() => setNotifOpen(false)} className={`${cls} transition-colors hover:bg-[#E4DBB4]/40`}>
                               {inner}
                             </Link>
                           );
@@ -304,9 +304,9 @@ export default function Navbar() {
             {sessionUser && isDesktop === true && <ChatLauncher />}
             <Link href="/favorites" className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white group" aria-label="Favorites list">
               <div className="relative">
-                <Heart className="h-5 w-5 text-white/90 group-hover:fill-[#E46924]/30" strokeWidth={1.6} />
+                <Heart className="h-5 w-5 text-white/90 group-hover:fill-[#E4DBB4]/40" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#E46924] px-1 text-[9px] font-bold text-white shadow">{favoriteCount}</span>
+                  <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#E4DBB4] px-1 text-[9px] font-bold text-[#193A38] shadow">{favoriteCount}</span>
                 )}
               </div>
               List
@@ -326,29 +326,29 @@ export default function Navbar() {
                   <ChevronDown className="h-3.5 w-3.5 text-white/80" />
                 </button>
                 {userMenuOpen && (
-                  <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#143250] border border-[#DDEAF5] shadow-xl">
-                    <div className="truncate border-b border-[#DDEAF5] px-3 py-2 text-[11px] text-[#6A86A4]">{sessionUser.email}</div>
+                  <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#344C49] border border-[#DEDCCF] shadow-xl">
+                    <div className="truncate border-b border-[#DEDCCF] px-3 py-2 text-[11px] text-[#344C49]/70">{sessionUser.email}</div>
                     {sessionUser.role === 'OPERATOR' && (
-                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]">Agency Dashboard</Link>
+                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Agency Dashboard</Link>
                     )}
                     {sessionUser.role === 'ADMIN' && (
-                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]">Admin Panel</Link>
+                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Admin Panel</Link>
                     )}
                     {sessionUser.role === 'TRAVELER' && (
                       <>
-                        <Link href="/favorites" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]">Saved Tours</Link>
-                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]">My Bookings</Link>
-                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]">Request a Quote</Link>
+                        <Link href="/favorites" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Saved Tours</Link>
+                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">My Bookings</Link>
+                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Request a Quote</Link>
                       </>
                     )}
-                    <button onClick={handleLogout} className="block w-full border-t border-[#DDEAF5] px-3 py-2 text-left text-[13px] font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)]">Sign Out</button>
+                    <button onClick={handleLogout} className="block w-full border-t border-[#DEDCCF] px-3 py-2 text-left text-[13px] font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)]">Sign Out</button>
                   </div>
                 )}
               </div>
             ) : (
               <div className="ml-1 flex items-center gap-2">
                 <Link href="/login" className="btn btn-sm border border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/50">Sign In</Link>
-                <Link href="/register" className="btn btn-primary btn-sm bg-[#E46924] hover:bg-[#C85312] text-white">Register</Link>
+                <Link href="/register" className="btn btn-secondary btn-sm bg-[#E4DBB4] hover:bg-[#D8CDA1] text-[#193A38] font-bold border-transparent">Register</Link>
               </div>
             )}
           </div>
@@ -383,11 +383,11 @@ export default function Navbar() {
         <div
           role="dialog"
           aria-label="Mobile Navigation Menu"
-          className="fixed left-0 right-0 top-[70px] sm:top-[74px] z-50 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-74px)] overflow-y-auto overscroll-contain border-t border-white/10 bg-[#F5F8FB] shadow-2xl transition-all duration-300 lg:hidden"
+          className="fixed left-0 right-0 top-[70px] sm:top-[74px] z-50 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-74px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
             {/* Quick search input */}
-            <div className="rounded-2xl border border-[#DDEAF5] bg-white p-1 shadow-xs">
+            <div className="rounded-2xl border border-[#DEDCCF] bg-white p-1 shadow-xs">
               <NavbarSearch mobile onNavigate={() => setMobileOpen(false)} />
             </div>
 
@@ -402,32 +402,32 @@ export default function Navbar() {
                     key={href}
                     className={`overflow-hidden rounded-2xl border transition-all ${
                       isExpanded
-                        ? 'border-[#E46924]/40 bg-white shadow-sm ring-1 ring-[#E46924]/20'
-                        : 'border-[#DDEAF5] bg-white hover:bg-[#F5F8FB]'
+                        ? 'border-[#214446]/40 bg-white shadow-sm ring-1 ring-[#214446]/20'
+                        : 'border-[#DEDCCF] bg-white hover:bg-[#E4DBB4]/20'
                     }`}
                   >
                     <button
                       type="button"
                       onClick={() => setMobileExpandedMenu(isExpanded ? null : label)}
-                      className="flex min-h-[48px] w-full items-center justify-between px-4 py-3 text-left font-bold text-[#0B1736] transition-colors"
+                      className="flex min-h-[48px] w-full items-center justify-between px-4 py-3 text-left font-bold text-[#193A38] transition-colors"
                       aria-expanded={isExpanded}
                     >
-                      <span className={`text-[14px] uppercase tracking-[0.05em] ${active ? 'text-[#E46924] font-extrabold' : ''}`}>
+                      <span className={`text-[14px] uppercase tracking-[0.05em] ${active ? 'text-[#214446] font-extrabold' : ''}`}>
                         {label}
                       </span>
                       <ChevronDown
-                        className={`h-4 w-4 text-[#3D5A80] transition-transform duration-200 ${
-                          isExpanded ? 'rotate-180 text-[#E46924]' : ''
+                        className={`h-4 w-4 text-[#344C49] transition-transform duration-200 ${
+                          isExpanded ? 'rotate-180 text-[#214446]' : ''
                         }`}
                       />
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-[#DDEAF5] bg-[#E3EDF6]/40 px-2 py-2">
+                      <div className="border-t border-[#DEDCCF] bg-[#E4DBB4]/20 px-2 py-2">
                         <Link
                           href={href}
                           onClick={() => setMobileOpen(false)}
-                          className="flex min-h-[42px] items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[#E46924] transition-colors hover:bg-[#DDEAF5]"
+                          className="flex min-h-[42px] items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[#214446] transition-colors hover:bg-[#E4DBB4]/40"
                         >
                           <span>Explore All {label}</span>
                           <span className="text-xs">→</span>
@@ -438,7 +438,7 @@ export default function Navbar() {
                               key={item.href}
                               href={item.href}
                               onClick={() => setMobileOpen(false)}
-                              className="flex min-h-[42px] items-center rounded-xl px-3 py-2 text-[13px] font-medium text-[#143250] transition-colors hover:bg-[#DDEAF5] hover:text-[#0B1736]"
+                              className="flex min-h-[42px] items-center rounded-xl px-3 py-2 text-[13px] font-medium text-[#344C49] transition-colors hover:bg-[#E4DBB4]/40 hover:text-[#193A38]"
                             >
                               {item.label}
                             </Link>
@@ -452,18 +452,18 @@ export default function Navbar() {
             </nav>
 
             {/* Quick action bar */}
-            <div className="mt-2 space-y-2 border-t border-[#DDEAF5] pt-3">
+            <div className="mt-2 space-y-2 border-t border-[#DEDCCF] pt-3">
               <Link
                 href="/favorites"
                 onClick={() => setMobileOpen(false)}
-                className="flex min-h-[46px] items-center justify-between rounded-2xl border border-[#DDEAF5] bg-white px-4 py-2.5 font-semibold text-[#0B1736] shadow-xs transition-colors hover:bg-[#DDEAF5] active:scale-[0.99]"
+                className="flex min-h-[46px] items-center justify-between rounded-2xl border border-[#DEDCCF] bg-white px-4 py-2.5 font-semibold text-[#193A38] shadow-xs transition-colors hover:bg-[#E4DBB4]/30 active:scale-[0.99]"
               >
                 <span className="flex items-center gap-2.5 text-[14px]">
-                  <Heart className="h-4 w-4 text-[#E46924]" />
+                  <Heart className="h-4 w-4 text-[#214446]" />
                   Saved Tours
                 </span>
                 {favoriteCount > 0 && (
-                  <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#E46924] px-1.5 text-[11px] font-bold text-white">
+                  <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#214446] px-1.5 text-[11px] font-bold text-white">
                     {favoriteCount}
                   </span>
                 )}
@@ -471,10 +471,10 @@ export default function Navbar() {
 
               {sessionUser ? (
                 <div className="space-y-1.5">
-                  <div className="rounded-2xl border border-[#DDEAF5] bg-white p-3">
-                    <div className="flex items-center gap-2.5 text-xs text-[#6A86A4]">
-                      <User className="h-4 w-4 text-[#E46924]" />
-                      <span className="truncate font-semibold">{sessionUser.name || sessionUser.email}</span>
+                  <div className="rounded-2xl border border-[#DEDCCF] bg-white p-3">
+                    <div className="flex items-center gap-2.5 text-xs text-[#344C49]/70">
+                      <User className="h-4 w-4 text-[#214446]" />
+                      <span className="truncate font-semibold text-[#193A38]">{sessionUser.name || sessionUser.email}</span>
                     </div>
                   </div>
 
@@ -482,18 +482,18 @@ export default function Navbar() {
                     <Link
                       href="/operator-portal"
                       onClick={() => setMobileOpen(false)}
-                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#0B1736] hover:bg-[#DDEAF5]"
+                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
                     >
-                      <User className="h-4 w-4 text-[#E46924]" /> Agency Dashboard
+                      <User className="h-4 w-4 text-[#214446]" /> Agency Dashboard
                     </Link>
                   )}
                   {sessionUser.role === 'ADMIN' && (
                     <Link
                       href="/admin"
                       onClick={() => setMobileOpen(false)}
-                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#0B1736] hover:bg-[#DDEAF5]"
+                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
                     >
-                      <User className="h-4 w-4 text-[#E46924]" /> Admin Panel
+                      <User className="h-4 w-4 text-[#214446]" /> Admin Panel
                     </Link>
                   )}
                   {sessionUser.role === 'TRAVELER' && (
@@ -501,16 +501,16 @@ export default function Navbar() {
                       <Link
                         href="/my-trips"
                         onClick={() => setMobileOpen(false)}
-                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#0B1736] hover:bg-[#DDEAF5]"
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
                       >
-                        <Calendar className="h-4 w-4 text-[#E46924]" /> My Bookings
+                        <Calendar className="h-4 w-4 text-[#214446]" /> My Bookings
                       </Link>
                       <Link
                         href="/quote/request"
                         onClick={() => setMobileOpen(false)}
-                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#0B1736] hover:bg-[#DDEAF5]"
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
                       >
-                        <Compass className="h-4 w-4 text-[#E46924]" /> Request a Custom Quote
+                        <Compass className="h-4 w-4 text-[#214446]" /> Request a Custom Quote
                       </Link>
                     </>
                   )}
@@ -528,14 +528,14 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="btn min-h-[48px] w-full justify-center text-[14px] border border-[#143250]/20 text-[#143250] bg-white hover:bg-[#DDEAF5]"
+                    className="btn min-h-[48px] w-full justify-center text-[14px] border border-[#214446]/25 text-[#214446] bg-white hover:bg-[#E4DBB4]/30"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setMobileOpen(false)}
-                    className="btn btn-primary min-h-[48px] w-full justify-center text-[14px] bg-[#E46924] hover:bg-[#C85312] text-white"
+                    className="btn btn-primary min-h-[48px] w-full justify-center text-[14px] bg-[#214446] hover:bg-[#193A38] text-white font-bold"
                   >
                     Register
                   </Link>

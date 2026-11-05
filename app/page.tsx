@@ -81,24 +81,24 @@ export default async function HomePage() {
           <HeroSearchForm />
         </HeroBackgroundSlider>
 
-        {/* ── Trust strip (Soft Sky Blue #DDEAF5 Statistics Bar) ── */}
+        {/* ── Trust strip (Savannah Sand Statistics Bar) ── */}
         <div className="relative z-10 mx-auto mt-3 sm:mt-5 max-w-[1230px] px-3 sm:px-6">
-          <div className="bg-[#DDEAF5] border border-[#BED6EC] grid grid-cols-2 gap-x-2 gap-y-2.5 sm:gap-x-4 sm:gap-y-3 rounded-2xl px-3 sm:px-6 py-3.5 sm:py-4 text-[11.5px] sm:text-[13px] font-semibold text-[#143250] md:grid-cols-4 shadow-xs">
+          <div className="bg-[#E4DBB4] border border-[#DEDCCF] grid grid-cols-2 gap-x-2 gap-y-2.5 sm:gap-x-4 sm:gap-y-3 rounded-2xl px-3 sm:px-6 py-3.5 sm:py-4 text-[11.5px] sm:text-[13px] font-semibold text-[#344C49] md:grid-cols-4 shadow-xs">
             <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#E46924]" />
-              <span className="leading-tight"><strong className="text-[#0B1736] font-bold">{stats.operators}</strong> Verified Operators</span>
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
+              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.operators}</strong> Verified Operators</span>
             </span>
             <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#E46924]" />
-              <span className="leading-tight"><strong className="text-[#0B1736] font-bold">Best Price</strong> Guarantee</span>
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
+              <span className="leading-tight"><strong className="text-[#193A38] font-bold">Best Price</strong> Guarantee</span>
             </span>
             <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#E46924]" />
-              <span className="leading-tight"><strong className="text-[#0B1736] font-bold">{stats.reviews}</strong> Traveler Reviews</span>
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
+              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.reviews}</strong> Traveler Reviews</span>
             </span>
             <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#E46924]" />
-              <span className="leading-tight"><strong className="text-[#0B1736] font-bold">{stats.destinations}</strong> Parks &amp; Reserves</span>
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
+              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.destinations}</strong> Parks &amp; Reserves</span>
             </span>
           </div>
         </div>
@@ -111,19 +111,19 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Popular tours (Pale Ice Blue #E3EDF6 background) ── */}
-        <section className="bg-[#E3EDF6] py-12 sm:py-16 border-y border-[#CFDFED]">
+        {/* ── Popular tours (Warm Ivory background) ── */}
+        <section className="bg-[#F7F6F1] py-12 sm:py-16 border-y border-[#DEDCCF]">
           <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
             <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
               <div>
-                <h2 className="text-[22px] sm:text-[28px] font-semibold text-[#0B1736]">
+                <h2 className="text-[22px] sm:text-[28px] font-semibold text-[#193A38]">
                   Popular Safari Tours
                 </h2>
-                <p className="mt-1 text-xs sm:text-sm text-[#143250]">
+                <p className="mt-1 text-xs sm:text-sm text-[#344C49]">
                   Handpicked authentic itineraries by local safari operators
                 </p>
               </div>
-              <Link href="/tours" className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#E46924] hover:text-[#C85312] self-start sm:self-auto transition-colors">
+              <Link href="/tours" className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#214446] hover:text-[#193A38] self-start sm:self-auto transition-colors">
                 View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
               </Link>
             </div>

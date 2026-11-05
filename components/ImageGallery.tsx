@@ -34,7 +34,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <div
             key={idx}
             onClick={() => openLightbox(idx)}
-            className="relative aspect-video rounded-2xl overflow-hidden cursor-pointer group border border-[#E5E0D8] shadow-sm"
+            className="relative aspect-video rounded-2xl overflow-hidden cursor-pointer group border border-[#DEDCCF] shadow-sm"
           >
             <img
               src={img.url}

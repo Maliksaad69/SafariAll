@@ -86,7 +86,7 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
           </>
         ) : next ? (
           <>
-            <div className="flex items-center gap-3.5 rounded-2xl border border-[var(--border)] bg-[#F5F8FB] p-3.5">
+            <div className="flex items-center gap-3.5 rounded-2xl border border-[var(--border)] bg-[var(--surface-sunk)] p-3.5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-soft)] text-[var(--brand-deep)] font-extrabold">
                 <Calendar className="h-5 w-5" />
               </span>
