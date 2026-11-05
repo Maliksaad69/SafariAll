@@ -98,7 +98,7 @@ export default function TourCard({ tour }: TourCardProps) {
   };
 
   return (
-    <article className="surface-card surface-card-hover group/card flex flex-col overflow-hidden font-sans rounded-2xl shadow-sm transition-all duration-300 hover:shadow-lg border border-[var(--glass-border)]">
+    <article className="surface-card surface-card-hover group/card flex flex-col h-full overflow-hidden font-sans rounded-2xl shadow-sm transition-all duration-300 hover:shadow-lg border border-[var(--glass-border)]">
       <Link href={`/tours/${tour.slug}`} className="block group">
         {/* ── Photo Header ── */}
         <div className="relative h-[200px] sm:h-[220px] overflow-hidden bg-[var(--dark)]">

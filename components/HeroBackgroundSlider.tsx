@@ -109,7 +109,7 @@ export default function HeroBackgroundSlider({
   showControls = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[460px] sm:min-h-[450px] md:h-[460px] lg:h-[480px]',
+  minHeightClass = 'h-[460px] min-h-[460px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -149,7 +149,7 @@ export default function HeroBackgroundSlider({
   return (
     <section
       aria-label="African Safari Hero Carousel"
-      className={`relative w-full overflow-hidden flex flex-col justify-between pt-6 pb-6 px-3 sm:px-4 md:pt-0 md:pb-0 md:px-0 md:block ${minHeightClass} ${className}`}
+      className={`relative w-full overflow-hidden flex flex-col justify-between pt-3.5 pb-3.5 px-3 sm:px-4 md:pt-0 md:pb-0 md:px-0 md:block ${minHeightClass} ${className}`}
     >
       {/* ── Top Dynamic Slide Progress Indicator ── */}
       <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
@@ -229,21 +229,21 @@ export default function HeroBackgroundSlider({
       </div>
 
       {/* ── Changing Text Hero Foreground ── */}
-      <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-4 md:h-full md:pb-24 pt-4 sm:pt-6 md:pt-2">
+      <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-24 pt-1 sm:pt-4 md:pt-0">
         <div
           key={currentIndex}
           className="animate-hero-text max-w-3xl text-center text-white"
         >
           {/* Animated Highlight Badge */}
           {currentSlide.badge && (
-            <span className="mb-2 sm:mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
+            <span className="mb-1.5 sm:mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--brand)] animate-ping" />
               {currentSlide.badge}
             </span>
           )}
 
           {/* Dynamic Headline with Vibrant Accent */}
-          <h1 className="text-[25px] sm:text-[34px] md:text-[42px] lg:text-[46px] font-bold leading-[1.12] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
+          <h1 className="text-[21px] sm:text-[30px] md:text-[38px] lg:text-[42px] font-bold leading-[1.14] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
             {currentSlide.title}{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffa463] via-[#F47735] to-[#ffbe8a] drop-shadow-[0_2px_12px_rgba(244,119,53,0.45)]">
               {currentSlide.titleHighlight}
@@ -252,7 +252,7 @@ export default function HeroBackgroundSlider({
 
           {/* Dynamic Subtitle */}
           {currentSlide.subtitle && (
-            <p className="mx-auto mt-1.5 sm:mt-2 max-w-xl text-xs sm:text-sm md:text-base font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
+            <p className="mx-auto mt-1 sm:mt-2 max-w-xl text-[11.5px] sm:text-sm md:text-base font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
               {currentSlide.subtitle}
             </p>
           )}

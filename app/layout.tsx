@@ -38,8 +38,8 @@ export default function RootLayout({
   const organizationSchema = buildOrganizationSchema();
 
   return (
-    <html lang="en" className={`h-full ${bodyFont.variable} ${displayFont.variable}`}>
-      <body className="min-h-full flex flex-col font-sans antialiased">
+    <html lang="en" className={`h-full ${bodyFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans antialiased" suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

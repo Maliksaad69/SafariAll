@@ -569,7 +569,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
             return (
               <article
                 key={country.slug}
-                className="surface-card surface-card-hover rounded-2xl overflow-hidden border border-[var(--border)] shadow-xs flex flex-col justify-between bg-white transition-all duration-300 hover:shadow-md"
+                className="surface-card surface-card-hover rounded-2xl overflow-hidden border border-[var(--border)] shadow-xs flex flex-col justify-between bg-white transition-all duration-300 hover:shadow-md h-full"
               >
                 <div>
                   {/* Card Visual Banner */}

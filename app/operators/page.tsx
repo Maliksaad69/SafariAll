@@ -41,7 +41,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
       <main className="flex-1 w-full mx-auto pb-12">
         {/* Page Header */}
         <div className="border-b border-[var(--border-soft)] bg-white/40 backdrop-blur-md py-8">
-          <div className="max-w-[1230px] mx-auto px-4">
+          <div className="max-w-[1230px] mx-auto px-4 sm:px-6">
             <nav className="text-[12px] text-[var(--ink-secondary)] uppercase tracking-[0.12em] font-semibold mb-3 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
               <Link href="/" className="text-[var(--brand-ink)] hover:underline normal-case">Home</Link>
               <ChevronRight className="w-3.5 h-3.5 text-[var(--ink-muted)]" />
@@ -64,7 +64,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
           </div>
         </div>
 
-        <div className="max-w-[1230px] mx-auto px-4 py-8">
+        <div className="max-w-[1230px] mx-auto px-4 sm:px-6 py-8">
           <div className="flex flex-col lg:flex-row gap-8">
 
             {/* Sidebar */}
@@ -102,35 +102,49 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
 
                       {/* Image */}
                       <div className="w-full h-[180px] md:w-[200px] md:h-[150px] bg-[var(--surface-sunk)] flex-shrink-0 rounded-xl overflow-hidden relative">
-                        <img src={op.image} alt={op.companyName} className="w-full h-full object-cover" />
+                        <img
+                          src={(op.image && op.image.trim()) || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80'}
+                          alt={op.companyName}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
 
                       {/* Content */}
                       <div className="flex-1 flex flex-col justify-between min-w-0">
 
-                        <div className="flex justify-between items-start gap-3">
-                          <div className="min-w-0">
-                            <Link href={`/operators/${op.slug}`} className="text-xl font-bold font-display text-[var(--ink)] hover:text-[var(--brand-ink)] transition-colors">
-                              {op.companyName}
-                            </Link>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div className="flex items-center gap-3.5 min-w-0">
+                            {/* Logo cleanly aligned with the heading */}
+                            {op.logo && op.logo.trim() ? (
+                              <div className="w-12 h-12 rounded-xl border border-[var(--glass-border)] bg-white p-1 flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xs">
+                                <img src={op.logo} alt={`${op.companyName} Logo`} className="w-full h-full object-contain rounded-lg" />
+                              </div>
+                            ) : (
+                              <div className="w-12 h-12 rounded-xl border border-[var(--glass-border)] bg-[var(--brand-soft)] text-[var(--brand-deep)] font-extrabold text-lg flex-shrink-0 flex items-center justify-center shadow-2xs">
+                                {op.companyName.charAt(0)}
+                              </div>
+                            )}
 
-                            <div className="flex items-center gap-2 mt-1.5 text-xs flex-wrap">
-                              <span className="flex text-[var(--gold)]" aria-hidden="true">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(op.averageRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#D5E2EC] text-[#D5E2EC]'}`} />
-                                ))}
-                              </span>
-                              <span className="font-bold text-[var(--ink)]">{op.averageRating.toFixed(1)}</span>
-                              <span className="text-[var(--ink-muted)]">/5 · {op.totalReviews} Reviews</span>
-                              {op.isVerified && (
-                                <span className="badge badge-success">Verified</span>
-                              )}
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <Link href={`/operators/${op.slug}`} className="text-xl font-bold font-display text-[var(--ink)] hover:text-[var(--brand-ink)] transition-colors">
+                                  {op.companyName}
+                                </Link>
+                                {op.isVerified && (
+                                  <span className="badge badge-success">Verified</span>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
+                                <span className="flex text-[var(--gold)]" aria-hidden="true">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star key={i} className={`h-3.5 w-3.5 ${i < Math.round(op.averageRating) ? 'fill-[var(--gold)] text-[var(--gold)]' : 'fill-[#D5E2EC] text-[#D5E2EC]'}`} />
+                                  ))}
+                                </span>
+                                <span className="font-bold text-[var(--ink)]">{op.averageRating.toFixed(1)}</span>
+                                <span className="text-[var(--ink-muted)]">/5 · {op.totalReviews} Reviews</span>
+                              </div>
                             </div>
-                          </div>
-
-                          {/* Logo */}
-                          <div className="w-12 h-12 rounded-xl border border-[var(--glass-border)] bg-white p-1 flex-shrink-0 hidden md:flex items-center justify-center overflow-hidden shadow-xs">
-                            <img src={op.logo} alt={`${op.companyName} Logo`} className="w-full h-full object-cover rounded-lg" />
                           </div>
                         </div>
 
