@@ -210,40 +210,124 @@
 }
 
 .surface-dark {
-  background: var(--dark);
+  background: var(--dark, #214446);
   color: #FFFFFF;
   border-radius: 18px;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   UNIVERSAL RULE:
-   "if background is green , text should be white everywhere"
-   Ensures absolute contrast across all green/teal backgrounds
+   UNIVERSAL CONTRAST RULE:
+   "if background is green, text should be white everywhere"
+   (Strictly isolated so white dropdowns, modals & cards NEVER turn white)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.glass-nav,
-.glass-nav :is(a:not(.btn-secondary):not(.btn), span:not([class*="text-"]):not([class*="bg-white"]):not(.btn-secondary), p, h1, h2, h3, h4),
-.surface-dark,
-.surface-dark :is(p, span:not([class*="text-"]):not([class*="bg-white"]):not(.btn-secondary), a:not(.btn-secondary):not(.btn), h1, h2, h3, h4),
-footer[class*="bg-[#214446]"],
-footer[class*="bg-[#214446]"] :is(p, span:not(.btn-secondary), a:not(.btn-secondary):not(.btn), h1, h2, h3, h4, li),
-[class*="bg-[#214446]"]:not(.btn-secondary),
-[class*="bg-[#193A38]"]:not(.btn-secondary),
-[class*="bg-[var(--brand-deep)]"]:not(.btn-secondary),
-[class*="bg-[var(--primary)]"]:not(.btn-secondary),
-[class*="bg-[var(--primary-dark)]"]:not(.btn-secondary),
+
+/* Green header bar container defaults to white text */
+.glass-nav {
+  color: #FFFFFF;
+}
+
+/* Green footer container */
+footer[class*="bg-[#214446]"] {
+  color: #FFFFFF;
+}
+
+/* Green buttons & solid green status pills */
+.btn-primary,
+.btn-ocean,
+.badge-primary,
+.badge-forest,
+.badge-ocean-solid,
 [class*="bg-emerald-600"],
 [class*="bg-emerald-700"],
 [class*="bg-emerald-800"],
 [class*="bg-green-600"],
 [class*="bg-green-700"],
 [class*="bg-green-800"] {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 .btn-primary svg,
 .btn-ocean svg {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   stroke: currentColor;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ADVANCED UI: WHITE DROPDOWNS, POPOVERS & DIALOGS
+   Crystal-clear, high-contrast African Safari dark typography (#193A38)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Dropdown containers */
+.popover,
+.dropdown-menu,
+.glass-nav .popover,
+.glass-nav [role="dialog"]:not(.surface-dark),
+[role="dialog"]:not(.surface-dark) {
+  background-color: #FFFFFF !important;
+  color: #344C49 !important;
+  border: 1px solid #DEDCCF !important;
+  border-radius: 16px !important;
+  box-shadow: 0 16px 40px -4px rgba(25, 58, 56, 0.16), 0 4px 14px -2px rgba(25, 58, 56, 0.08) !important;
+}
+
+/* Headings and labels inside popovers and dropdowns */
+.popover h1,
+.popover h2,
+.popover h3,
+.popover h4,
+.popover strong,
+.glass-nav .popover h1,
+.glass-nav .popover h2,
+.glass-nav .popover h3,
+.glass-nav .popover h4,
+.glass-nav .popover strong,
+.glass-nav [role="dialog"]:not(.surface-dark) h1,
+.glass-nav [role="dialog"]:not(.surface-dark) h2,
+.glass-nav [role="dialog"]:not(.surface-dark) h3,
+.glass-nav [role="dialog"]:not(.surface-dark) h4,
+.glass-nav [role="dialog"]:not(.surface-dark) strong {
+  color: #193A38 !important;
+  font-weight: 700;
+}
+
+/* Body copy in popovers and dropdowns */
+.popover p,
+.glass-nav .popover p,
+.glass-nav [role="dialog"]:not(.surface-dark) p {
+  color: #344C49 !important;
+}
+
+/* Links and list items in popovers and dropdowns */
+.popover a,
+.dropdown-menu a,
+.glass-nav .popover a,
+.glass-nav [role="dialog"]:not(.surface-dark) a:not(.btn-primary):not(.btn-ocean) {
+  color: #344C49 !important;
+  font-weight: 600 !important;
+  text-decoration: none;
+}
+
+/* Hover state on dropdown menu items */
+.popover a:hover,
+.dropdown-menu a:hover,
+.glass-nav .popover a:hover,
+.glass-nav [role="dialog"]:not(.surface-dark) a:not(.btn-primary):not(.btn-ocean):hover {
+  background-color: rgba(228, 219, 180, 0.45) !important;
+  color: #193A38 !important;
+}
+
+/* Metadata & subtle hints in dropdowns */
+.popover :is([class*="text-[#344C49]/70"], [class*="text-[#6A86A4]"], [class*="text-[var(--ink-secondary)]"], [class*="text-[var(--ink-muted)]"]),
+.glass-nav .popover :is([class*="text-[#344C49]/70"], [class*="text-[#6A86A4]"], [class*="text-[var(--ink-secondary)]"], [class*="text-[var(--ink-muted)]"]),
+.glass-nav [role="dialog"]:not(.surface-dark) :is([class*="text-[#344C49]/70"], [class*="text-[var(--ink-secondary)]"], [class*="text-[var(--ink-muted)]"]) {
+  color: #516D6A !important;
+}
+
+/* Native select controls & option lists */
+select.form-control,
+select.form-control option {
+  background-color: #FFFFFF !important;
+  color: #193A38 !important;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

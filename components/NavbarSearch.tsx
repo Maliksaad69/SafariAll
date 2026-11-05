@@ -169,7 +169,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
                   placeholder="Search tours, parks, agencies..."
                   aria-label="Search tours, parks and agencies"
                   autoFocus
-                  className="form-control pl-9"
+                  className="form-control pl-9 !text-[#193A38]"
                 />
                 {query && (
                   <button
@@ -185,7 +185,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
             </form>
 
             {/* Live results */}
-            <div className="max-h-[380px] overflow-y-auto">
+            <div className="max-h-[380px] overflow-y-auto bg-white !text-[#193A38]">
               <SearchResultsPanel
                 loading={loading}
                 hasResults={hasResults}
@@ -251,13 +251,13 @@ function SearchResultsPanel({
               key={t.id}
               href={`/tours/${t.slug}`}
               onClick={() => onResultClick(`/tours/${t.slug}`)}
-              className="flex items-center justify-between gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-[var(--surface-raised)]"
+              className="flex items-center justify-between gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-[#E4DBB4]/30"
             >
               <div className="min-w-0">
-                <div className="truncate text-[13px] font-semibold text-[var(--ink)]">{t.title}</div>
-                <div className="text-[11px] text-[var(--ink-secondary)]">{t.durationDays} days · {t.primaryCountry}</div>
+                <div className="truncate text-[13px] font-semibold !text-[#193A38]">{t.title}</div>
+                <div className="text-[11px] !text-[#516D6A]">{t.durationDays} days · {t.primaryCountry}</div>
               </div>
-              <span className="shrink-0 text-xs font-bold text-[var(--success)]">${t.minPriceUsd.toLocaleString()}</span>
+              <span className="shrink-0 text-xs font-bold text-[#2A5944]">${t.minPriceUsd.toLocaleString()}</span>
             </Link>
           ))}
         </div>
@@ -265,7 +265,7 @@ function SearchResultsPanel({
 
       {results.destinations.length > 0 && (
         <div className="p-2">
-          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider !text-[#516D6A]">
             <MapPin className="h-3.5 w-3.5 text-[var(--info)]" /> Parks &amp; Destinations
           </div>
           {results.destinations.map((d) => (
@@ -273,13 +273,13 @@ function SearchResultsPanel({
               key={d.id}
               href={`/parks/${d.slug}`}
               onClick={() => onResultClick(`/parks/${d.slug}`)}
-              className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[var(--surface-raised)]"
+              className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[#E4DBB4]/30"
             >
               <div className="min-w-0">
-                <div className="truncate text-[13px] font-semibold text-[var(--ink)]">{d.name}</div>
-                <div className="text-[11px] text-[var(--ink-secondary)]">{d.country} · {d.type.replace(/_/g, ' ').toLowerCase()}</div>
+                <div className="truncate text-[13px] font-semibold !text-[#193A38]">{d.name}</div>
+                <div className="text-[11px] !text-[#516D6A]">{d.country} · {d.type.replace(/_/g, ' ').toLowerCase()}</div>
               </div>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[var(--ink-muted)]" />
+              <ChevronRight className="h-4 w-4 shrink-0 text-[#516D6A]" />
             </Link>
           ))}
         </div>
@@ -287,19 +287,19 @@ function SearchResultsPanel({
 
       {results.operators.length > 0 && (
         <div className="p-2">
-          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-            <Building2 className="h-3.5 w-3.5 text-[var(--gold)]" /> Tour Agencies
+          <div className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider !text-[#516D6A]">
+            <Building2 className="h-3.5 w-3.5 text-[#214446]" /> Tour Agencies
           </div>
           {results.operators.map((op) => (
             <Link
               key={op.id}
               href={`/operators/${op.slug}`}
               onClick={() => onResultClick(`/operators/${op.slug}`)}
-              className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[var(--surface-raised)]"
+              className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[#E4DBB4]/30"
             >
               <div className="min-w-0">
-                <div className="truncate text-[13px] font-semibold text-[var(--ink)]">{op.companyName}</div>
-                <div className="text-[11px] text-[var(--ink-secondary)]">★ {op.averageRating} · {op.countryOfOrigin}</div>
+                <div className="truncate text-[13px] font-semibold !text-[#193A38]">{op.companyName}</div>
+                <div className="text-[11px] !text-[#516D6A]">★ {op.averageRating} · {op.countryOfOrigin}</div>
               </div>
               {op.isVerified && <span className="badge badge-success shrink-0">Verified</span>}
             </Link>

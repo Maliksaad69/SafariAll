@@ -236,7 +236,7 @@ export default function Navbar() {
                             key={item.href}
                             href={item.href}
                             onClick={() => setOpenMenu(null)}
-                            className="block rounded-lg px-3 py-2 text-[13px] font-medium normal-case tracking-normal text-[#344C49] transition-colors hover:bg-[#E4DBB4]/40 hover:text-[#193A38]"
+                            className="block rounded-lg px-3 py-2 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]"
                           >
                             {item.label}
                           </Link>
@@ -265,21 +265,21 @@ export default function Navbar() {
                 </button>
                 {notifOpen && (
                   <div className="popover absolute right-0 mt-3 w-[330px] overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
-                    <div className="border-b border-[#DEDCCF] px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#344C49]/70">
+                    <div className="border-b border-[#DEDCCF] px-3 py-2 text-[11px] font-bold uppercase tracking-wider !text-[#516D6A]">
                       Travel notifications
                     </div>
                     <div className="max-h-[380px] overflow-y-auto">
                       {notifications.length === 0 ? (
-                        <p className="px-3 py-6 text-center text-[13px] font-normal text-[#344C49]/70">
+                        <p className="px-3 py-6 text-center text-[13px] font-normal !text-[#516D6A]">
                           No notifications yet.
                         </p>
                       ) : (
                         notifications.map((n) => {
                           const inner = (
                             <>
-                              <div className="text-[13px] font-bold text-[#193A38]">{n.title}</div>
-                              <div className="mt-0.5 text-[12px] font-normal leading-snug text-[#344C49]">{n.body}</div>
-                              <div className="mt-1 text-[10px] font-normal uppercase tracking-wide text-[#344C49]/70">
+                              <div className="text-[13px] font-bold !text-[#193A38]">{n.title}</div>
+                              <div className="mt-0.5 text-[12px] font-normal leading-snug !text-[#344C49]">{n.body}</div>
+                              <div className="mt-1 text-[10px] font-medium uppercase tracking-wide !text-[#516D6A]">
                                 {new Date(n.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 {n.type === 'CHAT_MESSAGE' ? ' · open it with the chat button' : ''}
                               </div>
@@ -326,19 +326,19 @@ export default function Navbar() {
                   <ChevronDown className="h-3.5 w-3.5 text-white/80" />
                 </button>
                 {userMenuOpen && (
-                  <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#344C49] border border-[#DEDCCF] shadow-xl">
-                    <div className="truncate border-b border-[#DEDCCF] px-3 py-2 text-[11px] text-[#344C49]/70">{sessionUser.email}</div>
+                  <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
+                    <div className="truncate border-b border-[#DEDCCF] px-3 py-2 text-[11px] font-medium !text-[#516D6A]">{sessionUser.email}</div>
                     {sessionUser.role === 'OPERATOR' && (
-                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Agency Dashboard</Link>
+                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Agency Dashboard</Link>
                     )}
                     {sessionUser.role === 'ADMIN' && (
-                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Admin Panel</Link>
+                      <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Admin Panel</Link>
                     )}
                     {sessionUser.role === 'TRAVELER' && (
                       <>
-                        <Link href="/favorites" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Saved Tours</Link>
-                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">My Bookings</Link>
-                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] transition-colors hover:bg-[#E4DBB4]/30 hover:text-[#193A38]">Request a Quote</Link>
+                        <Link href="/favorites" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Saved Tours</Link>
+                        <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">My Bookings</Link>
+                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Request a Quote</Link>
                       </>
                     )}
                     <button onClick={handleLogout} className="block w-full border-t border-[#DEDCCF] px-3 py-2 text-left text-[13px] font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)]">Sign Out</button>
