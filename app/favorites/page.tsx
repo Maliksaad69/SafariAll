@@ -77,7 +77,7 @@ export default async function FavoritesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-[var(--brand-light)] text-xs font-semibold uppercase tracking-wider backdrop-blur-md border border-white/15">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-white text-xs font-semibold uppercase tracking-wider backdrop-blur-md border border-white/15">
             <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
             <span>Saved Shortlist</span>
           </div>

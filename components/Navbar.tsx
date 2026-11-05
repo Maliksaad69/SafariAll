@@ -304,9 +304,9 @@ export default function Navbar() {
             {sessionUser && isDesktop === true && <ChatLauncher />}
             <Link href="/favorites" className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white group" aria-label="Favorites list">
               <div className="relative">
-                <Heart className="h-5 w-5 text-white/90 group-hover:fill-[#E4DBB4]/40" strokeWidth={1.6} />
+                <Heart className="h-5 w-5 text-white/90 group-hover:fill-white/30" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#E4DBB4] px-1 text-[9px] font-bold text-[#193A38] shadow">{favoriteCount}</span>
+                  <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#193A38] px-1 text-[9px] font-bold text-white shadow border border-white/20">{favoriteCount}</span>
                 )}
               </div>
               List

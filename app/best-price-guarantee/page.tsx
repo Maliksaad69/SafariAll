@@ -68,7 +68,7 @@ export default function BestPriceGuaranteePage() {
                 Not every safari quote is identical. Vehicle quality, camp concessions, guide experience, and fly-in vs. drive-in logistics significantly affect your safari experience. Our marketplace helps you weigh true value.
               </p>
               <div className="flex flex-wrap gap-3.5">
-                <Link href="/tours" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
+                <Link href="/tours" className="btn bg-white hover:bg-white/90 text-[#214446] font-bold inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm shadow-sm">
                   <span>Compare Safaris</span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>

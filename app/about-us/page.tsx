@@ -44,8 +44,8 @@ export default function AboutUsPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-deep)] via-[var(--brand-deep)]/90 to-transparent" />
           <div className="relative px-6 py-12 sm:px-12 sm:py-16 max-w-3xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-[var(--brand-light)]">
-              <Compass className="h-3.5 w-3.5 text-[var(--brand-light)]" />
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-white">
+              <Compass className="h-3.5 w-3.5 text-white" />
               <span>About SafariRequest</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-white mb-5 leading-tight">
@@ -55,7 +55,7 @@ export default function AboutUsPage() {
               SafariRequest connects travelers directly to verified safari operators, destinations, and custom itineraries across East, Southern, and Central Africa — transparently, with no hidden markups.
             </p>
             <div className="flex flex-wrap gap-3.5">
-              <Link href="/tours" className="btn btn-primary px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
+              <Link href="/tours" className="btn bg-white text-[#214446] hover:bg-white/90 px-6 py-3 rounded-xl text-sm font-bold shadow-sm">
                 Explore Safaris
               </Link>
               <Link href="/operators" className="btn bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-semibold backdrop-blur-md transition-all">

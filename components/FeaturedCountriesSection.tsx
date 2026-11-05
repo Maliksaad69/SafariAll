@@ -395,17 +395,17 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                     {activeCountry.name}
                   </h3>
                   <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/15 text-xs text-white">
-                    <Star className="w-3.5 h-3.5 fill-[var(--brand)] text-[var(--brand)]" />
-                    <span className="font-extrabold text-[var(--brand)]">
+                    <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
+                    <span className="font-extrabold text-white">
                       {(activeCountry.rating ?? 4.9).toFixed(1)}
                     </span>
-                    <span className="text-white/70">
+                    <span className="text-white/80">
                       ({activeCountry.reviewCount?.toLocaleString() ?? '1.2k'} reviews)
                     </span>
                   </div>
                 </div>
 
-                <p className="text-sm sm:text-base font-bold text-[var(--brand)] mb-3 flex items-center gap-2 drop-shadow">
+                <p className="text-sm sm:text-base font-bold text-white mb-3 flex items-center gap-2 drop-shadow">
                   <span>✦</span>
                   <span>{currentMeta.tagline}</span>
                 </p>
@@ -418,11 +418,11 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
                   {/* Daily Budget */}
                   <div className="p-3 sm:p-3.5 rounded-2xl bg-white/12 backdrop-blur-md border border-white/20 flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[var(--brand)]/20 border border-[var(--brand)]/40 flex items-center justify-center shrink-0 text-[var(--brand)] font-extrabold text-sm">
+                    <div className="w-9 h-9 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0 text-white font-extrabold text-sm">
                       $
                     </div>
                     <div className="min-w-0">
-                      <div className="text-[11px] uppercase tracking-wider text-white/70 font-bold">Daily Rates</div>
+                      <div className="text-[11px] uppercase tracking-wider text-white/80 font-bold">Daily Rates</div>
                       <div className="text-xs sm:text-sm font-bold text-white truncate">
                         {activeCountry.dailyRates?.replace('per day', 'pp/day') || 'Varies by comfort'}
                       </div>
@@ -432,10 +432,10 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   {/* Best Travel Window */}
                   <div className="p-3 sm:p-3.5 rounded-2xl bg-white/12 backdrop-blur-md border border-white/20 flex items-start gap-3">
                     <div className="w-9 h-9 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0 text-white">
-                      <Calendar className="w-4 h-4 text-[var(--brand)]" />
+                      <Calendar className="w-4 h-4 text-white" />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-[11px] uppercase tracking-wider text-white/70 font-bold">Best Season</div>
+                      <div className="text-[11px] uppercase tracking-wider text-white/80 font-bold">Best Season</div>
                       <div className="text-xs sm:text-sm font-bold text-white truncate">
                         {activeCountry.bestTimeSummary?.split('(')[0].trim() || 'June – October'}
                       </div>
@@ -445,7 +445,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   {/* Child National Parks */}
                   <div className="p-3 sm:p-3.5 rounded-2xl bg-white/12 backdrop-blur-md border border-white/20 flex items-start gap-3">
                     <div className="w-9 h-9 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0 text-white">
-                      <MapPin className="w-4 h-4 text-[var(--brand)]" />
+                      <MapPin className="w-4 h-4 text-white" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="text-[11px] uppercase tracking-wider text-white/70 font-bold">Featured Parks</div>
@@ -540,7 +540,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                       <div className="text-xs font-extrabold truncate">{country.name}</div>
                       <div
                         className={`text-[10px] font-medium truncate ${
-                          isSelected ? 'text-[var(--brand)]' : 'text-[var(--ink-secondary)]'
+                          isSelected ? 'text-white/90' : 'text-[var(--ink-secondary)]'
                         }`}
                       >
                         {country.dailyRates ? country.dailyRates.split(' ')[0] + '/day' : 'On request'}

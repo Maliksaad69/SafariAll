@@ -143,7 +143,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
         aria-expanded={open}
         aria-haspopup="dialog"
       >
-        <Search className="h-3.5 w-3.5 text-[#E4DBB4]" />
+        <Search className="h-3.5 w-3.5 text-white" />
         Search
       </button>
 

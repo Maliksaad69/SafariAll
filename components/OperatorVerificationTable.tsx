@@ -79,8 +79,8 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
                 <td className="px-6 py-4 text-amber-500 font-bold">★ {op.averageRating} <span className="font-normal text-[var(--ink-muted)]">({op.totalReviews})</span></td>
                 <td className="px-6 py-4">
                   {op.isVerified ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-[10px]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Active
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 text-white rounded-full font-bold text-[10px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-white" /> Verified Active
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-900 rounded-full font-bold text-[10px]">
