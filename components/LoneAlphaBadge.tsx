@@ -7,11 +7,11 @@ export default function LoneAlphaBadge({ className = "" }: { className?: string 
         href="https://malik-saad-ahmed-awan.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        title="Voir le profil de Saad Ahmed — LoneAlpha"
+        title="View Saad Ahmed's profile — LoneAlpha"
         className="group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F7F6F1] border border-[#DEDCCF] hover:border-[#C5A059] shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 text-[#344C49]"
       >
         <span className="text-[11px] tracking-wide text-[#516D6A] font-medium leading-none">
-          Propulsé par
+          Powered by
         </span>
         <span className="w-px h-3.5 bg-[#DEDCCF]" />
         <div className="flex items-center gap-2">
