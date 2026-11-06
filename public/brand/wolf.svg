@@ -1,0 +1,61 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wolfGoldGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="45%" stop-color="#C5A059" />
+      <stop offset="100%" stop-color="#926F28" />
+    </linearGradient>
+    <linearGradient id="wolfGoldLight" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFBEB" />
+      <stop offset="100%" stop-color="#E4C176" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Ear -->
+  <path d="M4 2.5L9 8L3.5 10.5L4 2.5Z" fill="url(#wolfGoldGrad)" />
+  <path d="M5 4.5L8.2 8L4.8 9.5L5 4.5Z" fill="url(#wolfGoldLight)" opacity="0.9" />
+
+  <!-- Right Ear -->
+  <path d="M20 2.5L15 8L20.5 10.5L20 2.5Z" fill="url(#wolfGoldGrad)" />
+  <path d="M19 4.5L15.8 8L19.2 9.5L19 4.5Z" fill="url(#wolfGoldLight)" opacity="0.9" />
+
+  <!-- Forehead Crown -->
+  <path d="M12 4.5L9 8L12 12L15 8L12 4.5Z" fill="url(#wolfGoldLight)" />
+
+  <!-- Brow & Temples -->
+  <path d="M9 8L3.5 10.5L7.5 12.5L12 12L9 8Z" fill="url(#wolfGoldGrad)" opacity="0.9" />
+  <path d="M15 8L20.5 10.5L16.5 12.5L12 12L15 8Z" fill="url(#wolfGoldGrad)" opacity="0.8" />
+
+  <!-- Cheek Tufts Left -->
+  <path d="M3.5 10.5L1.5 14L6 14.5L7.5 12.5L3.5 10.5Z" fill="url(#wolfGoldGrad)" opacity="0.85" />
+  <path d="M1.5 14L4 18L7.5 16.5L6 14.5L1.5 14Z" fill="url(#wolfGoldGrad)" opacity="0.75" />
+
+  <!-- Cheek Tufts Right -->
+  <path d="M20.5 10.5L22.5 14L18 14.5L16.5 12.5L20.5 10.5Z" fill="url(#wolfGoldGrad)" opacity="0.85" />
+  <path d="M22.5 14L20 18L16.5 16.5L18 14.5L22.5 14Z" fill="url(#wolfGoldGrad)" opacity="0.75" />
+
+  <!-- Eyes - Keen Alpha Slits -->
+  <polygon points="7.2,12.2 10.2,12.6 8.5,13.6" fill="#0E1F1E" />
+  <polygon points="7.8,12.4 9.6,12.7 8.7,13.3" fill="#FFFBEB" />
+
+  <polygon points="16.8,12.2 13.8,12.6 15.5,13.6" fill="#0E1F1E" />
+  <polygon points="16.2,12.4 14.4,12.7 15.3,13.3" fill="#FFFBEB" />
+
+  <!-- Snout Bridge -->
+  <path d="M12 12L9.5 14L10.8 18.5L12 18.5L12 12Z" fill="url(#wolfGoldLight)" />
+  <path d="M12 12L14.5 14L13.2 18.5L12 18.5L12 12Z" fill="url(#wolfGoldGrad)" opacity="0.9" />
+
+  <!-- Muzzle Cheeks -->
+  <path d="M9.5 14L7.5 16.5L10.8 18.5L9.5 14Z" fill="url(#wolfGoldGrad)" opacity="0.8" />
+  <path d="M14.5 14L16.5 16.5L13.2 18.5L14.5 14Z" fill="url(#wolfGoldGrad)" opacity="0.7" />
+
+  <!-- Jaw & Chin Flanks -->
+  <path d="M7.5 16.5L10.5 21L12 18.5L10.8 18.5L7.5 16.5Z" fill="url(#wolfGoldGrad)" opacity="0.85" />
+  <path d="M16.5 16.5L13.5 21L12 18.5L13.2 18.5L16.5 16.5Z" fill="url(#wolfGoldGrad)" opacity="0.75" />
+
+  <!-- Nose Tip -->
+  <polygon points="10.8,18.5 13.2,18.5 12,20.2" fill="#0E1F1E" />
+
+  <!-- Chin Tip -->
+  <polygon points="10.5,20.8 13.5,20.8 12,22.2" fill="url(#wolfGoldLight)" />
+</svg>
