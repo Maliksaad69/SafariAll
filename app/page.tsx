@@ -134,7 +134,7 @@ export default async function HomePage() {
                   Handpicked authentic itineraries by local safari operators
                 </p>
               </div>
-              <Link href="/tours" className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#214446] hover:text-[#193A38] self-start sm:self-auto transition-colors">
+              <Link href="/african-safari-tours" className="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#214446] hover:text-[#193A38] self-start sm:self-auto transition-colors">
                 View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
               </Link>
             </div>

@@ -37,7 +37,7 @@ export default function HeroSearchForm() {
       }
     }
     const qs = params.toString();
-    router.push(qs ? `/tours?${qs}` : '/tours');
+    router.push(qs ? `/african-safari-tours?${qs}` : '/african-safari-tours');
   };
 
   const countries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe', 'Namibia'];

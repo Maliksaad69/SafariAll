@@ -55,7 +55,7 @@ export default function AboutUsPage() {
               SafariRequest connects travelers directly to verified safari operators, destinations, and custom itineraries across East, Southern, and Central Africa — transparently, with no hidden markups.
             </p>
             <div className="flex flex-wrap gap-3.5">
-              <Link href="/tours" className="btn bg-white text-[#214446] hover:bg-white/90 px-6 py-3 rounded-xl text-sm font-bold shadow-sm">
+              <Link href="/african-safari-tours" className="btn bg-white text-[#214446] hover:bg-white/90 px-6 py-3 rounded-xl text-sm font-bold shadow-sm">
                 Explore Safaris
               </Link>
               <Link href="/operators" className="btn bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-semibold backdrop-blur-md transition-all">

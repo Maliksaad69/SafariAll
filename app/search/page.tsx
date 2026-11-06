@@ -7,21 +7,21 @@ import { Search, MapPin, CalendarRange, ArrowRight } from 'lucide-react';
 import SearchAutocomplete from '@/components/SearchAutocomplete';
 
 const suggestedSearches = [
-  { term: 'Tanzania safari packages', href: '/tours?country=Tanzania' },
-  { term: 'Kenya luxury safari', href: '/tours?country=Kenya&comfort=LUXURY' },
-  { term: 'Botswana Okavango delta', href: '/tours?search=okavango' },
-  { term: 'Uganda gorilla trekking', href: '/tours?search=gorilla&country=Uganda' },
+  { term: 'Tanzania safari packages', href: '/african-safari-tours?country=Tanzania' },
+  { term: 'Kenya luxury safari', href: '/african-safari-tours?country=Kenya&comfort=LUXURY' },
+  { term: 'Botswana Okavango delta', href: '/african-safari-tours?search=okavango' },
+  { term: 'Uganda gorilla trekking', href: '/african-safari-tours?search=gorilla&country=Uganda' },
   { term: 'South Africa kruger safari', href: '/parks/kruger-national-park' },
-  { term: 'Namibia desert adventure', href: '/tours?search=desert' },
-  { term: 'budget camping safari', href: '/tours?comfort=BUDGET' },
-  { term: 'private guided safari', href: '/tours?tourType=PRIVATE' },
+  { term: 'Namibia desert adventure', href: '/african-safari-tours?search=desert' },
+  { term: 'budget camping safari', href: '/african-safari-tours?comfort=BUDGET' },
+  { term: 'private guided safari', href: '/african-safari-tours?tourType=PRIVATE' },
 ];
 
 const featuredDestinations = [
-  { name: 'Tanzania', blurb: 'Serengeti & Ngorongoro', href: '/tours?country=Tanzania' },
-  { name: 'Kenya', blurb: 'Masai Mara & Amboseli', href: '/tours?country=Kenya' },
-  { name: 'Botswana', blurb: 'Okavango Delta', href: '/tours?country=Botswana' },
-  { name: 'South Africa', blurb: 'Kruger & Private Reserves', href: '/tours?country=South+Africa' },
+  { name: 'Tanzania', blurb: 'Serengeti & Ngorongoro', href: '/african-safari-tours?country=Tanzania' },
+  { name: 'Kenya', blurb: 'Masai Mara & Amboseli', href: '/african-safari-tours?country=Kenya' },
+  { name: 'Botswana', blurb: 'Okavango Delta', href: '/african-safari-tours?country=Botswana' },
+  { name: 'South Africa', blurb: 'Kruger & Private Reserves', href: '/african-safari-tours?country=South+Africa' },
 ];
 
 export default function SearchPage() {

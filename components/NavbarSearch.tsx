@@ -84,7 +84,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = query.trim();
-    if (q) closeAndGo(`/tours?search=${encodeURIComponent(q)}`);
+    if (q) closeAndGo(`/african-safari-tours?search=${encodeURIComponent(q)}`);
   };
 
   if (mobile) {
@@ -310,7 +310,7 @@ function SearchResultsPanel({
       {/* See-all footer */}
       <button
         type="button"
-        onClick={() => onResultClick(`/tours?search=${encodeURIComponent(query.trim())}`)}
+        onClick={() => onResultClick(`/african-safari-tours?search=${encodeURIComponent(query.trim())}`)}
         className="w-full bg-[var(--surface-raised)] px-4 py-3 text-center text-xs font-bold text-[var(--brand)] transition-colors hover:bg-[var(--surface-sunk)]"
       >
         See all results for &ldquo;{query.trim()}&rdquo;

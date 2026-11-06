@@ -71,7 +71,7 @@ export default function FilterSidebar({
   );
 
   const handleParamChange = (name: string, value: string) => {
-    router.push(`/tours?${createQueryString({ [name]: value })}`);
+    router.push(`/african-safari-tours?${createQueryString({ [name]: value })}`);
   };
 
   // Which month options exist, based on today's date
@@ -87,7 +87,7 @@ export default function FilterSidebar({
   const selectedTravelers = Number(currentTravelers || '2');
 
   const resetAll = () => {
-    router.push('/tours');
+    router.push('/african-safari-tours');
   };
 
   const selectClass =

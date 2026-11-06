@@ -117,9 +117,9 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
         <div className="max-w-[1230px] mx-auto px-4 flex items-center gap-2 flex-wrap">
           <Link href="/" className="text-[var(--brand-deep)] font-bold hover:underline">Home</Link>
           <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />
-          <Link href="/tours" className="text-[var(--brand-deep)] font-bold hover:underline">All Tours</Link>
+          <Link href="/african-safari-tours" className="text-[var(--brand-deep)] font-bold hover:underline">All Tours</Link>
           <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />
-          <Link href={`/tours?country=${tour.primaryCountry}`} className="text-[var(--brand-deep)] font-bold hover:underline">{tour.primaryCountry} Tours</Link>
+          <Link href={`/african-safari-tours?country=${tour.primaryCountry}`} className="text-[var(--brand-deep)] font-bold hover:underline">{tour.primaryCountry} Tours</Link>
           <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />
           <span className="text-[var(--ink)] font-extrabold truncate max-w-md">{tour.title}</span>
         </div>

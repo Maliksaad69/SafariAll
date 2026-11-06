@@ -167,7 +167,7 @@ export default async function TopSafariCountriesPage() {
                     <Link href={`/parks/${country.slug}`} className="btn btn-primary text-sm font-bold px-5 py-2.5 rounded-xl">
                       Explore {country.name} Guide &rarr;
                     </Link>
-                    <Link href={`/tours?country=${country.name}`} className="btn btn-secondary text-sm font-bold px-5 py-2.5 rounded-xl">
+                    <Link href={`/african-safari-tours?country=${country.name}`} className="btn btn-secondary text-sm font-bold px-5 py-2.5 rounded-xl">
                       View {country.toursCount.toLocaleString()} {country.name} Safaris &rarr;
                     </Link>
                   </div>

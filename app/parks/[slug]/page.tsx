@@ -168,7 +168,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
             {/* Quick Media & Navigation Pills */}
             <div className="flex flex-wrap items-center gap-3">
               <Link
-                href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`}
+                href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}`}
                 className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-md"
               >
                 <span>Browse {park.name} Safaris ({relatedTours.length})</span>
@@ -298,7 +298,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
 
                 {idx < sections.length - 1 && (
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}&search=${encodeURIComponent(s.title)}`}
                     className="text-sm text-[var(--brand-deep)] hover:underline font-bold inline-flex items-center gap-1.5 transition-colors"
                   >
                     <ChevronRight className="w-4 h-4 text-[var(--brand)]" /> Find safari packages covering {s.title.toLowerCase()} &rarr;
@@ -321,7 +321,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
 
                 <div className="flex flex-wrap items-center gap-3.5 mb-8">
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}`}
                     className="btn btn-primary inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm sm:text-base shadow-sm"
                   >
                     <span>Browse All {park.name} Safaris</span>
@@ -337,28 +337,28 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=MID_RANGE`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=MID_RANGE`}
                     className="flex items-center gap-2 text-[var(--ink)] hover:text-[var(--brand-deep)] font-bold p-2 rounded-xl bg-white/70 border border-[var(--border-soft)] transition-colors"
                   >
                     <ChevronRight className="w-4 h-4 text-[var(--brand)] shrink-0" />
                     <span>Mid-Range Lodge Safaris</span>
                   </Link>
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=LUXURY`}
                     className="flex items-center gap-2 text-[var(--ink)] hover:text-[var(--brand-deep)] font-bold p-2 rounded-xl bg-white/70 border border-[var(--border-soft)] transition-colors"
                   >
                     <ChevronRight className="w-4 h-4 text-[var(--brand)] shrink-0" />
                     <span>Luxury Tented Camps</span>
                   </Link>
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}&comfort=BUDGET`}
                     className="flex items-center gap-2 text-[var(--ink)] hover:text-[var(--brand-deep)] font-bold p-2 rounded-xl bg-white/70 border border-[var(--border-soft)] transition-colors"
                   >
                     <ChevronRight className="w-4 h-4 text-[var(--brand)] shrink-0" />
                     <span>Budget &amp; Small Group Tours</span>
                   </Link>
                   <Link
-                    href={`/tours?country=${encodeURIComponent(countryName(park.slug))}&tourType=PRIVATE`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}&tourType=PRIVATE`}
                     className="flex items-center gap-2 text-[var(--ink)] hover:text-[var(--brand-deep)] font-bold p-2 rounded-xl bg-white/70 border border-[var(--border-soft)] transition-colors"
                   >
                     <ChevronRight className="w-4 h-4 text-[var(--brand)] shrink-0" />
@@ -575,7 +575,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 </p>
               </div>
               <Link
-                href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`}
+                href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}`}
                 className="btn btn-secondary text-sm px-5 py-2.5 rounded-xl font-bold shrink-0 self-start sm:self-auto"
               >
                 View all tours &rarr;
@@ -590,7 +590,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
 
             <div className="text-center pt-4">
               <Link
-                href={`/tours?country=${encodeURIComponent(countryName(park.slug))}`}
+                href={`/african-safari-tours?country=${encodeURIComponent(countryName(park.slug))}`}
                 className="btn btn-primary inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl font-bold text-base shadow-md"
               >
                 <span>Browse All {park.name} Safaris</span>

@@ -137,7 +137,7 @@ function QuoteRequestForm() {
         </div>
         <div>
           <button
-            onClick={() => router.push('/tours')}
+            onClick={() => router.push('/african-safari-tours')}
             className="btn btn-primary px-6 py-3 rounded-xl text-xs font-semibold shadow-sm"
           >
             Return to Safari Search

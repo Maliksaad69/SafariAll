@@ -12,5 +12,5 @@ export default async function DashboardPage() {
   if (session.role === 'OPERATOR') redirect('/operator-portal');
   if (session.role === 'ADMIN') redirect('/admin');
 
-  redirect('/tours');
+  redirect('/african-safari-tours');
 }

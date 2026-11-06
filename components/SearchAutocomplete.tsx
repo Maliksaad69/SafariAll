@@ -55,7 +55,7 @@ export default function SearchAutocomplete() {
     e.preventDefault();
     if (query.trim()) {
       setIsOpen(false);
-      router.push(`/tours?search=${encodeURIComponent(query.trim())}`);
+      router.push(`/african-safari-tours?search=${encodeURIComponent(query.trim())}`);
     }
   };
 

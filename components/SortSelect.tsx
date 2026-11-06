@@ -18,7 +18,7 @@ export default function SortSelect({ currentSort = 'recommended' }: SortSelectPr
     } else {
       params.delete('sort');
     }
-    router.push(`/tours?${params.toString()}`);
+    router.push(`/african-safari-tours?${params.toString()}`);
   };
 
   return (

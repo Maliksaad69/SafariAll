@@ -174,7 +174,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                             <span className="text-[var(--ink-secondary)] font-medium">Destinations:</span>
                             <span className="flex gap-1.5 flex-wrap">
                               {op.destinations.map((d: string) => (
-                                <Link key={d} href={`/tours?country=${encodeURIComponent(d)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1 font-semibold">
+                                <Link key={d} href={`/african-safari-tours?country=${encodeURIComponent(d)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1 font-semibold">
                                   <MapPin className="h-3 w-3" /> {d}
                                 </Link>
                               ))}
@@ -187,7 +187,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
                             <Link href={`/operators/${op.slug}`} className="btn btn-primary btn-sm">
                               View Operator <ChevronRight className="w-3.5 h-3.5" />
                             </Link>
-                            <Link href={`/tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="btn btn-secondary btn-sm">
+                            <Link href={`/african-safari-tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="btn btn-secondary btn-sm">
                               All {op.toursCount} Tours <ChevronRight className="w-3.5 h-3.5" />
                             </Link>
                           </div>

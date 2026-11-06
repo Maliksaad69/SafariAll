@@ -112,7 +112,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Props)
                 <p className="text-sm text-[var(--ink-secondary)]">The agency has received your reservation request and will confirm availability by email shortly.</p>
                 <div className="flex justify-center gap-3 pt-2">
                   <button type="button" onClick={close} className="btn btn-secondary btn-sm">Close</button>
-                  <button type="button" onClick={() => router.push('/tours')} className="btn btn-primary btn-sm">Continue Exploring</button>
+                  <button type="button" onClick={() => router.push('/african-safari-tours')} className="btn btn-primary btn-sm">Continue Exploring</button>
                 </div>
               </div>
             ) : (

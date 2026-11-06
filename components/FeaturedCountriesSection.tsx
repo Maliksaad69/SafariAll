@@ -417,7 +417,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
               {/* Bottom Action Bar */}
               <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 pt-4 border-t border-white/15">
                 <Link
-                  href={`/tours?country=${encodeURIComponent(activeCountry.name)}`}
+                  href={`/african-safari-tours?country=${encodeURIComponent(activeCountry.name)}`}
                   className="btn btn-primary min-h-[46px] text-sm font-bold shadow-md hover:shadow-lg justify-center gap-2 group"
                 >
                   <span>Explore {activeCountry.name} Safaris</span>
@@ -599,7 +599,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 {/* Footer Buttons */}
                 <div className="p-4 pt-0 grid grid-cols-2 gap-2">
                   <Link
-                    href={`/tours?country=${encodeURIComponent(country.name)}`}
+                    href={`/african-safari-tours?country=${encodeURIComponent(country.name)}`}
                     className="btn btn-primary btn-sm text-xs font-bold justify-center"
                   >
                     <span>View Tours</span>

@@ -79,11 +79,11 @@ export default function Navbar() {
 
   const navMenus = [
     {
-      href: '/tours',
+      href: '/african-safari-tours',
       label: 'Safaris & Tours',
       items: [
-        ...countries.map((country) => ({ label: `${country} Safaris`, href: `/tours?country=${encodeURIComponent(country)}` })),
-        { label: 'All Safaris', href: '/tours' },
+        ...countries.map((country) => ({ label: `${country} Safaris`, href: `/african-safari-tours?country=${encodeURIComponent(country)}` })),
+        { label: 'All Safaris', href: '/african-safari-tours' },
       ],
     },
     {

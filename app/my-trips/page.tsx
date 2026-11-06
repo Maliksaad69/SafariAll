@@ -230,7 +230,7 @@ export default function MyTripsPage() {
               Track tour departure progress, assigned vehicles, live communications, and post-trip reviews.
             </p>
           </div>
-          <Link href="/tours" className="btn btn-secondary text-xs px-4 py-2 rounded-xl">
+          <Link href="/african-safari-tours" className="btn btn-secondary text-xs px-4 py-2 rounded-xl">
             Browse Tours
           </Link>
         </div>
@@ -251,7 +251,7 @@ export default function MyTripsPage() {
             <p className="text-xs sm:text-sm text-[var(--ink-muted)] max-w-md mx-auto mb-6">
               Request a reservation for any safari package to start tracking your itinerary, car allocation, and conversations here.
             </p>
-            <Link href="/tours" className="btn btn-primary px-6 py-3 rounded-xl text-xs font-semibold shadow-sm">
+            <Link href="/african-safari-tours" className="btn btn-primary px-6 py-3 rounded-xl text-xs font-semibold shadow-sm">
               Browse Safari Tours
             </Link>
           </div>

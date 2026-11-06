@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         destination: '/top-safari-countries',
         permanent: true,
       },
+      {
+        source: '/tours',
+        destination: '/african-safari-tours',
+        permanent: true,
+      },
     ];
   },
 };

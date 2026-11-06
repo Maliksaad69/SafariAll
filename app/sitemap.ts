@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticUrls = [
     '',
-    '/tours',
+    '/african-safari-tours',
     '/operators',
     '/top-safari-countries',
     '/login',
