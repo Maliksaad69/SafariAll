@@ -1,7 +1,7 @@
 'use client';
 
 
-import { MapPin } from 'lucide-react';
+import { MapPin, Compass } from 'lucide-react';
 
 export interface HeroSlide {
   url: string;
@@ -18,7 +18,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
   return [
     {
       url: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2560&q=85',
-      location: 'Serengeti National Park · Tanzania',
+      location: "AFRICA'S MARKETPLACE FOR SAFARI TOURS",
       badge: 'Zero Commission · Direct Local Quotes',
       title: `Compare ${countStr} African`,
       titleHighlight: 'Safari Tours',
@@ -66,8 +66,8 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
     },
     {
       url: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=2560&q=85',
-      location: 'Tarangire & Serengeti · Tanzania',
-      badge: 'Sunset Wilderness · Tarangire & Serengeti',
+      location: 'Tarangire National Park · Tanzania',
+      badge: 'Sunset Wilderness · Tarangire',
       title: 'Silhouetted Giraffes On',
       titleHighlight: 'Golden Savannas',
       subtitle: 'Experience incandescent African sunsets across vast acacia and baobab plains',
@@ -130,15 +130,15 @@ export default function HeroBackgroundSlider({
         <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-deep)]/35 via-transparent to-[var(--brand)]/20 z-15" />
       </div>
 
-      {/* ── Top Floating Location Badge ── */}
+      {/* ── Top Floating Location / Brand Badge ── */}
       <div className="absolute top-3.5 sm:top-4 right-3 sm:right-6 z-30 flex items-center gap-2">
         {showLocationBadge && currentSlide && (
           <div
             key={currentSlide.location}
-            className="animate-fade-up hidden sm:flex items-center gap-1.5 rounded-full border border-white/25 bg-black/55 px-3 py-1 backdrop-blur-md shadow-md"
+            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/25 bg-black/55 px-2.5 sm:px-3 py-1 backdrop-blur-md shadow-md"
           >
-            <MapPin className="h-3 w-3 text-[var(--gold)] shrink-0 animate-pulse" />
-            <span className="text-[11px] font-bold text-white tracking-wide drop-shadow-sm">
+            <Compass className="h-3 w-3 text-[#E4DBB4] shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-extrabold text-white tracking-wider drop-shadow-sm uppercase">
               {currentSlide.location}
             </span>
           </div>
