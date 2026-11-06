@@ -145,7 +145,7 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
       <div className="space-y-3 pt-2">
         <ReserveDialog tourId={dbTourId || tourId} tourTitle={tourTitle} minPriceUsd={minPriceUsd} />
         <Link
-          href={`/quote/request?tourId=${encodeURIComponent(tourId)}`}
+          href={`/custom-safari-quote?tourId=${encodeURIComponent(tourId)}`}
           className="btn btn-secondary w-full text-sm font-bold py-3"
         >
           Request a quote instead <ChevronRight className="h-4 w-4" />

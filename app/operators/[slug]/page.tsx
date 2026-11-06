@@ -249,7 +249,7 @@ export default async function OperatorProfilePage({ params }: OperatorProfilePag
               </div>
 
               <Link
-                href="/quote/request"
+                href="/custom-safari-quote"
                 className="btn btn-primary w-full py-3 text-xs uppercase tracking-wider"
               >
                 <span>Request Custom Quote</span>

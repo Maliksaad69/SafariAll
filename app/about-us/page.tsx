@@ -58,7 +58,7 @@ export default function AboutUsPage() {
               <Link href="/african-safari-tours" className="btn bg-white text-[#214446] hover:bg-white/90 px-6 py-3 rounded-xl text-sm font-bold shadow-sm">
                 Explore Safaris
               </Link>
-              <Link href="/operators" className="btn bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-semibold backdrop-blur-md transition-all">
+              <Link href="/safari-operators" className="btn bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-sm font-semibold backdrop-blur-md transition-all">
                 Meet Operators
               </Link>
             </div>
@@ -99,7 +99,7 @@ export default function AboutUsPage() {
             <div className="text-xs text-[var(--ink-muted)]">
               Ready to begin planning your safari adventure?
             </div>
-            <Link href="/quote/request" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
+            <Link href="/custom-safari-quote" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
               <span>Request a Custom Quote</span>
               <ArrowRight className="h-4 w-4" />
             </Link>

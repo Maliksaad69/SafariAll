@@ -215,7 +215,7 @@ export default async function AfricanSafariToursPage({ searchParams }: AfricanSa
           <h2 className="text-xl sm:text-2xl font-bold font-display !text-[#193A38] mb-5">Popular Safari Searches</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3.5 text-sm sm:text-[14.5px] font-semibold">
             <Link href="/african-safari-tours" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Safari Tour Operators</Link>
-            <Link href="/operators" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Top 10 Safari Operators</Link>
+            <Link href="/safari-operators" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Top 10 Safari Operators</Link>
             <Link href="/african-safari-tours?comfort=BUDGET" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> African Budget Safaris</Link>
             <Link href="/african-safari-tours?search=gorilla" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Gorilla Trekking Tours</Link>
             <Link href="/african-safari-tours?search=chimp" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Chimp Trekking Tours</Link>
@@ -324,13 +324,13 @@ export default async function AfricanSafariToursPage({ searchParams }: AfricanSa
                 <p className="text-sm sm:text-[14.5px] text-[var(--ink)] leading-relaxed mb-4 line-clamp-3">
                   Our experience with local safari guides was excellent. Everything from the game drives to the bush camp exceeded expectations. Would recommend to any traveler looking for an authentic adventure.
                 </p>
-                <Link href="/reviews" className="text-sm text-[var(--brand-deep)] hover:underline font-bold inline-flex items-center gap-1">Read full review &rarr;</Link>
+                <Link href="/safari-reviews" className="text-sm text-[var(--brand-deep)] hover:underline font-bold inline-flex items-center gap-1">Read full review &rarr;</Link>
               </div>
             ))}
           </div>
 
           <div className="mt-8 flex justify-start">
-            <Link href="/reviews" className="btn btn-secondary text-sm sm:text-base font-bold px-6 py-3">
+            <Link href="/safari-reviews" className="btn btn-secondary text-sm sm:text-base font-bold px-6 py-3">
               All 180,175 Safari Reviews <ChevronRight className="w-4 h-4 ml-1" />
             </Link>
           </div>

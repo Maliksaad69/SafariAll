@@ -95,21 +95,21 @@ export default function Navbar() {
       ],
     },
     {
-      href: '/blogs',
-      label: 'Blogs',
+      href: '/safari-blog',
+      label: 'Safari Blog',
       items: [
-        { label: 'All Safari Stories', href: '/blogs' },
-        { label: 'Travel Guides', href: '/blogs?tag=Travel%20Guides' },
-        { label: 'Parks & Wildlife', href: '/blogs?tag=Parks%20%26%20Wildlife' },
-        { label: 'Trip Reports', href: '/blogs?tag=Trip%20Reports' },
+        { label: 'All Safari Stories', href: '/safari-blog' },
+        { label: 'Travel Guides', href: '/safari-blog?tag=Travel%20Guides' },
+        { label: 'Parks & Wildlife', href: '/safari-blog?tag=Parks%20%26%20Wildlife' },
+        { label: 'Trip Reports', href: '/safari-blog?tag=Trip%20Reports' },
       ],
     },
     {
-      href: '/operators',
+      href: '/safari-operators',
       label: 'Tour Operators',
       items: [
         ...topOperators.map((op) => ({ label: op.companyName, href: `/operators/${op.slug}` })),
-        { label: 'All Operators', href: '/operators' },
+        { label: 'All Safari Operators', href: '/safari-operators' },
       ],
     },
   ];
@@ -341,7 +341,7 @@ export default function Navbar() {
                       <>
                         <Link href="/favorites" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Saved Tours</Link>
                         <Link href="/my-trips" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">My Bookings</Link>
-                        <Link href="/quote/request" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Request a Quote</Link>
+                        <Link href="/custom-safari-quote" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Request a Custom Quote</Link>
                       </>
                     )}
                     <button onClick={handleLogout} className="block w-full border-t border-[#DEDCCF] px-3 py-2 text-left text-[13px] font-semibold text-[var(--danger)] transition-colors hover:bg-[var(--danger-soft)]">Sign Out</button>
@@ -509,7 +509,7 @@ export default function Navbar() {
                         <Calendar className="h-4 w-4 text-[#214446]" /> My Bookings
                       </Link>
                       <Link
-                        href="/quote/request"
+                        href="/custom-safari-quote"
                         onClick={() => setMobileOpen(false)}
                         className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
                       >

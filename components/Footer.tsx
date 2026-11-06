@@ -31,8 +31,10 @@ export default function Footer() {
       heading: 'Company',
       links: [
         { label: 'About Us', href: '/about-us' },
+        { label: 'Safari Tour Operators', href: '/safari-operators' },
+        { label: 'Traveler Reviews', href: '/safari-reviews' },
+        { label: 'Safari Blog', href: '/safari-blog' },
         { label: 'Best Price Guarantee', href: '/best-price-guarantee' },
-        { label: 'Traveler Reviews', href: '/reviews' },
         { label: 'Contact Us', href: '/contact-us' },
         { label: 'Search', href: '/search' },
         { label: 'How It Works', href: '/how-it-works' },

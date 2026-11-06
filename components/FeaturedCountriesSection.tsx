@@ -433,7 +433,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 </Link>
 
                 <Link
-                  href={`/operators?country=${encodeURIComponent(activeCountry.name)}`}
+                  href={`/safari-operators?country=${encodeURIComponent(activeCountry.name)}`}
                   className="btn btn-ghost-dark min-h-[46px] text-xs font-bold justify-center text-white/90 hover:text-white"
                 >
                   <span>Verified Operators in {activeCountry.name}</span>

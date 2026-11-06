@@ -168,14 +168,14 @@ export default async function HomePage() {
                   Insider safari guides, wildlife advice &amp; trip inspiration
                 </p>
               </div>
-              <Link href="/blogs" className="link inline-flex items-center gap-1 text-xs sm:text-sm font-semibold self-start sm:self-auto">
+              <Link href="/safari-blog" className="link inline-flex items-center gap-1 text-xs sm:text-sm font-semibold self-start sm:self-auto">
                 All articles <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {blogPosts.map((post) => (
                 <Link
-                  href={`/blogs/${post.slug}`}
+                  href={`/safari-blog/${post.slug}`}
                   key={post.slug}
                   className="surface-card surface-card-hover group relative block h-[180px] sm:h-[200px] overflow-hidden rounded-2xl shadow-xs"
                 >

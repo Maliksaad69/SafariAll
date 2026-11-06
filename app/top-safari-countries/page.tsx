@@ -118,7 +118,7 @@ export default async function TopSafariCountriesPage() {
                         <span className="font-extrabold text-[var(--ink)]">{country.rating.toFixed(1)}</span>
                         <span className="text-[var(--ink-secondary)] font-medium">
                           /5 ·{' '}
-                          <Link href="/reviews" className="text-[var(--brand-deep)] font-bold hover:underline">
+                          <Link href="/safari-reviews" className="text-[var(--brand-deep)] font-bold hover:underline">
                             {country.reviews} Reviews
                           </Link>
                         </span>

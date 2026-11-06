@@ -67,7 +67,7 @@ export default function TourReviewsWidget({ operatorId, operatorName }: TourRevi
               <span className="text-[var(--ink-secondary)] font-semibold text-xs">/ 5</span>
             </div>
             <p className="text-[var(--ink)] line-clamp-4 leading-relaxed mb-2 font-normal text-sm">{current.reviewBody}</p>
-            <Link href="/reviews" className="text-[var(--brand-deep)] hover:underline font-bold text-xs inline-flex items-center gap-1">Full Review &rarr;</Link>
+            <Link href="/safari-reviews" className="text-[var(--brand-deep)] hover:underline font-bold text-xs inline-flex items-center gap-1">Full Review &rarr;</Link>
           </div>
 
           <div className="flex items-center justify-between pt-1">
@@ -94,7 +94,7 @@ export default function TourReviewsWidget({ operatorId, operatorName }: TourRevi
         </>
       ) : (
         <>
-          <p className="text-sm text-[var(--ink-secondary)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/reviews" className="text-[var(--brand-deep)] hover:underline font-bold">write one</Link>.</p>
+          <p className="text-sm text-[var(--ink-secondary)] italic">No verified traveler reviews yet for {operatorName} — be the first to <Link href="/safari-reviews" className="text-[var(--brand-deep)] hover:underline font-bold">write one</Link>.</p>
         </>
       )}
     </div>

@@ -29,11 +29,11 @@ export default function OperatorFilterSidebar({
   };
 
   const handleParamChange = (name: string, value: string) => {
-    router.push(`/operators?${createQueryString(name, value)}`);
+    router.push(`/safari-operators?${createQueryString(name, value)}`);
   };
 
   const resetAll = () => {
-    router.push('/operators');
+    router.push('/safari-operators');
   };
 
   const applyOperatorSearch = (e: React.FormEvent) => {

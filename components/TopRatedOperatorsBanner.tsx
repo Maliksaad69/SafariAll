@@ -52,7 +52,7 @@ export default function TopRatedOperatorsBanner({
           </div>
 
           <Link
-            href="/operators"
+            href="/safari-operators"
             className="btn btn-secondary inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-xl sm:rounded-full text-xs sm:text-sm font-bold bg-[#E4DBB4] hover:bg-[#D8CDA1] text-[#193A38] shadow-sm transition-all active:scale-95 w-full sm:w-auto border-transparent"
           >
             <span>Explore All {totalOperatorsCount.toLocaleString()} Operators</span>

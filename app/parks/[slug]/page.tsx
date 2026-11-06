@@ -328,7 +328,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                   <Link
-                    href={`/operators?country=${encodeURIComponent(countryName(park.slug))}`}
+                    href={`/safari-operators?country=${encodeURIComponent(countryName(park.slug))}`}
                     className="btn btn-secondary inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base"
                   >
                     <span>Verified Operators</span>
@@ -504,7 +504,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-[var(--border-soft)]">
-                  <Link href="/reviews" className="text-sm font-bold text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1.5">
+                  <Link href="/safari-reviews" className="text-sm font-bold text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1.5">
                     Read full specialist review <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -548,10 +548,10 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-[var(--border-soft)]">
-                  <Link href="/reviews" className="text-sm font-bold text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1">
+                  <Link href="/safari-reviews" className="text-sm font-bold text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1">
                     All {park.reviewCount || 47} Reviews <ChevronRight className="w-4 h-4" />
                   </Link>
-                  <Link href="/quote/request" className="btn btn-secondary text-xs sm:text-sm px-4 py-2 rounded-xl font-bold">
+                  <Link href="/custom-safari-quote" className="btn btn-secondary text-xs sm:text-sm px-4 py-2 rounded-xl font-bold">
                     Inquire Now
                   </Link>
                 </div>

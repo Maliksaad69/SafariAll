@@ -362,7 +362,7 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                           ) : (
                             <div className="rounded-2xl border border-dashed border-[var(--border)] p-4 text-sm text-[var(--ink-secondary)]">
                               No departures are scheduled for this tour yet.{' '}
-                              <a href={`/quote/request?tourId=${encodeURIComponent(tourId)}`} className="font-semibold text-[var(--brand-ink)] underline">
+                              <a href={`/custom-safari-quote?tourId=${encodeURIComponent(tourId)}`} className="font-semibold text-[var(--brand-ink)] underline">
                                 Request a quote
                               </a>{' '}
                               and the operator will propose dates.

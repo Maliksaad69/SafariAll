@@ -81,7 +81,7 @@ export default async function AgencyBlogPage() {
                       {post.status === 'PUBLISHED' ? 'Published' : 'Draft'}
                     </span>
                     {post.status === 'PUBLISHED' && (
-                      <Link href={`/blogs/${post.slug}`} className="link inline-flex items-center gap-1 text-[11px] font-semibold">
+                      <Link href={`/safari-blog/${post.slug}`} className="link inline-flex items-center gap-1 text-[11px] font-semibold">
                         <Eye className="h-3 w-3" /> View live
                       </Link>
                     )}

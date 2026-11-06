@@ -107,7 +107,7 @@ export default function HowItWorksPage() {
             <span className="text-xs text-[var(--ink-muted)]">
               Have unique dates or group sizes? We can help.
             </span>
-            <Link href="/quote/request" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
+            <Link href="/custom-safari-quote" className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold shadow-sm">
               <span>Start Your Safari Quote</span>
               <ArrowRight className="h-4 w-4" />
             </Link>

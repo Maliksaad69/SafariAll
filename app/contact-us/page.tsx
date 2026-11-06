@@ -50,7 +50,7 @@ export default function ContactUsPage() {
               <p className="mt-3 text-sm leading-relaxed text-white">
                 Our team can help tailor the right itinerary for your dream safari in a few hours.
               </p>
-              <Link href="/quote/request" className="btn btn-primary mt-5 inline-flex items-center gap-2">
+              <Link href="/custom-safari-quote" className="btn btn-primary mt-5 inline-flex items-center gap-2">
                 Request a quote
                 <ArrowRight className="h-4 w-4" />
               </Link>

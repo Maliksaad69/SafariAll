@@ -362,7 +362,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={`/operators/${tour.operator.slug}`} className="btn btn-secondary font-bold text-sm px-5 py-2.5">Operator Profile &rarr;</Link>
-                <Link href={`/quote/request?tourId=${tour.id}`} className="btn btn-primary font-bold text-sm px-6 py-2.5">Request Direct Quote &rarr;</Link>
+                <Link href={`/custom-safari-quote?tourId=${tour.id}`} className="btn btn-primary font-bold text-sm px-6 py-2.5">Request Direct Quote &rarr;</Link>
               </div>
             </section>
 

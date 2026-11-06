@@ -27,7 +27,7 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5">
           <Link href="/" className="hover:text-[var(--brand)] transition-colors">Home</Link>
           <span className="text-[var(--ink-muted)] opacity-60">/</span>
-          <Link href="/reviews" className="hover:text-[var(--brand)] transition-colors">Experts</Link>
+          <Link href="/safari-reviews" className="hover:text-[var(--brand)] transition-colors">Reviews</Link>
           <span className="text-[var(--ink-muted)] opacity-60">/</span>
           <span className="text-[var(--ink)] font-medium">{expert.name}</span>
         </div>
@@ -57,7 +57,7 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
 
             <div className="pt-4">
               <Link
-                href="/reviews"
+                href="/safari-reviews"
                 className="btn btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold shadow-sm"
               >
                 <span>Read Traveler Reviews</span>
