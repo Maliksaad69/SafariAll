@@ -15,8 +15,6 @@ import {
   LayoutGrid,
   Layers,
   CheckCircle2,
-  Play,
-  Pause,
 } from 'lucide-react';
 
 export interface CountryHighlight {
@@ -349,31 +347,18 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   )}
                 </div>
 
-                {/* Autoplay Controls + Prev/Next Buttons */}
+                {/* Prev/Next Buttons & Count */}
                 <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/20">
                   <button
                     type="button"
                     onClick={prevDestination}
                     aria-label="Previous destination"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsPaused((prev) => !prev)}
-                    title={isPaused ? 'Resume 5s auto-play' : 'Pause 5s auto-play'}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
-                  >
-                    {isPaused || userHovered ? (
-                      <Play className="w-3.5 h-3.5 fill-current text-[var(--brand)]" />
-                    ) : (
-                      <Pause className="w-3.5 h-3.5 fill-current" />
-                    )}
-                  </button>
-
-                  <span className="text-[11px] font-bold text-white/80 px-1 min-w-[36px] text-center">
+                  <span className="text-[11px] font-bold text-white/90 px-1.5 min-w-[36px] text-center font-mono">
                     {currentIndex + 1} / {filteredCountries.length}
                   </span>
 
@@ -381,7 +366,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                     type="button"
                     onClick={nextDestination}
                     aria-label="Next destination"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -394,12 +379,12 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   <h3 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-white tracking-tight drop-shadow-md">
                     {activeCountry.name}
                   </h3>
-                  <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/15 text-xs text-white">
-                    <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-                    <span className="font-extrabold text-white">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E4DBB4] border border-[#DEDCCF] text-xs shadow-sm">
+                    <Star className="w-3.5 h-3.5 fill-[#193A38] text-[#193A38]" />
+                    <span className="font-extrabold text-[#193A38]">
                       {(activeCountry.rating ?? 4.9).toFixed(1)}
                     </span>
-                    <span className="text-white/80">
+                    <span className="text-[#344C49] font-bold">
                       ({activeCountry.reviewCount?.toLocaleString() ?? '1.2k'} reviews)
                     </span>
                   </div>
@@ -596,10 +581,10 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                       <h3 className="text-xl font-extrabold font-display drop-shadow">
                         {country.name}
                       </h3>
-                      <div className="flex items-center gap-1 text-[11px] text-[var(--gold)]">
-                        <Star className="w-3 h-3 fill-current" />
-                        <span className="font-bold text-white">{(country.rating ?? 4.9).toFixed(1)}</span>
-                        <span className="text-white/80">({country.reviewCount} reviews)</span>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E4DBB4] border border-[#DEDCCF] text-[11px] shadow-sm">
+                        <Star className="w-3 h-3 fill-[#193A38] text-[#193A38]" />
+                        <span className="font-extrabold text-[#193A38]">{(country.rating ?? 4.9).toFixed(1)}</span>
+                        <span className="text-[#344C49] font-bold">({country.reviewCount} reviews)</span>
                       </div>
                     </div>
                   </div>

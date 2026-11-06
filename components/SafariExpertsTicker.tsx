@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Play, Pause, Star, Award, ChevronRight } from 'lucide-react';
+import { Star, Award, ChevronRight } from 'lucide-react';
 
 export interface SafariExpert {
   id: string;
@@ -38,31 +38,12 @@ export default function SafariExpertsTicker({ experts }: SafariExpertsTickerProp
 
   return (
     <div className="relative w-full overflow-hidden">
-      {/* Top Controls Bar for Accessibility (WCAG 2.2.2 Pause/Stop/Hide) */}
+      {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
         <div className="flex items-center gap-2 text-xs font-semibold text-[var(--ink-secondary)]">
           <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[11.5px] sm:text-xs">Live Field Reports · Left-to-Right</span>
         </div>
-
-        <button
-          type="button"
-          onClick={() => setIsPaused((prev) => !prev)}
-          aria-label={isPaused ? 'Resume ticker movement' : 'Pause ticker movement'}
-          className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 rounded-full border border-[var(--border)] bg-white/80 text-[var(--ink)] text-xs font-bold hover:bg-white hover:border-[var(--brand)] transition-colors shadow-2xs cursor-pointer active:scale-95"
-        >
-          {isPaused ? (
-            <>
-              <Play className="h-3.5 w-3.5 text-[var(--brand)]" />
-              <span>Resume Motion</span>
-            </>
-          ) : (
-            <>
-              <Pause className="h-3.5 w-3.5 text-[var(--brand)]" />
-              <span>Pause Motion</span>
-            </>
-          )}
-        </button>
       </div>
 
       {/* Ticker Stage with Edge Fades & Touch Support */}

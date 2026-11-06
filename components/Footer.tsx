@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ShieldCheck, Award, Lock, ArrowUpRight } from 'lucide-react';
+import { Award, Lock, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -59,11 +59,6 @@ export default function Footer() {
             <p className="text-sm leading-relaxed text-white/85">
               Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators. Zero commission. Pure experience.
             </p>
-
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">
-              <ShieldCheck className="h-4 w-4 shrink-0 text-white" />
-              <span>100% Verified Local Operators</span>
-            </div>
           </div>
 
           {/* Columns 2-4: Categorized Links */}

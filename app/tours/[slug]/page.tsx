@@ -133,14 +133,14 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
       >
         <FavoriteHeartButton tourId={tour.id} />
         <div className="relative p-6 md:p-10 max-w-[1230px] mx-auto w-full flex flex-col justify-end h-full">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="badge badge-brand bg-white/20 text-white border-white/30 backdrop-blur-md px-3 py-1 font-bold text-xs sm:text-sm">
+          <div className="flex flex-wrap items-center gap-2.5 mb-3">
+            <span className="inline-flex items-center rounded-full bg-white/20 !text-white border border-white/35 backdrop-blur-md px-3.5 py-1 font-bold text-xs sm:text-sm shadow-sm drop-shadow-sm">
               {tour.primaryCountry}
             </span>
-            <span className="badge badge-neutral bg-white/20 text-white border-white/30 backdrop-blur-md px-3 py-1 font-bold text-xs sm:text-sm">
+            <span className="inline-flex items-center rounded-full bg-white/20 !text-white border border-white/35 backdrop-blur-md px-3.5 py-1 font-bold text-xs sm:text-sm shadow-sm drop-shadow-sm">
               {tour.durationDays} Days / {tour.durationNights} Nights
             </span>
-            <span className="badge badge-success bg-emerald-500/20 text-emerald-200 border-emerald-400/30 backdrop-blur-md px-3 py-1 font-bold text-xs sm:text-sm">
+            <span className="inline-flex items-center rounded-full bg-white/20 !text-white border border-white/35 backdrop-blur-md px-3.5 py-1 font-bold text-xs sm:text-sm shadow-sm drop-shadow-sm">
               {comfortLabel[tour.comfortLevel] || 'Safari'}
             </span>
           </div>

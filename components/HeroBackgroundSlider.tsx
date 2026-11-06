@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 export interface HeroSlide {
   url: string;
@@ -189,7 +189,7 @@ export default function HeroBackgroundSlider({
         <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-deep)]/35 via-transparent to-[var(--brand)]/20 z-15" />
       </div>
 
-      {/* ── Top Floating Location Badge & Slide Counter ── */}
+      {/* ── Top Floating Location Badge ── */}
       <div className="absolute top-3.5 sm:top-4 right-3 sm:right-6 z-30 flex items-center gap-2">
         {showLocationBadge && currentSlide && (
           <div
@@ -202,30 +202,6 @@ export default function HeroBackgroundSlider({
             </span>
           </div>
         )}
-
-        {showControls && resolvedSlides.length > 1 && (
-          <div className="flex items-center gap-1 rounded-full border border-white/20 bg-black/55 px-2 py-0.5 backdrop-blur-md text-white text-[11px] font-mono shadow-md">
-            <button
-              type="button"
-              onClick={prevSlide}
-              aria-label="Previous slide"
-              className="p-1 hover:text-[var(--brand)] transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="h-3 w-3" />
-            </button>
-            <span className="px-0.5 text-white/90">
-              {String(currentIndex + 1).padStart(2, '0')}&thinsp;/&thinsp;{String(resolvedSlides.length).padStart(2, '0')}
-            </span>
-            <button
-              type="button"
-              onClick={nextSlide}
-              aria-label="Next slide"
-              className="p-1 hover:text-[var(--brand)] transition-colors cursor-pointer"
-            >
-              <ChevronRight className="h-3 w-3" />
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ── Changing Text Hero Foreground ── */}
@@ -234,10 +210,13 @@ export default function HeroBackgroundSlider({
           key={currentIndex}
           className="animate-hero-text max-w-3xl text-center text-white"
         >
-          {/* Animated Highlight Badge */}
+          {/* Animated Highlight Badge with Orange Blink */}
           {currentSlide.badge && (
-            <span className="mb-1.5 sm:mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/15 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--brand)] animate-ping" />
+            <span className="mb-1.5 sm:mb-2.5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-80" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF7A00]" />
+              </span>
               {currentSlide.badge}
             </span>
           )}
@@ -261,27 +240,6 @@ export default function HeroBackgroundSlider({
 
       {/* ── Hero Foreground Extras (Search Form) ── */}
       {children}
-
-      {/* ── Bottom Slide Dots Indicator (Compact & Centered) ── */}
-      {showControls && resolvedSlides.length > 1 && (
-        <div className="relative z-25 mx-auto max-w-[1230px] px-4 hidden md:flex items-center justify-center pointer-events-none md:absolute md:bottom-1 md:left-1/2 md:-translate-x-1/2 md:w-full">
-          <div className="flex items-center gap-1.5 pointer-events-auto bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 shadow-sm">
-            {resolvedSlides.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => goToSlide(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                  i === currentIndex
-                    ? 'w-6 bg-[var(--brand)] shadow-[0_0_6px_rgba(244,119,53,0.7)]'
-                    : 'w-1.5 bg-white/40 hover:bg-white/80'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   );
 }
