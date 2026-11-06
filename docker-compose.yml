@@ -1,4 +1,24 @@
 services:
+  # Self-Hosted PostgreSQL Database (PostgreSQL 17, pre-loaded with full app catalog & demo data)
+  postgres:
+    build: ./docker/postgres
+    image: safaribookings-postgres:latest
+    container_name: safaribookings_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-safaribookings_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-safaribookings_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build:
       context: .
@@ -19,5 +39,7 @@ services:
       start_period: 30s
 
 volumes:
+  postgres_data:
+    driver: local
   pgdata:
     driver: local

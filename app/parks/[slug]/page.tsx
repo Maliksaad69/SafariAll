@@ -6,6 +6,8 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getTourCards } from '@/lib/catalog';
+import { getFallbackParkDetail } from '@/lib/fallback-data';
+import { CATALOG_DESTINATIONS } from '@/prisma/catalog-data';
 import {
   ChevronRight,
   MapPin,
@@ -33,10 +35,20 @@ interface ParkDetailPageProps {
 export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
   const { slug } = await params;
 
-  const park: any = await prisma.destination.findUnique({
-    where: { slug },
-    include: { sections: { orderBy: { sortOrder: 'asc' } } },
-  });
+  let park: any = null;
+  try {
+    park = await prisma.destination.findUnique({
+      where: { slug },
+      include: { sections: { orderBy: { sortOrder: 'asc' } } },
+    });
+  } catch (err) {
+    console.warn(`[ParkDetailPage] Database query failed for park "${slug}":`, (err as Error)?.message);
+  }
+
+  // Gracefully fallback to seed catalog
+  if (!park) {
+    park = getFallbackParkDetail(slug);
+  }
 
   if (!park) notFound();
 
@@ -48,13 +60,20 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
     ? await getTourCards({ primaryCountry: park.country }, 6)
     : await getTourCards({ destinations: { some: { destinationId: park.id } } }, 6);
 
-  const childParks = isCountry
-    ? await prisma.destination.findMany({
+  let childParks: any[] = [];
+  if (isCountry) {
+    try {
+      childParks = await prisma.destination.findMany({
         where: { country: park.country, type: { not: 'COUNTRY' } },
         orderBy: { name: 'asc' },
         select: { name: true, slug: true },
-      })
-    : [];
+      });
+    } catch {
+      childParks = CATALOG_DESTINATIONS
+        .filter((d) => d.country === park.country && d.type !== 'COUNTRY')
+        .map((d) => ({ name: d.name, slug: d.slug }));
+    }
+  }
 
   let sections: any[];
   // DB sections; fall back to a single Overview built from the description

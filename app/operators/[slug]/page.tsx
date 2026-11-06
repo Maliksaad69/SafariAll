@@ -7,6 +7,7 @@ import { buildOperatorSchema } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, MapPin, CheckCircle2, Star, Award, Mail, Phone, Globe, Calendar, ArrowRight, MessageSquare, Building, FileText } from 'lucide-react';
+import { getFallbackOperatorDetail } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,32 +20,42 @@ interface OperatorProfilePageProps {
 export default async function OperatorProfilePage({ params }: OperatorProfilePageProps) {
   const { slug } = await params;
 
-  const operator: any = await prisma.operator.findFirst({
-    where: {
-      OR: [
-        { id: slug },
-        { slug: slug },
-      ]
-    },
-    include: {
-      user: true,
-      tours: {
-        where: { isPublished: true },
-        include: {
-          operator: true,
-          destinations: {
-            include: { destination: true },
+  let operator: any = null;
+  try {
+    operator = await prisma.operator.findFirst({
+      where: {
+        OR: [
+          { id: slug },
+          { slug: slug },
+        ]
+      },
+      include: {
+        user: true,
+        tours: {
+          where: { isPublished: true },
+          include: {
+            operator: true,
+            destinations: {
+              include: { destination: true },
+            },
           },
         },
+        reviews: {
+          include: {
+            traveler: { select: { firstName: true, lastName: true, country: true } }
+          },
+          orderBy: { createdAt: 'desc' }
+        }
       },
-      reviews: {
-        include: {
-          traveler: { select: { firstName: true, lastName: true, country: true } }
-        },
-        orderBy: { createdAt: 'desc' }
-      }
-    },
-  });
+    });
+  } catch (err) {
+    console.warn(`[OperatorProfilePage] Database query failed for operator "${slug}":`, (err as Error)?.message);
+  }
+
+  // Graceful fallback to offline seed data
+  if (!operator) {
+    operator = getFallbackOperatorDetail(slug);
+  }
 
   if (!operator) {
     notFound();

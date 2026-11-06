@@ -2,6 +2,13 @@ import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import type { SiteOperator, SiteTour } from '@/lib/site-data';
 import { todayUtc } from '@/lib/booking';
+import {
+  getFallbackTourCards,
+  getFallbackOperatorCards,
+  getFallbackCountries,
+  getFallbackBlogPosts,
+} from '@/lib/fallback-data';
+import { CATALOG_EXPERTS } from '@/prisma/catalog-data';
 
 // Read helpers that shape Postgres rows into the card props the UI components use.
 
@@ -46,76 +53,109 @@ export function toTourCard(t: TourCardRow): SiteTour {
 }
 
 export async function getTourCards(where: Prisma.TourWhereInput = {}, take?: number): Promise<SiteTour[]> {
-  const rows = await prisma.tour.findMany({
-    where: { isPublished: true, ...where },
-    orderBy: [{ operator: { totalReviews: 'desc' } }, { createdAt: 'desc' }],
-    include: tourCardInclude,
-    take,
-  });
-  return rows.map(toTourCard);
+  try {
+    const rows = await prisma.tour.findMany({
+      where: { isPublished: true, ...where },
+      orderBy: [{ operator: { totalReviews: 'desc' } }, { createdAt: 'desc' }],
+      include: tourCardInclude,
+      take,
+    });
+    if (rows && rows.length > 0) {
+      return rows.map(toTourCard);
+    }
+  } catch (err) {
+    console.warn('[catalog] Database query failed in getTourCards, using offline seed catalog:', (err as Error)?.message);
+  }
+  return getFallbackTourCards(where, take);
 }
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
 
 export async function getOperatorCards(): Promise<SiteOperator[]> {
-  const rows = await prisma.operator.findMany({
-    orderBy: [{ isVerified: 'desc' }, { totalReviews: 'desc' }],
-    include: {
-      tours: {
-        where: { isPublished: true },
-        orderBy: { minPriceUsd: 'desc' },
-        select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true },
+  try {
+    const rows = await prisma.operator.findMany({
+      orderBy: [{ isVerified: 'desc' }, { totalReviews: 'desc' }],
+      include: {
+        tours: {
+          where: { isPublished: true },
+          orderBy: { minPriceUsd: 'desc' },
+          select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true },
+        },
       },
-    },
-  });
-  return rows.map((op) => {
-    const perDay = op.tours.map((t) => t.minPriceUsd / Math.max(t.durationDays, 1));
-    const destinations = Array.from(new Set([op.countryOfOrigin, ...op.tours.map((t) => t.primaryCountry)]));
-    return {
-      id: op.id,
-      companyName: op.companyName,
-      slug: op.slug,
-      averageRating: op.averageRating,
-      totalReviews: op.totalReviews,
-      officesIn: op.officesIn.length ? op.officesIn : [op.countryOfOrigin],
-      priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'On request',
-      tourTypes: op.serviceSummary ?? 'Private and group safaris',
-      destinations,
-      isVerified: op.isVerified,
-      image: op.bannerUrl ?? '',
-      logo: op.logoUrl ?? '',
-      toursCount: op.tours.length,
-      topTours: op.tours.slice(0, 3).map((t) => ({ name: t.title, price: `${usd(t.minPriceUsd)} pp` })),
-    };
-  });
+    });
+    if (rows && rows.length > 0) {
+      return rows.map((op) => {
+        const perDay = op.tours.map((t) => t.minPriceUsd / Math.max(t.durationDays, 1));
+        const destinations = Array.from(new Set([op.countryOfOrigin, ...op.tours.map((t) => t.primaryCountry)]));
+        return {
+          id: op.id,
+          companyName: op.companyName,
+          slug: op.slug,
+          averageRating: op.averageRating,
+          totalReviews: op.totalReviews,
+          officesIn: op.officesIn.length ? op.officesIn : [op.countryOfOrigin],
+          priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'On request',
+          tourTypes: op.serviceSummary ?? 'Private and group safaris',
+          destinations,
+          isVerified: op.isVerified,
+          image: op.bannerUrl ?? '',
+          logo: op.logoUrl ?? '',
+          toursCount: op.tours.length,
+          topTours: op.tours.slice(0, 3).map((t) => ({ name: t.title, price: `${usd(t.minPriceUsd)} pp` })),
+        };
+      });
+    }
+  } catch (err) {
+    console.warn('[catalog] Database query failed in getOperatorCards, using offline seed catalog:', (err as Error)?.message);
+  }
+  return getFallbackOperatorCards();
 }
 
 // Countries are destinations of type COUNTRY, ranked by popularityRank.
 export async function getCountries() {
-  const [countries, parks, tourCounts] = await Promise.all([
-    prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: [{ popularityRank: 'asc' }, { name: 'asc' }] }),
-    prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
-    prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
-  ]);
-  return countries.map((c) => {
-    const countryParks = parks.filter((p) => p.country === c.name);
-    return {
-      ...c,
-      parks: countryParks,
-      toursCount: tourCounts.find((t) => t.primaryCountry === c.name)?._count._all ?? 0,
-    };
-  });
+  try {
+    const [countries, parks, tourCounts] = await Promise.all([
+      prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: [{ popularityRank: 'asc' }, { name: 'asc' }] }),
+      prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
+      prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
+    ]);
+    if (countries && countries.length > 0) {
+      return countries.map((c) => {
+        const countryParks = parks.filter((p) => p.country === c.name);
+        return {
+          ...c,
+          parks: countryParks,
+          toursCount: tourCounts.find((t) => t.primaryCountry === c.name)?._count._all ?? 0,
+        };
+      });
+    }
+  } catch (err) {
+    console.warn('[catalog] Database query failed in getCountries, using offline seed catalog:', (err as Error)?.message);
+  }
+  return getFallbackCountries();
 }
 
 export async function getExperts() {
-  return prisma.expert.findMany({ orderBy: { sortOrder: 'asc' } });
+  try {
+    const experts = await prisma.expert.findMany({ orderBy: { sortOrder: 'asc' } });
+    if (experts && experts.length > 0) return experts;
+  } catch (err) {
+    console.warn('[catalog] Database query failed in getExperts, using offline seed catalog:', (err as Error)?.message);
+  }
+  return CATALOG_EXPERTS as unknown as any[];
 }
 
 export async function getLatestBlogPosts(take = 3) {
-  return prisma.blogPost.findMany({
-    where: { status: 'PUBLISHED' },
-    orderBy: { createdAt: 'desc' },
-    take,
-    select: { title: true, slug: true, coverImageUrl: true },
-  });
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: { createdAt: 'desc' },
+      take,
+      select: { title: true, slug: true, coverImageUrl: true },
+    });
+    if (posts && posts.length > 0) return posts;
+  } catch (err) {
+    console.warn('[catalog] Database query failed in getLatestBlogPosts, using offline seed catalog:', (err as Error)?.message);
+  }
+  return getFallbackBlogPosts(take);
 }

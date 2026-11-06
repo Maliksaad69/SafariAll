@@ -14,6 +14,7 @@ import BookingBox from '@/components/BookingBox';
 import TourReviewsWidget from '@/components/TourReviewsWidget';
 import HeroBackgroundSlider, { HeroSlide } from '@/components/HeroBackgroundSlider';
 import { getTourCards } from '@/lib/catalog';
+import { getFallbackTourDetail } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,24 +42,39 @@ function getTourImage(country: string, slug: string): string {
 export default async function TourDetailPage({ params }: TourDetailPageProps) {
   const { slug } = await params;
 
-  const tour = await prisma.tour.findUnique({
-    where: { slug },
-    include: {
-      operator: true,
-      itineraries: { orderBy: { dayNumber: 'asc' } },
-      destinations: { include: { destination: true } },
-    },
-  });
+  let tour: any = null;
+  try {
+    tour = await prisma.tour.findUnique({
+      where: { slug },
+      include: {
+        operator: true,
+        itineraries: { orderBy: { dayNumber: 'asc' } },
+        destinations: { include: { destination: true } },
+      },
+    });
+  } catch (err) {
+    console.warn(`[TourDetailPage] Database query failed for tour "${slug}":`, (err as Error)?.message);
+  }
+
+  // Gracefully fallback to seed catalog when Postgres is offline or tour is not in DB
+  if (!tour) {
+    tour = getFallbackTourDetail(slug);
+  }
 
   if (!tour || !tour.isPublished) notFound();
 
   // Agency-uploaded package photos, stored as blobs in Postgres.
-  // Falls back to a stock hero image when the package has no uploads yet.
-  const tourMedia = await prisma.mediaAsset.findMany({
-    where: { tourId: tour.id },
-    orderBy: [{ isCover: 'desc' }, { sortOrder: 'asc' }, { createdAt: 'asc' }],
-    select: { id: true, altText: true, filename: true },
-  });
+  // Falls back to a stock hero image when the package has no uploads yet or db is offline.
+  let tourMedia: any[] = [];
+  try {
+    tourMedia = await prisma.mediaAsset.findMany({
+      where: { tourId: tour.id },
+      orderBy: [{ isCover: 'desc' }, { sortOrder: 'asc' }, { createdAt: 'asc' }],
+      select: { id: true, altText: true, filename: true },
+    });
+  } catch {
+    tourMedia = [];
+  }
   const heroImg = tourMedia.length > 0 ? `/api/media/${tourMedia[0].id}` : getTourImage(tour.primaryCountry, tour.slug);
   const destNames = tour.destinations.map((d: any) => d.destination.name).join(', ');
   

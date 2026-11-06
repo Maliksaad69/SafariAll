@@ -42,7 +42,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const { id } = await params;
   try {
     const tour = await prisma.tour.findUnique({ where: { id }, select: { id: true } });
-    if (!tour) return NextResponse.json({ error: 'Tour not found.' }, { status: 404 });
+    if (!tour) {
+      return NextResponse.json({ availability: [], serverTime: new Date().toISOString() }, { headers: { 'Cache-Control': 'no-store' } });
+    }
 
     let manage = false;
     if (new URL(req.url).searchParams.get('manage') === '1') {
@@ -54,7 +56,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const availability = await getTourAvailability(id, { includePast: manage, includePlates: manage });
     return NextResponse.json({ availability, serverTime: new Date().toISOString() }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
-    return slotErrorResponse(error, 'Failed to load departures.');
+    if (new URL(req.url).searchParams.get('manage') === '1') {
+      return slotErrorResponse(error, 'Failed to load departures.');
+    }
+    // Return empty availability for travelers when DB is offline
+    return NextResponse.json({ availability: [], serverTime: new Date().toISOString() }, { headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
