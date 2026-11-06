@@ -27,13 +27,36 @@ if [ -n "$DATABASE_URL" ] && [ "$SKIP_PRISMA_MIGRATION" != "true" ]; then
     RETRY_COUNT=$((RETRY_COUNT + 1))
     echo "==> Running Prisma migration / schema push (attempt $RETRY_COUNT of $MAX_RETRIES)..."
 
-    if [ -d "./prisma/migrations" ] && [ -n "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
+    if [ "$PRISMA_MIGRATE_STRATEGY" = "push" ]; then
+      echo "==> Using PRISMA_MIGRATE_STRATEGY=push..."
+      if $PRISMA_CLI db push --skip-generate --accept-data-loss; then
+        MIGRATION_SUCCESS=true
+        echo "==> Prisma database schema synchronized successfully via db push."
+      fi
+    elif [ -d "./prisma/migrations" ] && [ -n "$(ls -A ./prisma/migrations 2>/dev/null)" ]; then
       if $PRISMA_CLI migrate deploy; then
         MIGRATION_SUCCESS=true
         echo "==> Prisma migrations deployed successfully."
+      else
+        echo "==> 'prisma migrate deploy' failed. Checking and resolving failed migrations..."
+        # 1. Resolve failed initial migration if present (e.g. after database flush)
+        $PRISMA_CLI migrate resolve --rolled-back "20260928180338_init" >/dev/null 2>&1 || true
+
+        # 2. Re-attempt migration deploy
+        if $PRISMA_CLI migrate deploy; then
+          MIGRATION_SUCCESS=true
+          echo "==> Prisma migrations deployed successfully after resolution."
+        else
+          # 3. Fallback to schema push to ensure all tables exist even if migration state was desynchronized
+          echo "==> Migrations still failed. Synchronizing database schema directly with 'prisma db push'..."
+          if $PRISMA_CLI db push --skip-generate --accept-data-loss; then
+            MIGRATION_SUCCESS=true
+            echo "==> Prisma schema synchronized successfully via db push fallback."
+          fi
+        fi
       fi
     else
-      if $PRISMA_CLI db push --skip-generate; then
+      if $PRISMA_CLI db push --skip-generate --accept-data-loss; then
         MIGRATION_SUCCESS=true
         echo "==> Prisma database schema synchronized successfully."
       fi
