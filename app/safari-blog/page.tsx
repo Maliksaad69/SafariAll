@@ -59,7 +59,7 @@ export default async function SafariBlogPage() {
       </div>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-[var(--brand-deep)] text-white shadow-xl p-8 sm:p-14">
+        <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[var(--brand-deep)] text-white shadow-xl p-5 sm:p-10 md:p-14">
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-overlay" 
             style={{ backgroundImage: "url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80')" }} 

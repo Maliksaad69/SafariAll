@@ -731,3 +731,12 @@ select.form-control {
     transform: none !important;
   }
 }
+
+/* ── Utility to hide scrollbars on touch reels ── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

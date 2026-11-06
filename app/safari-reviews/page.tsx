@@ -57,7 +57,7 @@ export default async function SafariReviewsPage() {
       </div>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-        <section className="surface-card rounded-3xl border border-black/5 p-8 sm:p-12 shadow-sm">
+        <section className="surface-card rounded-2xl sm:rounded-3xl border border-black/5 p-4 sm:p-8 md:p-12 shadow-sm">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-[var(--brand-soft)] border border-[var(--brand-pale)] px-3.5 py-1 text-xs font-semibold text-[var(--brand-deep)]">
             <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
             <span>Verified Safari Reviews</span>

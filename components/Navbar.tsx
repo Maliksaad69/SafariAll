@@ -144,11 +144,11 @@ export default function Navbar() {
   // Exactly one chat button is mounted: in the desktop action bar (right of the bell) or the mobile header.
   const isDesktop = useSyncExternalStore<boolean | null>(
     (onChange) => {
-      const mq = window.matchMedia('(min-width: 1024px)');
+      const mq = window.matchMedia('(min-width: 1280px)');
       mq.addEventListener('change', onChange);
       return () => mq.removeEventListener('change', onChange);
     },
-    () => window.matchMedia('(min-width: 1024px)').matches,
+    () => window.matchMedia('(min-width: 1280px)').matches,
     () => null,
   );
 
@@ -205,7 +205,7 @@ export default function Navbar() {
             />
           </Link>
 
-          <div className="hidden lg:flex items-center flex-1 justify-center px-2 xl:px-8">
+          <div className="hidden xl:flex items-center flex-1 justify-center px-2 xl:px-8">
             <nav className="relative flex items-center justify-center gap-2 xl:gap-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white/90">
               {navMenus.map(({ href, label, items }) => {
                 const active = isActive(href);
@@ -252,7 +252,7 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="hidden lg:flex items-center gap-4 text-[13px] font-semibold flex-shrink-0">
+          <div className="hidden xl:flex items-center gap-4 text-[13px] font-semibold flex-shrink-0">
             {sessionUser && (
               <div className="relative" ref={notifRef}>
                 <button
@@ -357,7 +357,7 @@ export default function Navbar() {
           </div>
 
           {/* Chat launcher + accessible 44px hamburger button for mobile/tablet */}
-          <div className="flex items-center gap-1 lg:hidden">
+          <div className="flex items-center gap-1 xl:hidden">
             {sessionUser && isDesktop === false && <ChatLauncher className="mr-1" />}
             <button
               type="button"
@@ -375,7 +375,7 @@ export default function Navbar() {
       {/* Mobile Drawer Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 top-[70px] sm:top-[74px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 lg:hidden"
+          className="fixed inset-0 top-[70px] sm:top-[74px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 xl:hidden"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
@@ -386,7 +386,7 @@ export default function Navbar() {
         <div
           role="dialog"
           aria-label="Mobile Navigation Menu"
-          className="fixed left-0 right-0 top-[70px] sm:top-[74px] z-50 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-74px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
+          className="fixed left-0 right-0 top-[70px] sm:top-[74px] z-50 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-74px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 xl:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
             {/* Quick search input */}

@@ -107,7 +107,7 @@ export default function HeroBackgroundSlider({
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'h-[460px] min-h-[460px]',
+  minHeightClass = 'min-h-[560px] sm:min-h-[500px] md:min-h-[460px] md:h-[460px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const currentSlide = resolvedSlides[0];
@@ -115,7 +115,7 @@ export default function HeroBackgroundSlider({
   return (
     <section
       aria-label="African Safari Hero Banner"
-      className={`relative w-full overflow-hidden flex flex-col justify-between pt-3.5 pb-3.5 px-3 sm:px-4 md:pt-0 md:pb-0 md:px-0 md:block ${minHeightClass} ${className}`}
+      className={`relative w-full overflow-hidden flex flex-col justify-between py-6 px-3 sm:px-4 md:py-0 md:px-0 md:block ${minHeightClass} ${className}`}
     >
       {/* ── Stable Hero Background Photography ── */}
       <div className="absolute inset-0 overflow-hidden z-0">

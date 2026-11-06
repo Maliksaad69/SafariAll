@@ -149,7 +149,7 @@ function QuoteRequestForm() {
   }
 
   return (
-    <div className="surface-card rounded-3xl shadow-xl p-8 sm:p-12 border border-black/5 space-y-8 max-w-3xl mx-auto">
+    <div className="surface-card rounded-2xl sm:rounded-3xl shadow-xl p-4 sm:p-8 md:p-12 border border-black/5 space-y-6 sm:space-y-8 max-w-3xl mx-auto">
       
       {/* Header */}
       <div className="text-center max-w-xl mx-auto space-y-2.5">

@@ -136,8 +136,8 @@ export default async function AfricanSafariToursPage({ searchParams }: AfricanSa
           </div>
         </div>
 
-        <div className="max-w-[1230px] mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="max-w-[1230px] mx-auto px-4 py-6 sm:py-8">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
 
             {/* Sidebar */}
             <div className="lg:w-[320px] flex-shrink-0">

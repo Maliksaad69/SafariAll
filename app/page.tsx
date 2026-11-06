@@ -86,7 +86,7 @@ export default async function HomePage() {
         {/* ── Hero ── */}
         <HeroBackgroundSlider
           tourCount={stats.tours}
-          minHeightClass="h-[460px] min-h-[460px]"
+          minHeightClass="min-h-[560px] sm:min-h-[500px] md:h-[460px] md:min-h-[460px]"
         >
           {/* Search Form — anchored at bottom on desktop, stacked on mobile */}
           <HeroSearchForm />
