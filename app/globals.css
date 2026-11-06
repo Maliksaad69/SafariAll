@@ -20,6 +20,12 @@
   --color-safari-sage: #8C9F91;
   --color-safari-body: #344C49;
   --color-safari-border: #DEDCCF;
+
+  /* ── LoneAlpha Brand Attribution Tokens ── */
+  --color-brand-border: #DEDCCF;
+  --color-brand-gold: #C5A059;
+  --color-brand-muted: #516D6A;
+  --color-brand-charcoal: #193A38;
 }
 
 @layer base {

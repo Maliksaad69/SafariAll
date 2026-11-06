@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Award, Lock, ArrowUpRight } from 'lucide-react';
+import LoneAlphaBadge from '@/components/LoneAlphaBadge';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -123,6 +124,11 @@ export default function Footer() {
               How It Works
             </Link>
           </div>
+        </div>
+
+        {/* Creator Attribution */}
+        <div className="mt-6 pt-5 border-t border-white/10 flex justify-center">
+          <LoneAlphaBadge />
         </div>
       </div>
     </footer>
