@@ -111,13 +111,14 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-white/75 lg:flex-row text-center lg:text-left">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-            <p>© {year} SafariRequest. All rights reserved.</p>
-            <span className="hidden sm:inline text-white/30" aria-hidden="true">·</span>
+        <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-white/75 lg:grid-cols-3">
+          <p className="order-1 text-center lg:text-left">
+            © {year} SafariRequest. All rights reserved.
+          </p>
+          <div className="order-2 flex justify-center">
             <LoneAlphaBadge />
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6">
+          <div className="order-3 flex flex-wrap items-center justify-center gap-5 sm:gap-6 lg:justify-end">
             <Link href="/privacy-policy" className="py-1 transition-colors hover:text-white">
               Privacy Policy
             </Link>
