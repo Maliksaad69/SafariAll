@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/tours',
     '/operators',
-    '/parks',
+    '/top-safari-countries',
     '/login',
     '/register',
     '/reviews',

@@ -132,7 +132,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
             Home
           </Link>
           <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />
-          <Link href="/parks" className="text-[var(--brand-deep)] font-bold hover:underline">
+          <Link href="/top-safari-countries" className="text-[var(--brand-deep)] font-bold hover:underline">
             Countries &amp; Parks
           </Link>
           <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />

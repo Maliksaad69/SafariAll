@@ -13,7 +13,7 @@ export default function Footer() {
         { label: 'South Africa', href: '/tours?country=South+Africa' },
         { label: 'Uganda — Gorillas', href: '/tours?country=Uganda' },
         { label: 'Botswana', href: '/tours?country=Botswana' },
-        { label: 'All Destinations', href: '/parks' },
+        { label: 'All Destinations', href: '/top-safari-countries' },
       ],
     },
     {

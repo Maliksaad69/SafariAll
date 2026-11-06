@@ -87,11 +87,11 @@ export default function Navbar() {
       ],
     },
     {
-      href: '/parks',
+      href: '/top-safari-countries',
       label: 'Countries & Parks',
       items: [
         ...countries.map((country) => ({ label: country, href: `/parks/${country.toLowerCase().replace(/\s+/g, '-')}` })),
-        { label: 'All Countries', href: '/parks' },
+        { label: 'All Countries', href: '/top-safari-countries' },
       ],
     },
     {

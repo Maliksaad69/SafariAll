@@ -241,7 +241,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
           </div>
 
           <Link
-            href="/parks"
+            href="/top-safari-countries"
             className="btn btn-ghost btn-sm text-xs font-bold gap-1 min-h-[38px] border border-[var(--border-soft)] bg-white/70 hover:bg-white text-[var(--ink)]"
           >
             <span>Destination Guide</span>
