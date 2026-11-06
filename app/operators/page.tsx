@@ -39,26 +39,29 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
       <Navbar />
 
       <main className="flex-1 w-full mx-auto pb-12">
-        {/* Page Header */}
-        <div className="border-b border-[var(--border-soft)] bg-white/40 backdrop-blur-md py-8">
-          <div className="max-w-[1230px] mx-auto px-4 sm:px-6">
-            <nav className="text-[12px] text-[var(--ink-secondary)] uppercase tracking-[0.12em] font-semibold mb-3 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
-              <Link href="/" className="text-[var(--brand-ink)] hover:underline normal-case">Home</Link>
-              <ChevronRight className="w-3.5 h-3.5 text-[var(--ink-muted)]" />
-              <span className="text-[var(--ink)] normal-case">Tour Operators</span>
+        {/* Page Hero Banner (Deep Safari Teal with Pure White Typography) */}
+        <div className="bg-[#214446] border-b border-[#193A38] py-10 sm:py-12 !text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#193A38]/90 via-[#214446] to-[#193A38]/90 pointer-events-none" />
+          <div className="absolute -right-24 -bottom-24 w-96 h-96 rounded-full bg-[#8C9F91]/10 blur-3xl pointer-events-none" />
+
+          <div className="relative max-w-[1230px] mx-auto px-4 sm:px-6">
+            <nav className="text-sm font-semibold !text-white/80 mb-3.5 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
+              <Link href="/" className="!text-white/85 hover:!text-white hover:underline transition-colors">Home</Link>
+              <ChevronRight className="w-4 h-4 text-white/60" />
+              <span className="!text-white font-extrabold">Tour Operators</span>
             </nav>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold font-display text-[var(--ink)] tracking-tight">
+                <h1 className="text-3xl md:text-5xl font-bold font-display !text-white tracking-tight drop-shadow-sm">
                   Safari Tour Operators
                 </h1>
-                <p className="mt-2 text-sm text-[var(--ink-secondary)] max-w-2xl">
+                <p className="mt-2 text-base text-white/90 max-w-2xl leading-relaxed">
                   Discover 100% verified local safari companies across Africa with direct traveler reviews and zero commission markups.
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 self-start md:self-auto surface-card rounded-full px-4 py-2 text-xs font-bold text-[var(--ink)] shadow-sm border border-[var(--glass-border)]">
-                <Star className="w-4 h-4 fill-[var(--gold)] text-[var(--gold)]" />
-                Verified local specialists
+              <div className="inline-flex items-center gap-2 self-start md:self-auto rounded-full px-4 py-2 text-sm font-bold !text-white shadow-sm border border-white/20 bg-white/10 backdrop-blur-md">
+                <Star className="w-4 h-4 fill-[#E4DBB4] text-[#E4DBB4]" />
+                <span className="font-extrabold !text-white">Verified local specialists</span>
               </div>
             </div>
           </div>

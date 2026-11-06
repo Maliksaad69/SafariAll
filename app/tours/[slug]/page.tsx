@@ -146,7 +146,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
       </HeroBackgroundSlider>
 
       {/* Sticky Tab Nav */}
-      <div className="glass-nav sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-[var(--border-soft)]">
+      <div className="glass-nav sticky top-0 z-20 border-b border-white/15 bg-[#214446]/95 backdrop-blur-md !text-white shadow-sm">
         <div className="max-w-[1230px] mx-auto px-4 flex gap-2 overflow-x-auto">
           {[
             { label: 'Overview', target: 'tour-overview' },
@@ -157,7 +157,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
             <a
               key={tab.label}
               href={`#${tab.target}`}
-              className="px-5 py-3.5 text-sm sm:text-base font-bold text-[var(--ink)] hover:text-[var(--brand-deep)] whitespace-nowrap border-b-2 border-transparent hover:border-[var(--brand)] transition-all"
+              className="px-5 py-3.5 text-sm sm:text-base font-bold !text-white/90 hover:!text-white whitespace-nowrap border-b-2 border-transparent hover:border-[#E4DBB4] transition-all"
             >
               {tab.label}
             </a>

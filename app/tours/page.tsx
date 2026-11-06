@@ -107,26 +107,30 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       <Navbar />
 
       <main className="flex-1 w-full mx-auto pb-12">
-        {/* Page Header */}
-        <div className="border-b border-[var(--border-soft)] bg-white/40 backdrop-blur-md py-8">
-          <div className="max-w-[1230px] mx-auto px-4">
-            <nav className="text-sm font-semibold text-[var(--ink-secondary)] mb-3.5 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
-              <Link href="/" className="text-[var(--brand-deep)] font-bold hover:underline">Home</Link>
-              <ChevronRight className="w-4 h-4 text-[var(--ink-secondary)]" />
-              <span className="text-[var(--ink)] font-extrabold">{heroTitle}</span>
+        {/* Page Hero Banner (Deep Safari Teal with Pure White Typography) */}
+        <div className="bg-[#214446] border-b border-[#193A38] py-10 sm:py-12 !text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#193A38]/90 via-[#214446] to-[#193A38]/90 pointer-events-none" />
+          <div className="absolute -right-24 -bottom-24 w-96 h-96 rounded-full bg-[#8C9F91]/10 blur-3xl pointer-events-none" />
+
+          <div className="relative max-w-[1230px] mx-auto px-4 sm:px-6">
+            <nav className="text-sm font-semibold !text-white/80 mb-3.5 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
+              <Link href="/" className="!text-white/85 hover:!text-white hover:underline transition-colors">Home</Link>
+              <ChevronRight className="w-4 h-4 text-white/60" />
+              <span className="!text-white font-extrabold">{heroTitle}</span>
             </nav>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold font-display text-[var(--ink)] tracking-tight">
+                <h1 className="text-3xl md:text-5xl font-bold font-display !text-white tracking-tight drop-shadow-sm">
                   {heroTitle}
                 </h1>
-                <p className="mt-2.5 text-base sm:text-lg text-[var(--ink)] font-normal max-w-2xl leading-relaxed">
+                <p className="mt-2.5 text-base sm:text-lg !text-white/90 font-normal max-w-2xl leading-relaxed">
                   Compare verified African safari packages from local operators with zero middleman commissions.
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 self-start md:self-auto surface-card rounded-full px-4 py-2.5 text-sm font-bold text-[var(--ink)] shadow-sm border border-[var(--glass-border)]">
-                <Star className="w-4 h-4 fill-[var(--gold)] text-[var(--gold)]" />
-                4.9 / 5 — 180,175 reviews
+              <div className="inline-flex items-center gap-2 self-start md:self-auto rounded-full px-4 py-2.5 text-sm font-bold !text-white shadow-sm border border-white/20 bg-white/10 backdrop-blur-md">
+                <Star className="w-4 h-4 fill-[#E4DBB4] text-[#E4DBB4]" />
+                <span className="font-extrabold !text-white">4.9 / 5</span>
+                <span className="!text-white/80">· 180,175 reviews</span>
               </div>
             </div>
           </div>
@@ -160,24 +164,24 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
               <div className="mb-6">
                 {activeFilters.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                    <span className="text-sm font-bold text-[var(--ink)]">Active filters:</span>
+                    <span className="text-sm font-bold !text-[#193A38]">Active filters:</span>
                     {activeFilters.map((f) => (
                       <Link
                         key={f.key}
                         href={removeFilterHref(f.key)}
-                        className="inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-white px-3.5 py-1.5 text-sm font-bold text-[var(--ink)] hover:border-[var(--brand)] hover:bg-white transition-all shadow-2xs"
+                        className="inline-flex items-center gap-2 rounded-full border border-[#DEDCCF] bg-white px-3.5 py-1.5 text-sm font-bold !text-[#193A38] hover:border-[#214446] hover:bg-[#E4DBB4]/20 transition-all shadow-2xs"
                       >
                         {f.label}
-                        <span aria-hidden="true" className="text-[var(--ink)] text-base font-extrabold leading-none">×</span>
+                        <span aria-hidden="true" className="!text-[#193A38] text-base font-extrabold leading-none">×</span>
                         <span className="sr-only">Remove filter</span>
                       </Link>
                     ))}
-                    <Link href="/tours" className="text-sm font-extrabold text-[var(--brand-deep)] hover:underline ml-1">Clear all</Link>
+                    <Link href="/tours" className="text-sm font-extrabold !text-[#214446] hover:underline ml-1">Clear all</Link>
                   </div>
                 )}
 
-                <div className="text-sm sm:text-base font-medium text-[var(--ink)]">
-                  Showing <strong className="text-[var(--brand-deep)] font-extrabold">1-{orderedTours.length} of {orderedTours.length}</strong> safari tours. Direct local quotes guaranteed.
+                <div className="text-sm sm:text-base font-medium !text-[#344C49]">
+                  Showing <strong className="!text-[#214446] font-extrabold">1-{orderedTours.length} of {orderedTours.length}</strong> safari tours. Direct local quotes guaranteed.
                 </div>
               </div>
 
@@ -206,22 +210,22 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       </main>
 
       {/* Related Searches Section */}
-      <section className="border-t border-[var(--border-soft)] bg-white/40 backdrop-blur-md py-10 font-sans">
+      <section className="border-t border-[#DEDCCF] bg-white/70 backdrop-blur-md py-10 font-sans">
         <div className="max-w-[1230px] mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)] mb-5">Popular Safari Searches</h2>
+          <h2 className="text-xl sm:text-2xl font-bold font-display !text-[#193A38] mb-5">Popular Safari Searches</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3.5 text-sm sm:text-[14.5px] font-semibold">
-            <Link href="/tours" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Safari Tour Operators</Link>
-            <Link href="/operators" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Top 10 Safari Operators</Link>
-            <Link href="/tours?comfort=BUDGET" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> African Budget Safaris</Link>
-            <Link href="/tours?search=gorilla" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Gorilla Trekking Tours</Link>
-            <Link href="/tours?search=chimp" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Chimp Trekking Tours</Link>
-            <Link href="/tours?search=overland" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> African Overland Tours</Link>
-            <Link href="/tours?comfort=BUDGET" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Camping Safaris</Link>
-            <Link href="/tours?comfort=LUXURY" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> African Luxury Safaris</Link>
-            <Link href="/tours?search=honeymoon" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Honeymoon Safaris</Link>
-            <Link href="/tours?search=photographic" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> African Photographic Safaris</Link>
-            <Link href="/tours?tourType=PRIVATE" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Private Safaris</Link>
-            <Link href="/tours?search=family" className="text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[var(--brand-deep)] shrink-0" /> Family Safaris</Link>
+            <Link href="/tours" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Safari Tour Operators</Link>
+            <Link href="/operators" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Top 10 Safari Operators</Link>
+            <Link href="/tours?comfort=BUDGET" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> African Budget Safaris</Link>
+            <Link href="/tours?search=gorilla" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Gorilla Trekking Tours</Link>
+            <Link href="/tours?search=chimp" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Chimp Trekking Tours</Link>
+            <Link href="/tours?search=overland" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> African Overland Tours</Link>
+            <Link href="/tours?comfort=BUDGET" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Camping Safaris</Link>
+            <Link href="/tours?comfort=LUXURY" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> African Luxury Safaris</Link>
+            <Link href="/tours?search=honeymoon" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Honeymoon Safaris</Link>
+            <Link href="/tours?search=photographic" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> African Photographic Safaris</Link>
+            <Link href="/tours?tourType=PRIVATE" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Private Safaris</Link>
+            <Link href="/tours?search=family" className="!text-[#344C49] hover:!text-[#214446] transition-colors flex items-center gap-2 py-0.5"><ChevronRight className="w-4 h-4 text-[#214446] shrink-0" /> Family Safaris</Link>
           </div>
         </div>
       </section>

@@ -231,6 +231,28 @@ footer[class*="bg-[#214446]"] {
   color: #FFFFFF;
 }
 
+/* Green hero banners & panels: universal white text */
+[class*="bg-[#214446]"]:not(.btn):not(.badge):not(.popover),
+[class*="bg-[#193A38]"]:not(.btn):not(.badge):not(.popover),
+[class*="bg-[var(--brand-deep)]"]:not(.btn):not(.badge):not(.popover),
+.hero-green {
+  color: #FFFFFF !important;
+}
+
+[class*="bg-[#214446]"]:not(.popover) :is(h1, h2, h3, h4, p:not(.popover p)),
+[class*="bg-[#193A38]"]:not(.popover) :is(h1, h2, h3, h4, p:not(.popover p)),
+[class*="bg-[var(--brand-deep)]"]:not(.popover) :is(h1, h2, h3, h4, p:not(.popover p)),
+.hero-green :is(h1, h2, h3, h4, p) {
+  color: #FFFFFF !important;
+}
+
+[class*="bg-[#214446]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
+[class*="bg-[#193A38]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
+[class*="bg-[var(--brand-deep)]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
+.hero-green a:not(.btn):not(.surface-card a) {
+  color: #FFFFFF !important;
+}
+
 /* Green buttons & solid green status pills */
 .btn-primary,
 .btn-ocean,
