@@ -32,11 +32,6 @@ ENV DATABASE_URL=${DATABASE_URL}
 RUN npx prisma generate
 RUN npm run build
 
-# Bundle database seed scripts into standalone JavaScript for runner
-RUN mkdir -p dist-seed && \
-    npx esbuild prisma/seed.ts --bundle --platform=node --target=node22 --outfile=dist-seed/seed-base.js --external:@prisma/client --external:bcryptjs && \
-    npx esbuild scripts/seed-complete-dummy-data.ts --bundle --platform=node --target=node22 --outfile=dist-seed/seed-dummy.js --external:@prisma/client --external:bcryptjs
-
 # ─── Stage 4: Production Runner ────────────────────────────────────────────────
 FROM base AS runner
 
@@ -71,11 +66,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Public assets (if public directory exists)
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Prisma schema, migrations, seed bundles, and runtime dependencies
+# Prisma schema, migrations, and runtime dependencies
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/dist-seed ./dist-seed
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modules/bcryptjs
 

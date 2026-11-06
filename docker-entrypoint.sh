@@ -62,11 +62,6 @@ if [ -n "$DATABASE_URL" ] && [ "$SKIP_PRISMA_MIGRATION" != "true" ]; then
       fi
     fi
   done
-
-  # Initialize default demo/admin user if database has no users
-  if [ -f "./prisma/seed-init.js" ]; then
-    node ./prisma/seed-init.js || true
-  fi
 fi
 
 exec "$@"
