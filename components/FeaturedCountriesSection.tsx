@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ChevronRight,
@@ -142,12 +142,6 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
   const [selectedCircuit, setSelectedCircuit] = useState<CircuitFilter>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('spotlight');
   const [selectedSlug, setSelectedSlug] = useState<string>(countries[0]?.slug ?? 'tanzania');
-  const [isPaused, setIsPaused] = useState(false);
-  const [userHovered, setUserHovered] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // 5-second auto-advance interval as requested
-  const AUTO_PLAY_INTERVAL = 5000;
 
   // Filter countries according to active circuit
   const filteredCountries = useMemo(() => {
@@ -183,22 +177,6 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
       return filteredCountries[prevIdx].slug;
     });
   }, [filteredCountries]);
-
-  // Auto-play timer effect: advances every 5 seconds unless paused or hovered
-  useEffect(() => {
-    if (viewMode !== 'spotlight' || isPaused || userHovered || filteredCountries.length <= 1) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
-
-    timerRef.current = setInterval(() => {
-      nextDestination();
-    }, AUTO_PLAY_INTERVAL);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [viewMode, isPaused, userHovered, filteredCountries, nextDestination]);
 
   if (!countries || countries.length === 0) return null;
 
@@ -295,30 +273,12 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          MODE 1: INTERACTIVE SPOTLIGHT SHOWCASE (Auto-advances every 5s)
+          MODE 1: INTERACTIVE SPOTLIGHT SHOWCASE
           ══════════════════════════════════════════════════════════════════════ */}
       {viewMode === 'spotlight' && (
-        <div
-          className="space-y-4"
-          onMouseEnter={() => setUserHovered(true)}
-          onMouseLeave={() => setUserHovered(false)}
-          onTouchStart={() => setUserHovered(true)}
-          onTouchEnd={() => setUserHovered(false)}
-        >
+        <div className="space-y-4">
           {/* Main Stage: Cinematic Country Hero Canvas */}
           <div className="relative rounded-3xl overflow-hidden shadow-lg border border-[var(--border)] bg-[#193A38] text-white">
-            {/* Top 5-second animated progress bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20 overflow-hidden">
-              <div
-                key={activeCountry.slug}
-                className="h-full bg-gradient-to-r from-[var(--brand)] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
-                style={{
-                  animationDuration: `${AUTO_PLAY_INTERVAL}ms`,
-                  animationPlayState: isPaused || userHovered ? 'paused' : 'running',
-                }}
-              />
-            </div>
-
             {/* Background Panorama with Atmospheric Gradients */}
             <div
               className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out transform scale-100"
@@ -489,7 +449,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 Select Destination to Inspect ({filteredCountries.length})
               </span>
               <span className="text-xs font-medium text-[var(--ink-muted)] hidden sm:inline">
-                Auto-advances every 5s · Hover or click any card to inspect
+                Click any destination card below or use the arrows to inspect
               </span>
             </div>
 

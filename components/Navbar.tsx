@@ -59,14 +59,20 @@ export default function Navbar() {
   };
 
   // Country list and top operators come from Postgres via /api/site/nav
-  const [countries, setCountries] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([
+    'Tanzania',
+    'Kenya',
+    'Botswana',
+    'Uganda',
+    'South Africa',
+  ]);
   const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
   useEffect(() => {
     fetch('/api/site/nav')
       .then((r) => r.json())
       .then((d) => {
-        setCountries(d.countries ?? []);
-        setTopOperators(d.operators ?? []);
+        if (d.countries && d.countries.length > 0) setCountries(d.countries);
+        if (d.operators && d.operators.length > 0) setTopOperators(d.operators);
       })
       .catch(() => {});
   }, []);
@@ -77,9 +83,6 @@ export default function Navbar() {
       label: 'Safaris & Tours',
       items: [
         ...countries.map((country) => ({ label: `${country} Safaris`, href: `/tours?country=${encodeURIComponent(country)}` })),
-        { label: 'Private Safaris', href: '/tours?tourType=PRIVATE' },
-        { label: 'Budget Safaris', href: '/tours?comfort=BUDGET' },
-        { label: 'Luxury Safaris', href: '/tours?comfort=LUXURY' },
         { label: 'All Safaris', href: '/tours' },
       ],
     },

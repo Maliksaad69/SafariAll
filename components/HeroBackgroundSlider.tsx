@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+
 import { MapPin } from 'lucide-react';
 
 export interface HeroSlide {
@@ -104,84 +104,25 @@ interface HeroBackgroundSliderProps {
 export default function HeroBackgroundSlider({
   slides,
   tourCount,
-  autoPlayInterval = 4800,
   showLocationBadge = true,
-  showControls = true,
   children,
   className = '',
   minHeightClass = 'h-[460px] min-h-[460px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const startAutoPlay = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % resolvedSlides.length);
-    }, autoPlayInterval);
-  }, [resolvedSlides.length, autoPlayInterval]);
-
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % resolvedSlides.length);
-    startAutoPlay();
-  }, [resolvedSlides.length, startAutoPlay]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + resolvedSlides.length) % resolvedSlides.length);
-    startAutoPlay();
-  }, [resolvedSlides.length, startAutoPlay]);
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-    startAutoPlay();
-  };
-
-  useEffect(() => {
-    startAutoPlay();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [startAutoPlay]);
-
-  const currentSlide = resolvedSlides[currentIndex] || resolvedSlides[0];
+  const currentSlide = resolvedSlides[0];
 
   return (
     <section
-      aria-label="African Safari Hero Carousel"
+      aria-label="African Safari Hero Banner"
       className={`relative w-full overflow-hidden flex flex-col justify-between pt-3.5 pb-3.5 px-3 sm:px-4 md:pt-0 md:pb-0 md:px-0 md:block ${minHeightClass} ${className}`}
     >
-      {/* ── Top Dynamic Slide Progress Indicator ── */}
-      <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
-        <div
-          key={currentIndex}
-          className="h-full bg-gradient-to-r from-[var(--brand)] via-[#8C9F91] to-[#E4DBB4] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
-          style={{ animationDuration: `${autoPlayInterval}ms` }}
-        />
-      </div>
-
-      {/* ── Background Crossfading Images with Cinematic Animations ── */}
+      {/* ── Stable Hero Background Photography ── */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        {resolvedSlides.map((slide, idx) => {
-          const isActive = idx === currentIndex;
-          const animClass = ANIMATION_CLASSES[idx % ANIMATION_CLASSES.length];
-          return (
-            <div
-              key={slide.url}
-              aria-hidden={!isActive}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-              }`}
-            >
-              <div
-                className={`w-full h-full bg-cover bg-center ${
-                  isActive ? animClass : 'scale-100'
-                }`}
-                style={{ backgroundImage: `url('${slide.url}')` }}
-              />
-            </div>
-          );
-        })}
+        <div
+          className="w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: `url('${currentSlide.url}')` }}
+        />
 
         {/* ── Layered Contrast Scrims ── */}
         <div className="absolute inset-0 bg-black/40 z-15" />
@@ -204,11 +145,11 @@ export default function HeroBackgroundSlider({
         )}
       </div>
 
-      {/* ── Changing Text Hero Foreground ── */}
+      {/* ── Text Hero Foreground ── */}
       <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-24 pt-1 sm:pt-4 md:pt-0">
         <div
-          key={currentIndex}
-          className="animate-hero-text max-w-3xl text-center text-white"
+          key={currentSlide.location || 'hero'}
+          className="max-w-3xl text-center text-white"
         >
           {/* Animated Highlight Badge with Orange Blink */}
           {currentSlide.badge && (
