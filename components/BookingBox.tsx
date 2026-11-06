@@ -70,10 +70,9 @@ export default function BookingBox({ tourId, tourTitle, minPriceUsd, maxPrice, d
             <span className="text-sm font-bold text-[var(--ink)]">pp</span>
           </div>
         </div>
-        <div className="text-right text-xs leading-relaxed font-semibold text-[var(--ink-secondary)]">
-          up to ${maxPrice.toLocaleString()} pp
-          <br />
-          per person sharing
+        <div className="text-right text-xs font-semibold text-[var(--ink-secondary)] whitespace-nowrap">
+          <div>up to ${maxPrice.toLocaleString()} pp</div>
+          <div className="text-[11px] text-[#516D6A] font-normal">per person sharing</div>
         </div>
       </div>
 

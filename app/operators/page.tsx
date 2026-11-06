@@ -68,7 +68,7 @@ export default async function OperatorsPage({ searchParams }: { searchParams: Pr
           <div className="flex flex-col lg:flex-row gap-8">
 
             {/* Sidebar */}
-            <div className="lg:w-[300px] flex-shrink-0">
+            <div className="lg:w-[320px] flex-shrink-0">
               <div className="sticky top-20">
                 <OperatorFilterSidebar
                   currentCountry={params.country || ''}

@@ -136,7 +136,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
           <div className="flex flex-col lg:flex-row gap-8">
 
             {/* Sidebar */}
-            <div className="lg:w-[310px] flex-shrink-0">
+            <div className="lg:w-[320px] flex-shrink-0">
               <div className="sticky top-20">
                 <FilterSidebar
                   currentCountry={country}
