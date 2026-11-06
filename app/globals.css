@@ -253,10 +253,10 @@ footer[class*="bg-[#214446]"] {
   color: #FFFFFF !important;
 }
 
-[class*="bg-[#214446]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
-[class*="bg-[#193A38]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
-[class*="bg-[var(--brand-deep)]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a),
-.hero-green a:not(.btn):not(.surface-card a) {
+[class*="bg-[#214446]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a):not([href*="malik-saad"]):not([class*="bg-white"]),
+[class*="bg-[#193A38]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a):not([href*="malik-saad"]):not([class*="bg-white"]),
+[class*="bg-[var(--brand-deep)]"]:not(.popover) a:not(.btn):not(.surface-card a):not(.popover a):not([href*="malik-saad"]):not([class*="bg-white"]),
+.hero-green a:not(.btn):not(.surface-card a):not([href*="malik-saad"]) {
   color: #FFFFFF !important;
 }
 

@@ -111,8 +111,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-white/75 sm:flex-row text-center sm:text-left">
-          <p>© {year} SafariRequest. All rights reserved.</p>
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-white/75 lg:flex-row text-center lg:text-left">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+            <p>© {year} SafariRequest. All rights reserved.</p>
+            <span className="hidden sm:inline text-white/30" aria-hidden="true">·</span>
+            <LoneAlphaBadge />
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6">
             <Link href="/privacy-policy" className="py-1 transition-colors hover:text-white">
               Privacy Policy
@@ -124,11 +128,6 @@ export default function Footer() {
               How It Works
             </Link>
           </div>
-        </div>
-
-        {/* Creator Attribution */}
-        <div className="mt-6 pt-5 border-t border-white/10 flex justify-center">
-          <LoneAlphaBadge />
         </div>
       </div>
     </footer>
