@@ -144,11 +144,11 @@ export default function Navbar() {
   // Exactly one chat button is mounted: in the desktop action bar (right of the bell) or the mobile header.
   const isDesktop = useSyncExternalStore<boolean | null>(
     (onChange) => {
-      const mq = window.matchMedia('(min-width: 1280px)');
+      const mq = window.matchMedia('(min-width: 1024px)');
       mq.addEventListener('change', onChange);
       return () => mq.removeEventListener('change', onChange);
     },
-    () => window.matchMedia('(min-width: 1280px)').matches,
+    () => window.matchMedia('(min-width: 1024px)').matches,
     () => null,
   );
 
@@ -194,19 +194,19 @@ export default function Navbar() {
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 font-sans text-white w-full border-b border-white/10">
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="flex h-[70px] sm:h-[74px] items-center justify-between gap-4 lg:gap-8 w-full">
+    <header className="glass-nav sticky top-0 z-50 font-sans text-white w-full border-b border-white/10 overflow-x-clip">
+      <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
+        <div className="flex h-[66px] sm:h-[72px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90">
             <img
               src="/images/safaribuilt-logo.png"
               alt="SafariRequest — One Marketplace for African Safari Tours"
-              className="h-[44px] sm:h-[50px] md:h-[54px] w-auto object-contain"
+              className="h-[38px] sm:h-[44px] lg:h-[46px] xl:h-[50px] w-auto object-contain shrink-0"
             />
           </Link>
 
-          <div className="hidden xl:flex items-center flex-1 justify-center px-2 xl:px-8">
-            <nav className="relative flex items-center justify-center gap-2 xl:gap-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white/90">
+          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-4">
+            <nav className="relative flex items-center justify-center gap-1 xl:gap-2.5 2xl:gap-4 text-[12px] xl:text-[13px] font-bold uppercase tracking-[0.04em] text-white/90">
               {navMenus.map(({ href, label, items }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -220,12 +220,12 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 transition-colors whitespace-nowrap ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
+                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2.5 py-1.5 xl:px-3.5 xl:py-2 transition-colors whitespace-nowrap ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
-                      {label}
-                      <ChevronDown className={`h-3.5 w-3.5 text-white/80 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                      <span>{label}</span>
+                      <ChevronDown className={`h-3 w-3 xl:h-3.5 xl:w-3.5 text-white/80 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                     </Link>
 
                     <div
@@ -252,18 +252,18 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="hidden xl:flex items-center gap-4 text-[13px] font-semibold flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 2xl:gap-4 text-xs xl:text-[13px] font-semibold shrink-0">
             {sessionUser && (
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={toggleNotifications}
-                  className="relative flex items-center text-white/90 transition-colors hover:text-white"
+                  className="relative flex items-center text-white/90 transition-colors hover:text-white p-1"
                   aria-label="Travel notifications"
                   aria-expanded={notifOpen}
                 >
                   <Bell className="h-5 w-5" strokeWidth={1.6} />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#8C9F91] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
+                    <span className="absolute -top-1 -right-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#8C9F91] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
                   )}
                 </button>
                 {notifOpen && (
@@ -289,7 +289,6 @@ export default function Navbar() {
                             </>
                           );
                           const cls = `block border-b border-[#DEDCCF] px-3 py-2.5 last:border-b-0 ${n.isRead ? '' : 'bg-[#E4DBB4]/30'}`;
-                          // Chat messages are only announced here; the chat button next to the bell opens them.
                           return n.type === 'CHAT_MESSAGE' || !n.link ? (
                             <div key={n.id} className={cls}>{inner}</div>
                           ) : (
@@ -305,18 +304,18 @@ export default function Navbar() {
               </div>
             )}
             {sessionUser && isDesktop === true && <ChatLauncher />}
-            <Link href="/favorites" className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white group" aria-label="Favorites list">
+            <Link href="/favorites" className="flex items-center gap-1 text-white/90 transition-colors hover:text-white group px-1 py-1 shrink-0" aria-label="Favorites list">
               <div className="relative">
-                <Heart className="h-5 w-5 text-white/90 group-hover:fill-white/30" strokeWidth={1.6} />
+                <Heart className="h-4 w-4 xl:h-5 xl:w-5 text-white/90 group-hover:fill-white/30" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#193A38] px-1 text-[9px] font-bold text-white shadow border border-white/20">{favoriteCount}</span>
                 )}
               </div>
-              List
+              <span className="hidden xl:inline">List</span>
             </Link>
             <NavbarSearch />
             {sessionUser ? (
-              <div className="relative ml-1" ref={userMenuRef}>
+              <div className="relative ml-0.5" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-1.5 text-white/90 transition-colors hover:text-white"
@@ -324,9 +323,9 @@ export default function Navbar() {
                   aria-expanded={userMenuOpen}
                   aria-label="Account menu"
                 >
-                  <span className="max-w-[110px] truncate text-[13px] font-bold text-white">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
-                  <User className="h-5 w-5" strokeWidth={1.6} />
-                  <ChevronDown className="h-3.5 w-3.5 text-white/80" />
+                  <span className="max-w-[80px] xl:max-w-[120px] truncate text-xs xl:text-[13px] font-bold text-white">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
+                  <User className="h-4 w-4 xl:h-5 xl:w-5" strokeWidth={1.6} />
+                  <ChevronDown className="h-3 w-3 xl:h-3.5 xl:w-3.5 text-white/80" />
                 </button>
                 {userMenuOpen && (
                   <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
@@ -349,24 +348,50 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <div className="ml-1 flex items-center gap-2">
-                <Link href="/login" className="btn btn-sm border border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/50">Sign In</Link>
-                <Link href="/register" className="btn btn-secondary btn-sm bg-[#E4DBB4] hover:bg-[#D8CDA1] text-[#193A38] font-bold border-transparent">Register</Link>
+              <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 px-2.5 xl:px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/10 hover:border-white/50 whitespace-nowrap"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center rounded-xl bg-[#E4DBB4] hover:bg-[#D8CDA1] px-3 xl:px-3.5 py-1.5 text-xs font-bold text-[#193A38] shadow-xs transition-colors whitespace-nowrap"
+                >
+                  Register
+                </Link>
               </div>
             )}
           </div>
 
-          {/* Chat launcher + accessible 44px hamburger button for mobile/tablet */}
-          <div className="flex items-center gap-1 xl:hidden">
-            {sessionUser && isDesktop === false && <ChatLauncher className="mr-1" />}
+          {/* Chat launcher + mobile register + accessible hamburger button for mobile/tablet */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden shrink-0">
+            {!sessionUser && (
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Link
+                  href="/login"
+                  className="hidden sm:inline-flex items-center rounded-lg border border-white/30 px-2.5 py-1 text-xs font-bold text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center rounded-lg bg-[#E4DBB4] hover:bg-[#D8CDA1] px-2.5 sm:px-3 py-1 text-xs font-bold text-[#193A38] shadow-xs transition-colors whitespace-nowrap"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+            {sessionUser && isDesktop === false && <ChatLauncher className="mr-0.5" />}
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 active:scale-95"
+              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 active:scale-95"
               aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -375,7 +400,7 @@ export default function Navbar() {
       {/* Mobile Drawer Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 top-[70px] sm:top-[74px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 xl:hidden"
+          className="fixed inset-0 top-[66px] sm:top-[72px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 lg:hidden"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
@@ -386,7 +411,7 @@ export default function Navbar() {
         <div
           role="dialog"
           aria-label="Mobile Navigation Menu"
-          className="fixed left-0 right-0 top-[70px] sm:top-[74px] z-50 max-h-[calc(100vh-70px)] sm:max-h-[calc(100vh-74px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 xl:hidden"
+          className="fixed left-0 right-0 top-[66px] sm:top-[72px] z-50 max-h-[calc(100vh-66px)] sm:max-h-[calc(100vh-72px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
             {/* Quick search input */}
