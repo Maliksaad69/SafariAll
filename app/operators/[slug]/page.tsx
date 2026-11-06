@@ -7,7 +7,6 @@ import { buildOperatorSchema } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, MapPin, CheckCircle2, Star, Award, Mail, Phone, Globe, Calendar, ArrowRight, MessageSquare, Building, FileText } from 'lucide-react';
-import { getFallbackOperatorDetail } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,11 +49,6 @@ export default async function OperatorProfilePage({ params }: OperatorProfilePag
     });
   } catch (err) {
     console.warn(`[OperatorProfilePage] Database query failed for operator "${slug}":`, (err as Error)?.message);
-  }
-
-  // Graceful fallback to offline seed data
-  if (!operator) {
-    operator = getFallbackOperatorDetail(slug);
   }
 
   if (!operator) {

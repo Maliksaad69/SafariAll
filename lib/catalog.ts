@@ -2,13 +2,6 @@ import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import type { SiteOperator, SiteTour } from '@/lib/site-data';
 import { todayUtc } from '@/lib/booking';
-import {
-  getFallbackTourCards,
-  getFallbackOperatorCards,
-  getFallbackCountries,
-  getFallbackBlogPosts,
-} from '@/lib/fallback-data';
-import { CATALOG_EXPERTS } from '@/prisma/catalog-data';
 
 // Read helpers that shape Postgres rows into the card props the UI components use.
 
@@ -63,10 +56,11 @@ export async function getTourCards(where: Prisma.TourWhereInput = {}, take?: num
     if (rows && rows.length > 0) {
       return rows.map(toTourCard);
     }
+    return [];
   } catch (err) {
-    console.warn('[catalog] Database query failed in getTourCards, using offline seed catalog:', (err as Error)?.message);
+    console.warn('[catalog] Database query failed in getTourCards:', (err as Error)?.message);
+    return [];
   }
-  return getFallbackTourCards(where, take);
 }
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
@@ -105,10 +99,11 @@ export async function getOperatorCards(): Promise<SiteOperator[]> {
         };
       });
     }
+    return [];
   } catch (err) {
-    console.warn('[catalog] Database query failed in getOperatorCards, using offline seed catalog:', (err as Error)?.message);
+    console.warn('[catalog] Database query failed in getOperatorCards:', (err as Error)?.message);
+    return [];
   }
-  return getFallbackOperatorCards();
 }
 
 // Countries are destinations of type COUNTRY, ranked by popularityRank.
@@ -129,20 +124,22 @@ export async function getCountries() {
         };
       });
     }
+    return [];
   } catch (err) {
-    console.warn('[catalog] Database query failed in getCountries, using offline seed catalog:', (err as Error)?.message);
+    console.warn('[catalog] Database query failed in getCountries:', (err as Error)?.message);
+    return [];
   }
-  return getFallbackCountries();
 }
 
 export async function getExperts() {
   try {
     const experts = await prisma.expert.findMany({ orderBy: { sortOrder: 'asc' } });
     if (experts && experts.length > 0) return experts;
+    return [];
   } catch (err) {
-    console.warn('[catalog] Database query failed in getExperts, using offline seed catalog:', (err as Error)?.message);
+    console.warn('[catalog] Database query failed in getExperts:', (err as Error)?.message);
+    return [];
   }
-  return CATALOG_EXPERTS as unknown as any[];
 }
 
 export async function getLatestBlogPosts(take = 3) {
@@ -154,8 +151,9 @@ export async function getLatestBlogPosts(take = 3) {
       select: { title: true, slug: true, coverImageUrl: true },
     });
     if (posts && posts.length > 0) return posts;
+    return [];
   } catch (err) {
-    console.warn('[catalog] Database query failed in getLatestBlogPosts, using offline seed catalog:', (err as Error)?.message);
+    console.warn('[catalog] Database query failed in getLatestBlogPosts:', (err as Error)?.message);
+    return [];
   }
-  return getFallbackBlogPosts(take);
 }

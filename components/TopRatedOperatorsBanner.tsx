@@ -23,8 +23,9 @@ interface TopRatedOperatorsBannerProps {
 
 export default function TopRatedOperatorsBanner({
   operators,
-  totalOperatorsCount = 120,
+  totalOperatorsCount = 0,
 }: TopRatedOperatorsBannerProps) {
+  if (!operators || operators.length === 0) return null;
   return (
     <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#214446] text-white p-4 sm:p-6 md:p-10 border border-[#193A38] shadow-md">
       {/* ── Banner Header Row ── */}

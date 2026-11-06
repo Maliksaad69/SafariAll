@@ -14,7 +14,6 @@ import BookingBox from '@/components/BookingBox';
 import TourReviewsWidget from '@/components/TourReviewsWidget';
 import HeroBackgroundSlider, { HeroSlide } from '@/components/HeroBackgroundSlider';
 import { getTourCards } from '@/lib/catalog';
-import { getFallbackTourDetail } from '@/lib/fallback-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,11 +53,6 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
     });
   } catch (err) {
     console.warn(`[TourDetailPage] Database query failed for tour "${slug}":`, (err as Error)?.message);
-  }
-
-  // Gracefully fallback to seed catalog when Postgres is offline or tour is not in DB
-  if (!tour) {
-    tour = getFallbackTourDetail(slug);
   }
 
   if (!tour || !tour.isPublished) notFound();

@@ -29,13 +29,13 @@ async function getRealStats() {
       destinations: destinationCount,
     };
   } catch (err) {
-    console.warn('[HomePage] Database query failed in getRealStats, using offline fallback stats:', (err as Error)?.message);
+    console.warn('[HomePage] Database query failed in getRealStats:', (err as Error)?.message);
     return {
-      tours: 14,
-      operators: 6,
-      reviews: 770,
-      rating: 4.9,
-      destinations: 48,
+      tours: 0,
+      operators: 0,
+      reviews: 0,
+      rating: 0,
+      destinations: 0,
     };
   }
 }
@@ -138,62 +138,72 @@ export default async function HomePage() {
                 View all {stats.tours.toLocaleString()} tours <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {tours.map((tour) => (
-                <TourCard key={tour.id} tour={tour} />
-              ))}
-            </div>
+            {tours.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {tours.map((tour) => (
+                  <TourCard key={tour.id} tour={tour} />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-[#DEDCCF] p-8 sm:p-12 text-center text-sm text-[#516D6A]">
+                No tours currently listed in the database.
+              </div>
+            )}
           </div>
         </section>
 
         {/* ── Operators (New Distinctive Banner Design) ── */}
-        <section className="pb-10 sm:pb-16">
-          <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
-            <TopRatedOperatorsBanner
-              operators={operators}
-              totalOperatorsCount={stats.operators}
-            />
-          </div>
-        </section>
+        {operators.length > 0 && (
+          <section className="pb-10 sm:pb-16">
+            <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
+              <TopRatedOperatorsBanner
+                operators={operators}
+                totalOperatorsCount={stats.operators}
+              />
+            </div>
+          </section>
+        )}
 
         {/* ── Blog ── */}
-        <section className="pb-10 sm:pb-16">
-          <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
-            <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-              <div>
-                <h2 className="text-[22px] sm:text-[28px] font-semibold text-[var(--ink)]">
-                  Latest from the Blog
-                </h2>
-                <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
-                  Insider safari guides, wildlife advice &amp; trip inspiration
-                </p>
-              </div>
-              <Link href="/safari-blog" className="link inline-flex items-center gap-1 text-xs sm:text-sm font-semibold self-start sm:self-auto">
-                All articles <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {blogPosts.map((post) => (
-                <Link
-                  href={`/safari-blog/${post.slug}`}
-                  key={post.slug}
-                  className="surface-card surface-card-hover group relative block h-[180px] sm:h-[200px] overflow-hidden rounded-2xl shadow-xs"
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                    style={{ backgroundImage: `url('${post.coverImageUrl ?? ''}')` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                    <h3 className="text-[15px] sm:text-[18px] font-semibold leading-snug text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)] line-clamp-2">
-                      {post.title}
-                    </h3>
-                  </div>
+        {blogPosts.length > 0 && (
+          <section className="pb-10 sm:pb-16">
+            <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
+              <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                  <h2 className="text-[22px] sm:text-[28px] font-semibold text-[var(--ink)]">
+                    Latest from the Blog
+                  </h2>
+                  <p className="mt-1 text-xs sm:text-sm text-[var(--ink-secondary)]">
+                    Insider safari guides, wildlife advice &amp; trip inspiration
+                  </p>
+                </div>
+                <Link href="/safari-blog" className="link inline-flex items-center gap-1 text-xs sm:text-sm font-semibold self-start sm:self-auto">
+                  All articles <ChevronRight className="h-4 w-4" />
                 </Link>
-              ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {blogPosts.map((post) => (
+                  <Link
+                    href={`/safari-blog/${post.slug}`}
+                    key={post.slug}
+                    className="surface-card surface-card-hover group relative block h-[180px] sm:h-[200px] overflow-hidden rounded-2xl shadow-xs"
+                  >
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                      style={{ backgroundImage: `url('${post.coverImageUrl ?? ''}')` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                      <h3 className="text-[15px] sm:text-[18px] font-semibold leading-snug text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)] line-clamp-2">
+                        {post.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* ── Experts (Moving Left-to-Right with Accessible Motion) ── */}
         <section className="pb-14 sm:pb-20">

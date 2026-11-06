@@ -81,11 +81,12 @@ export default async function TopSafariCountriesPage() {
           </div>
 
           <div className="space-y-8">
-            {countries.map((country) => (
-              <article
-                key={country.id}
-                className="surface-card surface-card-hover rounded-2xl overflow-hidden border border-[var(--border)] shadow-sm flex flex-col lg:flex-row bg-white/95"
-              >
+            {countries.length > 0 ? (
+              countries.map((country) => (
+                <article
+                  key={country.id}
+                  className="surface-card surface-card-hover rounded-2xl overflow-hidden border border-[var(--border)] shadow-sm flex flex-col lg:flex-row bg-white/95"
+                >
                 {/* Left: Image Banner */}
                 <div className="w-full lg:w-[260px] relative flex-shrink-0 min-h-[220px] lg:min-h-[260px]">
                   <img
@@ -206,7 +207,12 @@ export default async function TopSafariCountriesPage() {
                   </Link>
                 </div>
               </article>
-            ))}
+            ))
+            ) : (
+              <div className="surface-card rounded-2xl border border-[var(--border)] p-12 text-center text-sm text-[var(--ink-secondary)]">
+                No safari destinations currently available in the database.
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -6,8 +6,6 @@ import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getTourCards } from '@/lib/catalog';
-import { getFallbackParkDetail } from '@/lib/fallback-data';
-import { CATALOG_DESTINATIONS } from '@/prisma/catalog-data';
 import {
   ChevronRight,
   MapPin,
@@ -45,11 +43,6 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
     console.warn(`[ParkDetailPage] Database query failed for park "${slug}":`, (err as Error)?.message);
   }
 
-  // Gracefully fallback to seed catalog
-  if (!park) {
-    park = getFallbackParkDetail(slug);
-  }
-
   if (!park) notFound();
 
   const isCountry = park.type === 'COUNTRY';
@@ -69,9 +62,7 @@ export default async function ParkDetailPage({ params }: ParkDetailPageProps) {
         select: { name: true, slug: true },
       });
     } catch {
-      childParks = CATALOG_DESTINATIONS
-        .filter((d) => d.country === park.country && d.type !== 'COUNTRY')
-        .map((d) => ({ name: d.name, slug: d.slug }));
+      childParks = [];
     }
   }
 
