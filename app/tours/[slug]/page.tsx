@@ -134,9 +134,9 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
           </h1>
 
           <div className="flex flex-wrap items-center gap-3 text-white/95 text-sm sm:text-base">
-            <span>Offered By: <Link href={`/operators/${tour.operator.slug}`} className="font-bold underline hover:text-[var(--dark-gold)]">{tour.operator.companyName}</Link></span>
+            <span>Offered By: <Link href={`/operators/${tour.operator.slug}`} className="font-bold underline text-white hover:text-[#E4DBB4]">{tour.operator.companyName}</Link></span>
             <span className="text-white/40">·</span>
-            <div className="flex items-center gap-1.5 text-[var(--dark-gold)]">
+            <div className="flex items-center gap-1.5 text-[#E4DBB4]">
               {'★★★★★'.split('').map((star, i) => <span key={i}>{star}</span>)}
               <span className="text-white font-extrabold ml-1">{tour.operator.averageRating}</span>
               <span className="text-white/80 font-medium">({tour.operator.totalReviews} reviews)</span>
