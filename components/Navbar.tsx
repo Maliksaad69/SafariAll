@@ -191,9 +191,9 @@ export default function Navbar() {
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 font-sans text-white">
-      <div className="mx-auto max-w-[1230px] px-4 sm:px-6">
-        <div className="flex h-[70px] sm:h-[74px] items-center justify-between gap-3 sm:gap-4">
+    <header className="glass-nav sticky top-0 z-50 font-sans text-white w-full border-b border-white/10">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="flex h-[70px] sm:h-[74px] items-center justify-between gap-4 lg:gap-8 w-full">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90">
             <img
               src="/images/safaribuilt-logo.png"
@@ -202,8 +202,8 @@ export default function Navbar() {
             />
           </Link>
 
-          <div className="hidden lg:flex items-center flex-1 justify-center">
-            <nav className="relative flex items-center gap-1 text-[13px] font-bold uppercase tracking-[0.06em] text-white/90">
+          <div className="hidden lg:flex items-center flex-1 justify-center px-2 xl:px-8">
+            <nav className="relative flex items-center justify-center gap-2 xl:gap-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white/90">
               {navMenus.map(({ href, label, items }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -217,7 +217,7 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 transition-colors ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
+                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 transition-colors whitespace-nowrap ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
@@ -249,7 +249,7 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="hidden lg:flex items-center gap-4 text-[13px] font-semibold">
+          <div className="hidden lg:flex items-center gap-4 text-[13px] font-semibold flex-shrink-0">
             {sessionUser && (
               <div className="relative" ref={notifRef}>
                 <button
