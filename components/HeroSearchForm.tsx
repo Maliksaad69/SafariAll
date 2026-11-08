@@ -40,7 +40,7 @@ export default function HeroSearchForm() {
     router.push(qs ? `/african-safari-tours?${qs}` : '/african-safari-tours');
   };
 
-  const countries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe', 'Namibia'];
+  const countries = ['Botswana', 'Kenya', 'Namibia', 'Rwanda', 'South Africa', 'Tanzania', 'Uganda', 'Zimbabwe'];
 
   return (
     <div className="animate-fade-up relative z-20 w-full max-w-[680px] mx-auto md:absolute md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[min(90vw,680px)] px-2 sm:px-2 md:px-0 mt-3 sm:mt-4 md:mt-0">

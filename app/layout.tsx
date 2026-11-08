@@ -29,6 +29,14 @@ export const metadata: Metadata = {
   description:
     "Compare 10,000+ authentic African safari holidays offered by 100% verified local tour operators across Tanzania, Kenya, South Africa, Uganda, and Botswana. Zero commission. Direct quotes.",
   keywords: ["african safari", "safari bookings", "Tanzania safari", "Kenya safari", "luxury safari", "safari marketplace"],
+  icons: {
+    icon: [
+      { url: '/images/favicon.png', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/images/favicon.png',
+    apple: '/images/favicon.png',
+  },
   openGraph: {
     title: "SafariRequest — Africa's Premier Safari Marketplace",
     description: "Request direct quotes from verified African safari operators.",

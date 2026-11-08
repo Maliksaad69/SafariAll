@@ -23,7 +23,7 @@ function QuoteRequestForm() {
   useEffect(() => {
     fetch('/api/site/nav')
       .then((r) => r.json())
-      .then((d) => d.countries?.length && setCountries(d.countries))
+      .then((d) => d.countries?.length && setCountries([...d.countries].sort((a: string, b: string) => a.localeCompare(b))))
       .catch(() => {});
     if (tourId) {
       fetch(`/api/tours/${encodeURIComponent(tourId)}`)

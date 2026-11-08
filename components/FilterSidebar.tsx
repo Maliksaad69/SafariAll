@@ -28,7 +28,7 @@ interface FilterSidebarProps {
   durationCounts?: Record<string, number>;
 }
 
-export const safariCountries = ['Tanzania', 'Kenya', 'South Africa', 'Uganda', 'Botswana', 'Rwanda', 'Zimbabwe'];
+export const safariCountries = ['Botswana', 'Kenya', 'Namibia', 'Rwanda', 'South Africa', 'Tanzania', 'Uganda', 'Zimbabwe'];
 
 export const durationOptions = [
   { value: '1-4', label: '1-4 days' },
@@ -156,7 +156,7 @@ export default function FilterSidebar({
                 className={selectClass}
               >
                 <option value="">Any country</option>
-                {(countryCounts ? Object.keys(countryCounts) : safariCountries).map((country) => {
+                {(countryCounts ? Object.keys(countryCounts).sort((a, b) => a.localeCompare(b)) : safariCountries).map((country) => {
                   const count = countryCounts?.[country];
                   return (
                     <option key={country} value={country}>

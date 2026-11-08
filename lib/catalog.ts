@@ -106,11 +106,11 @@ export async function getOperatorCards(): Promise<SiteOperator[]> {
   }
 }
 
-// Countries are destinations of type COUNTRY, ranked by popularityRank.
+// Countries are destinations of type COUNTRY, ordered in alphabetical order.
 export async function getCountries() {
   try {
     const [countries, parks, tourCounts] = await Promise.all([
-      prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: [{ popularityRank: 'asc' }, { name: 'asc' }] }),
+      prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: { name: 'asc' } }),
       prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
       prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
     ]);

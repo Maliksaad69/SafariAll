@@ -60,18 +60,24 @@ export default function Navbar() {
 
   // Country list and top operators come from Postgres via /api/site/nav
   const [countries, setCountries] = useState<string[]>([
-    'Tanzania',
-    'Kenya',
     'Botswana',
-    'Uganda',
+    'Kenya',
+    'Namibia',
+    'Rwanda',
     'South Africa',
+    'Tanzania',
+    'Uganda',
+    'Zimbabwe',
   ]);
   const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
   useEffect(() => {
     fetch('/api/site/nav')
       .then((r) => r.json())
       .then((d) => {
-        if (d.countries && d.countries.length > 0) setCountries(d.countries);
+        if (d.countries && d.countries.length > 0) {
+          const sorted = [...d.countries].sort((a: string, b: string) => a.localeCompare(b));
+          setCountries(sorted);
+        }
         if (d.operators && d.operators.length > 0) setTopOperators(d.operators);
       })
       .catch(() => {});

@@ -59,8 +59,8 @@ export default async function HomePage() {
   }));
 
   const countryHighlights: CountryHighlight[] = countries
-    .filter((c) => c.popularityRank)
-    .sort((a, b) => (a.popularityRank ?? 99) - (b.popularityRank ?? 99))
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name))
     .slice(0, 9)
     .map((c) => ({
       name: c.name,

@@ -26,7 +26,7 @@ export async function GET(req: Request) {
 
     const destinations = await prisma.destination.findMany({
       where,
-      orderBy: [{ popularityRank: 'asc' }, { name: 'asc' }],
+      orderBy: type === 'countries' ? [{ name: 'asc' }] : [{ popularityRank: 'asc' }, { name: 'asc' }],
       select: {
         id: true,
         name: true,

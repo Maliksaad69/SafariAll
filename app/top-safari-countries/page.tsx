@@ -14,21 +14,23 @@ export const metadata = {
 };
 
 export default async function TopSafariCountriesPage() {
-  const countries = (await getCountries()).map((c) => ({
-    id: c.id,
-    name: c.name,
-    slug: c.slug,
-    reviews: c.reviewCount,
-    rating: c.rating ?? 0,
-    description: c.description ?? '',
-    rates: c.dailyRates ?? 'On request',
-    bestTime: c.bestTimeSummary ?? '',
-    highSeason: c.highSeason ?? '',
-    image: c.featuredImageUrl ?? '',
-    toursCount: c.toursCount,
-    parks: c.parks.slice(0, 6),
-    totalParks: c.parks.length,
-  }));
+  const countries = (await getCountries())
+    .map((c) => ({
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      reviews: c.reviewCount,
+      rating: c.rating ?? 0,
+      description: c.description ?? '',
+      rates: c.dailyRates ?? 'On request',
+      bestTime: c.bestTimeSummary ?? '',
+      highSeason: c.highSeason ?? '',
+      image: c.featuredImageUrl ?? '',
+      toursCount: c.toursCount,
+      parks: c.parks.slice(0, 6),
+      totalParks: c.parks.length,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-[var(--canvas)] text-[var(--ink)]">
