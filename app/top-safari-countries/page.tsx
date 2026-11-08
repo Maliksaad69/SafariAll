@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getCountries } from '@/lib/catalog';
 import { Sun, TrendingUp, Play, ChevronRight, Compass } from 'lucide-react';
 import HeroBackgroundSlider from '@/components/HeroBackgroundSlider';
+import { COUNTRY_FLAGS } from '@/lib/countries';
 
 export const dynamic = 'force-dynamic';
 
@@ -110,7 +111,10 @@ export default async function TopSafariCountriesPage() {
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
                       <h3 className="text-2xl sm:text-3xl font-bold font-display text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors">
-                        <Link href={`/parks/${country.slug}`}>{country.name}</Link>
+                        <Link href={`/parks/${country.slug}`} className="inline-flex items-center gap-2">
+                          {COUNTRY_FLAGS[country.name] && <span>{COUNTRY_FLAGS[country.name]}</span>}
+                          <span>{country.name}</span>
+                        </Link>
                       </h3>
                       <div className="flex items-center gap-2 text-sm">
                         <div className="flex text-amber-500 font-bold">

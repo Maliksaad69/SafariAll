@@ -128,6 +128,40 @@ const DESTINATION_META: Record<
     keyAnimals: ['Mountain Gorilla', 'Golden Monkey', 'Colobus'],
     topParksFallback: [],
   },
+  ethiopia: {
+    tagline: 'Simien Mountains Roof of Africa & Endemic Wildlife',
+    circuits: ['all'],
+    keyAnimals: ['Gelada Baboon', 'Ethiopian Wolf', 'Walia Ibex'],
+    topParksFallback: [
+      { name: 'Simien Mountains NP', slug: 'simien-mountains-national-park' },
+      { name: 'Bale Mountains NP', slug: 'bale-mountains-national-park' },
+    ],
+  },
+  madagascar: {
+    tagline: 'Unique Island Wildlife, Lemurs & Iconic Baobabs',
+    circuits: ['all'],
+    keyAnimals: ['Ring-Tailed Lemur', 'Indri', 'Panther Chameleon', 'Fossa'],
+    topParksFallback: [
+      { name: 'Andasibe-Mantadia', slug: 'andasibe-mantadia-national-park' },
+    ],
+  },
+  malawi: {
+    tagline: 'Lake of Stars Aquatic Wonder & Majete Big Five Revival',
+    circuits: ['all', 'delta'],
+    keyAnimals: ['Black Rhino', 'Elephant', 'Lion', 'African Wild Dog'],
+    topParksFallback: [
+      { name: 'Liwonde National Park', slug: 'liwonde-national-park' },
+    ],
+  },
+  mozambique: {
+    tagline: 'Gorongosa Wilderness Revival & Coastal Marine Safaris',
+    circuits: ['all', 'delta'],
+    keyAnimals: ['Whale Shark', 'Manta Ray', 'Lion', 'Elephant'],
+    topParksFallback: [
+      { name: 'Gorongosa National Park', slug: 'gorongosa-national-park' },
+      { name: 'Bazaruto Archipelago', slug: 'bazaruto-archipelago' },
+    ],
+  },
 };
 
 const CIRCUIT_TABS: { id: CircuitFilter; label: string; icon: string }[] = [

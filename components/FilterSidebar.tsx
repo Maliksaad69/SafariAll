@@ -14,6 +14,7 @@ import {
   X,
   RotateCcw,
 } from 'lucide-react';
+import { SAFARI_COUNTRIES, COUNTRY_FLAGS } from '@/lib/countries';
 
 interface FilterSidebarProps {
   currentCountry?: string;
@@ -28,7 +29,7 @@ interface FilterSidebarProps {
   durationCounts?: Record<string, number>;
 }
 
-export const safariCountries = ['Botswana', 'Kenya', 'Namibia', 'Rwanda', 'South Africa', 'Tanzania', 'Uganda', 'Zimbabwe'];
+export const safariCountries = SAFARI_COUNTRIES;
 
 export const durationOptions = [
   { value: '1-4', label: '1-4 days' },
@@ -156,12 +157,13 @@ export default function FilterSidebar({
                 className={selectClass}
               >
                 <option value="">Any country</option>
-                {(countryCounts ? Object.keys(countryCounts).sort((a, b) => a.localeCompare(b)) : safariCountries).map((country) => {
+                {safariCountries.map((country) => {
                   const count = countryCounts?.[country];
+                  const flag = COUNTRY_FLAGS[country] || '';
                   return (
                     <option key={country} value={country}>
-                      {country}
-                      {typeof count === 'number' ? ` (${count})` : ''}
+                      {flag ? `${flag} ` : ''}{country}
+                      {typeof count === 'number' && count > 0 ? ` (${count})` : ''}
                     </option>
                   );
                 })}

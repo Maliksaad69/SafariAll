@@ -321,18 +321,25 @@ export default function ContactUsPage() {
                           onChange={(e) => setDialCode(e.target.value)}
                           className="border-r border-[#DEDCCF] bg-[#F7F6F1] px-3 py-2.5 text-xs font-semibold text-[#193A38] focus:outline-none cursor-pointer"
                         >
-                          <option value="+61">🇦🇺 +61</option>
                           <option value="+267">🇧🇼 +267</option>
-                          <option value="+33">🇫🇷 +33</option>
-                          <option value="+49">🇩🇪 +49</option>
+                          <option value="+251">🇪🇹 +251</option>
                           <option value="+254">🇰🇪 +254</option>
-                          <option value="+31">🇳🇱 +31</option>
+                          <option value="+261">🇲🇬 +261</option>
+                          <option value="+265">🇲🇼 +265</option>
+                          <option value="+258">🇲🇿 +258</option>
+                          <option value="+264">🇳🇦 +264</option>
                           <option value="+250">🇷🇼 +250</option>
                           <option value="+27">🇿🇦 +27</option>
                           <option value="+255">🇹🇿 +255</option>
                           <option value="+256">🇺🇬 +256</option>
-                          <option value="+44">🇬🇧 +44</option>
+                          <option value="+260">🇿🇲 +260</option>
+                          <option value="+263">🇿🇼 +263</option>
                           <option value="+1">🇺🇸 +1</option>
+                          <option value="+44">🇬🇧 +44</option>
+                          <option value="+49">🇩🇪 +49</option>
+                          <option value="+33">🇫🇷 +33</option>
+                          <option value="+61">🇦🇺 +61</option>
+                          <option value="+31">🇳🇱 +31</option>
                         </select>
                         <input
                           id="phoneNumber"

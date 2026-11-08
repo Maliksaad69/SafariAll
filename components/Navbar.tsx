@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Heart, User, ChevronDown, Menu, X, Calendar, Bell, Compass } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import ChatLauncher from '@/components/ChatLauncher';
+import { SAFARI_COUNTRIES, COUNTRY_FLAGS } from '@/lib/countries';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -59,23 +60,14 @@ export default function Navbar() {
   };
 
   // Country list and top operators come from Postgres via /api/site/nav
-  const [countries, setCountries] = useState<string[]>([
-    'Botswana',
-    'Kenya',
-    'Namibia',
-    'Rwanda',
-    'South Africa',
-    'Tanzania',
-    'Uganda',
-    'Zimbabwe',
-  ]);
+  const [countries, setCountries] = useState<string[]>([...SAFARI_COUNTRIES]);
   const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
   useEffect(() => {
     fetch('/api/site/nav')
       .then((r) => r.json())
       .then((d) => {
         if (d.countries && d.countries.length > 0) {
-          const sorted = [...d.countries].sort((a: string, b: string) => a.localeCompare(b));
+          const sorted = Array.from(new Set([...SAFARI_COUNTRIES, ...d.countries])).sort((a: string, b: string) => a.localeCompare(b));
           setCountries(sorted);
         }
         if (d.operators && d.operators.length > 0) setTopOperators(d.operators);
@@ -88,7 +80,10 @@ export default function Navbar() {
       href: '/african-safari-tours',
       label: 'Safaris & Tours',
       items: [
-        ...countries.map((country) => ({ label: `${country} Safaris`, href: `/african-safari-tours?country=${encodeURIComponent(country)}` })),
+        ...countries.map((country) => {
+          const flag = COUNTRY_FLAGS[country] ? `${COUNTRY_FLAGS[country]} ` : '';
+          return { label: `${flag}${country} Safaris`, href: `/african-safari-tours?country=${encodeURIComponent(country)}` };
+        }),
         { label: 'All Safaris', href: '/african-safari-tours' },
       ],
     },
@@ -96,7 +91,10 @@ export default function Navbar() {
       href: '/top-safari-countries',
       label: 'Countries & Parks',
       items: [
-        ...countries.map((country) => ({ label: country, href: `/parks/${country.toLowerCase().replace(/\s+/g, '-')}` })),
+        ...countries.map((country) => {
+          const flag = COUNTRY_FLAGS[country] ? `${COUNTRY_FLAGS[country]} ` : '';
+          return { label: `${flag}${country}`, href: `/parks/${country.toLowerCase().replace(/\s+/g, '-')}` };
+        }),
         { label: 'All Countries', href: '/top-safari-countries' },
       ],
     },

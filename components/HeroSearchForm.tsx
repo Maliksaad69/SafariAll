@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Calendar, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { SAFARI_COUNTRIES } from '@/lib/countries';
 
 export default function HeroSearchForm() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function HeroSearchForm() {
     router.push(qs ? `/african-safari-tours?${qs}` : '/african-safari-tours');
   };
 
-  const countries = ['Botswana', 'Kenya', 'Namibia', 'Rwanda', 'South Africa', 'Tanzania', 'Uganda', 'Zimbabwe'];
+  const countries = SAFARI_COUNTRIES;
 
   return (
     <div className="animate-fade-up relative z-20 w-full max-w-[680px] mx-auto md:absolute md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[min(90vw,680px)] px-2 sm:px-2 md:px-0 mt-3 sm:mt-4 md:mt-0">

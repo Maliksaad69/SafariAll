@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Compass, Send, CheckCircle2, ArrowRight, ShieldCheck, MapPin, Calendar, Users, DollarSign, FileText, Star } from 'lucide-react';
+import { SAFARI_COUNTRIES, COUNTRY_FLAGS } from '@/lib/countries';
 
 function QuoteRequestForm() {
   const router = useRouter();
@@ -17,13 +18,18 @@ function QuoteRequestForm() {
 
   // If arriving from a specific tour page, preselect its country
   const [selectedTour, setSelectedTour] = useState<{ id: string; title: string; primaryCountry: string } | null>(null);
-  const [countries, setCountries] = useState<string[]>(['Tanzania']);
-  const [preferredCountry, setPreferredCountry] = useState('Tanzania');
+  const [countries, setCountries] = useState<string[]>([...SAFARI_COUNTRIES]);
+  const [preferredCountry, setPreferredCountry] = useState('Botswana');
 
   useEffect(() => {
     fetch('/api/site/nav')
       .then((r) => r.json())
-      .then((d) => d.countries?.length && setCountries([...d.countries].sort((a: string, b: string) => a.localeCompare(b))))
+      .then((d) => {
+        if (d.countries?.length) {
+          const merged = Array.from(new Set([...SAFARI_COUNTRIES, ...d.countries])).sort((a: string, b: string) => a.localeCompare(b));
+          setCountries(merged);
+        }
+      })
       .catch(() => {});
     if (tourId) {
       fetch(`/api/tours/${encodeURIComponent(tourId)}`)
@@ -183,9 +189,12 @@ function QuoteRequestForm() {
                 onChange={(e) => setPreferredCountry(e.target.value)}
                 className="form-control"
               >
-                {countries.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
+                {countries.map((c) => {
+                  const flag = COUNTRY_FLAGS[c] ? `${COUNTRY_FLAGS[c]} ` : '';
+                  return (
+                    <option key={c} value={c}>{flag}{c}</option>
+                  );
+                })}
               </select>
             </div>
 
