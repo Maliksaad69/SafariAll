@@ -203,7 +203,7 @@ export default function Navbar() {
         <div className="flex h-[66px] sm:h-[72px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90">
             <img
-              src="/images/safaribuilt-logo.png"
+              src="/images/safaribuilt-logo.png?v=3"
               alt="SafariRequest — One Marketplace for African Safari Tours"
               className="h-[38px] sm:h-[44px] lg:h-[46px] xl:h-[50px] w-auto object-contain shrink-0"
             />

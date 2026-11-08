@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block transition-opacity hover:opacity-90">
               <img
-                src="/images/safaribuilt-logo.png"
+                src="/images/safaribuilt-logo.png?v=3"
                 alt="SafariRequest — One Marketplace for African Safari Tours"
                 className="h-[48px] sm:h-[58px] w-auto object-contain"
               />

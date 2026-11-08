@@ -31,11 +31,12 @@ export const metadata: Metadata = {
   keywords: ["african safari", "safari bookings", "Tanzania safari", "Kenya safari", "luxury safari", "safari marketplace"],
   icons: {
     icon: [
-      { url: '/images/favicon.png', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/favicon-32x32.png?v=3', sizes: '32x32', type: 'image/png' },
+      { url: '/images/favicon-16x16.png?v=3', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon.ico?v=3', sizes: 'any' },
     ],
-    shortcut: '/images/favicon.png',
-    apple: '/images/favicon.png',
+    shortcut: '/images/favicon-32x32.png?v=3',
+    apple: '/images/favicon-180x180.png?v=3',
   },
   openGraph: {
     title: "SafariRequest — Africa's Premier Safari Marketplace",
@@ -53,6 +54,12 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={`h-full ${bodyFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=3" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=3" />
+        <link rel="shortcut icon" href="/favicon.ico?v=3" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-180x180.png?v=3" />
+      </head>
       <body className="min-h-full flex flex-col font-sans antialiased" suppressHydrationWarning>
         <script
           type="application/ld+json"
