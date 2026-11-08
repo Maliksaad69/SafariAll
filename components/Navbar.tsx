@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Heart, User, ChevronDown, Menu, X, Calendar, Bell, Compass } from 'lucide-react';
+import { Heart, User, ChevronDown, ChevronRight, Menu, X, Calendar, Bell, Compass } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import ChatLauncher from '@/components/ChatLauncher';
 import { SAFARI_COUNTRIES, COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
