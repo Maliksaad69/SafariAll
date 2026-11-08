@@ -61,12 +61,12 @@ export default async function HomePage() {
   const countryHighlights: CountryHighlight[] = countries
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
-    .slice(0, 9)
-    .map((c) => ({
+    .slice(0, 13)
+    .map((c, i) => ({
       name: c.name,
       slug: c.slug,
-      rank: `#${c.popularityRank}`,
-      popularityRank: c.popularityRank,
+      rank: `#${c.popularityRank || i + 1}`,
+      popularityRank: c.popularityRank || i + 1,
       featuredImageUrl: c.featuredImageUrl,
       rating: c.rating,
       reviewCount: c.reviewCount,
@@ -75,7 +75,7 @@ export default async function HomePage() {
       bestTimeSummary: c.bestTimeSummary,
       highSeason: c.highSeason,
       toursCount: c.toursCount,
-      parks: (c.parks || []).map((p) => ({ name: p.name, slug: p.slug })),
+      parks: (c.parks || []).map((p: any) => ({ name: p.name, slug: p.slug })),
     }));
 
   return (

@@ -2,6 +2,7 @@ import type { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import type { SiteOperator, SiteTour } from '@/lib/site-data';
 import { todayUtc } from '@/lib/booking';
+import { CURATED_COUNTRIES_DATA } from '@/lib/countries';
 
 // Read helpers that shape Postgres rows into the card props the UI components use.
 
@@ -114,8 +115,10 @@ export async function getCountries() {
       prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
       prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
     ]);
+
     if (countries && countries.length > 0) {
-      return countries.map((c) => {
+      const dbCountryNames = new Set(countries.map((c) => c.name.toLowerCase()));
+      const mappedDb = countries.map((c) => {
         const countryParks = parks.filter((p) => p.country === c.name);
         return {
           ...c,
@@ -123,11 +126,19 @@ export async function getCountries() {
           toursCount: tourCounts.find((t) => t.primaryCountry === c.name)?._count._all ?? 0,
         };
       });
+
+      // Merge any canonical countries not in DB so all 13 are always present
+      const missingCurated = CURATED_COUNTRIES_DATA.filter(
+        (cur) => !dbCountryNames.has(cur.name.toLowerCase())
+      );
+
+      return [...mappedDb, ...missingCurated].sort((a, b) => a.name.localeCompare(b.name));
     }
-    return [];
+
+    return CURATED_COUNTRIES_DATA;
   } catch (err) {
-    console.warn('[catalog] Database query failed in getCountries:', (err as Error)?.message);
-    return [];
+    console.warn('[catalog] Database query failed in getCountries, using curated countries:', (err as Error)?.message);
+    return CURATED_COUNTRIES_DATA;
   }
 }
 

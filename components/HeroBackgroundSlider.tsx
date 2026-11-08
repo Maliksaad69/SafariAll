@@ -1,6 +1,6 @@
 'use client';
 
-
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { MapPin, Compass } from 'lucide-react';
 
 export interface HeroSlide {
@@ -104,25 +104,68 @@ interface HeroBackgroundSliderProps {
 export default function HeroBackgroundSlider({
   slides,
   tourCount,
+  autoPlayInterval = 4800,
   showLocationBadge = true,
   children,
   className = '',
   minHeightClass = 'min-h-[560px] sm:min-h-[500px] md:min-h-[460px] md:h-[460px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
-  const currentSlide = resolvedSlides[0];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startAutoPlay = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % resolvedSlides.length);
+    }, autoPlayInterval);
+  }, [resolvedSlides.length, autoPlayInterval]);
+
+  useEffect(() => {
+    startAutoPlay();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [startAutoPlay]);
+
+  const currentSlide = resolvedSlides[currentIndex] || resolvedSlides[0];
 
   return (
     <section
-      aria-label="African Safari Hero Banner"
+      aria-label="African Safari Hero Carousel"
       className={`relative w-full overflow-hidden flex flex-col justify-between py-6 px-3 sm:px-4 md:py-0 md:px-0 md:block ${minHeightClass} ${className}`}
     >
-      {/* ── Stable Hero Background Photography ── */}
-      <div className="absolute inset-0 overflow-hidden z-0">
+      {/* ── Top Dynamic Slide Progress Indicator ── */}
+      <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
         <div
-          className="w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: `url('${currentSlide.url}')` }}
+          key={currentIndex}
+          className="h-full bg-gradient-to-r from-[var(--brand)] via-[#8C9F91] to-[#E4DBB4] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
+          style={{ animationDuration: `${autoPlayInterval}ms` }}
         />
+      </div>
+
+      {/* ── Background Crossfading Images with Cinematic Animations ── */}
+      <div className="absolute inset-0 overflow-hidden z-0">
+        {resolvedSlides.map((slide, idx) => {
+          const isActive = idx === currentIndex;
+          const animClass = ANIMATION_CLASSES[idx % ANIMATION_CLASSES.length];
+          return (
+            <div
+              key={slide.url}
+              aria-hidden={!isActive}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+            >
+              <div
+                className={`w-full h-full bg-cover bg-center ${
+                  isActive ? animClass : 'scale-100'
+                }`}
+                style={{ backgroundImage: `url('${slide.url}')` }}
+              />
+            </div>
+          );
+        })}
 
         {/* ── Layered Contrast Scrims ── */}
         <div className="absolute inset-0 bg-black/40 z-15" />
@@ -145,11 +188,11 @@ export default function HeroBackgroundSlider({
         )}
       </div>
 
-      {/* ── Text Hero Foreground ── */}
+      {/* ── Changing Text Hero Foreground ── */}
       <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-24 pt-1 sm:pt-4 md:pt-0">
         <div
-          key={currentSlide.location || 'hero'}
-          className="max-w-3xl text-center text-white"
+          key={currentIndex}
+          className="animate-hero-text max-w-3xl text-center text-white"
         >
           {/* Animated Highlight Badge with Orange Blink */}
           {currentSlide.badge && (
