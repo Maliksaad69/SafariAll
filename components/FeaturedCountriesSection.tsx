@@ -18,6 +18,7 @@ import {
   Pause,
   Play,
 } from 'lucide-react';
+import { getCountrySeoUrl } from '@/lib/countries';
 
 export interface CountryHighlight {
   name: string;
@@ -182,8 +183,8 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
   const [userHovered, setUserHovered] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 5-second auto-advance interval
-  const AUTO_PLAY_INTERVAL = 5000;
+  // 3-second auto-advance interval
+  const AUTO_PLAY_INTERVAL = 3000;
 
   // Filter countries according to active circuit
   const filteredCountries = useMemo(() => {
@@ -510,7 +511,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 </Link>
 
                 <Link
-                  href={`/parks/${activeCountry.slug}`}
+                  href={getCountrySeoUrl(activeCountry.slug)}
                   className="btn min-h-[46px] text-sm font-bold justify-center bg-white/20 hover:bg-white text-white hover:text-[var(--brand-deep)] border border-white/30 backdrop-blur-md transition-all gap-1.5"
                 >
                   <Compass className="w-4 h-4" />
@@ -534,7 +535,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                 Select Destination to Inspect ({filteredCountries.length})
               </span>
               <span className="text-xs font-medium text-[var(--ink-muted)] hidden sm:inline">
-                Auto-advances every 5s · Hover or click any card to inspect
+                Auto-advances every 3s · Hover or click any card to inspect
               </span>
             </div>
 
@@ -691,7 +692,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                     <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                   <Link
-                    href={`/parks/${country.slug}`}
+                    href={getCountrySeoUrl(country.slug)}
                     className="btn btn-ghost btn-sm text-xs font-bold justify-center border border-[var(--border)] bg-[var(--canvas-base)] text-[var(--ink)] hover:bg-white"
                   >
                     <span>Park Guide</span>

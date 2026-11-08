@@ -104,7 +104,7 @@ interface HeroBackgroundSliderProps {
 export default function HeroBackgroundSlider({
   slides,
   tourCount,
-  autoPlayInterval = 4800,
+  autoPlayInterval = 3000,
   showLocationBadge = true,
   children,
   className = '',

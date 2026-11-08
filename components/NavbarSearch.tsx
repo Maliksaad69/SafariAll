@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, MapPin, Compass, Building2, ChevronRight, Loader2, X } from 'lucide-react';
+import { getCountrySeoUrl } from '@/lib/countries';
 
 interface NavbarSearchProps {
   mobile?: boolean;
@@ -268,20 +269,23 @@ function SearchResultsPanel({
           <div className="flex items-center gap-1.5 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider !text-[#516D6A]">
             <MapPin className="h-3.5 w-3.5 text-[var(--info)]" /> Parks &amp; Destinations
           </div>
-          {results.destinations.map((d) => (
-            <Link
-              key={d.id}
-              href={`/parks/${d.slug}`}
-              onClick={() => onResultClick(`/parks/${d.slug}`)}
-              className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[#E4DBB4]/30"
-            >
-              <div className="min-w-0">
-                <div className="truncate text-[13px] font-semibold !text-[#193A38]">{d.name}</div>
-                <div className="text-[11px] !text-[#516D6A]">{d.country} · {d.type.replace(/_/g, ' ').toLowerCase()}</div>
-              </div>
-              <ChevronRight className="h-4 w-4 shrink-0 text-[#516D6A]" />
-            </Link>
-          ))}
+          {results.destinations.map((d) => {
+            const destUrl = d.type === 'COUNTRY' ? getCountrySeoUrl(d.slug) : `/parks/${d.slug}`;
+            return (
+              <Link
+                key={d.id}
+                href={destUrl}
+                onClick={() => onResultClick(destUrl)}
+                className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-[#E4DBB4]/30"
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-[13px] font-semibold !text-[#193A38]">{d.name}</div>
+                  <div className="text-[11px] !text-[#516D6A]">{d.country} · {d.type.replace(/_/g, ' ').toLowerCase()}</div>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-[#516D6A]" />
+              </Link>
+            );
+          })}
         </div>
       )}
 

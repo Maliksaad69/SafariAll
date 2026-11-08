@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Heart, User, ChevronDown, Menu, X, Calendar, Bell, Compass } from 'lucide-react';
 import NavbarSearch from '@/components/NavbarSearch';
 import ChatLauncher from '@/components/ChatLauncher';
-import { SAFARI_COUNTRIES, COUNTRY_FLAGS } from '@/lib/countries';
+import { SAFARI_COUNTRIES, COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -79,41 +79,50 @@ export default function Navbar() {
     {
       href: '/african-safari-tours',
       label: 'Safaris & Tours',
-      items: [
-        ...countries.map((country) => {
-          const flag = COUNTRY_FLAGS[country] ? `${COUNTRY_FLAGS[country]} ` : '';
-          return { label: `${flag}${country} Safaris`, href: `/african-safari-tours?country=${encodeURIComponent(country)}` };
-        }),
-        { label: 'All Safaris', href: '/african-safari-tours' },
-      ],
+      isWide: true,
+      viewAllLabel: 'Browse All African Safari Tours & Packages →',
+      items: countries.map((country) => {
+        const flag = COUNTRY_FLAGS[country] || '';
+        return {
+          label: `${country} Safaris`,
+          flag,
+          href: `/african-safari-tours?country=${encodeURIComponent(country)}`,
+        };
+      }),
     },
     {
       href: '/top-safari-countries',
       label: 'Countries & Parks',
-      items: [
-        ...countries.map((country) => {
-          const flag = COUNTRY_FLAGS[country] ? `${COUNTRY_FLAGS[country]} ` : '';
-          return { label: `${flag}${country}`, href: `/parks/${country.toLowerCase().replace(/\s+/g, '-')}` };
-        }),
-        { label: 'All Countries', href: '/top-safari-countries' },
-      ],
+      isWide: true,
+      viewAllLabel: 'Explore All 13 Safari Countries & National Parks →',
+      items: countries.map((country) => {
+        const flag = COUNTRY_FLAGS[country] || '';
+        return {
+          label: country,
+          flag,
+          href: getCountrySeoUrl(country),
+        };
+      }),
     },
     {
       href: '/safari-blog',
       label: 'Safari Blog',
+      isWide: false,
+      viewAllLabel: 'Browse All Safari Articles & Stories →',
       items: [
-        { label: 'All Safari Stories', href: '/safari-blog' },
-        { label: 'Travel Guides', href: '/safari-blog?tag=Travel%20Guides' },
-        { label: 'Parks & Wildlife', href: '/safari-blog?tag=Parks%20%26%20Wildlife' },
-        { label: 'Trip Reports', href: '/safari-blog?tag=Trip%20Reports' },
+        { label: 'All Safari Stories', href: '/safari-blog', flag: '' },
+        { label: 'Travel Guides', href: '/safari-blog?tag=Travel%20Guides', flag: '' },
+        { label: 'Parks & Wildlife', href: '/safari-blog?tag=Parks%20%26%20Wildlife', flag: '' },
+        { label: 'Trip Reports', href: '/safari-blog?tag=Trip%20Reports', flag: '' },
       ],
     },
     {
       href: '/safari-operators',
       label: 'Tour Operators',
+      isWide: false,
+      viewAllLabel: 'Browse All Verified Safari Operators →',
       items: [
-        ...topOperators.map((op) => ({ label: op.companyName, href: `/operators/${op.slug}` })),
-        { label: 'All Safari Operators', href: '/safari-operators' },
+        ...topOperators.map((op) => ({ label: op.companyName, href: `/operators/${op.slug}`, flag: '' })),
       ],
     },
   ];
@@ -211,7 +220,7 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-4">
             <nav className="relative flex items-center justify-center gap-1 xl:gap-2.5 2xl:gap-4 text-[12px] xl:text-[13px] font-bold uppercase tracking-[0.04em] text-white/90">
-              {navMenus.map(({ href, label, items }) => {
+              {navMenus.map(({ href, label, items, isWide, viewAllLabel }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
 
@@ -233,21 +242,72 @@ export default function Navbar() {
                     </Link>
 
                     <div
-                      className={`absolute left-0 top-full pt-3 transition-all duration-200 ${
+                      className={`absolute ${isWide ? '-left-8 sm:-left-12' : 'left-0'} top-full pt-3 transition-all duration-200 ${
                         isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
                       }`}
                     >
-                      <div className="popover w-[240px] p-2 bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl rounded-xl">
-                        {items.map((item) => (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setOpenMenu(null)}
-                            className="block rounded-lg px-3 py-2 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]"
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
+                      <div
+                        className={`popover p-3 bg-white text-[#193A38] border border-[#DEDCCF] shadow-2xl rounded-2xl ${
+                          isWide ? 'w-[470px] sm:w-[500px]' : 'w-[240px]'
+                        }`}
+                      >
+                        {isWide ? (
+                          <>
+                            <div className="px-2 pb-2 mb-1.5 border-b border-[#DEDCCF]/70 flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#516D6A]">
+                              <span>Destinations (A–Z)</span>
+                              <span className="text-[#8C9F91] font-semibold">{items.length} African Countries</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-x-1.5 gap-y-1">
+                              {items.map((item) => (
+                                <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  onClick={() => setOpenMenu(null)}
+                                  className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38] group"
+                                >
+                                  {item.flag && <span className="text-base shrink-0 leading-none">{item.flag}</span>}
+                                  <span className="truncate group-hover:translate-x-0.5 transition-transform">{item.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                            {viewAllLabel && (
+                              <div className="mt-2.5 pt-2 border-t border-[#DEDCCF]">
+                                <Link
+                                  href={href}
+                                  onClick={() => setOpenMenu(null)}
+                                  className="flex items-center justify-between rounded-xl bg-[#F7F6F1] hover:bg-[#E4DBB4]/40 px-3 py-2 text-xs font-bold !text-[#193A38] transition-colors"
+                                >
+                                  <span>{viewAllLabel}</span>
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#214446]" />
+                                </Link>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {items.map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setOpenMenu(null)}
+                                className="block rounded-lg px-3 py-2 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]"
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                            {viewAllLabel && (
+                              <div className="mt-1 pt-1.5 border-t border-[#DEDCCF]">
+                                <Link
+                                  href={href}
+                                  onClick={() => setOpenMenu(null)}
+                                  className="block rounded-lg px-3 py-1.5 text-xs font-bold text-[#214446] hover:bg-[#E4DBB4]/40 transition-colors"
+                                >
+                                  {viewAllLabel}
+                                </Link>
+                              </div>
+                            )}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -425,7 +485,7 @@ export default function Navbar() {
 
             {/* Accordion Navigation Menus */}
             <nav className="flex flex-col gap-2">
-              {navMenus.map(({ href, label, items }) => {
+              {navMenus.map(({ href, label, items, isWide, viewAllLabel }) => {
                 const isExpanded = mobileExpandedMenu === label;
                 const active = isActive(href);
 
@@ -455,24 +515,25 @@ export default function Navbar() {
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-[#DEDCCF] bg-[#E4DBB4]/20 px-2 py-2">
+                      <div className="border-t border-[#DEDCCF] bg-[#E4DBB4]/20 px-2.5 py-2.5">
                         <Link
                           href={href}
                           onClick={() => setMobileOpen(false)}
-                          className="flex min-h-[42px] items-center justify-between rounded-xl px-3 py-2 text-[13px] font-bold text-[#214446] transition-colors hover:bg-[#E4DBB4]/40"
+                          className="flex min-h-[40px] items-center justify-between rounded-xl px-3 py-2 text-[12.5px] font-bold text-[#214446] transition-colors hover:bg-[#E4DBB4]/40 bg-white/70 mb-2 border border-[#DEDCCF]"
                         >
-                          <span>Explore All {label}</span>
+                          <span>{viewAllLabel || `Explore All ${label}`}</span>
                           <span className="text-xs">→</span>
                         </Link>
-                        <div className="grid grid-cols-1 gap-1 pt-1">
+                        <div className={isWide ? 'grid grid-cols-2 gap-1.5' : 'grid grid-cols-1 gap-1'}>
                           {items.map((item) => (
                             <Link
                               key={item.href}
                               href={item.href}
                               onClick={() => setMobileOpen(false)}
-                              className="flex min-h-[42px] items-center rounded-xl px-3 py-2 text-[13px] font-medium text-[#344C49] transition-colors hover:bg-[#E4DBB4]/40 hover:text-[#193A38]"
+                              className="flex min-h-[38px] items-center gap-2 rounded-xl px-2.5 py-1.5 text-[12px] font-semibold text-[#344C49] transition-colors hover:bg-[#E4DBB4]/40 hover:text-[#193A38] bg-white/80 border border-[#DEDCCF]/60"
                             >
-                              {item.label}
+                              {item.flag && <span className="text-sm shrink-0 leading-none">{item.flag}</span>}
+                              <span className="truncate">{item.label}</span>
                             </Link>
                           ))}
                         </div>

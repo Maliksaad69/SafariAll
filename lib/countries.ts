@@ -72,6 +72,157 @@ export const COUNTRY_DIAL_CODES: Record<string, string> = {
   Zimbabwe: '+263',
 };
 
+export interface CountrySeoData {
+  country: SafariCountry;
+  slug: string;
+  flag: string;
+  seoSlug: string;
+  seoUrl: string;
+  seoTitle: string;
+  keywords: string[];
+}
+
+export const COUNTRY_SEO_DATA: Record<string, CountrySeoData> = {
+  botswana: {
+    country: 'Botswana',
+    slug: 'botswana',
+    flag: '🇧🇼',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/botswana/national-parks-and-game-reserves',
+    seoTitle: 'Botswana National Parks & Game Reserves',
+    keywords: ['Botswana national parks', 'Okavango Delta safaris', 'Chobe national park', 'Botswana game reserves', 'Kalahari wildlife'],
+  },
+  ethiopia: {
+    country: 'Ethiopia',
+    slug: 'ethiopia',
+    flag: '🇪🇹',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/ethiopia/national-parks-and-game-reserves',
+    seoTitle: 'Ethiopia National Parks & Wildlife Reserves',
+    keywords: ['Ethiopia national parks', 'Ethiopia wildlife reserves', 'Simien mountains', 'Bale mountains', 'Ethiopian wolf trekking'],
+  },
+  kenya: {
+    country: 'Kenya',
+    slug: 'kenya',
+    flag: '🇰🇪',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/kenya/national-parks-and-game-reserves',
+    seoTitle: 'Kenya National Parks & Game Reserves',
+    keywords: ['Kenya national parks', 'Masai Mara safaris', 'Amboseli national park', 'Kenya game reserves', 'Great Migration Kenya'],
+  },
+  madagascar: {
+    country: 'Madagascar',
+    slug: 'madagascar',
+    flag: '🇲🇬',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/madagascar/national-parks-and-game-reserves',
+    seoTitle: 'Madagascar National Parks & Nature Reserves',
+    keywords: ['Madagascar national parks', 'Madagascar nature reserves', 'Andasibe-Mantadia', 'Madagascar lemurs', 'Isalo national park'],
+  },
+  malawi: {
+    country: 'Malawi',
+    slug: 'malawi',
+    flag: '🇲🇼',
+    seoSlug: 'national-parks-and-wildlife-reserves',
+    seoUrl: '/parks/malawi/national-parks-and-wildlife-reserves',
+    seoTitle: 'Malawi National Parks & Wildlife Reserves',
+    keywords: ['Malawi national parks', 'Malawi wildlife reserves', 'Liwonde national park', 'Majete wildlife reserve', 'Lake Malawi safaris'],
+  },
+  mozambique: {
+    country: 'Mozambique',
+    slug: 'mozambique',
+    flag: '🇲🇿',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/mozambique/national-parks-and-game-reserves',
+    seoTitle: 'Mozambique National Parks & Wildlife Reserves',
+    keywords: ['Mozambique national parks', 'Mozambique wildlife reserves', 'Gorongosa national park', 'Bazaruto archipelago', 'Mozambique safari'],
+  },
+  namibia: {
+    country: 'Namibia',
+    slug: 'namibia',
+    flag: '🇳🇦',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/namibia/national-parks-and-game-reserves',
+    seoTitle: 'Namibia National Parks & Game Reserves',
+    keywords: ['Namibia national parks', 'Etosha national park', 'Sossusvlei dunes', 'Namibia game reserves', 'Skeleton Coast safaris'],
+  },
+  rwanda: {
+    country: 'Rwanda',
+    slug: 'rwanda',
+    flag: '🇷🇼',
+    seoSlug: 'national-parks',
+    seoUrl: '/parks/rwanda/national-parks',
+    seoTitle: 'Rwanda National Parks & Gorilla Trekking',
+    keywords: ['Rwanda national parks', 'Volcanoes national park', 'Rwanda gorilla trekking', 'Akagera national park', 'Nyungwe forest'],
+  },
+  'south-africa': {
+    country: 'South Africa',
+    slug: 'south-africa',
+    flag: '🇿🇦',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/south-africa/national-parks-and-game-reserves',
+    seoTitle: 'South Africa National Parks & Game Reserves',
+    keywords: ['South Africa national parks', 'Kruger national park', 'Sabi Sand game reserve', 'South Africa game reserves', 'Big 5 safari'],
+  },
+  tanzania: {
+    country: 'Tanzania',
+    slug: 'tanzania',
+    flag: '🇹🇿',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/tanzania/national-parks-and-game-reserves',
+    seoTitle: 'Tanzania National Parks & Game Reserves',
+    keywords: ['Tanzania national parks', 'Serengeti national park', 'Ngorongoro crater', 'Tarangire', 'Tanzania game reserves'],
+  },
+  uganda: {
+    country: 'Uganda',
+    slug: 'uganda',
+    flag: '🇺🇬',
+    seoSlug: 'national-parks-and-wildlife-reserves',
+    seoUrl: '/parks/uganda/national-parks-and-wildlife-reserves',
+    seoTitle: 'Uganda National Parks & Wildlife Reserves',
+    keywords: ['Uganda national parks', 'Uganda wildlife reserves', 'Bwindi impenetrable forest', 'Queen Elizabeth national park', 'Gorilla trekking Uganda'],
+  },
+  zambia: {
+    country: 'Zambia',
+    slug: 'zambia',
+    flag: '🇿🇲',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/zambia/national-parks-and-game-reserves',
+    seoTitle: 'Zambia National Parks & Game Reserves',
+    keywords: ['Zambia national parks', 'South Luangwa walking safaris', 'Lower Zambezi national park', 'Victoria Falls safaris', 'Zambia game reserves'],
+  },
+  zimbabwe: {
+    country: 'Zimbabwe',
+    slug: 'zimbabwe',
+    flag: '🇿🇼',
+    seoSlug: 'national-parks-and-game-reserves',
+    seoUrl: '/parks/zimbabwe/national-parks-and-game-reserves',
+    seoTitle: 'Zimbabwe National Parks & Game Reserves',
+    keywords: ['Zimbabwe national parks', 'Hwange national park', 'Mana Pools canoe safaris', 'Victoria Falls Zimbabwe', 'Zimbabwe game reserves'],
+  },
+};
+
+export function getCountrySeoData(countryOrSlug: string): CountrySeoData | undefined {
+  if (!countryOrSlug) return undefined;
+  const normalized = countryOrSlug.trim().toLowerCase().replace(/\s+/g, '-');
+  return COUNTRY_SEO_DATA[normalized] || Object.values(COUNTRY_SEO_DATA).find(
+    (c) => c.country.toLowerCase() === countryOrSlug.trim().toLowerCase() || c.slug === normalized
+  );
+}
+
+export function getCountrySeoUrl(countryOrSlug: string): string {
+  const data = getCountrySeoData(countryOrSlug);
+  if (data) return data.seoUrl;
+  const slug = countryOrSlug.trim().toLowerCase().replace(/\s+/g, '-');
+  return `/parks/${slug}`;
+}
+
+export function getCountrySeoTitle(countryOrSlug: string): string {
+  const data = getCountrySeoData(countryOrSlug);
+  if (data) return data.seoTitle;
+  return `${countryOrSlug} National Parks & Game Reserves`;
+}
+
 export interface CuratedCountryData {
   id: string;
   name: string;

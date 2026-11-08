@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getCountries } from '@/lib/catalog';
 import { Sun, TrendingUp, Play, ChevronRight, Compass } from 'lucide-react';
 import HeroBackgroundSlider from '@/components/HeroBackgroundSlider';
-import { COUNTRY_FLAGS } from '@/lib/countries';
+import { COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
 
 export const dynamic = 'force-dynamic';
 
@@ -111,7 +111,7 @@ export default async function TopSafariCountriesPage() {
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
                       <h3 className="text-2xl sm:text-3xl font-bold font-display text-[var(--ink)] hover:text-[var(--brand-deep)] transition-colors">
-                        <Link href={`/parks/${country.slug}`} className="inline-flex items-center gap-2">
+                        <Link href={getCountrySeoUrl(country.slug)} className="inline-flex items-center gap-2">
                           {COUNTRY_FLAGS[country.name] && <span>{COUNTRY_FLAGS[country.name]}</span>}
                           <span>{country.name}</span>
                         </Link>
@@ -171,7 +171,7 @@ export default async function TopSafariCountriesPage() {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[var(--border-soft)]">
-                    <Link href={`/parks/${country.slug}`} className="btn btn-primary text-sm font-bold px-5 py-2.5 rounded-xl">
+                    <Link href={getCountrySeoUrl(country.slug)} className="btn btn-primary text-sm font-bold px-5 py-2.5 rounded-xl">
                       Explore {country.name} Guide &rarr;
                     </Link>
                     <Link href={`/african-safari-tours?country=${country.name}`} className="btn btn-secondary text-sm font-bold px-5 py-2.5 rounded-xl">
@@ -205,7 +205,7 @@ export default async function TopSafariCountriesPage() {
                   </div>
 
                   <Link
-                    href={`/parks/${country.slug}#guide-parks-reserves`}
+                    href={`${getCountrySeoUrl(country.slug)}#guide-parks-reserves`}
                     className="text-sm font-bold text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1.5 pt-3 border-t border-[var(--border-soft)]"
                   >
                     <span>All {country.totalParks} Parks &amp; Highlights</span>

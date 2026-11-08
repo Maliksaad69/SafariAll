@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, MapPin, Compass, Building2, ChevronRight, Loader2 } from 'lucide-react';
+import { getCountrySeoUrl } from '@/lib/countries';
 
 export default function SearchAutocomplete() {
   const router = useRouter();
@@ -98,20 +99,23 @@ export default function SearchAutocomplete() {
                 <span>National Parks &amp; Destinations</span>
               </div>
               <div className="space-y-1 mt-1">
-                {results.destinations.map((park) => (
-                  <Link
-                    key={park.id}
-                    href={`/parks/${park.slug}`}
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-between p-2.5 hover:bg-[var(--brand-soft)]/50 rounded-xl transition-colors text-xs"
-                  >
-                    <div>
-                      <span className="font-bold text-[var(--brand-deep)] block">{park.name}</span>
-                      <span className="text-[10px] text-[var(--ink-muted)]">{park.country} • {park.type.replace('_', ' ')}</span>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-[var(--ink-muted)]" />
-                  </Link>
-                ))}
+                {results.destinations.map((park) => {
+                  const destUrl = park.type === 'COUNTRY' ? getCountrySeoUrl(park.slug) : `/parks/${park.slug}`;
+                  return (
+                    <Link
+                      key={park.id}
+                      href={destUrl}
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center justify-between p-2.5 hover:bg-[var(--brand-soft)]/50 rounded-xl transition-colors text-xs"
+                    >
+                      <div>
+                        <span className="font-bold text-[var(--brand-deep)] block">{park.name}</span>
+                        <span className="text-[10px] text-[var(--ink-muted)]">{park.country} • {park.type.replace('_', ' ')}</span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-[var(--ink-muted)]" />
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
