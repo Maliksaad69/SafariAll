@@ -9,14 +9,14 @@ export const dynamic = 'force-dynamic';
 
 interface CountrySectionPageProps {
   params: Promise<{
-    country: string;
+    slug: string;
     section: string;
   }>;
 }
 
 export async function generateMetadata({ params }: CountrySectionPageProps): Promise<Metadata> {
-  const { country } = await params;
-  const seoData = getCountrySeoData(country);
+  const { slug } = await params;
+  const seoData = getCountrySeoData(slug);
   if (!seoData) {
     return {
       title: 'African National Parks & Safari Guide | SafariRequest',
@@ -42,8 +42,8 @@ export async function generateMetadata({ params }: CountrySectionPageProps): Pro
 }
 
 export default async function CountryParksPage({ params }: CountrySectionPageProps) {
-  const { country, section } = await params;
-  const seoData = getCountrySeoData(country);
+  const { slug, section } = await params;
+  const seoData = getCountrySeoData(slug);
   if (!seoData) notFound();
 
   // Canonical redirect if URL segment doesn't match the recommended SEO subpath
