@@ -1,5 +1,5 @@
 import { getSession } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,8 +13,9 @@ export const dynamic = 'force-dynamic';
 export default async function AdminPage() {
   const session = await getSession();
 
+  // Hide admin panel from public/unauthorized access with 404
   if (!session || session.role !== 'ADMIN') {
-    redirect('/login');
+    notFound();
   }
 
   // Fetch metrics & operators

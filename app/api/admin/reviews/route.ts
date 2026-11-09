@@ -22,7 +22,7 @@ export async function GET() {
   const session = await getSession();
 
   if (!session || session.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized. Admin privilege required.' }, { status: 403 });
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
   const reviews = await prisma.review.findMany({
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
   const session = await getSession();
 
   if (!session || session.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized. Admin privilege required.' }, { status: 403 });
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
   const body = await req.json();
