@@ -25,11 +25,11 @@ interface ReservationItem {
 }
 
 function StatusBadge({ status }: { status: ReservationItem['status'] }) {
-  if (status === 'APPROVED') return <span className="badge badge-success">Approved</span>;
-  if (status === 'DECLINED') return <span className="badge badge-danger">Declined</span>;
-  if (status === 'CANCELLED') return <span className="badge badge-neutral">Cancelled</span>;
-  if (status === 'COMPLETED') return <span className="badge badge-info">Completed</span>;
-  return <span className="badge badge-warning">Pending</span>;
+  if (status === 'APPROVED') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">Approved</span>;
+  if (status === 'DECLINED') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-900 border border-red-300">Declined</span>;
+  if (status === 'CANCELLED') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-800 border border-gray-300">Cancelled</span>;
+  if (status === 'COMPLETED') return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-100 text-teal-900 border border-teal-300">Completed</span>;
+  return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-950 border border-amber-300">Pending Approval</span>;
 }
 
 export default function AgencyReservationsTable({ initialReservations }: { initialReservations: ReservationItem[] }) {
@@ -79,24 +79,29 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
       {/* Header with filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 sm:px-6 py-4 border-b border-[var(--border)]">
         <div>
-          <h2 className="text-lg font-bold text-[var(--ink)] font-display">
+          <h2 className="text-lg font-bold text-[#193A38] font-display">
             Reservation Requests
           </h2>
-          <p className="text-xs text-[var(--ink-secondary)] mt-0.5">
+          <p className="text-xs text-[#344C49] font-medium mt-0.5">
             {pendingCount} awaiting your approval
           </p>
         </div>
-        <div className="flex gap-1.5 flex-wrap">
-          {(['ALL', 'PENDING', 'APPROVED', 'COMPLETED', 'DECLINED'] as const).map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFilter(f)}
-              className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-secondary'}`}
-            >
-              {f === 'ALL' ? 'All' : f.charAt(0) + f.slice(1).toLowerCase()}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#193A38] shrink-0">
+            Filter status:
+          </span>
+          <div className="flex gap-1.5 flex-wrap">
+            {(['ALL', 'PENDING', 'APPROVED', 'COMPLETED', 'DECLINED'] as const).map((f) => (
+              <button
+                key={f}
+                type="button"
+                onClick={() => setFilter(f)}
+                className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-secondary'}`}
+              >
+                {f === 'ALL' ? 'All' : f.charAt(0) + f.slice(1).toLowerCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -114,11 +119,11 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
 
       {filtered.length === 0 ? (
         <div className="px-6 py-14 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-sunk)] text-[var(--ink-muted)]">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5F2E8] text-[#193A38]">
             <Inbox className="h-6 w-6" />
           </div>
-          <p className="text-sm font-semibold text-[var(--ink)]">No reservation requests here</p>
-          <p className="mt-1 text-xs text-[var(--ink-secondary)]">
+          <p className="text-sm font-semibold text-[#193A38]">No reservation requests here</p>
+          <p className="mt-1 text-xs text-[#344C49]">
             When travelers request to book your safari packages, they will appear in this list.
           </p>
         </div>
@@ -130,7 +135,7 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                 {/* Traveler + tour info */}
                 <div className="flex-1 min-w-0 space-y-2.5">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[15px] font-bold text-[var(--ink)]">
+                    <span className="text-[15px] font-bold text-[#193A38]">
                       {r.traveler.firstName} {r.traveler.lastName}
                     </span>
                     <StatusBadge status={r.status} />
@@ -142,66 +147,66 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                       const now = new Date();
                       if (now >= start && now < end) {
                         const dayNum = Math.min(dur, Math.max(1, Math.floor((now.getTime() - start.getTime()) / 86_400_000) + 1));
-                        return <span className="badge badge-brand animate-pulse">Tour Started · Day {dayNum}/{dur}</span>;
+                        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#193A38] text-white animate-pulse">Tour Started · Day {dayNum}/{dur}</span>;
                       }
                       if (now >= end) {
-                        return <span className="badge badge-success">Target Days Complete</span>;
+                        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">Target Days Complete</span>;
                       }
                       return null;
                     })()}
-                    <span className="font-mono text-[11px] text-[var(--ink-muted)]">#{r.reference.slice(-8).toUpperCase()}</span>
+                    <span className="font-mono text-[11px] font-bold text-[#516D6A]">Booking Ref: #{r.reference.slice(-8).toUpperCase()}</span>
                   </div>
 
-                  <p className="text-sm font-semibold text-[var(--brand)]">{r.tour.title}</p>
+                  <p className="text-sm font-bold text-[#214446]">{r.tour.title}</p>
 
-                  <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-[var(--ink-secondary)]">
+                  <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-[#344C49] font-medium">
                     <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="h-3.5 w-3.5" />
-                      Starts {new Date(r.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      <span className="text-[var(--ink-muted)]">({r.tour.durationDays} days)</span>
+                      <CalendarDays className="h-3.5 w-3.5 text-[#214446]" />
+                      <strong className="text-[#193A38]">Start:</strong> {new Date(r.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      <span className="text-[#516D6A]">({r.tour.durationDays} days)</span>
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <Users className="h-3.5 w-3.5" />
-                      {r.adultsCount} adult{r.adultsCount !== 1 ? 's' : ''}
+                      <Users className="h-3.5 w-3.5 text-[#214446]" />
+                      <strong className="text-[#193A38]">Party:</strong> {r.adultsCount} adult{r.adultsCount !== 1 ? 's' : ''}
                       {r.childrenCount > 0 ? `, ${r.childrenCount} child${r.childrenCount !== 1 ? 'ren' : ''}` : ''}
                     </span>
                     {r.vehicle && (
-                      <span className="inline-flex items-center gap-1.5 font-semibold text-[var(--brand)]">
-                        <Bus className="h-3.5 w-3.5" />
-                        Car: {r.vehicle.name} {r.vehicle.plateNumber ? `· ${r.vehicle.plateNumber}` : ''}
+                      <span className="inline-flex items-center gap-1.5 font-bold text-[#214446]">
+                        <Bus className="h-3.5 w-3.5 text-[#214446]" />
+                        <strong>Assigned Car:</strong> {r.vehicle.name} {r.vehicle.plateNumber ? `· ${r.vehicle.plateNumber}` : ''}
                       </span>
                     )}
                     <span className="inline-flex items-center gap-1.5">
-                      <Mail className="h-3.5 w-3.5" />
-                      {r.traveler.email}
+                      <Mail className="h-3.5 w-3.5 text-[#214446]" />
+                      <strong className="text-[#193A38]">Email:</strong> {r.traveler.email}
                     </span>
                     {r.traveler.phone && (
                       <span className="inline-flex items-center gap-1.5">
-                        <Phone className="h-3.5 w-3.5" />
-                        {r.traveler.phone}
+                        <Phone className="h-3.5 w-3.5 text-[#214446]" />
+                        <strong className="text-[#193A38]">Phone:</strong> {r.traveler.phone}
                       </span>
                     )}
                     {r.traveler.country && (
                       <span className="inline-flex items-center gap-1.5">
-                        <Globe className="h-3.5 w-3.5" />
-                        {r.traveler.country}
+                        <Globe className="h-3.5 w-3.5 text-[#214446]" />
+                        <strong className="text-[#193A38]">Country:</strong> {r.traveler.country}
                       </span>
                     )}
                   </div>
 
                   {r.specialRequests && (
-                    <p className="rounded-lg bg-[var(--surface-sunk)] px-3 py-2 text-xs text-[var(--ink-body)]">
-                      <span className="font-bold text-[var(--ink-secondary)]">Special requests: </span>
-                      {r.specialRequests}
-                    </p>
+                    <div className="rounded-xl bg-[#F8F6EF] border border-[#DDD8C7] px-3.5 py-2.5 text-xs text-[#193A38]">
+                      <strong className="font-bold text-[#193A38]">Special requests: </strong>
+                      <span>{r.specialRequests}</span>
+                    </div>
                   )}
                 </div>
 
                 {/* Price + decision */}
                 <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between gap-3 lg:gap-2 shrink-0 lg:w-44">
                   <div className="lg:text-right">
-                    <div className="text-[11px] uppercase tracking-wide text-[var(--ink-muted)] font-bold">Est. total</div>
-                    <div className="text-lg font-bold text-[var(--ink)]">${Math.round(r.estimatedTotalUsd).toLocaleString()}</div>
+                    <div className="text-[11px] uppercase tracking-wide text-[#516D6A] font-bold">Estimated Total</div>
+                    <div className="text-xl font-bold text-[#193A38]">${Math.round(r.estimatedTotalUsd).toLocaleString()}</div>
                   </div>
 
                   {r.status === 'PENDING' ? (
@@ -274,10 +279,10 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                     </span>
                   )}
                   {r.operatorNote && r.status !== 'PENDING' && (
-                    <p className="rounded-lg bg-[var(--surface-sunk)] px-3 py-2 text-xs text-[var(--ink-body)]">
-                      <span className="font-bold text-[var(--ink-secondary)]">Your note: </span>
-                      {r.operatorNote}
-                    </p>
+                    <div className="mt-2 rounded-xl bg-[#F8F6EF] border border-[#DDD8C7] px-3 py-2 text-xs text-[#193A38]">
+                      <strong className="font-bold text-[#193A38]">Your Operator Note: </strong>
+                      <span>{r.operatorNote}</span>
+                    </div>
                   )}
                 </div>
               </div>

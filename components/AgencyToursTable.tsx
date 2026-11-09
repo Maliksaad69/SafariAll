@@ -127,26 +127,30 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
           {/* Mobile Card View */}
           <div className="md:hidden divide-y divide-[var(--border-soft)]">
             {tours.map((tour) => (
-              <div key={tour.id} className="p-4 space-y-3">
+              <div key={tour.id} className="p-4 space-y-3 bg-white">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <Link href={`/tours/${tour.slug}`} className="font-bold text-sm text-[var(--ink)] hover:underline line-clamp-2">
+                    <Link href={`/tours/${tour.slug}`} className="font-bold text-sm text-[#193A38] hover:underline line-clamp-2">
                       {tour.title}
                     </Link>
-                    <div className="text-xs text-[var(--ink-secondary)] mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
-                      <span>{tour.primaryCountry}</span>
+                    <div className="text-xs text-[#344C49] mt-1.5 flex flex-wrap gap-x-3 gap-y-1 font-medium">
+                      <span><strong className="text-[#193A38]">Country:</strong> {tour.primaryCountry}</span>
                       <span>·</span>
-                      <span>{tour.durationDays} days</span>
+                      <span><strong className="text-[#193A38]">Duration:</strong> {tour.durationDays} days</span>
                       <span>·</span>
-                      <span className="font-bold text-[var(--ink)]">${tour.minPriceUsd.toLocaleString()}</span>
+                      <span><strong className="text-[#193A38]">Price:</strong> <span className="font-bold text-[#193A38]">${tour.minPriceUsd.toLocaleString()}</span></span>
+                      <span>·</span>
+                      <span><strong className="text-[#193A38]">Bookings:</strong> {tour.reservationCount}</span>
                     </div>
                   </div>
                   <button
                     type="button"
                     disabled={busyId === `pub-${tour.id}`}
                     onClick={() => togglePublish(tour)}
-                    className={`badge shrink-0 cursor-pointer transition-all hover:opacity-80 inline-flex items-center gap-1 ${
-                      tour.isPublished ? 'badge-success' : 'badge-neutral'
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold shrink-0 cursor-pointer transition-all ${
+                      tour.isPublished
+                        ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                        : 'bg-amber-100 text-amber-950 border border-amber-300'
                     }`}
                   >
                     {busyId === `pub-${tour.id}` ? (
@@ -163,7 +167,7 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
                 <div className="flex items-center justify-between pt-2 border-t border-[var(--border-soft)] text-xs">
                   <Link
                     href={`/operator-portal/tours/${tour.id}/images`}
-                    className="link inline-flex items-center gap-1 font-semibold"
+                    className="link inline-flex items-center gap-1 font-bold text-[#214446]"
                   >
                     <ImageIcon className="h-3.5 w-3.5" />
                     {tour.mediaCount > 0 ? `Photos (${tour.mediaCount})` : 'Upload Photos'}
@@ -202,37 +206,39 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
             <table className="data-table">
               <thead>
                 <tr>
-                  <th className="px-5 sm:px-6">Package</th>
-                  <th className="px-4">Country</th>
-                  <th className="px-4">Duration</th>
-                  <th className="px-4">Price from</th>
-                  <th className="px-4">Bookings</th>
-                  <th className="px-4">Status</th>
-                  <th className="px-4">Photos</th>
-                  <th className="px-5 sm:px-6 text-right">Actions</th>
+                  <th className="px-5 sm:px-6 font-bold text-[#193A38]">Package Name</th>
+                  <th className="px-4 font-bold text-[#193A38]">Destination Country</th>
+                  <th className="px-4 font-bold text-[#193A38]">Duration</th>
+                  <th className="px-4 font-bold text-[#193A38]">Price from</th>
+                  <th className="px-4 font-bold text-[#193A38]">Bookings</th>
+                  <th className="px-4 font-bold text-[#193A38]">Status</th>
+                  <th className="px-4 font-bold text-[#193A38]">Photos</th>
+                  <th className="px-5 sm:px-6 text-right font-bold text-[#193A38]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {tours.map((tour) => (
                   <tr key={tour.id}>
-                    <td className="px-5 sm:px-6 font-semibold text-[var(--ink)] max-w-xs">
-                      <Link href={`/tours/${tour.slug}`} className="link hover:underline block truncate">
+                    <td className="px-5 sm:px-6 font-bold text-[#193A38] max-w-xs">
+                      <Link href={`/tours/${tour.slug}`} className="link hover:underline block truncate text-[#193A38]">
                         {tour.title}
                       </Link>
                     </td>
-                    <td className="px-4 whitespace-nowrap">{tour.primaryCountry}</td>
-                    <td className="px-4 whitespace-nowrap">{tour.durationDays} days</td>
-                    <td className="px-4 whitespace-nowrap font-semibold">
+                    <td className="px-4 whitespace-nowrap font-medium text-[#344C49]">{tour.primaryCountry}</td>
+                    <td className="px-4 whitespace-nowrap font-medium text-[#344C49]">{tour.durationDays} days</td>
+                    <td className="px-4 whitespace-nowrap font-bold text-[#193A38]">
                       ${tour.minPriceUsd.toLocaleString()}
                     </td>
-                    <td className="px-4 whitespace-nowrap">{tour.reservationCount}</td>
+                    <td className="px-4 whitespace-nowrap font-bold text-[#193A38]">{tour.reservationCount}</td>
                     <td className="px-4 whitespace-nowrap">
                       <button
                         type="button"
                         disabled={busyId === `pub-${tour.id}`}
                         onClick={() => togglePublish(tour)}
-                        className={`badge cursor-pointer transition-all hover:opacity-80 inline-flex items-center gap-1 ${
-                          tour.isPublished ? 'badge-success' : 'badge-neutral'
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold cursor-pointer transition-all hover:opacity-85 ${
+                          tour.isPublished
+                            ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                            : 'bg-amber-100 text-amber-950 border border-amber-300'
                         }`}
                         title="Click to toggle Live/Draft"
                       >
@@ -249,7 +255,7 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
                     <td className="px-4 whitespace-nowrap">
                       <Link
                         href={`/operator-portal/tours/${tour.id}/images`}
-                        className="link inline-flex items-center gap-1.5 text-xs font-semibold"
+                        className="link inline-flex items-center gap-1.5 text-xs font-bold text-[#214446]"
                       >
                         <ImageIcon className="h-3.5 w-3.5" />
                         {tour.mediaCount > 0 ? `Photos (${tour.mediaCount})` : 'Upload'}

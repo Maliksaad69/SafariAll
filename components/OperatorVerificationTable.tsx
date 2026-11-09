@@ -55,7 +55,7 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
-          <thead className="bg-[var(--sand)]/70 text-[var(--ink-muted)] uppercase font-semibold tracking-wider border-b border-black/5">
+          <thead className="bg-[#E4DBB4] text-[#193A38] uppercase font-bold tracking-wider border-b border-[#DEDCCF]">
             <tr>
               <th className="px-6 py-3.5">Company Name</th>
               <th className="px-6 py-3.5">HQ Country</th>
@@ -65,26 +65,26 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
               <th className="px-6 py-3.5 text-right">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-black/5 font-medium">
+          <tbody className="divide-y divide-[#EBE9DF] font-medium bg-white">
             {operators.map((op) => (
-              <tr key={op.id} className="hover:bg-[var(--brand-soft)]/20 transition-colors">
-                <td className="px-6 py-4 font-bold text-[var(--ink)] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[var(--brand-deep)] flex items-center justify-center font-bold text-sm">
+              <tr key={op.id} className="hover:bg-[#F7F6F1] transition-colors">
+                <td className="px-6 py-4 font-bold text-[#193A38] flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-[var(--brand-soft)] text-[#193A38] flex items-center justify-center font-bold text-sm">
                     {op.companyName.charAt(0)}
                   </div>
                   <span>{op.companyName}</span>
                 </td>
-                <td className="px-6 py-4 text-[var(--ink-muted)]">{op.countryOfOrigin}</td>
-                <td className="px-6 py-4 font-mono text-[var(--ink-muted)]">{op.registrationNumber || 'Pending Submission'}</td>
-                <td className="px-6 py-4 text-amber-500 font-bold">★ {op.averageRating} <span className="font-normal text-[var(--ink-muted)]">({op.totalReviews})</span></td>
+                <td className="px-6 py-4 text-[#344C49] font-semibold">{op.countryOfOrigin}</td>
+                <td className="px-6 py-4 font-mono font-bold text-[#193A38]">{op.registrationNumber || 'Pending Submission'}</td>
+                <td className="px-6 py-4 text-amber-600 font-bold">★ {op.averageRating} <span className="font-semibold text-[#516D6A]">({op.totalReviews})</span></td>
                 <td className="px-6 py-4">
                   {op.isVerified ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 text-white rounded-full font-bold text-[10px]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-white" /> Verified Active
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-950 border border-emerald-300 rounded-full font-bold text-[10px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> Verified Active
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-900 rounded-full font-bold text-[10px]">
-                      <XCircle className="w-3.5 h-3.5 text-amber-600" /> Pending Review
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-950 border border-amber-300 rounded-full font-bold text-[10px]">
+                      <XCircle className="w-3.5 h-3.5 text-amber-700" /> Pending Review
                     </span>
                   )}
                 </td>

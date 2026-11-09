@@ -360,7 +360,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
             <div
               className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out transform scale-100"
               style={{
-                backgroundImage: `url('${activeCountry.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1800&q=80'}')`,
+                backgroundImage: `url('${activeCountry.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2400&q=90'}')`,
               }}
             />
             {/* Rich multi-stage overlay for contrast: Forest Shadow deep tint into natural warmth */}
@@ -557,9 +557,10 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   >
                     <div className="relative h-14 sm:h-16 w-full rounded-lg overflow-hidden mb-2">
                       <img
-                        src={country.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=400&q=80'}
+                        src={country.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=85'}
                         alt={country.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
                       <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-black bg-black/60 text-white backdrop-blur-xs">
@@ -606,9 +607,10 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                   {/* Card Visual Banner */}
                   <div className="relative h-44 w-full overflow-hidden bg-slate-900">
                     <img
-                      src={country.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80'}
+                      src={country.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1400&q=85'}
                       alt={country.name}
                       className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 

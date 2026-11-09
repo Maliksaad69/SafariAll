@@ -93,9 +93,10 @@ export default async function TopSafariCountriesPage() {
                 {/* Left: Image Banner */}
                 <div className="w-full lg:w-[260px] relative flex-shrink-0 min-h-[220px] lg:min-h-[260px]">
                   <img
-                    src={country.image || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80'}
+                    src={country.image || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1400&q=85'}
                     alt={country.name}
                     className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
                   <div className="absolute bottom-3.5 left-3.5 text-white text-xs font-bold drop-shadow">

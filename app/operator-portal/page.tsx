@@ -183,37 +183,44 @@ export default async function OperatorPortalPage() {
         <div className="surface-dark p-7 sm:p-9 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div>
             <span className="badge badge-on-dark mb-3">Agency Portal</span>
-            <h1 className="text-3xl sm:text-4xl font-bold text-[var(--dark-text)] font-display">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white font-display">
               {operatorName}
             </h1>
-            <p className="mt-2 text-sm text-[var(--dark-text-soft)] max-w-xl">
+            <p className="mt-2 text-sm text-white/90 max-w-xl font-medium">
               Review reservation requests, manage your safari packages, publish marketing stories, and respond to travelers.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`badge ${operator?.isVerified ? 'badge-success' : 'badge-warning'}`}>
-              {operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm ${
+                operator?.isVerified
+                  ? 'bg-emerald-500/25 text-emerald-100 border-emerald-400/50'
+                  : 'bg-amber-500/25 text-amber-100 border-amber-400/50'
+              }`}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>{operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}</span>
             </span>
-            <Link href="/operator-portal/messages" className="btn btn-secondary relative">
+            <Link href="/operator-portal/messages" className="btn btn-secondary relative" aria-label="Open Agency Messages Inbox">
               <Mail className="h-4 w-4" />
-              Inbox
+              <span>Inbox</span>
               {unreadChats > 0 && (
-                <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--danger)] px-1 text-[10px] font-bold text-white">
+                <span className="absolute -top-2 -right-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-[10.5px] font-extrabold text-white shadow-md">
                   {unreadChats}
                 </span>
               )}
             </Link>
             <Link href="/operator-portal/slots" className="btn btn-secondary">
               <CalendarDays className="h-4 w-4" />
-              Departures
+              <span>Departures</span>
             </Link>
             <Link href="/operator-portal/blog/new" className="btn btn-secondary">
               <Building2 className="h-4 w-4" />
-              Write Story
+              <span>Write Story</span>
             </Link>
             <Link href="/operator-portal/tours/new" className="btn btn-primary">
               <PlusCircle className="h-4 w-4" />
-              Create Tour Package
+              <span>Create Tour Package</span>
             </Link>
           </div>
         </div>
@@ -221,29 +228,29 @@ export default async function OperatorPortalPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
           {statCards.map(({ label, value, icon: Icon, tint }) => (
-            <div key={label} className="surface-card p-5">
+            <div key={label} className="surface-card p-5 border border-[var(--border)] shadow-xs">
               <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${tint}`}>
                 <Icon className="h-4.5 w-4.5" />
               </div>
-              <div className="text-xl font-bold text-[var(--ink)]">{value}</div>
-              <div className="text-[11px] font-semibold text-[var(--ink-secondary)]">{label}</div>
+              <div className="text-xl font-bold text-[#193A38]">{value}</div>
+              <div className="text-xs font-bold text-[#344C49] mt-0.5">{label}</div>
             </div>
           ))}
         </div>
 
         {/* Fleet / departure gaps: tours without open departures can't be booked */}
         {operator && fleetSize === 0 && needsDepartures.length === 0 && (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-            <strong>Add your vehicles to start selling seats.</strong> Bookings are taken per seat on scheduled departures, so each
+          <div className="rounded-2xl border border-amber-300 bg-amber-50/90 px-5 py-4 text-sm text-amber-950 font-medium shadow-xs">
+            <strong className="text-amber-950 font-bold">Add your vehicles to start selling seats.</strong> Bookings are taken per seat on scheduled departures, so each
             vehicle you add sets how many travellers a departure can carry.{' '}
-            <Link href="/operator-portal/slots" className="font-semibold underline">Set up your fleet</Link>
+            <Link href="/operator-portal/slots" className="font-bold underline text-amber-950 hover:text-black">Set up your fleet</Link>
           </div>
         )}
         {needsDepartures.length > 0 && (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-            <strong>{needsDepartures.length} package{needsDepartures.length === 1 ? '' : 's'} cannot take bookings</strong> because there are no open
+          <div className="rounded-2xl border border-amber-300 bg-amber-50/90 px-5 py-4 text-sm text-amber-950 font-medium shadow-xs">
+            <strong className="text-amber-950 font-bold">{needsDepartures.length} package{needsDepartures.length === 1 ? '' : 's'} cannot take bookings</strong> because there are no open
             upcoming departures: {needsDepartures.map((t) => t.title).join(', ')}.{' '}
-            <Link href="/operator-portal/slots" className="font-semibold underline">Schedule departures</Link>
+            <Link href="/operator-portal/slots" className="font-bold underline text-amber-950 hover:text-black">Schedule departures</Link>
             {fleetSize === 0 ? ' (add your vehicles there first).' : '.'}
           </div>
         )}
@@ -258,43 +265,52 @@ export default async function OperatorPortalPage() {
         <AgencyToursTable initialTours={serializedTours} />
 
         {/* Inquiry leads */}
-        <section className="surface-card overflow-hidden">
+        <section className="surface-card overflow-hidden border border-[var(--border)]">
           <div className="px-5 sm:px-6 py-4 border-b border-[var(--border)]">
-            <h2 className="text-lg font-bold text-[var(--ink)] font-display">
+            <h2 className="text-lg font-bold text-[#193A38] font-display">
               Quote Inquiry Leads
             </h2>
-            <p className="text-xs text-[var(--ink-secondary)] mt-0.5">Travelers who requested a custom quote routed to your agency.</p>
+            <p className="text-xs text-[#344C49] font-medium mt-0.5">Travelers who requested a custom quote routed to your agency.</p>
           </div>
           {leads.length > 0 ? (
             <ul className="divide-y divide-[var(--border-soft)]">
               {leads.map((lead) => (
-                <li key={lead.id} className="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <li key={lead.id} className="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[var(--canvas-base)]/40 transition-colors">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-bold text-[var(--ink)]">
+                      <span className="text-sm font-bold text-[#193A38]">
                         {lead.inquiry.traveler.firstName} {lead.inquiry.traveler.lastName}
                       </span>
-                      <span className="badge badge-neutral">{lead.status}</span>
+                      <span className="badge badge-neutral text-xs font-semibold">{lead.status}</span>
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--ink-secondary)]">
+                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#344C49] font-medium">
                       <span className="inline-flex items-center gap-1.5">
-                        <Mail className="h-3.5 w-3.5" /> {lead.inquiry.traveler.email}
+                        <Mail className="h-3.5 w-3.5 text-[#214446]" /> {lead.inquiry.traveler.email}
                       </span>
                       <span className="inline-flex items-center gap-1.5">
-                        <Users className="h-3.5 w-3.5" /> {lead.inquiry.adultsCount} adult{lead.inquiry.adultsCount !== 1 ? 's' : ''}
+                        <Users className="h-3.5 w-3.5 text-[#214446]" /> {lead.inquiry.adultsCount} adult{lead.inquiry.adultsCount !== 1 ? 's' : ''}
                         {lead.inquiry.childrenCount > 0 ? `, ${lead.inquiry.childrenCount} children` : ''}
                       </span>
-                      {lead.inquiry.tour && <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {lead.inquiry.tour.title}</span>}
+                      {lead.inquiry.tour && (
+                        <span className="inline-flex items-center gap-1.5 font-semibold text-[#193A38]">
+                          <MapPin className="h-3.5 w-3.5 text-[#214446]" /> {lead.inquiry.tour.title}
+                        </span>
+                      )}
                       {lead.inquiry.preferredCountry && !lead.inquiry.tour && (
-                        <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> {lead.inquiry.preferredCountry}</span>
+                        <span className="inline-flex items-center gap-1.5 font-semibold text-[#193A38]">
+                          <MapPin className="h-3.5 w-3.5 text-[#214446]" /> {lead.inquiry.preferredCountry}
+                        </span>
                       )}
                     </div>
                     {lead.inquiry.customNotes && (
-                      <p className="mt-2 rounded-lg bg-[var(--surface-sunk)] px-3 py-1.5 text-xs text-[var(--ink-body)]">{lead.inquiry.customNotes}</p>
+                      <p className="mt-2 rounded-xl bg-[#F5F2E8] border border-[#E3DECF] px-3.5 py-2 text-xs text-[#193A38] font-medium">
+                        <strong className="text-[#193A38] font-bold">Traveler note: </strong>
+                        {lead.inquiry.customNotes}
+                      </p>
                     )}
                   </div>
-                  <div className="text-xs text-[var(--ink-muted)] whitespace-nowrap shrink-0">
-                    <CalendarDays className="mr-1 inline h-3.5 w-3.5" />
+                  <div className="text-xs text-[#344C49] font-semibold whitespace-nowrap shrink-0">
+                    <CalendarDays className="mr-1 inline h-3.5 w-3.5 text-[#214446]" />
                     {new Date(lead.createdAt).toLocaleDateString()}
                   </div>
                 </li>
@@ -302,8 +318,8 @@ export default async function OperatorPortalPage() {
             </ul>
           ) : (
             <div className="px-6 py-10 text-center">
-              <p className="text-sm font-semibold text-[var(--ink)]">No inquiry leads yet</p>
-              <p className="mt-1 text-xs text-[var(--ink-secondary)]">When travelers request quotes in your destination, they arrive here.</p>
+              <p className="text-sm font-semibold text-[#193A38]">No inquiry leads yet</p>
+              <p className="mt-1 text-xs text-[#344C49]">When travelers request quotes in your destination, they arrive here.</p>
             </div>
           )}
         </section>

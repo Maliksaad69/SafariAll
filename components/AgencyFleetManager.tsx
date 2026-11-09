@@ -230,7 +230,9 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
 
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
             <div className="sm:col-span-2">
-              <label className="form-label" htmlFor="vf-name">Vehicle Base Name *</label>
+              <label className="form-label" htmlFor="vf-name">
+                Vehicle Base Name <span className="text-red-600">*</span>
+              </label>
               <input
                 id="vf-name"
                 type="text"
@@ -240,10 +242,13 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                 className="form-control text-xs"
                 placeholder="e.g. Safari Cruiser or Land Cruiser 4x4"
               />
+              <span className="text-[10.5px] text-[#516D6A] mt-1 block">Name displayed to guests and in departures</span>
             </div>
 
             <div>
-              <label className="form-label" htmlFor="vf-type">Vehicle Type</label>
+              <label className="form-label" htmlFor="vf-type">
+                Vehicle Type / Category <span className="text-red-600">*</span>
+              </label>
               <select
                 id="vf-type"
                 value={vehicleType}
@@ -256,10 +261,13 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                 <option value="Overland Safari Truck">Overland Truck</option>
                 <option value="Luxury SUV">Luxury SUV</option>
               </select>
+              <span className="text-[10.5px] text-[#516D6A] mt-1 block">Vehicle specification</span>
             </div>
 
             <div>
-              <label className="form-label" htmlFor="vf-seats">Seats per Car *</label>
+              <label className="form-label" htmlFor="vf-seats">
+                Passenger Seats <span className="text-red-600">*</span>
+              </label>
               <input
                 id="vf-seats"
                 type="number"
@@ -268,12 +276,15 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                 required
                 value={seats}
                 onChange={(e) => setSeats(Number(e.target.value))}
-                className="form-control text-xs"
+                className="form-control text-xs font-bold text-[#193A38]"
               />
+              <span className="text-[10.5px] text-[#516D6A] mt-1 block">Excluding driver</span>
             </div>
 
             <div>
-              <label className="form-label" htmlFor="vf-count">Quantity / How Many *</label>
+              <label className="form-label" htmlFor="vf-count">
+                Fleet Quantity <span className="text-red-600">*</span>
+              </label>
               <input
                 id="vf-count"
                 type="number"
@@ -284,12 +295,15 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                 onChange={(e) => setCount(Number(e.target.value))}
                 className="form-control text-xs font-bold text-[var(--brand)]"
               />
+              <span className="text-[10.5px] text-[#516D6A] mt-1 block">Identical units</span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="form-label" htmlFor="vf-plate">License Plate Prefix (optional)</label>
+              <label className="form-label" htmlFor="vf-plate">
+                License Plate / Registration Prefix (Optional)
+              </label>
               <input
                 id="vf-plate"
                 type="text"
@@ -298,12 +312,13 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                 className="form-control text-xs"
                 placeholder="e.g. TZ-8492"
               />
+              <span className="text-[10.5px] text-[#516D6A] mt-1 block">Optional identifier for vehicle dispatch</span>
             </div>
-            <div className="flex items-end">
+            <div className="flex items-center pt-5">
               <button
                 type="submit"
                 disabled={busy === 'add'}
-                className="btn btn-primary btn-sm w-full inline-flex items-center justify-center gap-2 text-xs font-bold"
+                className="btn btn-primary btn-sm w-full inline-flex items-center justify-center gap-2 text-xs font-bold min-h-[38px]"
               >
                 {busy === 'add' ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -326,7 +341,7 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
               className={`rounded-2xl border p-4 transition-all space-y-3 ${
                 v.isActive
                   ? 'border-[var(--border)] bg-white shadow-xs'
-                  : 'border-dashed border-gray-300 bg-gray-50 opacity-60'
+                  : 'border-amber-300 bg-amber-50/50 shadow-xs'
               }`}
             >
               <div className="flex items-start justify-between gap-2">
@@ -335,55 +350,66 @@ export default function AgencyFleetManager({ initialVehicles }: { initialVehicle
                     className={`h-9 w-9 rounded-xl flex items-center justify-center ${
                       v.isActive
                         ? 'bg-[var(--brand-soft)] text-[var(--brand)]'
-                        : 'bg-gray-200 text-gray-500'
+                        : 'bg-amber-100 text-amber-800'
                     }`}
                   >
                     <Bus className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-[var(--ink)]">{v.name}</h4>
-                    <span className="text-[11px] text-[var(--ink-secondary)]">
+                    <h4 className="font-bold text-sm text-[#193A38]">{v.name}</h4>
+                    <span className="text-xs font-semibold text-[#516D6A]">
                       {v.vehicleType}
                     </span>
                   </div>
                 </div>
                 <span
-                  className={`badge ${v.isActive ? 'badge-success' : 'badge-neutral'}`}
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold ${
+                    v.isActive
+                      ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                      : 'bg-amber-100 text-amber-950 border border-amber-300'
+                  }`}
                 >
-                  {v.isActive ? 'Available' : 'Maintenance'}
+                  {v.isActive ? 'Active' : 'Maintenance'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-[var(--ink-secondary)] pt-1 border-t border-[var(--border-soft)]">
-                <span>{v.seats} Passenger Seats</span>
-                {v.plateNumber && <span className="font-mono">{v.plateNumber}</span>}
+              <div className="space-y-1.5 text-xs text-[#344C49] pt-2 border-t border-[var(--border-soft)]">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#193A38]">Passenger Capacity:</span>
+                  <span className="font-semibold text-[#193A38]">{v.seats} Seats</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#193A38]">License Plate:</span>
+                  <span className="font-mono font-bold text-[#193A38]">{v.plateNumber || 'None specified'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#193A38]">Scheduled Trips:</span>
+                  <span className="font-semibold text-[#214446]">
+                    {v.upcomingDepartures ? `${v.upcomingDepartures} departure(s)` : 'Ready to reserve'}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-[11px] text-[var(--ink-muted)]">
-                  {v.upcomingDepartures ? `${v.upcomingDepartures} departure(s)` : 'Ready to reserve'}
-                </span>
-                <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-end pt-2 border-t border-[var(--border-soft)] gap-2">
+                <button
+                  type="button"
+                  onClick={() => toggleActive(v)}
+                  disabled={busy === `toggle-${v.id}`}
+                  className="btn btn-secondary btn-sm text-xs px-2.5 py-1"
+                >
+                  {v.isActive ? 'Set Inactive' : 'Activate Vehicle'}
+                </button>
+                {(!v.upcomingDepartures || v.upcomingDepartures === 0) && (
                   <button
                     type="button"
-                    onClick={() => toggleActive(v)}
-                    disabled={busy === `toggle-${v.id}`}
-                    className="btn btn-ghost btn-sm text-[11px] px-2 py-1"
+                    onClick={() => handleDelete(v)}
+                    disabled={busy === `del-${v.id}`}
+                    className="btn btn-danger btn-sm text-xs px-2 py-1"
+                    title="Permanently remove vehicle from fleet"
                   >
-                    {v.isActive ? 'Set Inactive' : 'Activate'}
+                    <Trash2 className="h-3.5 w-3.5" />
                   </button>
-                  {(!v.upcomingDepartures || v.upcomingDepartures === 0) && (
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(v)}
-                      disabled={busy === `del-${v.id}`}
-                      className="text-red-500 hover:text-red-700 p-1 rounded-md transition-colors"
-                      title="Delete vehicle"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  )}
-                </div>
+                )}
               </div>
             </div>
           ))}

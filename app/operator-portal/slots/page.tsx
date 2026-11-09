@@ -186,14 +186,19 @@ export default function SlotManagerPage() {
         <section className="surface-card">
           <div className="flex flex-wrap items-center gap-3 border-b border-[var(--border)] px-5 py-4 sm:px-6">
             <Calendar className="h-4 w-4 text-[var(--brand-ink)]" />
-            <h2 className="font-bold text-[var(--ink)]">Departures</h2>
-            {loadingTours ? (
-              <div className="h-9 w-64 animate-pulse rounded-xl bg-[var(--surface-sunk)]" />
-            ) : (
-              <select value={tourId} onChange={(e) => setTourId(e.target.value)} className="form-control max-w-md">
-                {tours.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
-              </select>
-            )}
+            <h2 className="font-bold text-[#193A38]">Scheduled Departures</h2>
+            <div className="ml-auto flex items-center gap-2">
+              <label htmlFor="select-tour-slots" className="text-xs font-bold uppercase tracking-wider text-[#193A38] shrink-0">
+                Select Tour Package:
+              </label>
+              {loadingTours ? (
+                <div className="h-9 w-64 animate-pulse rounded-xl bg-[var(--surface-sunk)]" />
+              ) : (
+                <select id="select-tour-slots" value={tourId} onChange={(e) => setTourId(e.target.value)} className="form-control max-w-md text-xs font-semibold">
+                  {tours.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
+                </select>
+              )}
+            </div>
           </div>
 
           {tourId && (
@@ -209,17 +214,39 @@ export default function SlotManagerPage() {
                   setDepForm((f) => ({ ...f, startDate: '', note: '' }));
                 });
               }}
-              className="space-y-3 px-5 pt-4 pb-4 sm:px-6"
+              className="space-y-4 px-5 pt-4 pb-5 sm:px-6 bg-[#F8F6EF]/50 border-b border-[var(--border)]"
             >
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
-                <div><label className="form-label" htmlFor="d-date">Date</label><input id="d-date" type="date" min={new Date().toISOString().slice(0, 10)} className="form-control" value={depForm.startDate} onChange={(e) => setDepForm((f) => ({ ...f, startDate: e.target.value }))} /></div>
-                <div><label className="form-label" htmlFor="d-time">Departure time</label><input id="d-time" type="time" className="form-control" value={depForm.departureTime} onChange={(e) => setDepForm((f) => ({ ...f, departureTime: e.target.value }))} /></div>
-                <div className="sm:col-span-2"><label className="form-label" htmlFor="d-route">Route</label><input id="d-route" className="form-control" placeholder="Arusha → Tarangire → Serengeti" value={depForm.route} onChange={(e) => setDepForm((f) => ({ ...f, route: e.target.value }))} /></div>
+              <div className="text-xs font-bold text-[#193A38] uppercase tracking-wider">
+                Add New Departure Date for Selected Package
               </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                <div>
+                  <label className="form-label" htmlFor="d-date">
+                    Departure Date <span className="text-red-600">*</span>
+                  </label>
+                  <input id="d-date" type="date" required min={new Date().toISOString().slice(0, 10)} className="form-control text-xs" value={depForm.startDate} onChange={(e) => setDepForm((f) => ({ ...f, startDate: e.target.value }))} />
+                </div>
+                <div>
+                  <label className="form-label" htmlFor="d-time">
+                    Departure Time <span className="text-red-600">*</span>
+                  </label>
+                  <input id="d-time" type="time" required className="form-control text-xs" value={depForm.departureTime} onChange={(e) => setDepForm((f) => ({ ...f, departureTime: e.target.value }))} />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="form-label" htmlFor="d-route">
+                    Route / Staging Locations (Optional)
+                  </label>
+                  <input id="d-route" className="form-control text-xs" placeholder="e.g. Arusha → Tarangire → Serengeti" value={depForm.route} onChange={(e) => setDepForm((f) => ({ ...f, route: e.target.value }))} />
+                </div>
+              </div>
+
               <div>
-                <span className="form-label">Vehicles on this departure</span>
+                <label className="form-label block mb-1">
+                  Assign Vehicles from Your Fleet to this Departure
+                </label>
                 {activeFleet.length === 0 ? (
-                  <p className="text-xs text-[var(--ink-muted)]">Add vehicles above to sell seats per vehicle, or set a group size below.</p>
+                  <p className="text-xs text-[#516D6A]">Add vehicles above to sell seats per vehicle, or set an open group size below.</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {activeFleet.map((v) => {
@@ -229,24 +256,37 @@ export default function SlotManagerPage() {
                           type="button"
                           key={v.id}
                           onClick={() => setDepForm((f) => ({ ...f, vehicleIds: on ? f.vehicleIds.filter((x) => x !== v.id) : [...f.vehicleIds, v.id] }))}
-                          className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${on ? 'border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand-ink)]' : 'border-[var(--border)] text-[var(--ink-secondary)]'}`}
+                          className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${on ? 'border-[var(--brand)] bg-[var(--brand)] text-white shadow-xs' : 'border-[var(--border)] bg-white text-[#344C49] hover:border-[var(--brand)]'}`}
                         >
-                          {v.name} · {v.seats} seats
+                          {on ? '✓ Assigned: ' : '+ Assign: '}{v.name} · {v.seats} seats
                         </button>
                       );
                     })}
                   </div>
                 )}
               </div>
-              <div className="flex flex-wrap items-end gap-3">
+
+              <div className="flex flex-wrap items-end gap-3 pt-1">
                 {depForm.vehicleIds.length === 0 ? (
-                  <div><label className="form-label" htmlFor="d-cap">Max group size</label><input id="d-cap" type="number" min={1} max={500} className="form-control w-32" value={depForm.maxTravelers} onChange={(e) => setDepForm((f) => ({ ...f, maxTravelers: Number(e.target.value) }))} /></div>
+                  <div>
+                    <label className="form-label" htmlFor="d-cap">
+                      Max Group Capacity <span className="text-red-600">*</span>
+                    </label>
+                    <input id="d-cap" type="number" min={1} max={500} className="form-control w-32 text-xs" value={depForm.maxTravelers} onChange={(e) => setDepForm((f) => ({ ...f, maxTravelers: Number(e.target.value) }))} />
+                  </div>
                 ) : (
-                  <div className="text-sm font-semibold text-[var(--ink)]">Capacity: {selectedSeats} seats</div>
+                  <div className="text-sm font-bold text-[#193A38] pb-2">
+                    Total Departure Capacity: <span className="text-[var(--brand)]">{selectedSeats} passenger seats</span>
+                  </div>
                 )}
-                <div className="flex-1 min-w-[200px]"><label className="form-label" htmlFor="d-note">Note (optional)</label><input id="d-note" className="form-control" value={depForm.note} onChange={(e) => setDepForm((f) => ({ ...f, note: e.target.value }))} /></div>
-                <button type="submit" className="btn btn-primary" disabled={busy === 'dep-add' || !depForm.startDate}>
-                  {busy === 'dep-add' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />} Add departure
+                <div className="flex-1 min-w-[200px]">
+                  <label className="form-label" htmlFor="d-note">
+                    Internal Note / Instructions (Optional)
+                  </label>
+                  <input id="d-note" className="form-control text-xs" placeholder="e.g. Guaranteed departure, min 2 people" value={depForm.note} onChange={(e) => setDepForm((f) => ({ ...f, note: e.target.value }))} />
+                </div>
+                <button type="submit" className="btn btn-primary btn-sm min-h-[38px] px-4 font-bold" disabled={busy === 'dep-add' || !depForm.startDate}>
+                  {busy === 'dep-add' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />} Schedule Departure
                 </button>
               </div>
             </form>
@@ -266,13 +306,25 @@ export default function SlotManagerPage() {
                 const past = d.startDate < new Date().toISOString().slice(0, 10);
                 const label = d.status === 'CLOSED' ? 'CLOSED' : d.spotsLeft <= 0 ? 'FULL' : 'OPEN';
                 return (
-                  <li key={d.slotId} className={`space-y-3 px-5 py-4 sm:px-6 ${past ? 'opacity-60' : ''}`}>
+                  <li key={d.slotId} className={`space-y-3 px-5 py-4 sm:px-6 ${past ? 'bg-gray-50/60' : 'bg-white'}`}>
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${label === 'OPEN' ? 'bg-[var(--success-soft)] text-[var(--success)]' : label === 'FULL' ? 'bg-red-100 text-red-700' : 'bg-[var(--surface-sunk)] text-[var(--ink-secondary)]'}`}>{label}</span>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                        label === 'OPEN'
+                          ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
+                          : label === 'FULL'
+                          ? 'bg-red-100 text-red-900 border border-red-300'
+                          : 'bg-gray-100 text-gray-900 border border-gray-300'
+                      }`}>
+                        {label === 'OPEN' ? 'Open for Bookings' : label === 'FULL' ? 'Fully Booked' : 'Closed'}
+                      </span>
                       <div className="min-w-0">
-                        <div className="font-semibold text-[var(--ink)]">{fmtDate(d.startDate)} · {d.departureTime}{past ? ' (departed)' : ''}</div>
-                        <div className="text-xs text-[var(--ink-secondary)]">
-                          {d.route ? `${d.route} · ` : ''}{d.bookedTravelers} of {d.maxTravelers} seats booked · {d.spotsLeft} left{d.note ? ` · ${d.note}` : ''}
+                        <div className="font-bold text-[#193A38] text-sm">
+                          <strong>Departure: </strong>{fmtDate(d.startDate)} at {d.departureTime}{past ? ' (Departed)' : ''}
+                        </div>
+                        <div className="text-xs text-[#344C49] font-medium mt-0.5">
+                          {d.route ? <span className="font-semibold text-[#193A38]">Route: {d.route} · </span> : ''}
+                          <strong className="text-[#193A38]">Seats Booked: </strong>{d.bookedTravelers} of {d.maxTravelers} · <strong className="text-[#193A38]">Spots Left: </strong>{d.spotsLeft}
+                          {d.note ? ` · Note: ${d.note}` : ''}
                         </div>
                       </div>
                       <div className="ml-auto flex gap-2">

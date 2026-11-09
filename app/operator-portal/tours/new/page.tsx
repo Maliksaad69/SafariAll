@@ -253,15 +253,19 @@ export default function NewTourPage() {
                   onChange={(e) => setPrimaryCountry(e.target.value)}
                   className="form-control"
                 >
-                  <option value="Tanzania">Tanzania</option>
-                  <option value="Kenya">Kenya</option>
-                  <option value="South Africa">South Africa</option>
-                  <option value="Uganda">Uganda</option>
                   <option value="Botswana">Botswana</option>
-                  <option value="Zimbabwe">Zimbabwe</option>
-                  <option value="Rwanda">Rwanda</option>
+                  <option value="Ethiopia">Ethiopia</option>
+                  <option value="Kenya">Kenya</option>
+                  <option value="Madagascar">Madagascar</option>
+                  <option value="Malawi">Malawi</option>
+                  <option value="Mozambique">Mozambique</option>
                   <option value="Namibia">Namibia</option>
+                  <option value="Rwanda">Rwanda</option>
+                  <option value="South Africa">South Africa</option>
+                  <option value="Tanzania">Tanzania</option>
+                  <option value="Uganda">Uganda</option>
                   <option value="Zambia">Zambia</option>
+                  <option value="Zimbabwe">Zimbabwe</option>
                 </select>
               </div>
               {/* National Parks & Game Reserves Multi-Select */}
@@ -317,7 +321,7 @@ export default function NewTourPage() {
 
               <div>
                 <label className="form-label">
-                  Comfort Level *
+                  Comfort Level <span className="text-red-600">*</span>
                 </label>
                 <select
                   value={comfortLevel}
@@ -329,6 +333,22 @@ export default function NewTourPage() {
                   <option value="LUXURY">Luxury (High-end Tented Camp)</option>
                   <option value="SUPER_LUXURY">Super Luxury (Exclusive Private Villa)</option>
                   <option value="CAMPING">Public / Adventure Camping</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="form-label">
+                  Tour Type <span className="text-red-600">*</span>
+                </label>
+                <select
+                  value={tourType}
+                  onChange={(e) => setTourType(e.target.value)}
+                  className="form-control"
+                >
+                  <option value="PRIVATE">Private Tour (Exclusive Vehicle)</option>
+                  <option value="SHARED_GROUP">Shared Group Safari</option>
+                  <option value="FLY_IN">Fly-In Safari</option>
+                  <option value="SELF_DRIVE">Self-Drive Safari</option>
                 </select>
               </div>
 
@@ -577,21 +597,46 @@ export default function NewTourPage() {
               </div>
             )}
 
-            <div className="space-y-2">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">Add new vehicles</span>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="block text-xs font-bold uppercase tracking-wider text-[#193A38]">
+                  Define New Vehicles to Add to Fleet (Optional)
+                </span>
+                <span className="text-[11px] text-[#516D6A]">Specify vehicle specification and quantity</span>
+              </div>
+              {newVehicles.length > 0 && (
+                <div className="hidden sm:grid sm:grid-cols-5 gap-2 text-[10.5px] font-bold uppercase tracking-wider text-[#193A38] px-1">
+                  <div className="sm:col-span-2">Vehicle Name *</div>
+                  <div>Vehicle Type *</div>
+                  <div>Passenger Seats *</div>
+                  <div>Units Count *</div>
+                </div>
+              )}
               {newVehicles.map((v, i) => (
-                <div key={i} className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-end">
-                  <input className="form-control sm:col-span-2" placeholder="Name, e.g. Land Cruiser" value={v.name} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, name: e.target.value } : x)))} />
-                  <input className="form-control" placeholder="Type" value={v.vehicleType} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, vehicleType: e.target.value } : x)))} />
-                  <input className="form-control" type="number" min={1} max={100} title="Seats per vehicle" value={v.seats} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, seats: Number(e.target.value) } : x)))} />
-                  <div className="flex gap-2">
-                    <input className="form-control" type="number" min={1} max={10} title="How many of these" value={v.count} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, count: Number(e.target.value) } : x)))} />
-                    <button type="button" className="text-rose-600" onClick={() => setNewVehicles((l) => l.filter((_, k) => k !== i))}><Trash2 className="w-4 h-4" /></button>
+                <div key={i} className="grid grid-cols-2 sm:grid-cols-5 gap-2 items-end p-2.5 rounded-xl bg-white/80 border border-[var(--border-soft)]">
+                  <div className="sm:col-span-2">
+                    <label className="sm:hidden form-label text-[10px]">Vehicle Name</label>
+                    <input className="form-control text-xs" placeholder="e.g. 4x4 Safari Land Cruiser" value={v.name} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, name: e.target.value } : x)))} />
+                  </div>
+                  <div>
+                    <label className="sm:hidden form-label text-[10px]">Type</label>
+                    <input className="form-control text-xs" placeholder="Type" value={v.vehicleType} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, vehicleType: e.target.value } : x)))} />
+                  </div>
+                  <div>
+                    <label className="sm:hidden form-label text-[10px]">Seats</label>
+                    <input className="form-control text-xs font-bold text-[#193A38]" type="number" min={1} max={100} title="Seats per vehicle" value={v.seats} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, seats: Number(e.target.value) } : x)))} />
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <div className="flex-1">
+                      <label className="sm:hidden form-label text-[10px]">Qty</label>
+                      <input className="form-control text-xs font-bold text-[var(--brand)]" type="number" min={1} max={10} title="How many of these" value={v.count} onChange={(e) => setNewVehicles((l) => l.map((x, k) => (k === i ? { ...x, count: Number(e.target.value) } : x)))} />
+                    </div>
+                    <button type="button" className="text-red-600 hover:text-red-800 p-1 cursor-pointer shrink-0" title="Remove vehicle" onClick={() => setNewVehicles((l) => l.filter((_, k) => k !== i))}><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
               ))}
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => setNewVehicles((l) => [...l, { name: '', vehicleType: '4x4 Land Cruiser', seats: 7, count: 1 }])}>
-                <Plus className="w-4 h-4" /> Add vehicle type
+                <Plus className="w-4 h-4" /> Add Vehicle Type
               </button>
             </div>
 

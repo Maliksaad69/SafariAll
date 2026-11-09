@@ -627,9 +627,13 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
                   </div>
 
                   <div>
-                    <label className="form-label">Day Title</label>
+                    <label className="form-label" htmlFor={`day-title-${idx}`}>
+                      Day Title <span className="text-red-600">*</span>
+                    </label>
                     <input
+                      id={`day-title-${idx}`}
                       type="text"
+                      required
                       value={day.title}
                       onChange={(e) => updateDay(idx, 'title', e.target.value)}
                       className="form-control"
@@ -638,9 +642,13 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
                   </div>
 
                   <div>
-                    <label className="form-label">Day Description & Activities</label>
+                    <label className="form-label" htmlFor={`day-desc-${idx}`}>
+                      Day Description &amp; Activities <span className="text-red-600">*</span>
+                    </label>
                     <textarea
+                      id={`day-desc-${idx}`}
                       rows={3}
+                      required
                       value={day.description}
                       onChange={(e) => updateDay(idx, 'description', e.target.value)}
                       className="form-control text-xs"
@@ -650,8 +658,9 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
-                      <label className="form-label">Accommodation</label>
+                      <label className="form-label" htmlFor={`day-accom-${idx}`}>Overnight Accommodation</label>
                       <input
+                        id={`day-accom-${idx}`}
                         type="text"
                         value={day.accommodationName}
                         onChange={(e) => updateDay(idx, 'accommodationName', e.target.value)}
@@ -660,8 +669,9 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
                       />
                     </div>
                     <div>
-                      <label className="form-label">Meals Included</label>
+                      <label className="form-label" htmlFor={`day-meals-${idx}`}>Meals Included</label>
                       <input
+                        id={`day-meals-${idx}`}
                         type="text"
                         value={day.mealsIncluded}
                         onChange={(e) => updateDay(idx, 'mealsIncluded', e.target.value)}
