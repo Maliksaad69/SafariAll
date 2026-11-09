@@ -1,10 +1,10 @@
 import { getSession } from '@/lib/auth';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import prisma from '@/lib/prisma';
 import OperatorVerificationTable from '@/components/OperatorVerificationTable';
+import AdminLoginForm from '@/components/AdminLoginForm';
 import { parseTalaData } from '@/lib/tala-verification';
 import { ShieldCheck, Users, Building2, MapPin, Award, Clock, MessageSquare, CheckCircle2 } from 'lucide-react';
 
@@ -13,9 +13,9 @@ export const dynamic = 'force-dynamic';
 export default async function AdminPage() {
   const session = await getSession();
 
-  // Hide admin panel from public/unauthorized access with 404
+  // If user is not authenticated as ADMIN, display the dedicated Admin Login portal
   if (!session || session.role !== 'ADMIN') {
-    notFound();
+    return <AdminLoginForm currentRole={session?.role} currentEmail={session?.email} />;
   }
 
   // Fetch metrics & operators

@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ReviewModerationQueue from '@/components/ReviewModerationQueue';
@@ -9,9 +9,8 @@ export const dynamic = 'force-dynamic';
 export default async function AdminReviewsPage() {
   const session = await getSession();
 
-  // Hide admin panel from public/unauthorized access with 404
   if (!session || session.role !== 'ADMIN') {
-    notFound();
+    redirect('/admin');
   }
 
   return (
