@@ -7,6 +7,20 @@ import { Star, MapPin, ChevronRight, Building2 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
+function formatDisplayTourTypes(raw?: string): string {
+  if (!raw) return 'Private & Group Safaris';
+  const trimmed = raw.trim();
+  if (
+    trimmed.startsWith('{') ||
+    trimmed.includes('talaNumber') ||
+    trimmed.includes('documentUrl') ||
+    trimmed.includes('issuingAuthority')
+  ) {
+    return 'Custom Private & Group Safaris';
+  }
+  return trimmed;
+}
+
 export default async function SafariOperatorsPage({ searchParams }: { searchParams: Promise<{ country?: string; rating?: string; office?: string; search?: string; travelers?: string; month?: string }> }) {
   const params = await searchParams;
   let operators = await getOperatorCards();
@@ -155,25 +169,33 @@ export default async function SafariOperatorsPage({ searchParams }: { searchPara
                           <div className="flex flex-wrap items-baseline gap-1.5">
                             <span className="text-[var(--ink-secondary)] font-medium">Offices In:</span>
                             <span className="flex gap-1.5 flex-wrap font-semibold">
-                              {op.officesIn.map((c: string) => (
-                                <Link key={c} href={`/safari-operators?office=${encodeURIComponent(c)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1">
-                                  <Building2 className="h-3 w-3" /> {c}
-                                </Link>
-                              ))}
+                              {op.officesIn && op.officesIn.length > 0 ? (
+                                op.officesIn.map((c: string) => (
+                                  <Link key={c} href={`/safari-operators?office=${encodeURIComponent(c)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1">
+                                    <Building2 className="h-3 w-3" /> {c}
+                                  </Link>
+                                ))
+                              ) : (
+                                <span className="text-[var(--ink-body)]">Direct Agency Operator</span>
+                              )}
                             </span>
                           </div>
                           <div>
-                            <span className="text-[var(--ink-secondary)] font-medium">Tour Types:</span>
-                            <span className="text-[var(--ink-body)]">{op.tourTypes}</span>
+                            <span className="text-[var(--ink-secondary)] font-medium">Tour Types:</span>{' '}
+                            <span className="text-[var(--ink-body)] font-medium">{formatDisplayTourTypes(op.tourTypes)}</span>
                           </div>
                           <div className="flex flex-wrap items-baseline gap-1.5">
                             <span className="text-[var(--ink-secondary)] font-medium">Destinations:</span>
                             <span className="flex gap-1.5 flex-wrap">
-                              {op.destinations.map((d: string) => (
-                                <Link key={d} href={`/african-safari-tours?country=${encodeURIComponent(d)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1 font-semibold">
-                                  <MapPin className="h-3 w-3" /> {d}
-                                </Link>
-                              ))}
+                              {op.destinations && op.destinations.length > 0 ? (
+                                op.destinations.map((d: string) => (
+                                  <Link key={d} href={`/african-safari-tours?country=${encodeURIComponent(d)}`} className="text-[var(--brand-ink)] hover:underline inline-flex items-center gap-1 font-semibold">
+                                    <MapPin className="h-3 w-3" /> {d}
+                                  </Link>
+                                ))
+                              ) : (
+                                <span className="text-[var(--ink-body)]">Custom Safari Destinations</span>
+                              )}
                             </span>
                           </div>
                         </div>
@@ -183,7 +205,7 @@ export default async function SafariOperatorsPage({ searchParams }: { searchPara
                             <Link href={`/operators/${op.slug}`} className="btn btn-primary btn-sm">
                               View Operator <ChevronRight className="w-3.5 h-3.5" />
                             </Link>
-                            <Link href={`/african-safari-tours?country=${encodeURIComponent(op.officesIn[0] || 'Tanzania')}`} className="btn btn-secondary btn-sm">
+                            <Link href={`/operators/${op.slug}#tours`} className="btn btn-secondary btn-sm">
                               All {op.toursCount} Tours <ChevronRight className="w-3.5 h-3.5" />
                             </Link>
                           </div>

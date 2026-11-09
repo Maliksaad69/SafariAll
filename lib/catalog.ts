@@ -74,24 +74,66 @@ export async function getOperatorCards(): Promise<SiteOperator[]> {
         tours: {
           where: { isPublished: true },
           orderBy: { minPriceUsd: 'desc' },
-          select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true },
+          select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true, tourType: true },
         },
       },
     });
     if (rows && rows.length > 0) {
       return rows.map((op) => {
         const perDay = op.tours.map((t) => t.minPriceUsd / Math.max(t.durationDays, 1));
-        const destinations = Array.from(new Set([op.countryOfOrigin, ...op.tours.map((t) => t.primaryCountry)]));
+
+        // Format clean, human-readable Tour Types — NEVER output raw TALA JSON!
+        let tourTypes = 'Tailor-Made Private & Group Safaris';
+        const distinctTourTypes = Array.from(new Set(op.tours.map((t) => t.tourType).filter(Boolean)));
+
+        if (distinctTourTypes.length > 0) {
+          const typeNames: Record<string, string> = {
+            PRIVATE: 'Private Safaris',
+            SHARED_GROUP: 'Group Safaris',
+            FLY_IN: 'Fly-in Safaris',
+            SELF_DRIVE: 'Self-Drive Safaris',
+          };
+          tourTypes = distinctTourTypes.map((tt) => typeNames[tt] || tt).join(', ');
+        } else if (
+          op.serviceSummary &&
+          !op.serviceSummary.trim().startsWith('{') &&
+          !op.serviceSummary.includes('talaNumber') &&
+          !op.serviceSummary.includes('documentUrl')
+        ) {
+          tourTypes = op.serviceSummary.trim();
+        } else if (op.priceTier) {
+          const tierNames: Record<string, string> = {
+            CAMPING: 'Budget Camping & Overland Safaris',
+            BUDGET: 'Budget Adventure Safaris',
+            MID_RANGE: 'Mid-Range Lodge & Tented Safaris',
+            LUXURY: 'Luxury Lodge & Fly-in Safaris',
+            SUPER_LUXURY: 'VIP Bespoke & Private Reserve Safaris',
+          };
+          tourTypes = tierNames[op.priceTier] || 'Tailor-Made African Safaris';
+        }
+
+        // Destinations: collect all unique operating countries from countryOfOrigin, officesIn, and tour countries
+        const rawDestinations = [
+          op.countryOfOrigin,
+          ...(Array.isArray(op.officesIn) ? op.officesIn : []),
+          ...op.tours.map((t) => t.primaryCountry),
+        ].filter((c): c is string => typeof c === 'string' && c.trim().length > 0);
+        const destinations = Array.from(new Set(rawDestinations));
+
+        const offices = Array.isArray(op.officesIn) && op.officesIn.length > 0
+          ? op.officesIn
+          : [op.countryOfOrigin].filter(Boolean);
+
         return {
           id: op.id,
           companyName: op.companyName,
           slug: op.slug,
           averageRating: op.averageRating,
           totalReviews: op.totalReviews,
-          officesIn: op.officesIn.length ? op.officesIn : [op.countryOfOrigin],
-          priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'On request',
-          tourTypes: op.serviceSummary ?? 'Private and group safaris',
-          destinations,
+          officesIn: offices.length ? offices : (destinations.length ? destinations : ['East Africa']),
+          priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'Custom quotes available',
+          tourTypes,
+          destinations: destinations.length ? destinations : offices,
           isVerified: op.isVerified,
           image: op.bannerUrl ?? '',
           logo: op.logoUrl ?? '',

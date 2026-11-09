@@ -51,12 +51,14 @@ export async function POST(request: Request) {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, '');
 
+        const operatorCountry = countryOfOrigin || country || 'Tanzania';
         operatorRecord = await tx.operator.create({
           data: {
             userId: user.id,
             companyName: companyName || `${firstName}'s Safari Company`,
             slug: `${slug}-${Math.floor(1000 + Math.random() * 9000)}`,
-            countryOfOrigin: countryOfOrigin || country || 'Tanzania',
+            countryOfOrigin: operatorCountry,
+            officesIn: [operatorCountry],
             isVerified: false, // Pending admin approval
           },
         });

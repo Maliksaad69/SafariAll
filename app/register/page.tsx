@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Mail, Lock, User, Building2, ArrowRight, AlertCircle, CheckCircle2, Award, Compass } from 'lucide-react';
+import { SAFARI_COUNTRY_LIST } from '@/lib/countries';
 
 function RegisterFormContent() {
   const router = useRouter();
@@ -215,24 +216,41 @@ function RegisterFormContent() {
 
           <div>
             <label htmlFor="reg-country" className="form-label">
-              {role === 'OPERATOR' ? 'Country of Operation' : 'Country of Residence'}
+              {role === 'OPERATOR' ? 'Country of Primary Operation' : 'Country of Residence'}
             </label>
-            <select
-              id="reg-country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="form-control"
-            >
-              <option value="Tanzania">Tanzania</option>
-              <option value="Kenya">Kenya</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Uganda">Uganda</option>
-              <option value="Botswana">Botswana</option>
-              <option value="Rwanda">Rwanda</option>
-              <option value="Namibia">Namibia</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United States">United States</option>
-            </select>
+            {role === 'OPERATOR' ? (
+              <select
+                id="reg-country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="form-control"
+              >
+                {SAFARI_COUNTRY_LIST.map((c) => (
+                  <option key={c.name} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                id="reg-country"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="form-control"
+              >
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Germany">Germany</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="France">France</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Other">Other</option>
+              </select>
+            )}
           </div>
         </div>
 
