@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { verifyPassword, createSession } from '@/lib/auth';
+import { verifyPassword, hashPassword, createSession } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
@@ -14,24 +14,67 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+    const normalizedEmail = email.toLowerCase().trim();
+    const envAdminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
+    const envAdminPassword = process.env.ADMIN_PASSWORD;
+
+    let user = await prisma.user.findUnique({
+      where: { email: normalizedEmail },
       include: { operator: true },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid email or password.' },
-        { status: 401 }
-      );
-    }
+    const isEnvAdminMatch = Boolean(
+      envAdminEmail &&
+      envAdminPassword &&
+      normalizedEmail === envAdminEmail &&
+      password === envAdminPassword
+    );
 
-    const isValid = await verifyPassword(password, user.passwordHash);
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid email or password.' },
-        { status: 401 }
-      );
+    if (isEnvAdminMatch) {
+      if (!user) {
+        // Provision the platform admin user if not present in the database
+        user = await prisma.user.create({
+          data: {
+            email: normalizedEmail,
+            passwordHash: await hashPassword(password),
+            firstName: 'System',
+            lastName: 'Admin',
+            role: 'ADMIN',
+            emailVerified: true,
+            country: 'Kenya',
+          },
+          include: { operator: true },
+        });
+      } else {
+        // Ensure user has ADMIN role and sync password hash if needed
+        const isValid = await verifyPassword(password, user.passwordHash);
+        if (user.role !== 'ADMIN' || !isValid) {
+          user = await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              role: 'ADMIN',
+              passwordHash: await hashPassword(password),
+              emailVerified: true,
+            },
+            include: { operator: true },
+          });
+        }
+      }
+    } else {
+      if (!user) {
+        return NextResponse.json(
+          { error: 'Invalid email or password.' },
+          { status: 401 }
+        );
+      }
+
+      const isValid = await verifyPassword(password, user.passwordHash);
+      if (!isValid) {
+        return NextResponse.json(
+          { error: 'Invalid email or password.' },
+          { status: 401 }
+        );
+      }
     }
 
     const sessionPayload = {

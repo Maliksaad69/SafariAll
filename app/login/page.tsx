@@ -14,11 +14,14 @@ const demoAccounts = {
   agency: [
     { label: 'Tour Operator (Kili Expeditions)', email: 'info@kiliexpeditions.co.tz', pass: 'OperatorPass123!' },
   ],
+  admin: [
+    { label: 'Platform Owner / Admin', email: 'admin@safariasili.com', pass: 'SafariAdmin2026!' },
+  ],
 };
 
 export default function LoginPage() {
   const router = useRouter();
-  const [tab, setTab] = useState<'customer' | 'agency'>('customer');
+  const [tab, setTab] = useState<'customer' | 'agency' | 'admin'>('customer');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -109,7 +112,9 @@ export default function LoginPage() {
               <p className="text-[11px] leading-relaxed text-[var(--dark-text-soft)]">
                 {tab === 'customer'
                   ? 'Customers browse tours, reserve trips, and track agency approvals.'
-                  : 'Agencies review reservation requests, approve bookings, and manage tour packages.'}
+                  : tab === 'agency'
+                  ? 'Agencies review reservation requests, approve bookings, and manage tour packages.'
+                  : 'Platform owners verify tour agency TALA licenses, moderate reviews, and inspect platform metrics.'}
               </p>
             </div>
 
@@ -133,7 +138,7 @@ export default function LoginPage() {
               </div>
 
               {/* Account type tabs */}
-              <div className="grid grid-cols-2 gap-1 rounded-xl bg-[var(--surface-sunk)] p-1">
+              <div className="grid grid-cols-3 gap-1 rounded-xl bg-[var(--surface-sunk)] p-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -142,9 +147,9 @@ export default function LoginPage() {
                     setPassword('');
                     setError('');
                   }}
-                  className={`rounded-lg px-3 py-2 text-xs font-bold transition ${tab === 'customer' ? 'bg-white text-[var(--ink)] shadow-sm' : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'}`}
+                  className={`rounded-lg px-2.5 py-2 text-xs font-bold transition text-center ${tab === 'customer' ? 'bg-white text-[var(--ink)] shadow-sm' : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'}`}
                 >
-                  Customer Login
+                  Traveler
                 </button>
                 <button
                   type="button"
@@ -154,9 +159,21 @@ export default function LoginPage() {
                     setPassword('');
                     setError('');
                   }}
-                  className={`rounded-lg px-3 py-2 text-xs font-bold transition ${tab === 'agency' ? 'bg-white text-[var(--ink)] shadow-sm' : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'}`}
+                  className={`rounded-lg px-2.5 py-2 text-xs font-bold transition text-center ${tab === 'agency' ? 'bg-white text-[var(--ink)] shadow-sm' : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'}`}
                 >
-                  Agency Login
+                  Agency
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTab('admin');
+                    setEmail('');
+                    setPassword('');
+                    setError('');
+                  }}
+                  className={`rounded-lg px-2.5 py-2 text-xs font-bold transition text-center ${tab === 'admin' ? 'bg-white text-[var(--ink)] shadow-sm' : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'}`}
+                >
+                  Admin
                 </button>
               </div>
 
