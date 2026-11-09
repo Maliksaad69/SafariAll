@@ -8,7 +8,7 @@ import AgencyReservationsTable from '@/components/AgencyReservationsTable';
 import AgencyToursTable from '@/components/AgencyToursTable';
 import AgencyFleetManager from '@/components/AgencyFleetManager';
 import { parseTalaData } from '@/lib/tala-verification';
-import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, Bus, FileText, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, Bus, FileText, AlertTriangle, CheckCircle2, Settings } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -214,6 +214,10 @@ export default async function OperatorPortalPage() {
             <Link href="/operator-portal/verification" className="btn btn-secondary">
               <ShieldCheck className="h-4 w-4" />
               <span>TALA License</span>
+            </Link>
+            <Link href="/operator-portal/settings" className="btn btn-secondary" title="Edit agency profile and settings">
+              <Settings className="h-4 w-4" />
+              <span>Settings</span>
             </Link>
             <Link href="/operator-portal/messages" className="btn btn-secondary relative" aria-label="Open Agency Messages Inbox">
               <Mail className="h-4 w-4" />

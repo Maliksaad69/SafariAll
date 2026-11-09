@@ -29,7 +29,15 @@ export default async function AdminPage() {
       select: {
         id: true,
         companyName: true,
+        slug: true,
         countryOfOrigin: true,
+        headquartersAddress: true,
+        yearEstablished: true,
+        priceTier: true,
+        overviewText: true,
+        officesIn: true,
+        logoUrl: true,
+        bannerUrl: true,
         registrationNumber: true,
         licenseDocumentUrl: true,
         isVerified: true,
@@ -40,10 +48,18 @@ export default async function AdminPage() {
         createdAt: true,
         user: {
           select: {
+            id: true,
             email: true,
             firstName: true,
             lastName: true,
             phone: true,
+          },
+        },
+        _count: {
+          select: {
+            tours: true,
+            vehicles: true,
+            reservations: true,
           },
         },
       },

@@ -24,13 +24,29 @@ import {
   Download,
   AlertCircle,
   RefreshCw,
+  Pencil,
+  Trash2,
+  Settings,
+  Image as ImageIcon,
+  Phone,
+  Tag,
+  Globe,
 } from 'lucide-react';
 import { parseTalaData, type TalaVerificationData } from '@/lib/tala-verification';
+import { SAFARI_COUNTRY_LIST } from '@/lib/countries';
 
 export interface OperatorRecord {
   id: string;
   companyName: string;
+  slug?: string;
   countryOfOrigin: string;
+  headquartersAddress?: string | null;
+  yearEstablished?: number | null;
+  priceTier?: string | null;
+  overviewText?: string | null;
+  officesIn?: string[];
+  logoUrl?: string | null;
+  bannerUrl?: string | null;
   registrationNumber: string | null;
   licenseDocumentUrl: string | null;
   isVerified: boolean;
@@ -40,11 +56,17 @@ export interface OperatorRecord {
   serviceSummary: string | null;
   createdAt?: string;
   user?: {
+    id?: string;
     email: string;
     firstName: string;
     lastName: string;
     phone?: string | null;
   } | null;
+  _count?: {
+    tours: number;
+    vehicles: number;
+    reservations: number;
+  };
 }
 
 export default function OperatorVerificationTable({ initialOperators }: { initialOperators: OperatorRecord[] }) {
@@ -54,6 +76,8 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
   
   // Modals state
   const [previewOperator, setPreviewOperator] = useState<OperatorRecord | null>(null);
+  const [editingOperator, setEditingOperator] = useState<OperatorRecord | null>(null);
+  const [deletingOperator, setDeletingOperator] = useState<OperatorRecord | null>(null);
   const [actionModal, setActionModal] = useState<{
     operator: OperatorRecord;
     action: 'APPROVE' | 'REJECT' | 'REVOKE';
@@ -447,12 +471,13 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
 
                       {/* Owner Actions */}
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1.5 flex-wrap">
                           {!op.isVerified ? (
                             <>
                               <button
                                 onClick={() => handleOpenActionModal(op, 'APPROVE')}
-                                className="px-3.5 py-1.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-deep)] text-white font-bold text-xs shadow-xs transition-all inline-flex items-center gap-1"
+                                className="px-3 py-1.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-deep)] text-white font-bold text-xs shadow-xs transition-all inline-flex items-center gap-1"
+                                title="Approve TALA license"
                               >
                                 <Check className="w-3.5 h-3.5" />
                                 <span>Approve</span>
@@ -461,7 +486,8 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
                               {hasDoc && (
                                 <button
                                   onClick={() => handleOpenActionModal(op, 'REJECT')}
-                                  className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition-all inline-flex items-center gap-1"
+                                  className="px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs transition-all inline-flex items-center gap-1"
+                                  title="Decline submission"
                                 >
                                   <X className="w-3.5 h-3.5" />
                                   <span>Decline</span>
@@ -472,10 +498,43 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
                             <button
                               onClick={() => handleOpenActionModal(op, 'REVOKE')}
                               className="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-bold text-xs transition-all inline-flex items-center gap-1"
+                              title="Revoke verified status"
                             >
                               <XCircle className="w-3.5 h-3.5" />
-                              <span>Revoke License</span>
+                              <span>Revoke</span>
                             </button>
+                          )}
+
+                          {/* Edit Agency Profile */}
+                          <button
+                            onClick={() => setEditingOperator(op)}
+                            className="px-2.5 py-1.5 rounded-xl bg-[#F7F6F1] hover:bg-[#EBE9DF] border border-black/10 text-[#193A38] font-bold text-xs transition-all inline-flex items-center gap-1 shadow-2xs"
+                            title="Edit any part of this agency profile"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-[#193A38]" />
+                            <span>Edit</span>
+                          </button>
+
+                          {/* Delete Agency */}
+                          <button
+                            onClick={() => setDeletingOperator(op)}
+                            className="px-2 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs transition-all inline-flex items-center gap-1 shadow-2xs"
+                            title="Delete this agency and all associated records"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+
+                          {/* Public Profile Link */}
+                          {op.slug && (
+                            <a
+                              href={`/operators/${op.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+                              title="View agency public profile"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
                           )}
                         </div>
                       </td>
@@ -712,6 +771,628 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
         </div>
       )}
 
+      {/* Admin Edit Agency Modal */}
+      {editingOperator && (
+        <AdminEditOperatorModal
+          operator={editingOperator}
+          onClose={() => setEditingOperator(null)}
+          onUpdated={(updated) => {
+            setOperators((prev) =>
+              prev.map((op) => (op.id === updated.id ? { ...op, ...updated } : op))
+            );
+            setEditingOperator(null);
+          }}
+        />
+      )}
+
+      {/* Admin Delete Agency Modal */}
+      {deletingOperator && (
+        <AdminDeleteOperatorModal
+          operator={deletingOperator}
+          onClose={() => setDeletingOperator(null)}
+          onDeleted={(deletedId) => {
+            setOperators((prev) => prev.filter((op) => op.id !== deletedId));
+            setDeletingOperator(null);
+          }}
+        />
+      )}
+
+    </div>
+  );
+}
+
+/**
+ * Admin Edit Operator Modal
+ * Allows website owner to modify ANY detail of a tour operator agency.
+ */
+function AdminEditOperatorModal({
+  operator,
+  onClose,
+  onUpdated,
+}: {
+  operator: OperatorRecord;
+  onClose: () => void;
+  onUpdated: (updated: OperatorRecord) => void;
+}) {
+  const [companyName, setCompanyName] = useState(operator.companyName || '');
+  const [slug, setSlug] = useState(operator.slug || '');
+  const [countryOfOrigin, setCountryOfOrigin] = useState(operator.countryOfOrigin || 'Tanzania');
+  const [headquartersAddress, setHeadquartersAddress] = useState(operator.headquartersAddress || '');
+  const [yearEstablished, setYearEstablished] = useState(
+    operator.yearEstablished ? String(operator.yearEstablished) : ''
+  );
+  const [priceTier, setPriceTier] = useState(operator.priceTier || 'MID_RANGE');
+  const [overviewText, setOverviewText] = useState(operator.overviewText || '');
+  const [officesIn, setOfficesIn] = useState<string[]>(operator.officesIn || []);
+  const [registrationNumber, setRegistrationNumber] = useState(operator.registrationNumber || '');
+  const [licenseDocumentUrl, setLicenseDocumentUrl] = useState(operator.licenseDocumentUrl || '');
+  const [isVerified, setIsVerified] = useState(operator.isVerified);
+  const [logoUrl, setLogoUrl] = useState(operator.logoUrl || '');
+  const [bannerUrl, setBannerUrl] = useState(operator.bannerUrl || '');
+
+  // Contact person
+  const [firstName, setFirstName] = useState(operator.user?.firstName || '');
+  const [lastName, setLastName] = useState(operator.user?.lastName || '');
+  const [email, setEmail] = useState(operator.user?.email || '');
+  const [phone, setPhone] = useState(operator.user?.phone || '');
+
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const toggleOffice = (cName: string) => {
+    setOfficesIn((prev) =>
+      prev.includes(cName) ? prev.filter((c) => c !== cName) : [...prev, cName]
+    );
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/admin/operators/${operator.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyName,
+          slug,
+          countryOfOrigin,
+          headquartersAddress,
+          yearEstablished,
+          priceTier,
+          overviewText,
+          officesIn,
+          registrationNumber,
+          licenseDocumentUrl,
+          isVerified,
+          logoUrl,
+          bannerUrl,
+          firstName,
+          lastName,
+          email,
+          phone,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update agency details.');
+      }
+
+      onUpdated(data.operator);
+    } catch (err: any) {
+      setError(err.message || 'Error updating agency.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="bg-white w-full max-w-4xl rounded-3xl shadow-2xl border border-black/10 overflow-hidden flex flex-col my-auto max-h-[92vh]">
+        {/* Header */}
+        <div className="p-6 border-b border-black/5 bg-[#F7F6F1] flex items-center justify-between gap-4 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[var(--brand)] text-white flex items-center justify-center font-bold shadow-xs">
+              <Pencil className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[var(--brand)] bg-[var(--brand-soft)] px-2 py-0.5 rounded-full">
+                  Admin Edit Mode
+                </span>
+                {operator.isVerified && (
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                    Verified
+                  </span>
+                )}
+              </div>
+              <h3 className="text-xl font-bold font-display text-[#193A38]">
+                Edit Agency: {operator.companyName}
+              </h3>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-xl hover:bg-gray-200/60 flex items-center justify-center text-gray-500 hover:text-black transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Form Body */}
+        <form onSubmit={handleSubmit} className="overflow-y-auto flex-1 p-6 sm:p-8 space-y-8 text-xs">
+          {error && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 font-semibold flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Section 1: Core Company Profile */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <Building2 className="w-4 h-4" />
+              <span>1. Agency Identity &amp; Classification</span>
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Company / Brand Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">URL Slug (Unique Public URL) *</label>
+                <input
+                  type="text"
+                  required
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-mono text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+                <p className="text-[10.5px] text-gray-500 font-mono">
+                  safarirequest.com/operators/{slug || '...'}
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Country of Origin *</label>
+                <select
+                  value={countryOfOrigin}
+                  onChange={(e) => setCountryOfOrigin(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                >
+                  {SAFARI_COUNTRY_LIST.map((c) => (
+                    <option key={c.name} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Year Established</label>
+                <input
+                  type="number"
+                  min="1950"
+                  max={new Date().getFullYear()}
+                  value={yearEstablished}
+                  onChange={(e) => setYearEstablished(e.target.value)}
+                  placeholder="e.g. 2014"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Price / Comfort Level</label>
+                <select
+                  value={priceTier}
+                  onChange={(e) => setPriceTier(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                >
+                  <option value="CAMPING">Camping / Backpacker</option>
+                  <option value="BUDGET">Budget Friendly</option>
+                  <option value="MID_RANGE">Mid-Range (Standard Lodge)</option>
+                  <option value="LUXURY">Luxury Tented &amp; Private Reserve</option>
+                  <option value="SUPER_LUXURY">Super Luxury / Bespoke VIP</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Headquarters Physical Address</label>
+                <input
+                  type="text"
+                  value={headquartersAddress}
+                  onChange={(e) => setHeadquartersAddress(e.target.value)}
+                  placeholder="e.g. Plot 14, Haile Selassie Rd, Arusha, Tanzania"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Operating Destinations */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <Globe className="w-4 h-4" />
+              <span>2. Operational Destinations ({officesIn.length} Selected)</span>
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 pt-1">
+              {SAFARI_COUNTRY_LIST.map((c) => {
+                const checked = officesIn.includes(c.name);
+                return (
+                  <label
+                    key={c.name}
+                    onClick={() => toggleOffice(c.name)}
+                    className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all select-none ${
+                      checked
+                        ? 'border-[var(--brand)] bg-[var(--brand-soft)] text-[#193A38] shadow-2xs'
+                        : 'border-black/10 bg-[#F7F6F1]/50 text-gray-700 hover:bg-[#F7F6F1]'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => {}}
+                      className="rounded text-[var(--brand)] focus:ring-0"
+                    />
+                    <span>{c.name}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section 3: Overview Story */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <FileText className="w-4 h-4" />
+              <span>3. Overview &amp; Marketing Story</span>
+            </h4>
+            <textarea
+              rows={4}
+              value={overviewText}
+              onChange={(e) => setOverviewText(e.target.value)}
+              placeholder="Describe the company's background, safari vehicles, guides, wildlife focus..."
+              className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+            />
+          </div>
+
+          {/* Section 4: Brand Media Assets */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <ImageIcon className="w-4 h-4" />
+              <span>4. Brand Media &amp; Imagery</span>
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="font-bold text-[#193A38]">Agency Logo Image URL</label>
+                <input
+                  type="url"
+                  value={logoUrl}
+                  onChange={(e) => setLogoUrl(e.target.value)}
+                  placeholder="https://images.unsplash.com/... or hosted CDN URL"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-mono text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+                {logoUrl && (
+                  <div className="mt-2 flex items-center gap-3 p-2 bg-[#F7F6F1] rounded-xl border border-black/5">
+                    <img
+                      src={logoUrl}
+                      alt="Logo Preview"
+                      className="w-12 h-12 rounded-lg object-cover border bg-white"
+                      onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
+                    />
+                    <span className="text-[11px] text-gray-500">Logo preview</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="font-bold text-[#193A38]">Banner / Hero Cover Image URL</label>
+                <input
+                  type="url"
+                  value={bannerUrl}
+                  onChange={(e) => setBannerUrl(e.target.value)}
+                  placeholder="https://images.unsplash.com/... or hosted CDN URL"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-mono text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+                {bannerUrl && (
+                  <div className="mt-2 p-1.5 bg-[#F7F6F1] rounded-xl border border-black/5">
+                    <img
+                      src={bannerUrl}
+                      alt="Banner Preview"
+                      className="w-full h-16 rounded-lg object-cover"
+                      onError={(e) => ((e.target as HTMLElement).style.display = 'none')}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: TALA Document & Trust */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <ShieldCheck className="w-4 h-4" />
+              <span>5. TALA Registration &amp; Verification Status</span>
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">TALA / Government Registration #</label>
+                <input
+                  type="text"
+                  value={registrationNumber}
+                  onChange={(e) => setRegistrationNumber(e.target.value)}
+                  placeholder="e.g. TALA/2026/0491 or MNRT/TR/9821"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-mono text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">License Certificate Document URL</label>
+                <input
+                  type="url"
+                  value={licenseDocumentUrl}
+                  onChange={(e) => setLicenseDocumentUrl(e.target.value)}
+                  placeholder="https://... PDF or JPEG doc URL"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-mono text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <label className="flex items-center gap-3 p-3.5 rounded-2xl border border-black/10 bg-[#F7F6F1] cursor-pointer hover:bg-[#EBE9DF]/60 transition-colors">
+              <input
+                type="checkbox"
+                checked={isVerified}
+                onChange={(e) => setIsVerified(e.target.checked)}
+                className="w-4 h-4 rounded text-[var(--brand)] focus:ring-0"
+              />
+              <div>
+                <span className="font-bold text-[#193A38] block text-xs">
+                  Mark this Operator as Official &ldquo;Verified Agency&rdquo;
+                </span>
+                <span className="text-[11px] text-gray-500 block">
+                  Enables the verified green badge across the entire platform.
+                </span>
+              </div>
+            </label>
+          </div>
+
+          {/* Section 6: Primary User Account */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-wider text-[var(--brand)] flex items-center gap-2 border-b border-black/5 pb-2">
+              <User className="w-4 h-4" />
+              <span>6. Primary Account Holder &amp; Login Contact</span>
+            </h4>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">First Name</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Last Name</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Login Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">Phone / WhatsApp</label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+255 7..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-medium text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Action Footer */}
+          <div className="pt-4 border-t border-black/5 flex items-center justify-end gap-3 sticky bottom-0 bg-white py-3">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+              className="px-5 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl text-xs font-bold bg-[var(--brand)] hover:bg-[var(--brand-deep)] text-white shadow-sm flex items-center gap-2 transition-all disabled:opacity-50"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving Changes...</span>
+                </>
+              ) : (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Save Agency Changes</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Admin Delete Operator Modal
+ * Confirmation dialog before permanently deleting an agency and cascading child records.
+ */
+function AdminDeleteOperatorModal({
+  operator,
+  onClose,
+  onDeleted,
+}: {
+  operator: OperatorRecord;
+  onClose: () => void;
+  onDeleted: (deletedId: string) => void;
+}) {
+  const [confirmText, setConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isConfirmed = confirmText.trim().toLowerCase() === operator.companyName.trim().toLowerCase();
+
+  const handleDelete = async () => {
+    if (!isConfirmed) return;
+    setDeleting(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/admin/operators/${operator.id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to delete agency.');
+      }
+      onDeleted(operator.id);
+    } catch (err: any) {
+      setError(err.message || 'Error deleting agency.');
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-black/10 overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b border-rose-100 bg-rose-50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center font-bold shadow-xs">
+              <Trash2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold font-display text-rose-950">
+                Permanently Delete Tour Agency
+              </h3>
+              <p className="text-xs text-rose-800">
+                Irreversible administrative deletion
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-lg hover:bg-rose-100 flex items-center justify-center text-rose-700"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-4 text-xs">
+          <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200 text-rose-950 space-y-1.5">
+            <p className="font-bold flex items-center gap-1.5">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>Warning: This action cannot be reversed!</span>
+            </p>
+            <p className="text-[11.5px] text-rose-900 leading-relaxed">
+              Deleting <strong>{operator.companyName}</strong> will permanently erase all associated safari packages, vehicle fleet listings, customer reservations, and review ratings from the database.
+            </p>
+          </div>
+
+          <div className="space-y-1 bg-[#F7F6F1] p-3.5 rounded-2xl border border-black/5 text-[#193A38]">
+            <p className="font-semibold text-xs">Agency Details:</p>
+            <p className="text-gray-600">Company: <strong className="text-black">{operator.companyName}</strong></p>
+            <p className="text-gray-600">Country: <strong className="text-black">{operator.countryOfOrigin}</strong></p>
+            {operator.user?.email && (
+              <p className="text-gray-600">Account: <strong className="text-black">{operator.user.email}</strong> (will be downgraded to Traveler)</p>
+            )}
+            {operator._count && (
+              <p className="text-gray-600">
+                Data impacted: <strong className="text-black">{operator._count.tours}</strong> tours, <strong className="text-black">{operator._count.vehicles}</strong> vehicles, <strong className="text-black">{operator._count.reservations}</strong> reservations
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="block font-bold text-[#193A38]">
+              Type &ldquo;<span className="text-rose-700 underline font-mono">{operator.companyName}</span>&rdquo; to confirm deletion:
+            </label>
+            <input
+              type="text"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder={operator.companyName}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-rose-300 bg-white font-mono text-xs text-[#193A38] focus:outline-none focus:ring-2 focus:ring-rose-500"
+            />
+          </div>
+
+          {error && (
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-5 border-t border-black/5 bg-[#F7F6F1] flex items-center justify-end gap-3">
+          <button
+            onClick={onClose}
+            disabled={deleting}
+            className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-200/50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={!isConfirmed || deleting}
+            className="px-5 py-2 rounded-xl text-white font-bold text-xs shadow-sm flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          >
+            {deleting ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Deleting Agency...</span>
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Permanently Delete Agency</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
