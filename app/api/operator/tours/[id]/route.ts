@@ -202,7 +202,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
 
 /**
  * DELETE /api/operator/tours/[id]
- * Delete a tour package if it has no active (PENDING or APPROVED) reservations.
+ * Delete a tour package and all related records (itineraries, destinations, media, slots, availability, reservations).
  */
 export async function DELETE(_req: Request, { params }: RouteContext) {
   const ctx = await getOperatorContext();
@@ -218,14 +218,10 @@ export async function DELETE(_req: Request, { params }: RouteContext) {
         OR: [{ id }, { slug: id }],
         ...(ctx.isAdmin ? {} : { operatorId: ctx.operatorId }),
       },
-      include: {
-        _count: {
-          select: {
-            reservations: {
-              where: { status: { in: ['PENDING', 'APPROVED'] } },
-            },
-          },
-        },
+      select: {
+        id: true,
+        title: true,
+        operatorId: true,
       },
     });
 
@@ -233,20 +229,86 @@ export async function DELETE(_req: Request, { params }: RouteContext) {
       return NextResponse.json({ error: 'Tour package not found.' }, { status: 404 });
     }
 
-    if (existingTour._count.reservations > 0) {
-      return NextResponse.json(
-        {
-          error: `Cannot delete "${existingTour.title}" because it has ${existingTour._count.reservations} active or upcoming reservation(s). You can toggle it to "Draft" to hide it from new bookings instead.`,
-        },
-        { status: 409 }
-      );
-    }
-
     const tourId = existingTour.id;
 
-    // Delete the tour package (itineraries, destinations, media, availability cascade delete via Prisma schema)
-    await prisma.tour.delete({
-      where: { id: tourId },
+    // Execute comprehensive cascading cleanup in a single transaction
+    await prisma.$transaction(async (tx) => {
+      // 1. Unlink inquiries referencing this tour
+      await tx.inquiry.updateMany({
+        where: { tourId },
+        data: { tourId: null, slotId: null },
+      });
+
+      // 2. Unlink reviews referencing this tour
+      await tx.review.updateMany({
+        where: { tourId },
+        data: { tourId: null },
+      });
+
+      // 3. Delete reservations and their message threads
+      const reservations = await tx.reservation.findMany({
+        where: { tourId },
+        select: { id: true },
+      });
+      const resIds = reservations.map((r) => r.id);
+      if (resIds.length > 0) {
+        const messages = await tx.reservationMessage.findMany({
+          where: { reservationId: { in: resIds } },
+          select: { id: true },
+        });
+        const msgIds = messages.map((m) => m.id);
+        if (msgIds.length > 0) {
+          await tx.messageAttachment.deleteMany({
+            where: { messageId: { in: msgIds } },
+          });
+          await tx.reservationMessage.deleteMany({
+            where: { id: { in: msgIds } },
+          });
+        }
+        await tx.reservation.deleteMany({
+          where: { id: { in: resIds } },
+        });
+      }
+
+      // 4. Delete slots and slot seat blocks
+      const slots = await tx.tourSlot.findMany({
+        where: { tourId },
+        select: { id: true },
+      });
+      const slotIds = slots.map((s) => s.id);
+      if (slotIds.length > 0) {
+        await tx.slotSeatBlock.deleteMany({
+          where: { slotId: { in: slotIds } },
+        });
+        await tx.tourSlot.deleteMany({
+          where: { id: { in: slotIds } },
+        });
+      }
+
+      // 5. Delete tour availability settings
+      await tx.tourAvailability.deleteMany({
+        where: { tourId },
+      });
+
+      // 6. Delete media files associated with the tour
+      await tx.media.deleteMany({
+        where: { tourId },
+      });
+
+      // 7. Delete destination junctions
+      await tx.tourDestination.deleteMany({
+        where: { tourId },
+      });
+
+      // 8. Delete itineraries
+      await tx.tourItinerary.deleteMany({
+        where: { tourId },
+      });
+
+      // 9. Finally delete the tour record itself
+      await tx.tour.delete({
+        where: { id: tourId },
+      });
     });
 
     notifyChange(`tour:${tourId}`, `operator:${existingTour.operatorId}`);

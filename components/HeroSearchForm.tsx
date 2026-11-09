@@ -44,7 +44,7 @@ export default function HeroSearchForm() {
   const countries = SAFARI_COUNTRIES;
 
   return (
-    <div className="animate-fade-up relative z-20 w-full max-w-[680px] mx-auto md:absolute md:bottom-4 md:left-1/2 md:-translate-x-1/2 md:w-[min(90vw,680px)] px-2 sm:px-2 md:px-0 mt-3 sm:mt-4 md:mt-0">
+    <div className="animate-fade-up relative z-20 w-full max-w-[680px] mx-auto md:absolute md:bottom-8 lg:bottom-12 md:left-1/2 md:-translate-x-1/2 md:w-[min(90vw,680px)] px-2 sm:px-2 md:px-0 mt-3 sm:mt-4 md:mt-0">
       <form
         onSubmit={handleSearch}
         className="glass flex flex-col gap-1.5 sm:gap-2 rounded-2xl md:rounded-full p-1.5 sm:p-2 md:flex-row md:items-center shadow-2xl border border-white/70 bg-white/92 md:bg-white/80 backdrop-blur-xl"

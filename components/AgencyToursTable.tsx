@@ -62,7 +62,7 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
   };
 
   const handleDelete = async (tour: TourItem) => {
-    if (!window.confirm(`Are you sure you want to permanently delete "${tour.title}"?`)) {
+    if (!window.confirm(`Are you sure you want to permanently delete "${tour.title}"? This action cannot be undone.`)) {
       return;
     }
 
@@ -79,7 +79,7 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
       if (!res.ok) throw new Error(data.error || 'Failed to delete tour package.');
 
       setTours((prev) => prev.filter((t) => t.id !== tour.id));
-      setSuccess(`Package "${tour.title}" has been deleted.`);
+      setSuccess(`Package "${tour.title}" has been permanently deleted.`);
       setTimeout(() => setSuccess(''), 4000);
       router.refresh();
     } catch (err: any) {
@@ -123,92 +123,169 @@ export default function AgencyToursTable({ initialTours }: { initialTours: TourI
       )}
 
       {tours.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th className="px-5 sm:px-6">Package</th>
-                <th className="px-4">Country</th>
-                <th className="px-4">Duration</th>
-                <th className="px-4">Price from</th>
-                <th className="px-4">Bookings</th>
-                <th className="px-4">Status</th>
-                <th className="px-4">Photos</th>
-                <th className="px-5 sm:px-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tours.map((tour) => (
-                <tr key={tour.id}>
-                  <td className="px-5 sm:px-6 font-semibold text-[var(--ink)] max-w-xs">
-                    <Link href={`/tours/${tour.slug}`} className="link hover:underline block truncate">
+        <>
+          {/* Mobile Card View */}
+          <div className="md:hidden divide-y divide-[var(--border-soft)]">
+            {tours.map((tour) => (
+              <div key={tour.id} className="p-4 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <Link href={`/tours/${tour.slug}`} className="font-bold text-sm text-[var(--ink)] hover:underline line-clamp-2">
                       {tour.title}
                     </Link>
-                  </td>
-                  <td className="px-4 whitespace-nowrap">{tour.primaryCountry}</td>
-                  <td className="px-4 whitespace-nowrap">{tour.durationDays} days</td>
-                  <td className="px-4 whitespace-nowrap font-semibold">
-                    ${tour.minPriceUsd.toLocaleString()}
-                  </td>
-                  <td className="px-4 whitespace-nowrap">{tour.reservationCount}</td>
-                  <td className="px-4 whitespace-nowrap">
+                    <div className="text-xs text-[var(--ink-secondary)] mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
+                      <span>{tour.primaryCountry}</span>
+                      <span>·</span>
+                      <span>{tour.durationDays} days</span>
+                      <span>·</span>
+                      <span className="font-bold text-[var(--ink)]">${tour.minPriceUsd.toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={busyId === `pub-${tour.id}`}
+                    onClick={() => togglePublish(tour)}
+                    className={`badge shrink-0 cursor-pointer transition-all hover:opacity-80 inline-flex items-center gap-1 ${
+                      tour.isPublished ? 'badge-success' : 'badge-neutral'
+                    }`}
+                  >
+                    {busyId === `pub-${tour.id}` ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : tour.isPublished ? (
+                      <Eye className="h-3 w-3" />
+                    ) : (
+                      <EyeOff className="h-3 w-3" />
+                    )}
+                    {tour.isPublished ? 'Live' : 'Draft'}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-[var(--border-soft)] text-xs">
+                  <Link
+                    href={`/operator-portal/tours/${tour.id}/images`}
+                    className="link inline-flex items-center gap-1 font-semibold"
+                  >
+                    <ImageIcon className="h-3.5 w-3.5" />
+                    {tour.mediaCount > 0 ? `Photos (${tour.mediaCount})` : 'Upload Photos'}
+                  </Link>
+
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/operator-portal/tours/${tour.id}/edit`}
+                      className="btn btn-secondary btn-sm inline-flex items-center gap-1 text-xs px-2.5 py-1"
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                      Edit
+                    </Link>
                     <button
                       type="button"
-                      disabled={busyId === `pub-${tour.id}`}
-                      onClick={() => togglePublish(tour)}
-                      className={`badge cursor-pointer transition-all hover:opacity-80 inline-flex items-center gap-1 ${
-                        tour.isPublished ? 'badge-success' : 'badge-neutral'
-                      }`}
-                      title="Click to toggle Live/Draft"
+                      onClick={() => handleDelete(tour)}
+                      disabled={busyId === `del-${tour.id}`}
+                      className="btn btn-danger btn-sm inline-flex items-center gap-1 text-xs px-2.5 py-1 cursor-pointer"
+                      title="Permanently Delete Package"
                     >
-                      {busyId === `pub-${tour.id}` ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      ) : tour.isPublished ? (
-                        <Eye className="h-3 w-3" />
+                      {busyId === `del-${tour.id}` ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
                       ) : (
-                        <EyeOff className="h-3 w-3" />
+                        <Trash2 className="h-3.5 w-3.5" />
                       )}
-                      {tour.isPublished ? 'Live' : 'Draft'}
+                      <span>Delete</span>
                     </button>
-                  </td>
-                  <td className="px-4 whitespace-nowrap">
-                    <Link
-                      href={`/operator-portal/tours/${tour.id}/images`}
-                      className="link inline-flex items-center gap-1.5 text-xs font-semibold"
-                    >
-                      <ImageIcon className="h-3.5 w-3.5" />
-                      {tour.mediaCount > 0 ? `Photos (${tour.mediaCount})` : 'Upload'}
-                    </Link>
-                  </td>
-                  <td className="px-5 sm:px-6 whitespace-nowrap text-right">
-                    <div className="inline-flex items-center gap-2">
-                      <Link
-                        href={`/operator-portal/tours/${tour.id}/edit`}
-                        className="btn btn-secondary btn-sm inline-flex items-center gap-1 text-xs"
-                      >
-                        <Edit className="h-3.5 w-3.5" />
-                        Edit
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th className="px-5 sm:px-6">Package</th>
+                  <th className="px-4">Country</th>
+                  <th className="px-4">Duration</th>
+                  <th className="px-4">Price from</th>
+                  <th className="px-4">Bookings</th>
+                  <th className="px-4">Status</th>
+                  <th className="px-4">Photos</th>
+                  <th className="px-5 sm:px-6 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tours.map((tour) => (
+                  <tr key={tour.id}>
+                    <td className="px-5 sm:px-6 font-semibold text-[var(--ink)] max-w-xs">
+                      <Link href={`/tours/${tour.slug}`} className="link hover:underline block truncate">
+                        {tour.title}
                       </Link>
+                    </td>
+                    <td className="px-4 whitespace-nowrap">{tour.primaryCountry}</td>
+                    <td className="px-4 whitespace-nowrap">{tour.durationDays} days</td>
+                    <td className="px-4 whitespace-nowrap font-semibold">
+                      ${tour.minPriceUsd.toLocaleString()}
+                    </td>
+                    <td className="px-4 whitespace-nowrap">{tour.reservationCount}</td>
+                    <td className="px-4 whitespace-nowrap">
                       <button
                         type="button"
-                        onClick={() => handleDelete(tour)}
-                        disabled={busyId === `del-${tour.id}`}
-                        className="btn btn-danger btn-sm p-1.5 text-xs"
-                        title="Delete Package"
+                        disabled={busyId === `pub-${tour.id}`}
+                        onClick={() => togglePublish(tour)}
+                        className={`badge cursor-pointer transition-all hover:opacity-80 inline-flex items-center gap-1 ${
+                          tour.isPublished ? 'badge-success' : 'badge-neutral'
+                        }`}
+                        title="Click to toggle Live/Draft"
                       >
-                        {busyId === `del-${tour.id}` ? (
-                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        {busyId === `pub-${tour.id}` ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : tour.isPublished ? (
+                          <Eye className="h-3 w-3" />
                         ) : (
-                          <Trash2 className="h-3.5 w-3.5" />
+                          <EyeOff className="h-3 w-3" />
                         )}
+                        {tour.isPublished ? 'Live' : 'Draft'}
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </td>
+                    <td className="px-4 whitespace-nowrap">
+                      <Link
+                        href={`/operator-portal/tours/${tour.id}/images`}
+                        className="link inline-flex items-center gap-1.5 text-xs font-semibold"
+                      >
+                        <ImageIcon className="h-3.5 w-3.5" />
+                        {tour.mediaCount > 0 ? `Photos (${tour.mediaCount})` : 'Upload'}
+                      </Link>
+                    </td>
+                    <td className="px-5 sm:px-6 whitespace-nowrap text-right">
+                      <div className="inline-flex items-center gap-2">
+                        <Link
+                          href={`/operator-portal/tours/${tour.id}/edit`}
+                          className="btn btn-secondary btn-sm inline-flex items-center gap-1 text-xs"
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                          Edit
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(tour)}
+                          disabled={busyId === `del-${tour.id}`}
+                          className="btn btn-danger btn-sm inline-flex items-center gap-1 px-2.5 py-1 text-xs cursor-pointer"
+                          title="Permanently Delete Package"
+                        >
+                          {busyId === `del-${tour.id}` ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-3.5 w-3.5" />
+                          )}
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       ) : (
         <div className="px-6 py-12 text-center">
           <p className="text-sm font-semibold text-[var(--ink)]">No packages published yet</p>

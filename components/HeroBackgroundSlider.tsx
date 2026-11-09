@@ -108,7 +108,7 @@ export default function HeroBackgroundSlider({
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[560px] sm:min-h-[500px] md:min-h-[460px] md:h-[460px]',
+  minHeightClass = 'min-h-[620px] sm:min-h-[580px] md:min-h-[580px] md:h-[580px] lg:min-h-[640px] lg:h-[640px] xl:min-h-[680px] xl:h-[680px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -189,14 +189,14 @@ export default function HeroBackgroundSlider({
       </div>
 
       {/* ── Changing Text Hero Foreground ── */}
-      <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-24 pt-1 sm:pt-4 md:pt-0">
+      <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-28 lg:pb-36 pt-2 sm:pt-6 md:pt-0">
         <div
           key={currentIndex}
           className="animate-hero-text max-w-3xl text-center text-white"
         >
           {/* Animated Highlight Badge with Orange Blink */}
           {currentSlide.badge && (
-            <span className="mb-1.5 sm:mb-2.5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
+            <span className="mb-2 sm:mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 py-1 text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF7A00]" />
@@ -206,7 +206,7 @@ export default function HeroBackgroundSlider({
           )}
 
           {/* Dynamic Headline with Vibrant Accent */}
-          <h1 className="text-[21px] sm:text-[30px] md:text-[38px] lg:text-[42px] font-bold leading-[1.14] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
+          <h1 className="text-[23px] sm:text-[32px] md:text-[42px] lg:text-[48px] xl:text-[52px] font-bold leading-[1.12] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
             {currentSlide.title}{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFDF5] via-[#E4DBB4] to-[#C9B98A] drop-shadow-[0_2px_12px_rgba(25,58,56,0.5)]">
               {currentSlide.titleHighlight}
@@ -215,7 +215,7 @@ export default function HeroBackgroundSlider({
 
           {/* Dynamic Subtitle */}
           {currentSlide.subtitle && (
-            <p className="mx-auto mt-1 sm:mt-2 max-w-xl text-[11.5px] sm:text-sm md:text-base font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
+            <p className="mx-auto mt-2 sm:mt-3 max-w-xl text-[12px] sm:text-sm md:text-base font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
               {currentSlide.subtitle}
             </p>
           )}

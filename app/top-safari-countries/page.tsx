@@ -51,7 +51,7 @@ export default async function TopSafariCountriesPage() {
 
         {/* Hero Banner */}
         <HeroBackgroundSlider
-          minHeightClass="min-h-[340px] md:h-[380px]"
+          minHeightClass="min-h-[420px] sm:min-h-[400px] md:min-h-[460px] md:h-[460px] lg:min-h-[500px] lg:h-[500px]"
           className="border-b border-[var(--dark-border)]"
         >
           <div className="relative max-w-[1230px] mx-auto px-4 py-12 md:py-16 flex flex-col justify-center h-full">

@@ -119,7 +119,7 @@ export default function ParkDetailView({
         <HeroBackgroundSlider
           slides={parkHeroSlides}
           autoPlayInterval={3000}
-          minHeightClass="min-h-[460px] md:min-h-[500px]"
+          minHeightClass="min-h-[520px] sm:min-h-[500px] md:min-h-[560px] lg:min-h-[600px]"
           className="border-b border-[var(--dark-border)]"
         >
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 flex flex-col justify-center h-full">

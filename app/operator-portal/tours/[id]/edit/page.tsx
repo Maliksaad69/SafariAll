@@ -207,7 +207,7 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(`Are you sure you want to permanently delete "${title}"? This cannot be undone.`)) {
+    if (!window.confirm(`Are you sure you want to permanently delete "${title || 'this package'}"? This action cannot be undone.`)) {
       return;
     }
 
@@ -368,69 +368,71 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
                     onChange={(e) => setPrimaryCountry(e.target.value)}
                     className="form-control"
                   >
-                    <option value="Tanzania">Tanzania</option>
-                    <option value="Kenya">Kenya</option>
                     <option value="Botswana">Botswana</option>
-                    <option value="Uganda">Uganda</option>
-                    <option value="South Africa">South Africa</option>
+                    <option value="Ethiopia">Ethiopia</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Madagascar">Madagascar</option>
+                    <option value="Malawi">Malawi</option>
+                    <option value="Mozambique">Mozambique</option>
                     <option value="Namibia">Namibia</option>
-                    <option value="Zimbabwe">Zimbabwe</option>
-                    <option value="Zambia">Zambia</option>
                     <option value="Rwanda">Rwanda</option>
-                  <option value="Namibia">Namibia</option>
-                  <option value="Zambia">Zambia</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Tanzania">Tanzania</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Zambia">Zambia</option>
+                    <option value="Zimbabwe">Zimbabwe</option>
                   </select>
                 </div>
-              {/* National Parks & Game Reserves Multi-Select */}
-              <div className="md:col-span-2">
-                <label className="form-label flex items-center justify-between">
-                  <span>National Parks &amp; Reserves Visited</span>
-                  <span className="text-xs text-[var(--ink-secondary)] font-normal">
-                    Check the parks included in this safari itinerary
-                  </span>
-                </label>
-                {loadingParks ? (
-                  <div className="py-2.5 text-xs text-[var(--ink-secondary)] flex items-center gap-2">
-                    <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-[var(--brand)] border-t-transparent rounded-full" />
-                    Loading parks for {primaryCountry}...
-                  </div>
-                ) : availableParks.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-3 bg-white/60 border border-[var(--border)] rounded-xl max-h-52 overflow-y-auto">
-                    {availableParks.map((park) => {
-                      const checked = selectedParkIds.includes(park.id);
-                      return (
-                        <label
-                          key={park.id}
-                          className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer border text-xs font-semibold transition-all ${
-                            checked
-                              ? 'bg-[var(--brand-deep)] text-white border-[var(--brand-deep)] shadow-xs'
-                              : 'bg-white hover:bg-[var(--canvas)] border-[var(--border-soft)] text-[var(--ink)]'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => togglePark(park.id)}
-                            className="sr-only"
-                          />
-                          <span
-                            className={`w-3.5 h-3.5 rounded flex items-center justify-center border text-[9px] ${
-                              checked ? 'bg-white text-[var(--brand-deep)] font-extrabold' : 'border-[var(--border)] bg-white'
+                {/* National Parks & Game Reserves Multi-Select */}
+                <div className="md:col-span-2">
+                  <label className="form-label flex items-center justify-between">
+                    <span>National Parks &amp; Reserves Visited</span>
+                    <span className="text-xs text-[var(--ink-secondary)] font-normal">
+                      Check the parks included in this safari itinerary
+                    </span>
+                  </label>
+                  {loadingParks ? (
+                    <div className="py-2.5 text-xs text-[var(--ink-secondary)] flex items-center gap-2">
+                      <span className="animate-spin inline-block w-3.5 h-3.5 border-2 border-[var(--brand)] border-t-transparent rounded-full" />
+                      Loading parks for {primaryCountry}...
+                    </div>
+                  ) : availableParks.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-3 bg-white/60 border border-[var(--border)] rounded-xl max-h-52 overflow-y-auto">
+                      {availableParks.map((park) => {
+                        const checked = selectedParkIds.includes(park.id);
+                        return (
+                          <label
+                            key={park.id}
+                            className={`flex items-center gap-2.5 p-2 rounded-lg cursor-pointer border text-xs font-semibold transition-all ${
+                              checked
+                                ? 'bg-[var(--brand-deep)] text-white border-[var(--brand-deep)] shadow-xs'
+                                : 'bg-white hover:bg-[var(--canvas)] border-[var(--border-soft)] text-[var(--ink)]'
                             }`}
                           >
-                            {checked ? '✓' : ''}
-                          </span>
-                          <span className="truncate">{park.name}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p className="text-xs text-[var(--ink-secondary)] italic p-2">
-                    No specific parks cataloged for {primaryCountry} yet. Your package will still be listed under {primaryCountry}.
-                  </p>
-                )}
-              </div>
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => togglePark(park.id)}
+                              className="sr-only"
+                            />
+                            <span
+                              className={`w-3.5 h-3.5 rounded flex items-center justify-center border text-[9px] ${
+                                checked ? 'bg-white text-[var(--brand-deep)] font-extrabold' : 'border-[var(--border)] bg-white'
+                              }`}
+                            >
+                              {checked ? '✓' : ''}
+                            </span>
+                            <span className="truncate">{park.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[var(--ink-secondary)] italic p-2">
+                      No specific parks cataloged for {primaryCountry} yet. Your package will still be listed under {primaryCountry}.
+                    </p>
+                  )}
+                </div>
                 <div>
                   <label className="form-label" htmlFor="startLoc">Start Location</label>
                   <input
@@ -673,19 +675,52 @@ export default function EditTourPage({ params }: { params: Promise<{ id: string 
             </div>
           </section>
 
+          {/* Danger Zone: Permanently Delete Tour Package */}
+          <section className="rounded-2xl border border-red-200 bg-red-50/60 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-red-950 font-display">Delete Safari Package</h3>
+                <p className="text-xs text-red-800/80 mt-1 max-w-xl leading-relaxed">
+                  Permanently delete &ldquo;{title || 'this package'}&rdquo; and all of its day-by-day itineraries, departure slots, and media links. This action cannot be undone.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="btn btn-danger btn-sm shrink-0 inline-flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+              >
+                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                {deleting ? 'Deleting Package...' : 'Delete Safari Package'}
+              </button>
+            </div>
+          </section>
+
           {/* Sticky save bar */}
           <div className="sticky bottom-4 z-20 surface-card p-4 flex items-center justify-between gap-4 border border-[var(--border)] shadow-xl">
-            <Link
-              href="/operator-portal"
-              className="btn btn-secondary text-xs"
-            >
-              Cancel
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/operator-portal"
+                className="btn btn-secondary text-xs"
+              >
+                Cancel
+              </Link>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="btn btn-danger btn-sm text-xs inline-flex items-center gap-1 cursor-pointer"
+                title="Permanently delete this package"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>Delete</span>
+              </button>
+            </div>
             <div className="flex items-center gap-3">
               <button
                 type="submit"
                 disabled={saving}
-                className="btn btn-primary inline-flex items-center gap-2"
+                className="btn btn-primary inline-flex items-center gap-2 cursor-pointer"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {saving ? 'Saving Changes...' : 'Save Changes'}
