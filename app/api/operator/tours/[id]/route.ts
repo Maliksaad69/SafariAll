@@ -270,14 +270,14 @@ export async function DELETE(_req: Request, { params }: RouteContext) {
         });
       }
 
-      // 4. Delete slots and slot seat blocks
+      // 4. Delete slots and slot vehicle assignments
       const slots = await tx.tourSlot.findMany({
         where: { tourId },
         select: { id: true },
       });
       const slotIds = slots.map((s) => s.id);
       if (slotIds.length > 0) {
-        await tx.slotSeatBlock.deleteMany({
+        await tx.slotVehicle.deleteMany({
           where: { slotId: { in: slotIds } },
         });
         await tx.tourSlot.deleteMany({
@@ -291,7 +291,7 @@ export async function DELETE(_req: Request, { params }: RouteContext) {
       });
 
       // 6. Delete media files associated with the tour
-      await tx.media.deleteMany({
+      await tx.mediaAsset.deleteMany({
         where: { tourId },
       });
 

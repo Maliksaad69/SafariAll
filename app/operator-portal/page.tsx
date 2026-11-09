@@ -7,7 +7,8 @@ import prisma from '@/lib/prisma';
 import AgencyReservationsTable from '@/components/AgencyReservationsTable';
 import AgencyToursTable from '@/components/AgencyToursTable';
 import AgencyFleetManager from '@/components/AgencyFleetManager';
-import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, Bus } from 'lucide-react';
+import { parseTalaData } from '@/lib/tala-verification';
+import { PlusCircle, ShieldCheck, Clock, MapPin, ArrowRight, CalendarDays, Users, Building2, Mail, TrendingUp, Bus, FileText, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -173,6 +174,13 @@ export default async function OperatorPortalPage() {
     { label: 'Live packages', value: String(operator?.tours.length ?? 0), icon: MapPin, tint: 'text-[var(--ink-secondary)] bg-[var(--surface-sunk)]' },
   ];
 
+  const talaData = parseTalaData(
+    operator?.serviceSummary,
+    operator?.registrationNumber,
+    operator?.licenseDocumentUrl,
+    operator?.isVerified
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--surface-page)] text-[var(--ink-body)]">
       <Navbar />
@@ -191,16 +199,22 @@ export default async function OperatorPortalPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm ${
+            <Link
+              href="/operator-portal/verification"
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-md shadow-sm transition-all hover:scale-105 ${
                 operator?.isVerified
                   ? 'bg-emerald-500/25 text-emerald-100 border-emerald-400/50'
                   : 'bg-amber-500/25 text-amber-100 border-amber-400/50'
               }`}
+              title="Manage Agency TALA License & Verification"
             >
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>{operator?.isVerified ? 'Verified Agency' : 'Verification Pending'}</span>
-            </span>
+            </Link>
+            <Link href="/operator-portal/verification" className="btn btn-secondary">
+              <ShieldCheck className="h-4 w-4" />
+              <span>TALA License</span>
+            </Link>
             <Link href="/operator-portal/messages" className="btn btn-secondary relative" aria-label="Open Agency Messages Inbox">
               <Mail className="h-4 w-4" />
               <span>Inbox</span>
@@ -224,6 +238,69 @@ export default async function OperatorPortalPage() {
             </Link>
           </div>
         </div>
+
+        {/* Verification Status Alert Banner */}
+        {!operator?.isVerified && (
+          <div
+            className={`rounded-2xl border p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+              talaData.status === 'REJECTED'
+                ? 'border-rose-300 bg-rose-50/95 text-rose-950'
+                : talaData.status === 'PENDING'
+                ? 'border-amber-300 bg-amber-50/95 text-amber-950'
+                : 'border-[#193A38]/15 bg-[#F7F6F1] text-[#193A38]'
+            }`}
+          >
+            <div className="flex items-start gap-3.5">
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold text-white shadow-xs ${
+                  talaData.status === 'REJECTED'
+                    ? 'bg-rose-600'
+                    : talaData.status === 'PENDING'
+                    ? 'bg-amber-500'
+                    : 'bg-[#193A38]'
+                }`}
+              >
+                {talaData.status === 'REJECTED' ? (
+                  <AlertTriangle className="w-5 h-5" />
+                ) : talaData.status === 'PENDING' ? (
+                  <Clock className="w-5 h-5" />
+                ) : (
+                  <ShieldCheck className="w-5 h-5" />
+                )}
+              </div>
+              <div>
+                <h4 className="font-bold text-sm">
+                  {talaData.status === 'REJECTED'
+                    ? 'TALA Verification Requires Revision'
+                    : talaData.status === 'PENDING'
+                    ? 'TALA Document Under Review by Platform Owner'
+                    : 'Submit TALA License to Unlock "Verified Agency" Status'}
+                </h4>
+                <p className="text-xs mt-0.5 font-medium opacity-90 max-w-2xl">
+                  {talaData.status === 'REJECTED'
+                    ? `The website owner requested updates: "${talaData.reviewNotes || 'Document invalid or illegible'}". Please upload a revised certificate.`
+                    : talaData.status === 'PENDING'
+                    ? `Your TALA license (${talaData.talaNumber || 'Submitted'}) is awaiting manual verification by the platform owner.`
+                    : 'International safari travelers prefer verified agencies. Upload your official Tourism Agency Licensing Authority document to obtain your verification badge.'}
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/operator-portal/verification"
+              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs inline-flex items-center gap-1.5 ${
+                talaData.status === 'REJECTED'
+                  ? 'bg-rose-600 hover:bg-rose-700 text-white'
+                  : talaData.status === 'PENDING'
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                  : 'bg-[#193A38] hover:bg-[#214446] text-white'
+              }`}
+            >
+              <span>{talaData.status === 'REJECTED' ? 'Resubmit TALA License' : talaData.status === 'PENDING' ? 'View Submission' : 'Upload TALA License'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
