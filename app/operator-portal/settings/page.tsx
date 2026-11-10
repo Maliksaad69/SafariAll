@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import OperatorAgencySettingsView from '@/components/OperatorAgencySettingsView';
+import { parseNameRequest } from '@/lib/name-requests';
 import { ChevronRight, Settings, ArrowLeft } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -118,7 +119,10 @@ export default async function OperatorAgencySettingsPage() {
         </div>
 
         {/* Agency Settings Editor */}
-        <OperatorAgencySettingsView initialOperator={operator} />
+        <OperatorAgencySettingsView
+          initialOperator={operator}
+          initialNameRequest={parseNameRequest(operator.serviceSummary)}
+        />
       </main>
 
       <Footer />

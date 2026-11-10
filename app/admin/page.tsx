@@ -6,6 +6,7 @@ import prisma from '@/lib/prisma';
 import OperatorVerificationTable from '@/components/OperatorVerificationTable';
 import AdminLoginForm from '@/components/AdminLoginForm';
 import { parseTalaData } from '@/lib/tala-verification';
+import { parseNameRequest } from '@/lib/name-requests';
 import { ShieldCheck, Users, Building2, MapPin, Award, Clock, MessageSquare, CheckCircle2 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -66,12 +67,18 @@ export default async function AdminPage() {
     }),
   ]);
 
-  // Compute pending verifications
-  const pendingCount = operators.filter((op) => {
-    if (op.isVerified) return false;
-    const tala = parseTalaData(op.serviceSummary, op.registrationNumber, op.licenseDocumentUrl, op.isVerified);
-    return tala.status === 'PENDING';
-  }).length;
+  // Compute pending verifications & name change requests
+  let pendingCount = 0;
+  let pendingNameCount = 0;
+
+  for (const op of operators) {
+    if (!op.isVerified) {
+      const tala = parseTalaData(op.serviceSummary, op.registrationNumber, op.licenseDocumentUrl, op.isVerified);
+      if (tala.status === 'PENDING') pendingCount++;
+    }
+    const nr = parseNameRequest(op.serviceSummary);
+    if (nr && nr.status === 'PENDING') pendingNameCount++;
+  }
 
   const verifiedCount = operators.filter((op) => op.isVerified).length;
 
@@ -115,7 +122,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Section Navigation Tabs */}
-        <div className="flex items-center gap-3 border-b border-black/10 pb-3">
+        <div className="flex items-center gap-3 border-b border-black/10 pb-3 flex-wrap">
           <Link
             href="/admin"
             className="px-4 py-2 rounded-xl text-xs font-bold bg-[var(--brand)] text-white shadow-sm flex items-center gap-2"
@@ -130,6 +137,19 @@ export default async function AdminPage() {
           </Link>
 
           <Link
+            href="/admin/name-requests"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#344C49] hover:bg-[#F7F6F1] border border-black/5 shadow-2xs flex items-center gap-2"
+          >
+            <Building2 className="w-4 h-4 text-[var(--brand)]" />
+            <span>Name Change Requests</span>
+            {pendingNameCount > 0 && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-400 text-amber-950 font-black animate-pulse">
+                {pendingNameCount} new
+              </span>
+            )}
+          </Link>
+
+          <Link
             href="/admin/reviews"
             className="px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#344C49] hover:bg-[#F7F6F1] border border-black/5 shadow-2xs flex items-center gap-2"
           >
@@ -137,6 +157,31 @@ export default async function AdminPage() {
             <span>Customer Review Moderation</span>
           </Link>
         </div>
+
+        {/* Pending Name Requests Alert Banner */}
+        {pendingNameCount > 0 && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-amber-950">
+                  {pendingNameCount} Agency Name Change {pendingNameCount === 1 ? 'Request' : 'Requests'} Pending Your Approval
+                </h4>
+                <p className="text-xs text-amber-800 mt-0.5">
+                  Operators have requested legal name rebrands. As website owner, only you can approve or decline these changes.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/admin/name-requests"
+              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-xs shrink-0 transition-colors"
+            >
+              Review Renames
+            </Link>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">

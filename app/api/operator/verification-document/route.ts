@@ -179,7 +179,7 @@ export async function POST(req: Request) {
       reviewNotes: operatorNotes ? `Operator remarks: ${operatorNotes}` : prevTalaData.reviewNotes,
     };
 
-    const serialized = serializeTalaData(updatedTalaData);
+    const serialized = serializeTalaData(updatedTalaData, operator.serviceSummary);
 
     const updatedOperator = await prisma.operator.update({
       where: { id: operator.id },

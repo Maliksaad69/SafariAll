@@ -89,9 +89,23 @@ export async function PATCH(req: Request) {
         });
       }
 
-      // 2. Update operator profile
+      // 2. Prevent unauthorized company name change for operators
+      if (body.companyName !== undefined && body.companyName.trim() !== operator.companyName.trim()) {
+        if (session.role !== 'ADMIN') {
+          return NextResponse.json(
+            {
+              error: 'Direct company name modification is restricted. Please submit a Name Change Request from your Agency Settings page for admin review and approval.',
+            },
+            { status: 403 }
+          );
+        }
+      }
+
+      // 3. Update operator profile
       const dataToUpdate: any = {};
-      if (body.companyName !== undefined) dataToUpdate.companyName = body.companyName.trim();
+      if (session.role === 'ADMIN' && body.companyName !== undefined) {
+        dataToUpdate.companyName = body.companyName.trim();
+      }
       if (body.slug !== undefined) dataToUpdate.slug = body.slug.trim().toLowerCase();
       if (body.countryOfOrigin !== undefined) dataToUpdate.countryOfOrigin = body.countryOfOrigin.trim();
       if (body.headquartersAddress !== undefined) dataToUpdate.headquartersAddress = body.headquartersAddress?.trim() || null;

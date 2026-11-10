@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       reviewedBy: session.name || 'Website Owner',
     };
 
-    const serializedSummary = serializeTalaData(updatedTalaData);
+    const serializedSummary = serializeTalaData(updatedTalaData, operator.serviceSummary);
 
     const updatedOperator = await prisma.operator.update({
       where: { id: operatorId },

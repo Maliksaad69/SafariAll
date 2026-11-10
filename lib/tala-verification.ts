@@ -64,8 +64,25 @@ export function parseTalaData(
 }
 
 /**
- * Serializes TalaVerificationData into a JSON string suitable for storing in serviceSummary.
+ * Serializes TalaVerificationData into a JSON string suitable for storing in serviceSummary,
+ * while preserving any nameRequest or other governance fields.
  */
-export function serializeTalaData(data: TalaVerificationData): string {
-  return JSON.stringify(data);
+export function serializeTalaData(data: TalaVerificationData, existingSummary?: string | null): string {
+  let existingObj: Record<string, any> = {};
+  if (existingSummary) {
+    try {
+      const parsed = JSON.parse(existingSummary);
+      if (typeof parsed === 'object' && parsed !== null) {
+        existingObj = parsed;
+      }
+    } catch {
+      // not JSON
+    }
+  }
+
+  return JSON.stringify({
+    ...existingObj,
+    ...data,
+    tala: data,
+  });
 }

@@ -17,12 +17,18 @@ import {
   Trash2,
   AlertTriangle,
   CheckCircle2,
+  Check,
   AlertCircle,
   Loader2,
   ExternalLink,
   ShieldCheck,
+  Lock,
+  Clock,
+  Pencil,
+  X,
 } from 'lucide-react';
 import { SAFARI_COUNTRY_LIST } from '@/lib/countries';
+import { OperatorNameChangeRequest } from '@/lib/name-requests';
 
 interface OperatorAgencySettingsViewProps {
   initialOperator: {
@@ -39,6 +45,7 @@ interface OperatorAgencySettingsViewProps {
     bannerUrl: string | null;
     registrationNumber: string | null;
     isVerified: boolean;
+    serviceSummary?: string | null;
     user?: {
       firstName: string;
       lastName: string;
@@ -51,9 +58,13 @@ interface OperatorAgencySettingsViewProps {
       reservations: number;
     };
   };
+  initialNameRequest?: OperatorNameChangeRequest | null;
 }
 
-export default function OperatorAgencySettingsView({ initialOperator }: OperatorAgencySettingsViewProps) {
+export default function OperatorAgencySettingsView({
+  initialOperator,
+  initialNameRequest,
+}: OperatorAgencySettingsViewProps) {
   const router = useRouter();
 
   // Profile state
@@ -73,6 +84,15 @@ export default function OperatorAgencySettingsView({ initialOperator }: Operator
   const [lastName, setLastName] = useState(initialOperator.user?.lastName || '');
   const [phone, setPhone] = useState(initialOperator.user?.phone || '');
 
+  // Name Change Request state
+  const [nameRequest, setNameRequest] = useState<OperatorNameChangeRequest | null>(initialNameRequest || null);
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [proposedName, setProposedName] = useState('');
+  const [nameChangeReason, setNameChangeReason] = useState('');
+  const [submittingNameRequest, setSubmittingNameRequest] = useState(false);
+  const [nameRequestError, setNameRequestError] = useState<string | null>(null);
+  const [cancellingNameRequest, setCancellingNameRequest] = useState(false);
+
   // UI status
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -89,6 +109,60 @@ export default function OperatorAgencySettingsView({ initialOperator }: Operator
     );
   };
 
+  const handleSubmitNameRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!proposedName.trim()) return;
+
+    setSubmittingNameRequest(true);
+    setNameRequestError(null);
+
+    try {
+      const res = await fetch('/api/operator/name-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestedName: proposedName.trim(),
+          reason: nameChangeReason.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit name change request.');
+      }
+
+      setNameRequest(data.nameRequest);
+      setShowNameModal(false);
+      setFeedback({ type: 'success', message: data.message });
+      router.refresh();
+    } catch (err: any) {
+      setNameRequestError(err.message || 'Error submitting name request.');
+    } finally {
+      setSubmittingNameRequest(false);
+    }
+  };
+
+  const handleCancelNameRequest = async () => {
+    setCancellingNameRequest(true);
+    try {
+      const res = await fetch('/api/operator/name-request', {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to cancel request.');
+      }
+
+      setNameRequest((prev) => (prev ? { ...prev, status: 'CANCELLED' } : null));
+      setFeedback({ type: 'success', message: 'Name change request cancelled.' });
+      router.refresh();
+    } catch (err: any) {
+      setFeedback({ type: 'error', message: err.message || 'Error cancelling request.' });
+    } finally {
+      setCancellingNameRequest(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -99,7 +173,6 @@ export default function OperatorAgencySettingsView({ initialOperator }: Operator
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          companyName: companyName.trim(),
           slug: slug.trim().toLowerCase(),
           countryOfOrigin,
           headquartersAddress: headquartersAddress.trim() || null,
@@ -206,20 +279,122 @@ export default function OperatorAgencySettingsView({ initialOperator }: Operator
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             
-            {/* Company Name */}
+            {/* Pending Name Request Alert Banner */}
+            {nameRequest && nameRequest.status === 'PENDING' && (
+              <div className="sm:col-span-2 p-4 rounded-2xl bg-amber-50/95 border border-amber-300 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-2xs">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
+                      <span>Name Change Request Awaiting Admin Approval</span>
+                    </h4>
+                    <p className="text-xs mt-0.5 font-medium text-amber-950">
+                      Requested New Name:{' '}
+                      <strong className="font-bold bg-amber-100/80 px-2 py-0.5 rounded text-amber-950 border border-amber-300">
+                        {nameRequest.requestedName}
+                      </strong>
+                      {nameRequest.reason && (
+                        <span className="text-amber-800 ml-1.5">· Reason: &ldquo;{nameRequest.reason}&rdquo;</span>
+                      )}
+                    </p>
+                    <span className="text-[10.5px] text-amber-700 block mt-0.5">
+                      Submitted on {new Date(nameRequest.submittedAt).toLocaleDateString()}. The website administrator must accept this change before your agency name updates publicly.
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCancelNameRequest}
+                  disabled={cancellingNameRequest}
+                  className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border border-amber-400 bg-white hover:bg-amber-100 text-amber-900 transition-colors cursor-pointer"
+                >
+                  {cancellingNameRequest ? 'Cancelling...' : 'Cancel Request'}
+                </button>
+              </div>
+            )}
+
+            {/* Declined Name Request Banner */}
+            {nameRequest && nameRequest.status === 'REJECTED' && (
+              <div className="sm:col-span-2 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-950 flex items-start gap-3">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="text-xs">
+                  <p className="font-bold">
+                    Previous name change request to &ldquo;{nameRequest.requestedName}&rdquo; was declined by the administrator.
+                  </p>
+                  {nameRequest.reviewNotes && (
+                    <p className="text-[11px] text-rose-800 mt-0.5">
+                      Admin explanation: &ldquo;{nameRequest.reviewNotes}&rdquo;
+                    </p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProposedName('');
+                      setNameChangeReason('');
+                      setNameRequestError(null);
+                      setShowNameModal(true);
+                    }}
+                    className="mt-1 font-bold text-rose-900 underline hover:text-black cursor-pointer inline-block"
+                  >
+                    Submit a revised name request
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Approved Name Confirmation Banner */}
+            {nameRequest && nameRequest.status === 'APPROVED' && nameRequest.reviewedAt && (
+              <div className="sm:col-span-2 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-center gap-2.5 text-xs font-medium">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>
+                  Admin approved your company name &ldquo;<strong>{initialOperator.companyName}</strong>&rdquo; on{' '}
+                  {new Date(nameRequest.reviewedAt).toLocaleDateString()}.
+                </span>
+              </div>
+            )}
+
+            {/* Company Name (Admin Protected) */}
             <div className="space-y-1.5">
-              <label htmlFor="companyName" className="block text-xs font-bold text-[#193A38] uppercase tracking-wider">
-                Company Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="companyName"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-                disabled={saving}
-                className="w-full px-4 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-bold text-[#193A38] focus:outline-none focus:ring-2 focus:ring-[var(--brand)]"
-              />
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-[#193A38] uppercase tracking-wider">
+                  Company Name <span className="text-red-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProposedName('');
+                    setNameChangeReason('');
+                    setNameRequestError(null);
+                    setShowNameModal(true);
+                  }}
+                  className="text-xs font-bold text-[var(--brand)] hover:text-[var(--brand-deep)] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                  title="Submit a request to rename your tour agency"
+                >
+                  <Pencil className="w-3 h-3" />
+                  <span>Request Name Change</span>
+                </button>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="text"
+                  id="companyName"
+                  value={initialOperator.companyName}
+                  readOnly
+                  disabled
+                  className="w-full pl-4 pr-28 py-2.5 rounded-xl border border-black/15 bg-gray-50 text-xs font-bold text-[#193A38] cursor-not-allowed select-none"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                  <Lock className="w-2.5 h-2.5" />
+                  <span>Admin Locked</span>
+                </span>
+              </div>
+              <p className="text-[11px] text-[var(--ink-muted)]">
+                Agency legal renames must be requested and accepted by the website owner.
+              </p>
             </div>
 
             {/* Public URL Slug */}
@@ -625,6 +800,110 @@ export default function OperatorAgencySettingsView({ initialOperator }: Operator
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Request Name Change Modal */}
+      {showNameModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-black/10 overflow-hidden">
+            <div className="p-6 border-b border-black/5 bg-[#F7F6F1] flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-[var(--brand)] bg-[var(--brand-soft)] px-2 py-0.5 rounded-full">
+                  Official Verification Required
+                </span>
+                <h3 className="text-lg font-bold font-display text-[#193A38] mt-1">
+                  Request Agency Name Change
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowNameModal(false)}
+                className="w-8 h-8 rounded-lg hover:bg-gray-200/60 flex items-center justify-center text-gray-500 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitNameRequest} className="p-6 space-y-4 text-xs">
+              <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950 leading-relaxed">
+                <p className="font-bold flex items-center gap-1.5 mb-1 text-amber-900">
+                  <ShieldCheck className="w-4 h-4 text-amber-600" />
+                  <span>Admin Approval Process</span>
+                </p>
+                To maintain verified operator integrity and protect travelers with existing safari reservations, company name updates must be reviewed and accepted by the website owner.
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-gray-600">Current Official Name</label>
+                <div className="p-2.5 rounded-xl bg-gray-100 text-gray-800 font-bold border border-black/5">
+                  {initialOperator.companyName}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">
+                  New Proposed Company Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={proposedName}
+                  onChange={(e) => setProposedName(e.target.value)}
+                  placeholder="e.g. Serengeti Heritage Expeditions"
+                  className="w-full px-4 py-2.5 rounded-xl border border-black/15 bg-white text-xs font-bold text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#193A38]">
+                  Reason for Name Change <span className="text-gray-400 font-normal">(Optional)</span>
+                </label>
+                <textarea
+                  rows={3}
+                  value={nameChangeReason}
+                  onChange={(e) => setNameChangeReason(e.target.value)}
+                  placeholder="e.g. Legal corporate rebranding, merger, updated company registration certificate..."
+                  className="w-full px-4 py-2.5 rounded-xl border border-black/15 bg-white text-xs text-[#193A38] focus:ring-2 focus:ring-[var(--brand)] focus:outline-none font-medium"
+                />
+              </div>
+
+              {nameRequestError && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{nameRequestError}</span>
+                </div>
+              )}
+
+              <div className="pt-3 border-t border-black/5 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowNameModal(false)}
+                  disabled={submittingNameRequest}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submittingNameRequest || !proposedName.trim()}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[var(--brand)] hover:bg-[var(--brand-deep)] text-white shadow-sm flex items-center gap-1.5 disabled:opacity-50 cursor-pointer transition-all"
+                >
+                  {submittingNameRequest ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Submitting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Submit Request to Admin</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import {
   CheckCircle2,
   XCircle,
@@ -33,6 +34,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { parseTalaData, type TalaVerificationData } from '@/lib/tala-verification';
+import { parseNameRequest } from '@/lib/name-requests';
 import { SAFARI_COUNTRY_LIST } from '@/lib/countries';
 
 export interface OperatorRecord {
@@ -351,6 +353,7 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
                 filteredOperators.map((op) => {
                   const docUrl = op.tala.documentUrl || op.licenseDocumentUrl;
                   const hasDoc = Boolean(docUrl);
+                  const nameReq = parseNameRequest(op.serviceSummary);
 
                   return (
                     <tr key={op.id} className="hover:bg-[#F7F6F1] transition-colors">
@@ -365,6 +368,16 @@ export default function OperatorVerificationTable({ initialOperators }: { initia
                             <span className="text-[11px] font-semibold text-amber-600 block mt-0.5">
                               ★ {op.averageRating} <span className="text-gray-500">({op.totalReviews} reviews)</span>
                             </span>
+                            {nameReq && nameReq.status === 'PENDING' && (
+                              <Link
+                                href="/admin/name-requests"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-950 border border-amber-300 mt-1 hover:bg-amber-200 transition-colors"
+                                title={`Requested rename to "${nameReq.requestedName}"`}
+                              >
+                                <Clock className="w-2.5 h-2.5 text-amber-700" />
+                                <span>Rename: &ldquo;{nameReq.requestedName}&rdquo;</span>
+                              </Link>
+                            )}
                           </div>
                         </div>
                       </td>
