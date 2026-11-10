@@ -527,62 +527,6 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
               </div>
             </div>
           </div>
-
-          {/* Bottom Interactive Country Selector Reel */}
-          <div className="p-3 sm:p-4 rounded-2xl bg-white border border-[var(--border)] shadow-xs">
-            <div className="flex items-center justify-between mb-3 px-1">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--ink-secondary)]">
-                Select Destination to Inspect ({filteredCountries.length})
-              </span>
-              <span className="text-xs font-medium text-[var(--ink-muted)] hidden sm:inline">
-                Auto-advances every 3s · Hover or click any card to inspect
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-9 gap-2 sm:gap-2.5">
-              {filteredCountries.map((country) => {
-                const isSelected = country.slug === activeCountry.slug;
-                return (
-                  <button
-                    key={country.slug}
-                    type="button"
-                    onClick={() => {
-                      setSelectedSlug(country.slug);
-                    }}
-                    className={`group relative overflow-hidden rounded-xl p-2 text-left transition-all duration-300 flex flex-col justify-between ${
-                      isSelected
-                        ? 'bg-[var(--brand-deep)] text-white shadow-md ring-2 ring-[var(--brand)] -translate-y-0.5'
-                        : 'bg-[var(--canvas-base)] hover:bg-white border border-[var(--border-soft)] text-[var(--ink)] hover:shadow-xs'
-                    }`}
-                  >
-                    <div className="relative h-14 sm:h-16 w-full rounded-lg overflow-hidden mb-2">
-                      <img
-                        src={country.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=85'}
-                        alt={country.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                      <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-black bg-black/60 text-white backdrop-blur-xs">
-                        {country.rank}
-                      </span>
-                    </div>
-
-                    <div className="min-w-0 w-full">
-                      <div className="text-xs font-extrabold truncate">{country.name}</div>
-                      <div
-                        className={`text-[10px] font-medium truncate ${
-                          isSelected ? 'text-white/90' : 'text-[var(--ink-secondary)]'
-                        }`}
-                      >
-                        {country.dailyRates ? country.dailyRates.split(' ')[0] + '/day' : 'On request'}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       )}
 
