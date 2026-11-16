@@ -233,7 +233,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 font-sans text-[#193A38] w-full border-b border-[#c4b78a] bg-[#d8cda1]/95 backdrop-blur-md overflow-x-clip shadow-xs">
+    <header className="glass-nav sticky top-0 z-50 font-sans text-[#193A38] w-full border-b border-[#e5ece7] bg-white/95 backdrop-blur-md overflow-x-clip shadow-xs">
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
         <div className="flex h-[54px] sm:h-[58px] lg:h-[62px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
@@ -259,7 +259,7 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-[#123b34] text-white shadow-xs' : 'text-[#193A38] hover:bg-[#cbbe8f] hover:text-[#0b2926]'}`}
+                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-[#123b34] text-white shadow-xs' : 'text-[#193A38] hover:bg-[#edf3f0] hover:text-[#0b2926]'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
@@ -347,7 +347,7 @@ export default function Navbar() {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={toggleNotifications}
-                  className="relative flex items-center text-[#193A38] transition-colors hover:text-[#0b2926] p-1.5 rounded-full hover:bg-[#cbbe8f]"
+                  className="relative flex items-center text-[#193A38] transition-colors hover:text-[#0b2926] p-1.5 rounded-full hover:bg-[#edf3f0]"
                   aria-label="Travel notifications"
                   aria-expanded={notifOpen}
                 >
@@ -394,7 +394,7 @@ export default function Navbar() {
               </div>
             )}
             {sessionUser && isDesktop === true && <ChatLauncher />}
-            <Link href="/favorites" className="flex items-center gap-1 text-[#193A38] transition-colors hover:text-[#0b2926] group px-1.5 py-1 shrink-0 rounded-full hover:bg-[#cbbe8f]" aria-label="Favorites list">
+            <Link href="/favorites" className="flex items-center gap-1 text-[#193A38] transition-colors hover:text-[#0b2926] group px-1.5 py-1 shrink-0 rounded-full hover:bg-[#edf3f0]" aria-label="Favorites list">
               <div className="relative">
                 <Heart className="h-4 w-4 xl:h-5 xl:w-5 text-[#193A38] group-hover:text-[#0b2926] transition-colors" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
@@ -408,7 +408,7 @@ export default function Navbar() {
               <div className="relative ml-0.5" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-1.5 text-[#193A38] transition-colors hover:text-[#0b2926] px-2 py-1 rounded-full hover:bg-[#cbbe8f]"
+                  className="flex items-center gap-1.5 text-[#193A38] transition-colors hover:text-[#0b2926] px-2 py-1 rounded-full hover:bg-[#edf3f0]"
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
                   aria-label="Account menu"
@@ -441,13 +441,13 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
                 <Link
                   href="/register?role=OPERATOR"
-                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-[#c4b78a] bg-white/60 hover:bg-white px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors whitespace-nowrap"
+                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-[#dbe1dc] bg-[#f4f7f5] hover:bg-[#edf3f0] px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors whitespace-nowrap"
                 >
                   List Your Tours
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-xl border border-[#c4b78a] px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors hover:bg-white/60 whitespace-nowrap"
+                  className="inline-flex items-center justify-center rounded-xl border border-[#dbe1dc] bg-white px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors hover:bg-[#f4f7f5] whitespace-nowrap"
                 >
                   Sign In
                 </Link>
@@ -467,7 +467,7 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex items-center rounded-lg border border-[#c4b78a] px-2.5 py-1 text-xs font-bold text-[#193A38] hover:bg-white/60 transition-colors whitespace-nowrap"
+                  className="hidden sm:inline-flex items-center rounded-lg border border-[#dbe1dc] bg-white px-2.5 py-1 text-xs font-bold text-[#193A38] hover:bg-[#f4f7f5] transition-colors whitespace-nowrap"
                 >
                   Sign In
                 </Link>
@@ -483,7 +483,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-[#193A38] transition-colors hover:bg-black/5 active:scale-95"
+              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-[#193A38] transition-colors hover:bg-[#edf3f0] active:scale-95"
               aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
             >

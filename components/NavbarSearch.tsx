@@ -139,7 +139,7 @@ export default function NavbarSearch({ mobile = false, onNavigate }: NavbarSearc
           setOpen((o) => !o);
           setTimeout(() => inputRef.current?.focus(), 50);
         }}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#c4b78a] bg-white/70 text-[#193A38] hover:text-[#0b2926] hover:border-[#123b34]/40 hover:bg-white transition-colors font-semibold text-xs"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#dbe1dc] bg-[#f4f7f5] text-[#193A38] hover:text-[#0b2926] hover:border-[#123b34]/40 hover:bg-white transition-colors font-semibold text-xs"
         aria-label="Search safaris"
         aria-expanded={open}
         aria-haspopup="dialog"
