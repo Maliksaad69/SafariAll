@@ -30,14 +30,14 @@ export const metadata: Metadata = {
   keywords: ["african safari", "safari tours", "safari marketplace", "Tanzania safari", "Kenya safari", "safari quotes", "local tour operators", "SafariHello"],
   icons: {
     icon: [
-      { url: '/images/favicon-32x32.png?v=7', sizes: '32x32', type: 'image/png' },
-      { url: '/images/favicon-16x16.png?v=7', sizes: '16x16', type: 'image/png' },
-      { url: '/images/favicon-192x192.png?v=7', sizes: '192x192', type: 'image/png' },
-      { url: '/images/favicon-512x512.png?v=7', sizes: '512x512', type: 'image/png' },
-      { url: '/favicon.ico?v=7', sizes: 'any' },
+      { url: '/images/favicon-32x32.png?v=8', sizes: '32x32', type: 'image/png' },
+      { url: '/images/favicon-16x16.png?v=8', sizes: '16x16', type: 'image/png' },
+      { url: '/images/favicon-192x192.png?v=8', sizes: '192x192', type: 'image/png' },
+      { url: '/images/favicon-512x512.png?v=8', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico?v=8', sizes: 'any' },
     ],
-    shortcut: '/favicon.ico?v=7',
-    apple: '/images/favicon-180x180.png?v=7',
+    shortcut: '/favicon.ico?v=8',
+    apple: '/images/favicon-180x180.png?v=8',
   },
   openGraph: {
     title: "SafariHello — Africa's Marketplace for Safari Tours",
@@ -57,11 +57,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`h-full ${bodyFont.variable} ${displayFont.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=7" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=7" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png?v=7" />
-        <link rel="shortcut icon" href="/favicon.ico?v=7" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-180x180.png?v=7" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=8" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=8" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png?v=8" />
+        <link rel="shortcut icon" href="/favicon.ico?v=8" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-180x180.png?v=8" />
       </head>
       <body className="min-h-full flex flex-col font-sans antialiased" suppressHydrationWarning>
         <script

@@ -218,9 +218,8 @@ export default function HeroBackgroundSlider({
       ) : (
         <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-9 pb-20 sm:pb-24 lg:pb-28">
           <div className="max-w-[830px]">
-            {/* Eyebrow with dash */}
-            <div className="flex items-center gap-2.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-2.5 sm:mb-3">
-              <span className="w-6 h-[2px] bg-[#e78748] shrink-0" />
+            {/* Eyebrow */}
+            <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-2.5 sm:mb-3">
               <span>AFRICA&apos;S MARKETPLACE FOR SAFARI TOURS</span>
             </div>
 
