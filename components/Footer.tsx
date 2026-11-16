@@ -51,16 +51,18 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-white/10 pb-12">
           {/* Column 1: Brand overview */}
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
-            <Link href="/" className="inline-block transition-opacity hover:opacity-90">
-              <img
-                src="/images/safaribuilt-logo.png?v=3"
-                alt="SafariRequest — One Marketplace for African Safari Tours"
-                className="h-[48px] sm:h-[58px] w-auto object-contain"
-              />
+            <Link href="/" className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-95" aria-label="SafariHello homepage">
+              <span className="relative flex h-9 w-9 items-center justify-center rounded-[11px] bg-[#123b34] text-white font-extrabold text-xl font-display shadow-md ring-1 ring-white/20">
+                S
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#e78748] ring-1 ring-[#123b34]" />
+              </span>
+              <span className="font-display font-extrabold text-[24px] tracking-[-1.2px] text-white leading-none">
+                Safari<span className="text-[#e78748]">Hello</span>
+              </span>
             </Link>
 
             <p className="text-sm leading-relaxed text-white/85">
-              Africa&apos;s direct safari marketplace. Connecting global travelers with licensed local tour operators. Zero commission. Pure experience.
+              Africa&apos;s marketplace for safari tours. Discover amazing wildlife experiences and connect directly with local safari operators.
             </p>
           </div>
 
@@ -113,7 +115,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-white/75 lg:grid-cols-3">
           <p className="order-1 text-center lg:text-left">
-            © {year} SafariRequest. All rights reserved.
+            © {year} SafariHello. All rights reserved.
           </p>
           <div className="order-2 flex justify-center">
             <LoneAlphaBadge />

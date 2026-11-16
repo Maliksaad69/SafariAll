@@ -2,11 +2,11 @@ export function buildOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'TravelAgency',
-    name: 'SafariRequest',
-    description: 'African safari marketplace connecting travelers with verified local operators.',
-    url: 'https://safariasili.com',
+    name: 'SafariHello',
+    description: "Explore African safari tours, compare itineraries, and request quotes directly from local tour operators on SafariHello.",
+    url: 'https://safarirequest.com',
     logo: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
-    areaServed: ['Tanzania', 'Kenya', 'Botswana', 'Uganda', 'South Africa', 'Namibia', 'Zimbabwe', 'Zambia'],
+    areaServed: ['Tanzania', 'Kenya', 'Botswana', 'Uganda', 'Rwanda', 'South Africa', 'Namibia', 'Zimbabwe', 'Zambia', 'Madagascar', 'Malawi', 'Mozambique', 'Ethiopia'],
     sameAs: [
       'https://www.facebook.com',
       'https://www.instagram.com',
@@ -21,10 +21,10 @@ export function buildTourSchema(tour: any) {
     '@type': 'TouristTrip',
     name: tour?.title || 'Safari Tour',
     description: tour?.description || 'Custom safari experience designed by a verified African tour operator.',
-    url: `https://safariasili.com/tours/${tour?.slug || ''}`,
+    url: `https://safarirequest.com/tours/${tour?.slug || ''}`,
     provider: {
       '@type': 'Organization',
-      name: tour?.operator?.companyName || 'SafariRequest',
+      name: tour?.operator?.companyName || 'SafariHello',
     },
     itinerary: {
       '@type': 'ItemList',

@@ -708,7 +708,7 @@ export default function OperatorAgencySettingsView({
               <span>Danger Zone: Delete Tour Agency Profile</span>
             </h4>
             <p className="text-xs text-rose-900 font-medium max-w-xl">
-              Permanently delete this agency from SafariRequest. This will immediately remove all your tour packages ({initialOperator._count?.tours ?? 0}),
+              Permanently delete this agency from SafariHello. This will immediately remove all your tour packages ({initialOperator._count?.tours ?? 0}),
               fleet vehicles ({initialOperator._count?.vehicles ?? 0}), and marketplace listings. This action cannot be undone.
             </p>
           </div>

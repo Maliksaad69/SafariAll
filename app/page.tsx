@@ -84,33 +84,55 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ── */}
-        <HeroBackgroundSlider
-          tourCount={stats.tours}
-          minHeightClass="min-h-[640px] sm:min-h-[600px] md:min-h-[580px] md:h-[580px] lg:min-h-[660px] lg:h-[660px] xl:min-h-[700px] xl:h-[700px]"
-        >
-          {/* Search Form — anchored at bottom on desktop, stacked on mobile */}
-          <HeroSearchForm />
-        </HeroBackgroundSlider>
+        <HeroBackgroundSlider />
 
-        {/* ── Trust strip (Savannah Sand Statistics Bar) ── */}
-        <div className="relative z-10 mx-auto mt-3 sm:mt-5 max-w-[1230px] px-3 sm:px-6">
-          <div className="bg-[#E4DBB4] border border-[#DEDCCF] grid grid-cols-2 gap-x-2 gap-y-2.5 sm:gap-x-4 sm:gap-y-3 rounded-2xl px-3 sm:px-6 py-3.5 sm:py-4 text-[11.5px] sm:text-[13px] font-semibold text-[#344C49] md:grid-cols-4 shadow-xs">
-            <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
-              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.operators}</strong> Verified Operators</span>
-            </span>
-            <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
-              <span className="leading-tight"><strong className="text-[#193A38] font-bold">Best Price</strong> Guarantee</span>
-            </span>
-            <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
-              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.reviews}</strong> Traveler Reviews</span>
-            </span>
-            <span className="flex items-center gap-1.5 sm:gap-2 justify-start sm:justify-center md:justify-start">
-              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-[#214446]" />
-              <span className="leading-tight"><strong className="text-[#193A38] font-bold">{stats.destinations}</strong> Parks &amp; Reserves</span>
-            </span>
+        {/* ── Floating Overlapping Search Card ── */}
+        <HeroSearchForm />
+
+        {/* ── Trust strip (Inspired by SafariHello Prototype) ── */}
+        <div className="relative z-10 mx-auto mt-6 sm:mt-10 max-w-[1240px] px-4 sm:px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 py-6 border-b border-[#e1e8e3]">
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-full bg-[#edf4ef] text-[#123b34] flex items-center justify-center font-extrabold text-base shrink-0 shadow-xs">
+                ✓
+              </span>
+              <div>
+                <strong className="block text-[13px] sm:text-sm font-extrabold text-[#1d302d]">Direct connections</strong>
+                <small className="block text-[11px] sm:text-xs text-[#697771] mt-0.5">
+                  Talk to {stats.operators > 0 ? `${stats.operators} verified` : 'local'} operators yourself
+                </small>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-full bg-[#edf4ef] text-[#123b34] flex items-center justify-center font-extrabold text-base shrink-0 shadow-xs">
+                ◇
+              </span>
+              <div>
+                <strong className="block text-[13px] sm:text-sm font-extrabold text-[#1d302d]">Local safari expertise</strong>
+                <small className="block text-[11px] sm:text-xs text-[#697771] mt-0.5">Explore tours by African specialists</small>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-full bg-[#edf4ef] text-[#123b34] flex items-center justify-center font-extrabold text-base shrink-0 shadow-xs">
+                ♧
+              </span>
+              <div>
+                <strong className="block text-[13px] sm:text-sm font-extrabold text-[#1d302d]">13 destinations</strong>
+                <small className="block text-[11px] sm:text-xs text-[#697771] mt-0.5">Explore safari countries across Africa</small>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span className="w-10 h-10 rounded-full bg-[#edf4ef] text-[#123b34] flex items-center justify-center font-extrabold text-base shrink-0 shadow-xs">
+                ♡
+              </span>
+              <div>
+                <strong className="block text-[13px] sm:text-sm font-extrabold text-[#1d302d]">More choice</strong>
+                <small className="block text-[11px] sm:text-xs text-[#697771] mt-0.5">Compare itineraries in one place</small>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -210,7 +232,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-[1230px] px-3 sm:px-6">
             <div className="mb-5 sm:mb-6">
               <h2 className="text-[22px] sm:text-[28px] font-semibold text-[var(--ink)]">
-                SafariRequest Experts
+                SafariHello Experts
               </h2>
               <p className="mt-1 max-w-2xl text-xs sm:text-sm text-[var(--ink-secondary)]">
                 Independent travel writers and industry experts review destinations and operators across the continent, so you can book with confidence.

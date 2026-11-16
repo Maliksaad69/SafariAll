@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MapPin, Compass } from 'lucide-react';
+import { Compass } from 'lucide-react';
+import Link from 'next/link';
 
 export interface HeroSlide {
   url: string;
@@ -14,13 +15,12 @@ export interface HeroSlide {
 }
 
 export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
-  const countStr = tourCount ? tourCount.toLocaleString() : '1,500+';
   return [
     {
       url: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2560&q=85',
-      location: "AFRICA'S MARKETPLACE FOR SAFARI TOURS",
+      location: 'Serengeti National Park · Tanzania',
       badge: 'Zero Commission · Direct Local Quotes',
-      title: `Compare ${countStr} African`,
+      title: 'Compare African',
       titleHighlight: 'Safari Tours',
       subtitle: 'Booked directly from top-rated verified local operators at true local prices',
     },
@@ -90,12 +90,11 @@ const ANIMATION_CLASSES = [
   'ken-burns-left',
 ];
 
-interface HeroBackgroundSliderProps {
+export interface HeroBackgroundSliderProps {
   slides?: HeroSlide[];
   tourCount?: number;
   autoPlayInterval?: number;
   showLocationBadge?: boolean;
-  showControls?: boolean;
   children?: React.ReactNode;
   className?: string;
   minHeightClass?: string;
@@ -104,11 +103,11 @@ interface HeroBackgroundSliderProps {
 export default function HeroBackgroundSlider({
   slides,
   tourCount,
-  autoPlayInterval = 3000,
+  autoPlayInterval = 6000,
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[620px] sm:min-h-[580px] md:min-h-[580px] md:h-[580px] lg:min-h-[640px] lg:h-[640px] xl:min-h-[680px] xl:h-[680px]',
+  minHeightClass = 'min-h-[560px] sm:min-h-[584px] lg:min-h-[620px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -132,14 +131,14 @@ export default function HeroBackgroundSlider({
 
   return (
     <section
-      aria-label="African Safari Hero Carousel"
-      className={`relative w-full overflow-hidden flex flex-col justify-between py-6 px-3 sm:px-4 md:py-0 md:px-0 md:block ${minHeightClass} ${className}`}
+      aria-label="African Safari Hero"
+      className={`relative w-full overflow-hidden flex items-center ${minHeightClass} ${className}`}
     >
       {/* ── Top Dynamic Slide Progress Indicator ── */}
       <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
         <div
           key={currentIndex}
-          className="h-full bg-gradient-to-r from-[var(--brand)] via-[#8C9F91] to-[#E4DBB4] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
+          className="h-full bg-gradient-to-r from-[#123b34] via-[#e78748] to-[#f6bd91] hero-progress-bar shadow-[0_0_8px_rgba(231,135,72,0.8)]"
           style={{ animationDuration: `${autoPlayInterval}ms` }}
         />
       </div>
@@ -167,63 +166,90 @@ export default function HeroBackgroundSlider({
           );
         })}
 
-        {/* ── Layered Contrast Scrims ── */}
-        <div className="absolute inset-0 bg-black/40 z-15" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/25 to-black/85 z-15" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--brand-deep)]/35 via-transparent to-[var(--brand)]/20 z-15" />
+        {/* ── Layered Directional Contrast Scrims ── */}
+        {/* Desktop directional scrim (dark on left, sheer on right) */}
+        <div
+          className="hidden md:block absolute inset-0 z-15"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(8,34,30,0.92) 0%, rgba(8,34,30,0.72) 48%, rgba(8,34,30,0.18) 100%)',
+          }}
+        />
+        {/* Mobile vertical scrim */}
+        <div
+          className="md:hidden absolute inset-0 z-15"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(8,34,30,0.92) 0%, rgba(8,34,30,0.78) 55%, rgba(8,34,30,0.92) 100%)',
+          }}
+        />
       </div>
 
-      {/* ── Top Floating Location / Brand Badge ── */}
-      <div className="absolute top-3.5 sm:top-4 right-3 sm:right-6 z-30 flex items-center gap-2">
+      {/* ── Top Floating Location Badge ── */}
+      <div className="absolute top-4 right-4 sm:right-8 z-30">
         {showLocationBadge && currentSlide && (
           <div
             key={currentSlide.location}
-            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/25 bg-black/55 px-2.5 sm:px-3 py-1 backdrop-blur-md shadow-md"
+            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0b2926]/75 px-3 py-1 backdrop-blur-md shadow-md"
           >
-            <Compass className="h-3 w-3 text-[#E4DBB4] shrink-0" />
-            <span className="text-[10px] sm:text-[11px] font-extrabold text-white tracking-wider drop-shadow-sm uppercase">
+            <Compass className="h-3.5 w-3.5 text-[#e78748] shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-extrabold text-[#f4f7f3] tracking-wider uppercase">
               {currentSlide.location}
             </span>
           </div>
         )}
       </div>
 
-      {/* ── Changing Text Hero Foreground ── */}
-      <div className="relative z-20 mx-auto flex w-full max-w-[1230px] flex-col items-center justify-center text-center px-3 sm:px-6 md:h-full md:pb-28 lg:pb-36 pt-2 sm:pt-6 md:pt-0">
-        <div
-          key={currentIndex}
-          className="animate-hero-text max-w-3xl text-center text-white"
-        >
-          {/* Animated Highlight Badge with Orange Blink */}
-          {currentSlide.badge && (
-            <span className="mb-2 sm:mb-3 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3.5 py-1 text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-80" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF7A00]" />
-              </span>
-              {currentSlide.badge}
-            </span>
-          )}
-
-          {/* Dynamic Headline with Vibrant Accent */}
-          <h1 className="text-[23px] sm:text-[32px] md:text-[42px] lg:text-[48px] xl:text-[52px] font-bold leading-[1.12] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)] font-display">
-            {currentSlide.title}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFDF5] via-[#E4DBB4] to-[#C9B98A] drop-shadow-[0_2px_12px_rgba(25,58,56,0.5)]">
-              {currentSlide.titleHighlight}
-            </span>
-          </h1>
-
-          {/* Dynamic Subtitle */}
-          {currentSlide.subtitle && (
-            <p className="mx-auto mt-2 sm:mt-3 max-w-xl text-[12px] sm:text-sm md:text-base font-medium leading-relaxed text-white/95 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
-              {currentSlide.subtitle}
-            </p>
-          )}
+      {/* ── Foreground Content ── */}
+      {children ? (
+        <div className="relative z-20 w-full h-full flex flex-col justify-between py-6 px-3 sm:px-4 md:py-0 md:px-0">
+          {children}
         </div>
-      </div>
+      ) : (
+        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+          <div className="max-w-[830px]">
+            {/* Eyebrow with dash */}
+            <div className="flex items-center gap-2.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-4 sm:mb-5">
+              <span className="w-6 h-[2px] bg-[#e78748] shrink-0" />
+              <span>AFRICA&apos;S MARKETPLACE FOR SAFARI TOURS</span>
+            </div>
 
-      {/* ── Hero Foreground Extras (Search Form) ── */}
-      {children}
+            {/* Heading */}
+            <h1 className="font-display font-extrabold text-[36px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.06] tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+              Your next safari<br className="hidden sm:inline" /> starts with{' '}
+              <span className="text-[#f3ae7d]">hello.</span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-[15px] sm:text-[17px] leading-[1.65] max-w-[580px] text-[#e5ece7] mb-7 sm:mb-8 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
+              Explore extraordinary African safaris, compare authentic tours, and connect directly with trusted local operators. The adventure is yours to discover.
+            </p>
+
+            {/* CTA Button */}
+            <div>
+              <Link
+                href="/african-safari-tours"
+                className="inline-flex items-center justify-center gap-2 bg-[#e78748] hover:bg-[#d87638] text-[#0b2926] font-extrabold text-sm sm:text-[15px] px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl shadow-xl transition-all active:scale-[0.98]"
+              >
+                Find Your Perfect Safari &nbsp; ↗
+              </Link>
+            </div>
+
+            {/* Feature Check Chips */}
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-7 sm:mt-8">
+              <span className="flex items-center gap-2">
+                <b className="text-[#f2aa78] font-black text-sm">✓</b> Direct local quotes
+              </span>
+              <span className="flex items-center gap-2">
+                <b className="text-[#f2aa78] font-black text-sm">✓</b> Explore 13 African countries
+              </span>
+              <span className="flex items-center gap-2">
+                <b className="text-[#f2aa78] font-black text-sm">✓</b> No booking commission
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

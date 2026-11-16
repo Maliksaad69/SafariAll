@@ -46,13 +46,13 @@ export default function AboutUsPage() {
           <div className="relative px-6 py-12 sm:px-12 sm:py-16 max-w-3xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-white">
               <Compass className="h-3.5 w-3.5 text-white" />
-              <span>About SafariRequest</span>
+              <span>About SafariHello</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-white mb-5 leading-tight">
               A smarter way to compare African safari holidays
             </h1>
             <p className="text-sm sm:text-base leading-relaxed text-white/85 font-light mb-8 max-w-2xl">
-              SafariRequest connects travelers directly to verified safari operators, destinations, and custom itineraries across East, Southern, and Central Africa — transparently, with no hidden markups.
+              SafariHello connects travelers directly to verified safari operators, destinations, and custom itineraries across East, Southern, and Central Africa — transparently, with no hidden markups.
             </p>
             <div className="flex flex-wrap gap-3.5">
               <Link href="/african-safari-tours" className="btn bg-white text-[#214446] hover:bg-white/90 px-6 py-3 rounded-xl text-sm font-bold shadow-sm">
@@ -85,14 +85,14 @@ export default function AboutUsPage() {
         {/* Value Proposition */}
         <section className="mt-12 surface-card rounded-3xl border border-black/5 p-8 sm:p-12 shadow-sm">
           <h2 className="text-2xl sm:text-3xl font-bold font-display text-[var(--brand-deep)] mb-6">
-            Why travelers trust SafariRequest
+            Why travelers trust SafariHello
           </h2>
           <div className="grid gap-6 md:grid-cols-2 text-sm text-[var(--ink)]/80 leading-relaxed">
             <p>
               Travelers use our marketplace to compare luxury tented camps, private lodges, mobile expeditions, and conservation-led safaris without needing to manually inquire across dozens of fragmented websites.
             </p>
             <p>
-              Whether you are planning a classic Serengeti Great Migration safari, an Okavango Delta mokoro excursion in Botswana, or gorilla trekking in Rwanda, SafariRequest lets you filter by price, comfort style, duration, and seasonality before requesting tailored quotes.
+              Whether you are planning a classic Serengeti Great Migration safari, an Okavango Delta mokoro excursion in Botswana, or gorilla trekking in Rwanda, SafariHello lets you filter by price, comfort style, duration, and seasonality before requesting tailored quotes.
             </p>
           </div>
           <div className="mt-8 pt-6 border-t border-black/5 flex items-center justify-between flex-wrap gap-4">

@@ -19,20 +19,20 @@ export async function generateMetadata({ params }: CountrySectionPageProps): Pro
   const seoData = getCountrySeoData(slug);
   if (!seoData) {
     return {
-      title: 'African National Parks & Safari Guide | SafariRequest',
+      title: 'African National Parks & Safari Guide | SafariHello',
     };
   }
 
   const countryData = CURATED_COUNTRIES_DATA.find((c) => c.slug === seoData.slug);
 
   return {
-    title: `${seoData.seoTitle} | SafariRequest`,
+    title: `${seoData.seoTitle} | SafariHello`,
     description:
       countryData?.description ||
       `Explore premier national parks, game reserves, wildlife concentrations, daily travel rates, and expert-guided safari tours across ${seoData.country}.`,
     keywords: seoData.keywords,
     openGraph: {
-      title: `${seoData.seoTitle} | SafariRequest`,
+      title: `${seoData.seoTitle} | SafariHello`,
       description:
         countryData?.description ||
         `Compare national parks, safari itineraries, and verified local tour operators across ${seoData.country}.`,

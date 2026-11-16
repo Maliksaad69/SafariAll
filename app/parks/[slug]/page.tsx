@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: ParkDetailPageProps): Promise
   const seoData = getCountrySeoData(slug);
   if (seoData) {
     return {
-      title: `${seoData.seoTitle} | SafariRequest`,
+      title: `${seoData.seoTitle} | SafariHello`,
     };
   }
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ParkDetailPageProps): Promise
 
   const title = park ? `${park.name} — Wildlife & Safari Travel Guide` : 'African National Park Guide';
   return {
-    title: `${title} | SafariRequest`,
+    title: `${title} | SafariHello`,
     description: park?.description || 'African safari guide, national park wildlife, travel seasons, and tours.',
   };
 }

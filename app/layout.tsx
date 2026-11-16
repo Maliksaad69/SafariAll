@@ -1,20 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Fraunces } from "next/font/google";
+import { DM_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 import { buildOrganizationSchema } from '@/lib/seo';
 
-const bodyFont = Manrope({
+const bodyFont = DM_Sans({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-body",
 });
 
-const displayFont = Fraunces({
+const displayFont = Outfit({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-display",
 });
 
@@ -25,10 +24,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "SafariRequest — Africa's Premier Safari Marketplace",
+  title: "SafariHello — Africa's Marketplace for Safari Tours",
   description:
-    "Compare 10,000+ authentic African safari holidays offered by 100% verified local tour operators across Tanzania, Kenya, South Africa, Uganda, and Botswana. Zero commission. Direct quotes.",
-  keywords: ["african safari", "safari bookings", "Tanzania safari", "Kenya safari", "luxury safari", "safari marketplace"],
+    "Explore African safari tours, compare itineraries, and request quotes directly from local tour operators on SafariHello.",
+  keywords: ["african safari", "safari tours", "safari marketplace", "Tanzania safari", "Kenya safari", "safari quotes", "local tour operators", "SafariHello"],
   icons: {
     icon: [
       { url: '/images/favicon-32x32.png?v=5', sizes: '32x32', type: 'image/png' },
@@ -41,9 +40,10 @@ export const metadata: Metadata = {
     apple: '/images/favicon-180x180.png?v=5',
   },
   openGraph: {
-    title: "SafariRequest — Africa's Premier Safari Marketplace",
-    description: "Request direct quotes from verified African safari operators.",
+    title: "SafariHello — Africa's Marketplace for Safari Tours",
+    description: "Explore African safari tours, compare itineraries, and request quotes directly from local tour operators on SafariHello.",
     type: "website",
+    siteName: "SafariHello",
   },
 };
 

@@ -73,7 +73,7 @@ function RegisterFormContent() {
       <div className="text-center max-w-xl mx-auto space-y-2">
         <div className="badge badge-brand mx-auto">
           <Compass className="h-3.5 w-3.5" />
-          Join SafariRequest
+          Join SafariHello
         </div>
         <h1 className="text-3xl font-bold text-[var(--ink)] font-display">
           Create Your Account

@@ -51,7 +51,7 @@ export default function HowItWorksPage() {
               Planning your safari should be simple and transparent
             </h1>
             <p className="text-sm sm:text-base leading-relaxed text-white/85 font-light">
-              SafariRequest helps travelers compare trusted operators, inspect transparent packages, and request tailored quotes without high broker markups or confusing itineraries.
+              SafariHello helps travelers compare trusted operators, inspect transparent packages, and request tailored quotes without high broker markups or confusing itineraries.
             </p>
           </div>
         </section>
@@ -86,7 +86,7 @@ export default function HowItWorksPage() {
               <CheckCircle2 className="h-5 w-5" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display text-[var(--brand-deep)]">
-              Why travelers choose SafariRequest
+              Why travelers choose SafariHello
             </h2>
           </div>
           <ul className="space-y-3.5 text-sm text-[var(--ink)]/80 mb-8 max-w-2xl">

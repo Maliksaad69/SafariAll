@@ -9,7 +9,7 @@ import { COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Top African Safari Countries & National Parks | SafariRequest',
+  title: 'Top African Safari Countries & National Parks | SafariHello',
   description:
     'Compare Africa’s premier safari destinations. Explore seasonal wildlife concentrations, park guides, daily travel budgets, and verified local tour operators.',
 };

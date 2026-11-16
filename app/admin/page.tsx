@@ -103,7 +103,7 @@ export default async function AdminPage() {
               <span>Platform Owner Dashboard</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold font-display tracking-tight text-white">
-              SafariRequest Owner Control Center
+              SafariHello Owner Control Center
             </h1>
             <p className="text-sm text-white/85 mt-2 max-w-xl font-light">
               Review and certify safari tour operators via governmental TALA documents, moderate customer reviews, and monitor ecosystem health.

@@ -510,7 +510,7 @@ export default function OperatorNameRequestsQueue({
 
               {actionModal.action === 'APPROVE' ? (
                 <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 font-medium leading-relaxed">
-                  Approving will immediately rename this tour operator to <strong>&ldquo;{actionModal.item.nameRequest.requestedName}&rdquo;</strong> across the entire SafariRequest platform, directory pages, and traveler reservation records.
+                  Approving will immediately rename this tour operator to <strong>&ldquo;{actionModal.item.nameRequest.requestedName}&rdquo;</strong> across the entire SafariHello platform, directory pages, and traveler reservation records.
                 </div>
               ) : (
                 <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-950 font-medium leading-relaxed">

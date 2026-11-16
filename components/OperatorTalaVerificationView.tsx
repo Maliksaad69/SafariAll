@@ -537,7 +537,7 @@ export default function OperatorTalaVerificationView({
               license issued to commercial safari tour operators in East &amp; Southern Africa.
             </p>
             <p className="text-xs text-[#344C49] leading-relaxed font-medium">
-              SafariRequest requires manual owner verification of your TALA license to guarantee traveler safety, ethical wildlife tracking, and legitimate park concessions.
+              SafariHello requires manual owner verification of your TALA license to guarantee traveler safety, ethical wildlife tracking, and legitimate park concessions.
             </p>
           </div>
 

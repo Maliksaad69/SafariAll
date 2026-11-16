@@ -1,17 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MapPin, Calendar, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { SAFARI_COUNTRIES } from '@/lib/countries';
+import { ArrowRight, MapPin, Compass, Calendar } from 'lucide-react';
+import { SAFARI_COUNTRY_LIST } from '@/lib/countries';
+
+const SAFARI_STYLES = [
+  { value: '', label: 'All safari styles' },
+  { value: 'Wildlife Safari', label: 'Wildlife Safari' },
+  { value: 'Luxury Safari', label: 'Luxury Safari' },
+  { value: 'Gorilla Trekking', label: 'Gorilla Trekking' },
+  { value: 'Family Safari', label: 'Family Safari' },
+  { value: 'Big Five Safari', label: 'Big Five Safari' },
+  { value: 'Fly-in Safari', label: 'Fly-in Safari' },
+  { value: 'Cultural Safari', label: 'Cultural & Walking' },
+];
 
 export default function HeroSearchForm() {
   const router = useRouter();
   const [destination, setDestination] = useState('');
+  const [style, setStyle] = useState('');
   const [startDate, setStartDate] = useState('');
   const [tourCount, setTourCount] = useState<number | null>(null);
 
-  // Fetch the real number of published tours so the CTA is never a fake number
   useEffect(() => {
     let cancelled = false;
     fetch('/api/tours-count')
@@ -28,7 +39,12 @@ export default function HeroSearchForm() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (destination.trim()) params.set('search', destination.trim());
+    if (destination.trim()) {
+      params.set('country', destination.trim());
+    }
+    if (style.trim()) {
+      params.set('search', style.trim());
+    }
     if (startDate) {
       const date = new Date(`${startDate}T00:00:00`);
       if (!Number.isNaN(date.getTime())) {
@@ -41,69 +57,88 @@ export default function HeroSearchForm() {
     router.push(qs ? `/african-safari-tours?${qs}` : '/african-safari-tours');
   };
 
-  const countries = SAFARI_COUNTRIES;
-
   return (
-    <div className="animate-fade-up relative z-20 w-full max-w-[680px] mx-auto md:absolute md:bottom-8 lg:bottom-12 md:left-1/2 md:-translate-x-1/2 md:w-[min(90vw,680px)] px-2 sm:px-2 md:px-0 mt-3 sm:mt-4 md:mt-0">
+    <div id="search" className="relative z-20 w-full max-w-[1080px] -mt-12 sm:-mt-14 mx-auto px-4">
       <form
         onSubmit={handleSearch}
-        className="glass flex flex-col gap-1.5 sm:gap-2 rounded-2xl md:rounded-full p-1.5 sm:p-2 md:flex-row md:items-center shadow-2xl border border-white/70 bg-white/92 md:bg-white/80 backdrop-blur-xl"
+        className="bg-white rounded-2xl shadow-[0_18px_60px_rgba(31,57,37,0.18)] border border-[#e1e8e3] p-2.5 sm:p-3.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_auto] gap-2.5 sm:gap-3 items-center"
       >
-        {/* Destination */}
-        <div className="relative flex flex-1 items-center rounded-xl md:rounded-full bg-white/70 px-3 sm:px-3.5 py-1.5 sm:py-2 transition-colors focus-within:bg-white/95 focus-within:ring-2 focus-within:ring-[var(--brand)]/30 hover:bg-white/85">
-          <MapPin className="mr-2 sm:mr-2.5 h-4 w-4 shrink-0 text-[var(--brand)]" />
-          <div className="flex-1 min-w-0">
-            <label htmlFor="hero-destination" className="block text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-              Where To
-            </label>
-            <input
-              id="hero-destination"
-              type="text"
-              list="hero-destinations"
-              placeholder="e.g. Serengeti, Masai Mara..."
-              aria-label="Destination"
-              className="w-full bg-transparent text-[13px] sm:text-[14px] font-semibold text-[var(--ink)] outline-none placeholder:font-normal placeholder:text-[var(--ink-muted)]"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-            />
-            <datalist id="hero-destinations">
-              {countries.map((c) => (
-                <option key={c} value={c} />
-              ))}
-            </datalist>
-          </div>
+        {/* Field 1: Where to? */}
+        <div className="px-3.5 py-2 sm:py-2.5 border-b sm:border-b-0 sm:border-r border-[#e1e8e3]">
+          <label
+            htmlFor="hero-where"
+            className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.09em] font-extrabold text-[#697771] mb-1.5"
+          >
+            <MapPin className="w-3.5 h-3.5 text-[#123b34]" />
+            Where to?
+          </label>
+          <select
+            id="hero-where"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            className="w-full bg-white text-[#1d302d] text-sm sm:text-[15px] font-bold outline-none cursor-pointer border-0 p-0 focus:ring-0"
+          >
+            <option value="">All 13 destinations</option>
+            {SAFARI_COUNTRY_LIST.map((c) => (
+              <option key={c.name} value={c.name}>
+                {c.flag} {c.name}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Subtle desktop divider */}
-        <div className="hidden md:block h-7 w-px bg-[var(--border)] shrink-0 self-center" aria-hidden="true" />
+        {/* Field 2: Safari Style */}
+        <div className="px-3.5 py-2 sm:py-2.5 border-b sm:border-b-0 lg:border-r border-[#e1e8e3]">
+          <label
+            htmlFor="hero-style"
+            className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.09em] font-extrabold text-[#697771] mb-1.5"
+          >
+            <Compass className="w-3.5 h-3.5 text-[#123b34]" />
+            Safari style
+          </label>
+          <select
+            id="hero-style"
+            value={style}
+            onChange={(e) => setStyle(e.target.value)}
+            className="w-full bg-white text-[#1d302d] text-sm sm:text-[15px] font-bold outline-none cursor-pointer border-0 p-0 focus:ring-0"
+          >
+            {SAFARI_STYLES.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {/* Start date */}
-        <div className="relative flex flex-1 items-center rounded-xl md:rounded-full bg-white/70 px-3 sm:px-3.5 py-1.5 sm:py-2 transition-colors focus-within:bg-white/95 focus-within:ring-2 focus-within:ring-[var(--brand)]/30 hover:bg-white/85">
-          <Calendar className="mr-2 sm:mr-2.5 h-4 w-4 shrink-0 text-[var(--brand)]" />
-          <div className="flex-1 min-w-0">
-            <label htmlFor="hero-start-date" className="block text-[9.5px] sm:text-[10px] font-bold uppercase tracking-wider text-[var(--ink-muted)]">
-              Start Date
-            </label>
-            <input
-              id="hero-start-date"
-              type="date"
-              aria-label="Start date"
-              min={new Date().toISOString().split('T')[0]}
-              className="w-full bg-transparent text-[13px] sm:text-[14px] font-semibold text-[var(--ink)] outline-none cursor-pointer"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
+        {/* Field 3: Travel Date */}
+        <div className="px-3.5 py-2 sm:py-2.5 sm:border-r lg:border-r border-[#e1e8e3]">
+          <label
+            htmlFor="hero-date"
+            className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.09em] font-extrabold text-[#697771] mb-1.5"
+          >
+            <Calendar className="w-3.5 h-3.5 text-[#123b34]" />
+            Travel date
+          </label>
+          <input
+            id="hero-date"
+            type="date"
+            min={new Date().toISOString().split('T')[0]}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="w-full bg-white text-[#1d302d] text-sm sm:text-[15px] font-bold outline-none cursor-pointer border-0 p-0 focus:ring-0"
+          />
         </div>
 
         {/* Submit button */}
-        <button
-          type="submit"
-          className="btn btn-primary h-11 sm:h-[46px] w-full md:w-auto md:min-w-[150px] rounded-xl md:rounded-full px-5 text-[13.5px] sm:text-[14px] font-bold shadow-md transition-all active:scale-[0.98] shrink-0 justify-center gap-1.5"
-        >
-          <span>Show {tourCount !== null ? tourCount.toLocaleString() : ''} Tours</span>
-          <ChevronRight className="h-4 w-4 shrink-0" />
-        </button>
+        <div className="p-1 sm:col-span-2 lg:col-span-1">
+          <button
+            type="submit"
+            className="w-full h-full min-h-[48px] sm:min-h-[52px] px-6 sm:px-8 py-3 bg-[#e78748] hover:bg-[#d97738] text-[#0b2926] font-extrabold text-sm sm:text-[15px] rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+          >
+            <span>Search Safaris</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </form>
     </div>
   );

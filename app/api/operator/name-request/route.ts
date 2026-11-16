@@ -100,7 +100,7 @@ export async function POST(req: Request) {
 
     if (nameCollision) {
       return NextResponse.json(
-        { error: `The name "${requestedName}" is already registered by another tour operator on SafariRequest.` },
+        { error: `The name "${requestedName}" is already registered by another tour operator on SafariHello.` },
         { status: 400 }
       );
     }

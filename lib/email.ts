@@ -1,5 +1,5 @@
 /**
- * Transactional Email Notification Service for SafariRequest
+ * Transactional Email Notification Service for SafariHello
  * Configurable via SMTP environment variables or fallback console logging.
  */
 

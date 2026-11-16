@@ -133,12 +133,12 @@ export default function ContactUsPage() {
 
           {/* Heading */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display tracking-tight text-white max-w-3xl leading-tight">
-            Contact SafariRequest
+            Contact SafariHello
           </h1>
 
           {/* Tagline */}
           <p className="mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-white/85 font-light">
-            Reach SafariRequest for marketplace support, partnership questions, or general assistance. We reply by message within 24 hours.
+            Reach SafariHello for marketplace support, partnership questions, or general assistance. We reply by message within 24 hours.
           </p>
 
           {/* Feature Badges Row */}
@@ -187,13 +187,13 @@ export default function ContactUsPage() {
               <div className="border-b border-[#E8E6DC] pb-6 mb-8">
                 <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#214446] mb-2">
                   <Mail className="h-3.5 w-3.5 text-[#214446]" />
-                  <span>SafariRequest Support</span>
+                  <span>SafariHello Support</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold font-display text-[#193A38] tracking-tight">
                   Send Us A Message
                 </h2>
                 <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#516D6A]">
-                  Use this page for marketplace support, partnership questions, content updates, and general SafariRequest assistance.
+                  Use this page for marketplace support, partnership questions, content updates, and general SafariHello assistance.
                 </p>
               </div>
 
@@ -261,7 +261,7 @@ export default function ContactUsPage() {
                           Your Details
                         </h3>
                         <p className="text-xs text-[#516D6A] mt-0.5">
-                          SafariRequest will use these details only to respond to your message.
+                          SafariHello will use these details only to respond to your message.
                         </p>
                       </div>
                     </div>

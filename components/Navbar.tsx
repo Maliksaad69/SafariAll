@@ -208,14 +208,21 @@ export default function Navbar() {
 
   return (
     <header className="glass-nav sticky top-0 z-50 font-sans text-white w-full border-b border-white/10 overflow-x-clip">
+      {/* ── Top Announcement Banner ── */}
+      <div className="bg-[#0b2926] text-[#f4f7f3] text-[11px] sm:text-xs text-center py-2 px-3 tracking-[0.035em] border-b border-white/10">
+        <span>🌍 EXPLORE AFRICA WITH CONFIDENCE &nbsp; • &nbsp; <b className="text-[#f6bd91] font-bold">Connect directly with local safari operators</b></span>
+      </div>
+
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
         <div className="flex h-[66px] sm:h-[72px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
-          <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90">
-            <img
-              src="/images/safaribuilt-logo.png?v=3"
-              alt="SafariRequest — One Marketplace for African Safari Tours"
-              className="h-[38px] sm:h-[44px] lg:h-[46px] xl:h-[50px] w-auto object-contain shrink-0"
-            />
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0 transition-opacity hover:opacity-95" aria-label="SafariHello homepage">
+            <span className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[11px] sm:rounded-[13px] bg-[#123b34] text-white font-extrabold text-xl sm:text-2xl font-display shadow-md ring-1 ring-white/20 shrink-0">
+              S
+              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#e78748] ring-1 ring-[#123b34]" />
+            </span>
+            <span className="font-display font-extrabold text-[22px] sm:text-[26px] tracking-[-1.2px] text-white leading-none">
+              Safari<span className="text-[#e78748]">Hello</span>
+            </span>
           </Link>
 
           <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-4">
@@ -414,16 +421,22 @@ export default function Navbar() {
             ) : (
               <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
                 <Link
+                  href="/register?role=OPERATOR"
+                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 hover:bg-white/15 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap"
+                >
+                  List Your Tours
+                </Link>
+                <Link
                   href="/login"
                   className="inline-flex items-center justify-center rounded-xl border border-white/30 px-2.5 xl:px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/10 hover:border-white/50 whitespace-nowrap"
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center rounded-xl bg-[#E4DBB4] hover:bg-[#D8CDA1] px-3 xl:px-3.5 py-1.5 text-xs font-bold text-[#193A38] shadow-xs transition-colors whitespace-nowrap"
+                  href="/african-safari-tours"
+                  className="inline-flex items-center justify-center rounded-xl bg-[#e78748] hover:bg-[#d97738] px-3 xl:px-3.5 py-1.5 text-xs font-extrabold text-[#0b2926] shadow-sm transition-colors whitespace-nowrap gap-1"
                 >
-                  Register
+                  Explore Safaris ↗
                 </Link>
               </div>
             )}
@@ -617,20 +630,29 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="space-y-2 pt-1">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="btn min-h-[46px] w-full justify-center text-[13.5px] border border-[#214446]/25 text-[#214446] bg-white hover:bg-[#E4DBB4]/30 font-bold"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/african-safari-tours"
+                      onClick={() => setMobileOpen(false)}
+                      className="btn min-h-[46px] w-full justify-center text-[13.5px] bg-[#e78748] hover:bg-[#d97738] text-[#0b2926] font-extrabold shadow-sm"
+                    >
+                      Explore Safaris ↗
+                    </Link>
+                  </div>
                   <Link
-                    href="/login"
+                    href="/register?role=OPERATOR"
                     onClick={() => setMobileOpen(false)}
-                    className="btn min-h-[48px] w-full justify-center text-[14px] border border-[#214446]/25 text-[#214446] bg-white hover:bg-[#E4DBB4]/30"
+                    className="flex min-h-[44px] w-full items-center justify-center rounded-xl border border-[#DEDCCF] bg-white text-center text-[13px] font-bold text-[#193A38] hover:bg-[#E4DBB4]/20 transition-colors"
                   >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/register"
-                    onClick={() => setMobileOpen(false)}
-                    className="btn btn-primary min-h-[48px] w-full justify-center text-[14px] bg-[#214446] hover:bg-[#193A38] text-white font-bold"
-                  >
-                    Register
+                    List Your Tours (For Tour Operators)
                   </Link>
                 </div>
               )}

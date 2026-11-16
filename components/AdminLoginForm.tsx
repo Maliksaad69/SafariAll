@@ -167,7 +167,7 @@ export default function AdminLoginForm({ currentRole, currentEmail }: AdminLogin
             </form>
 
             <div className="pt-2 text-center text-[11px] text-[var(--ink-muted)]">
-              <span>Encrypted Session &bull; Protected by SafariRequest Security Protocol</span>
+              <span>Encrypted Session &bull; Protected by SafariHello Security Protocol</span>
             </div>
 
           </div>

@@ -30,7 +30,7 @@ export default function PrivacyPolicyPage() {
 
           <div className="space-y-6 text-sm sm:text-base leading-relaxed text-[var(--ink)]/80">
             <p>
-              SafariRequest respects your privacy and handles personal information only for legitimate booking, service, and communication purposes. We use your data to help match you with suitable safari operators, answer inquiries, and improve the quality of the travel planning experience.
+              SafariHello respects your privacy and handles personal information only for legitimate booking, service, and communication purposes. We use your data to help match you with suitable safari operators, answer inquiries, and improve the quality of the travel planning experience.
             </p>
             <p>
               We may use cookies to remember preferences, improve the site experience, and understand how visitors interact with our content. You can manage your consent settings at any time through the cookies popup or browser settings.
