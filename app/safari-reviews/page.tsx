@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import Link from 'next/link';
 import { Star, CheckCircle2, PenLine } from 'lucide-react';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 function Stars({ rating }: { rating: number }) {
   return (

@@ -12,7 +12,7 @@ import { getTourCards, getOperatorCards, getCountries, getExperts, getLatestBlog
 import { withMemoryCache } from '@/lib/cache';
 import { CheckCircle2, ChevronRight, Award } from 'lucide-react';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 async function getRealStats() {
   return withMemoryCache('home_real_stats', 60, async () => {

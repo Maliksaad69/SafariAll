@@ -2,13 +2,18 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { withMemoryCache } from '@/lib/cache';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const count = await withMemoryCache('tours_count', 300, () =>
-      prisma.tour.count({ where: { isPublished: true } })
-    );
+    const count = await withMemoryCache('tours_count', 300, async () => {
+      try {
+        return await prisma.tour.count({ where: { isPublished: true } });
+      } catch (err) {
+        console.warn('[tours-count API] Query failed:', (err as Error)?.message);
+        return 0;
+      }
+    });
     return NextResponse.json(
       { count },
       {
@@ -18,7 +23,6 @@ export async function GET() {
       }
     );
   } catch (error: any) {
-    console.error('Tours count API error:', error);
-    return NextResponse.json({ count: 0 }, { status: 500 });
+    return NextResponse.json({ count: 0 });
   }
 }

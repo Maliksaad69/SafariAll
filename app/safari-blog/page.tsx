@@ -4,7 +4,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { ArrowRight, Newspaper } from 'lucide-react';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 interface Post {
   id: string;

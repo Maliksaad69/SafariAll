@@ -6,7 +6,7 @@ import { Sun, TrendingUp, Play, ChevronRight, Compass } from 'lucide-react';
 import HeroBackgroundSlider from '@/components/HeroBackgroundSlider';
 import { COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Top African Safari Countries & National Parks | SafariHello',
