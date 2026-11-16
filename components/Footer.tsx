@@ -45,10 +45,10 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-12 border-t border-[#c4b78a] bg-[#d8cda1] text-[#193A38]">
+    <footer className="mt-12 border-t border-[#c8bc94] bg-[#dbd0ab] text-[#193A38]">
       <div className="mx-auto max-w-[1230px] px-4 sm:px-6 pt-14 pb-10">
         {/* Responsive 5-column grid */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-[#c4b78a] pb-12">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-[#c8bc94] pb-12">
           {/* Column 1: Brand overview */}
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
