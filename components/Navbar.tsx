@@ -208,23 +208,18 @@ export default function Navbar() {
 
   return (
     <header className="glass-nav sticky top-0 z-50 font-sans text-white w-full border-b border-white/10 overflow-x-clip">
-      {/* ── Top Announcement Banner ── */}
-      <div className="bg-[#0b2926] text-[#f4f7f3] text-[11px] sm:text-xs text-center py-2 px-3 tracking-[0.035em] border-b border-white/10">
-        <span>🌍 EXPLORE AFRICA WITH CONFIDENCE &nbsp; • &nbsp; <b className="text-[#f6bd91] font-bold">Connect directly with local safari operators</b></span>
-      </div>
-
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
-        <div className="flex h-[66px] sm:h-[72px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
+        <div className="flex h-[54px] sm:h-[58px] lg:h-[62px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
             <img
               src="/images/safaribuilt-logo.png?v=6"
               alt="SafariHello — Africa's Marketplace for Safari Tours"
-              className="h-[38px] sm:h-[44px] lg:h-[48px] xl:h-[52px] w-auto object-contain shrink-0"
+              className="h-[30px] sm:h-[34px] lg:h-[38px] xl:h-[42px] w-auto object-contain shrink-0"
             />
           </Link>
 
-          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-4">
-            <nav className="relative flex items-center justify-center gap-1 xl:gap-2.5 2xl:gap-4 text-[12px] xl:text-[13px] font-bold uppercase tracking-[0.04em] text-white/90">
+          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-3">
+            <nav className="relative flex items-center justify-center gap-0.5 xl:gap-1.5 2xl:gap-3 text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.03em] text-white/90">
               {navMenus.map(({ href, label, items, isWide, viewAllLabel }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -238,7 +233,7 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2.5 py-1.5 xl:px-3.5 xl:py-2 transition-colors whitespace-nowrap ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
+                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-white/20 text-white shadow-xs' : 'hover:bg-white/10 hover:text-white'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
@@ -247,7 +242,7 @@ export default function Navbar() {
                     </Link>
 
                     <div
-                      className={`absolute ${isWide ? '-left-8 sm:-left-12' : 'left-0'} top-full pt-3 transition-all duration-200 ${
+                      className={`absolute ${isWide ? '-left-8 sm:-left-12' : 'left-0'} top-full pt-2 transition-all duration-200 ${
                         isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
                       }`}
                     >
@@ -420,21 +415,21 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
                 <Link
                   href="/register?role=OPERATOR"
-                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 hover:bg-white/15 px-3 py-1.5 text-xs font-bold text-white transition-colors whitespace-nowrap"
+                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/5 hover:bg-white/15 px-2.5 py-1 text-xs font-bold text-white transition-colors whitespace-nowrap"
                 >
                   List Your Tours
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/30 px-2.5 xl:px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/10 hover:border-white/50 whitespace-nowrap"
+                  className="inline-flex items-center justify-center rounded-xl border border-white/30 px-2.5 py-1 text-xs font-bold text-white transition-colors hover:bg-white/10 hover:border-white/50 whitespace-nowrap"
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/african-safari-tours"
-                  className="inline-flex items-center justify-center rounded-xl bg-[#e78748] hover:bg-[#d97738] px-3 xl:px-3.5 py-1.5 text-xs font-extrabold text-[#0b2926] shadow-sm transition-colors whitespace-nowrap gap-1"
+                  href="/register"
+                  className="inline-flex items-center justify-center rounded-xl bg-[#E4DBB4] hover:bg-[#D8CDA1] px-2.5 py-1 text-xs font-bold text-[#193A38] shadow-xs transition-colors whitespace-nowrap"
                 >
-                  Explore Safaris ↗
+                  Register
                 </Link>
               </div>
             )}
@@ -475,7 +470,7 @@ export default function Navbar() {
       {/* Mobile Drawer Backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 top-[66px] sm:top-[72px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 lg:hidden"
+          className="fixed inset-0 top-[54px] sm:top-[58px] lg:top-[62px] z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-200 lg:hidden"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
@@ -486,7 +481,7 @@ export default function Navbar() {
         <div
           role="dialog"
           aria-label="Mobile Navigation Menu"
-          className="fixed left-0 right-0 top-[66px] sm:top-[72px] z-50 max-h-[calc(100vh-66px)] sm:max-h-[calc(100vh-72px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
+          className="fixed left-0 right-0 top-[54px] sm:top-[58px] lg:top-[62px] z-50 max-h-[calc(100vh-54px)] sm:max-h-[calc(100vh-58px)] lg:max-h-[calc(100vh-62px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
             {/* Mobile Header Logo */}
@@ -644,22 +639,22 @@ export default function Navbar() {
                     <Link
                       href="/login"
                       onClick={() => setMobileOpen(false)}
-                      className="btn min-h-[46px] w-full justify-center text-[13.5px] border border-[#214446]/25 text-[#214446] bg-white hover:bg-[#E4DBB4]/30 font-bold"
+                      className="btn min-h-[42px] w-full justify-center text-[13px] border border-[#214446]/25 text-[#214446] bg-white hover:bg-[#E4DBB4]/30 font-bold"
                     >
                       Sign In
                     </Link>
                     <Link
-                      href="/african-safari-tours"
+                      href="/register"
                       onClick={() => setMobileOpen(false)}
-                      className="btn min-h-[46px] w-full justify-center text-[13.5px] bg-[#e78748] hover:bg-[#d97738] text-[#0b2926] font-extrabold shadow-sm"
+                      className="btn btn-primary min-h-[42px] w-full justify-center text-[13px] bg-[#214446] hover:bg-[#193A38] text-white font-bold"
                     >
-                      Explore Safaris ↗
+                      Register
                     </Link>
                   </div>
                   <Link
                     href="/register?role=OPERATOR"
                     onClick={() => setMobileOpen(false)}
-                    className="flex min-h-[44px] w-full items-center justify-center rounded-xl border border-[#DEDCCF] bg-white text-center text-[13px] font-bold text-[#193A38] hover:bg-[#E4DBB4]/20 transition-colors"
+                    className="flex min-h-[40px] w-full items-center justify-center rounded-xl border border-[#DEDCCF] bg-white text-center text-[12.5px] font-bold text-[#193A38] hover:bg-[#E4DBB4]/20 transition-colors"
                   >
                     List Your Tours (For Tour Operators)
                   </Link>
