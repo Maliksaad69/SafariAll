@@ -45,10 +45,10 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-12 border-t border-[#0b2926]/15 bg-[#e78748] text-[#0b2926]">
+    <footer className="mt-12 border-t border-[#c4b78a] bg-[#d8cda1] text-[#193A38]">
       <div className="mx-auto max-w-[1230px] px-4 sm:px-6 pt-14 pb-10">
         {/* Responsive 5-column grid */}
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-[#0b2926]/15 pb-12">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-[#c4b78a] pb-12">
           {/* Column 1: Brand overview */}
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
@@ -59,7 +59,7 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="text-sm leading-relaxed text-[#0b2926]/90 font-medium">
+            <p className="text-sm leading-relaxed text-[#193A38]/90 font-medium">
               Africa&apos;s marketplace for safari tours. Discover amazing wildlife experiences and connect directly with local safari operators.
             </p>
           </div>
@@ -67,7 +67,7 @@ export default function Footer() {
           {/* Columns 2-4: Categorized Links */}
           {columns.map((col) => (
             <div key={col.heading} className="space-y-3">
-              <h4 className="text-xs font-black uppercase tracking-wider text-[#0b2926]">
+              <h4 className="text-xs font-black uppercase tracking-wider text-[#123b34]">
                 {col.heading}
               </h4>
               <ul className="space-y-2">
@@ -75,7 +75,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="inline-block py-1 text-sm font-semibold text-[#0b2926]/85 transition-colors hover:text-white"
+                      className="inline-block py-1 text-sm font-semibold text-[#193A38]/85 transition-colors hover:text-[#0b2926] hover:underline"
                     >
                       {link.label}
                     </Link>
@@ -87,10 +87,10 @@ export default function Footer() {
 
           {/* Column 5: For Tour Operators CTA */}
           <div className="space-y-3 sm:col-span-2 lg:col-span-1">
-            <h4 className="text-xs font-black uppercase tracking-wider text-[#0b2926]">
+            <h4 className="text-xs font-black uppercase tracking-wider text-[#123b34]">
               For Tour Operators
             </h4>
-            <p className="text-sm leading-relaxed text-[#0b2926]/90 font-medium">
+            <p className="text-sm leading-relaxed text-[#193A38]/90 font-medium">
               Are you a licensed African safari company? Join our verified network and receive direct traveler quote requests — free of charge.
             </p>
             <div className="pt-1">
@@ -103,7 +103,7 @@ export default function Footer() {
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             </div>
-            <p className="flex items-center gap-1.5 text-xs text-[#0b2926]/80 pt-1 font-semibold">
+            <p className="flex items-center gap-1.5 text-xs text-[#193A38]/75 pt-1 font-semibold">
               <Lock className="h-3.5 w-3.5 shrink-0" />
               <span>Anti-scam verification · No hidden fees</span>
             </p>
@@ -111,7 +111,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-[#0b2926]/80 font-medium lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-[#193A38]/80 font-medium lg:grid-cols-3">
           <p className="order-1 text-center lg:text-left">
             © {year} SafariHello. All rights reserved.
           </p>
@@ -119,13 +119,13 @@ export default function Footer() {
             <LoneAlphaBadge />
           </div>
           <div className="order-3 flex flex-wrap items-center justify-center gap-5 sm:gap-6 lg:justify-end">
-            <Link href="/privacy-policy" className="py-1 transition-colors hover:text-white">
+            <Link href="/privacy-policy" className="py-1 transition-colors hover:text-[#0b2926] hover:underline">
               Privacy Policy
             </Link>
-            <Link href="/faq" className="py-1 transition-colors hover:text-white">
+            <Link href="/faq" className="py-1 transition-colors hover:text-[#0b2926] hover:underline">
               FAQ
             </Link>
-            <Link href="/how-it-works" className="py-1 transition-colors hover:text-white">
+            <Link href="/how-it-works" className="py-1 transition-colors hover:text-[#0b2926] hover:underline">
               How It Works
             </Link>
           </div>

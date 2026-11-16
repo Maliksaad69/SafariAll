@@ -233,7 +233,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 font-sans text-[#1d302d] w-full border-b border-[#e1e8e3] bg-white/95 backdrop-blur-md overflow-x-clip shadow-xs">
+    <header className="glass-nav sticky top-0 z-50 font-sans text-[#193A38] w-full border-b border-[#c4b78a] bg-[#d8cda1]/95 backdrop-blur-md overflow-x-clip shadow-xs">
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
         <div className="flex h-[54px] sm:h-[58px] lg:h-[62px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
@@ -245,7 +245,7 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-3">
-            <nav className="relative flex items-center justify-center gap-0.5 xl:gap-1.5 2xl:gap-3 text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.03em] text-[#1d302d]">
+            <nav className="relative flex items-center justify-center gap-0.5 xl:gap-1.5 2xl:gap-3 text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.03em] text-[#193A38]">
               {navMenus.map(({ href, label, items, isWide, viewAllLabel }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -259,12 +259,12 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-[#123b34]/10 text-[#123b34] font-extrabold shadow-xs' : 'text-[#1d302d] hover:bg-[#F7F6F0] hover:text-[#e78748]'}`}
+                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-[#123b34] text-white shadow-xs' : 'text-[#193A38] hover:bg-[#cbbe8f] hover:text-[#0b2926]'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
                       <span>{label}</span>
-                      <ChevronDown className={`h-3 w-3 xl:h-3.5 xl:w-3.5 text-[#697771] transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#e78748]' : ''}`} />
+                      <ChevronDown className={`h-3 w-3 xl:h-3.5 xl:w-3.5 text-[#516D6A] transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#0b2926]' : ''}`} />
                     </Link>
 
                     <div
@@ -347,13 +347,13 @@ export default function Navbar() {
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={toggleNotifications}
-                  className="relative flex items-center text-[#1d302d] transition-colors hover:text-[#123b34] p-1.5 rounded-full hover:bg-[#F7F6F0]"
+                  className="relative flex items-center text-[#193A38] transition-colors hover:text-[#0b2926] p-1.5 rounded-full hover:bg-[#cbbe8f]"
                   aria-label="Travel notifications"
                   aria-expanded={notifOpen}
                 >
                   <Bell className="h-5 w-5" strokeWidth={1.6} />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#e78748] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
+                    <span className="absolute -top-1 -right-1 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#123b34] px-1 text-[9px] font-bold text-white shadow">{unreadCount}</span>
                   )}
                 </button>
                 {notifOpen && (
@@ -394,28 +394,28 @@ export default function Navbar() {
               </div>
             )}
             {sessionUser && isDesktop === true && <ChatLauncher />}
-            <Link href="/favorites" className="flex items-center gap-1 text-[#1d302d] transition-colors hover:text-[#e78748] group px-1.5 py-1 shrink-0 rounded-full hover:bg-[#F7F6F0]" aria-label="Favorites list">
+            <Link href="/favorites" className="flex items-center gap-1 text-[#193A38] transition-colors hover:text-[#0b2926] group px-1.5 py-1 shrink-0 rounded-full hover:bg-[#cbbe8f]" aria-label="Favorites list">
               <div className="relative">
-                <Heart className="h-4 w-4 xl:h-5 xl:w-5 text-[#1d302d] group-hover:text-[#e78748] group-hover:fill-[#e78748]/20 transition-colors" strokeWidth={1.6} />
+                <Heart className="h-4 w-4 xl:h-5 xl:w-5 text-[#193A38] group-hover:text-[#0b2926] transition-colors" strokeWidth={1.6} />
                 {favoriteCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-[#123b34] px-1 text-[9px] font-bold text-white shadow">{favoriteCount}</span>
                 )}
               </div>
-              <span className="hidden xl:inline text-[#1d302d] group-hover:text-[#e78748]">List</span>
+              <span className="hidden xl:inline text-[#193A38] group-hover:text-[#0b2926]">List</span>
             </Link>
             <NavbarSearch />
             {sessionUser ? (
               <div className="relative ml-0.5" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-1.5 text-[#1d302d] transition-colors hover:text-[#123b34] px-2 py-1 rounded-full hover:bg-[#F7F6F0]"
+                  className="flex items-center gap-1.5 text-[#193A38] transition-colors hover:text-[#0b2926] px-2 py-1 rounded-full hover:bg-[#cbbe8f]"
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
                   aria-label="Account menu"
                 >
-                  <span className="max-w-[80px] xl:max-w-[120px] truncate text-xs xl:text-[13px] font-bold text-[#1d302d]">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
-                  <User className="h-4 w-4 xl:h-5 xl:w-5 text-[#1d302d]" strokeWidth={1.6} />
-                  <ChevronDown className="h-3 w-3 xl:h-3.5 xl:w-3.5 text-[#697771]" />
+                  <span className="max-w-[80px] xl:max-w-[120px] truncate text-xs xl:text-[13px] font-bold text-[#193A38]">{sessionUser.name || sessionUser.email?.split('@')[0]}</span>
+                  <User className="h-4 w-4 xl:h-5 xl:w-5 text-[#193A38]" strokeWidth={1.6} />
+                  <ChevronDown className="h-3 w-3 xl:h-3.5 xl:w-3.5 text-[#516D6A]" />
                 </button>
                 {userMenuOpen && (
                   <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
@@ -441,13 +441,13 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
                 <Link
                   href="/register?role=OPERATOR"
-                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-[#e1e8e3] bg-[#F7F6F0] hover:bg-[#eae8de] px-2.5 py-1 text-xs font-bold text-[#123b34] transition-colors whitespace-nowrap"
+                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-[#c4b78a] bg-white/60 hover:bg-white px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors whitespace-nowrap"
                 >
                   List Your Tours
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center rounded-xl border border-[#e1e8e3] px-2.5 py-1 text-xs font-bold text-[#1d302d] transition-colors hover:bg-[#F7F6F0] hover:border-[#697771]/30 whitespace-nowrap"
+                  className="inline-flex items-center justify-center rounded-xl border border-[#c4b78a] px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors hover:bg-white/60 whitespace-nowrap"
                 >
                   Sign In
                 </Link>
@@ -467,7 +467,7 @@ export default function Navbar() {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   href="/login"
-                  className="hidden sm:inline-flex items-center rounded-lg border border-[#e1e8e3] px-2.5 py-1 text-xs font-bold text-[#1d302d] hover:bg-[#F7F6F0] transition-colors whitespace-nowrap"
+                  className="hidden sm:inline-flex items-center rounded-lg border border-[#c4b78a] px-2.5 py-1 text-xs font-bold text-[#193A38] hover:bg-white/60 transition-colors whitespace-nowrap"
                 >
                   Sign In
                 </Link>
@@ -479,11 +479,11 @@ export default function Navbar() {
                 </Link>
               </div>
             )}
-            {sessionUser && isDesktop === false && <ChatLauncher className="mr-0.5 text-[#1d302d] hover:text-[#123b34]" />}
+            {sessionUser && isDesktop === false && <ChatLauncher className="mr-0.5 text-[#193A38] hover:text-[#0b2926]" />}
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-[#1d302d] transition-colors hover:bg-black/5 active:scale-95"
+              className="flex h-10 w-10 min-h-[40px] min-w-[40px] items-center justify-center rounded-full text-[#193A38] transition-colors hover:bg-black/5 active:scale-95"
               aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
             >

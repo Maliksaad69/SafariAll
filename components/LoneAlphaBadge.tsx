@@ -6,15 +6,15 @@ export default function LoneAlphaBadge({ className = "" }: { className?: string 
         target="_blank"
         rel="noopener noreferrer"
         title="View Saad Ahmed's profile — LoneAlpha"
-        className="group relative inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#163332]/85 hover:bg-[#122A29] border border-white/10 hover:border-[#C5A059]/60 shadow-xs hover:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5),0_0_16px_rgba(197,160,89,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0 backdrop-blur-md"
+        className="group relative inline-flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#123b34] hover:bg-[#0b2926] border border-[#0b2926]/30 hover:border-[#C5A059]/70 shadow-md hover:shadow-[0_8px_24px_-4px_rgba(11,41,38,0.4),0_0_16px_rgba(197,160,89,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-0"
       >
-        <span className="text-xs sm:text-[13px] tracking-wide text-white/70 group-hover:text-white/95 font-medium leading-none transition-colors">
+        <span className="text-xs sm:text-[13px] tracking-wide text-white/80 group-hover:text-white font-semibold leading-none transition-colors">
           Powered by
         </span>
-        <span className="w-px h-4 bg-white/15 group-hover:bg-[#C5A059]/50 transition-colors" />
+        <span className="w-px h-4 bg-white/20 group-hover:bg-[#C5A059]/60 transition-colors" />
         <div className="flex items-center gap-2 sm:gap-2.5">
           {/* Natural dark wolf vessel with subtle gold aura */}
-          <div className="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#0E1F1E] border border-white/10 group-hover:border-[#C5A059]/60 shadow-inner flex items-center justify-center p-1 transition-all duration-300 shrink-0 group-hover:shadow-[0_0_10px_rgba(197,160,89,0.4)]">
+          <div className="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#0b2926] border border-[#C5A059]/40 group-hover:border-[#C5A059] shadow-inner flex items-center justify-center p-1 transition-all duration-300 shrink-0 group-hover:shadow-[0_0_10px_rgba(197,160,89,0.4)]">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -83,11 +83,11 @@ export default function LoneAlphaBadge({ className = "" }: { className?: string 
               <polygon points="10.5,20.8 13.5,20.8 12,22.2" fill="url(#loneAlphaWolfLight)" />
             </svg>
           </div>
-          <span className="text-xs sm:text-[14px] font-black tracking-wider uppercase text-white group-hover:text-[#E4DBB4] transition-colors leading-none">
+          <span className="text-xs sm:text-[14px] font-black tracking-wider uppercase text-white group-hover:text-[#FDE68A] transition-colors leading-none">
             LoneAlpha
           </span>
           <svg
-            className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/60 group-hover:text-[#C5A059] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0"
+            className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70 group-hover:text-[#FDE68A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
