@@ -107,7 +107,7 @@ export default function HeroBackgroundSlider({
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[560px] sm:min-h-[584px] lg:min-h-[620px]',
+  minHeightClass = 'min-h-[500px] sm:min-h-[530px] lg:min-h-[570px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -141,7 +141,7 @@ export default function HeroBackgroundSlider({
   return (
     <section
       aria-label="African Safari Hero"
-      className={`relative w-full overflow-hidden flex items-center ${minHeightClass} ${className}`}
+      className={`relative w-full overflow-hidden flex items-start ${minHeightClass} ${className}`}
     >
       {/* ── Top Dynamic Slide Progress Indicator ── */}
       <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
@@ -216,22 +216,22 @@ export default function HeroBackgroundSlider({
           {children}
         </div>
       ) : (
-        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-9 pb-20 sm:pb-24 lg:pb-28">
           <div className="max-w-[830px]">
             {/* Eyebrow with dash */}
-            <div className="flex items-center gap-2.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-4 sm:mb-5">
+            <div className="flex items-center gap-2.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-2.5 sm:mb-3">
               <span className="w-6 h-[2px] bg-[#e78748] shrink-0" />
               <span>AFRICA&apos;S MARKETPLACE FOR SAFARI TOURS</span>
             </div>
 
             {/* Heading */}
-            <h1 className="font-display font-extrabold text-[36px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.06] tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+            <h1 className="font-display font-extrabold text-[36px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.06] tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-3 sm:mb-3.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
               Your next safari<br className="hidden sm:inline" /> starts with{' '}
               <span className="text-[#f3ae7d]">hello.</span>
             </h1>
 
             {/* Description */}
-            <p className="text-[15px] sm:text-[17px] leading-[1.65] max-w-[580px] text-[#e5ece7] mb-7 sm:mb-8 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
+            <p className="text-[15px] sm:text-[17px] leading-[1.65] max-w-[580px] text-[#e5ece7] mb-5 sm:mb-6 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
               Explore extraordinary African safaris, compare authentic tours, and connect directly with trusted local operators. The adventure is yours to discover.
             </p>
 
@@ -246,7 +246,7 @@ export default function HeroBackgroundSlider({
             </div>
 
             {/* Feature Check Chips */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-7 sm:mt-8">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-5 sm:mt-6">
               <span className="flex items-center gap-2">
                 <b className="text-[#f2aa78] font-black text-sm">✓</b> Direct local quotes
               </span>
