@@ -607,9 +607,9 @@ select.form-control {
 
 /* ── Frosted nav & inputs ── */
 .glass-nav {
-  background-color: var(--primary, #214446);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 2px 8px rgba(25, 58, 56, 0.15);
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #e1e8e3;
+  box-shadow: 0 1px 4px rgba(18, 59, 52, 0.06);
 }
 
 .glass-input {
