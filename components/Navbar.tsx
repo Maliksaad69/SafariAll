@@ -215,14 +215,12 @@ export default function Navbar() {
 
       <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
         <div className="flex h-[66px] sm:h-[72px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0 transition-opacity hover:opacity-95" aria-label="SafariHello homepage">
-            <span className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[11px] sm:rounded-[13px] bg-[#123b34] text-white font-extrabold text-xl sm:text-2xl font-display shadow-md ring-1 ring-white/20 shrink-0">
-              S
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#e78748] ring-1 ring-[#123b34]" />
-            </span>
-            <span className="font-display font-extrabold text-[22px] sm:text-[26px] tracking-[-1.2px] text-white leading-none">
-              Safari<span className="text-[#e78748]">Hello</span>
-            </span>
+          <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
+            <img
+              src="/images/safaribuilt-logo.png?v=6"
+              alt="SafariHello — Africa's Marketplace for Safari Tours"
+              className="h-[38px] sm:h-[44px] lg:h-[48px] xl:h-[52px] w-auto object-contain shrink-0"
+            />
           </Link>
 
           <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-4">
@@ -491,6 +489,17 @@ export default function Navbar() {
           className="fixed left-0 right-0 top-[66px] sm:top-[72px] z-50 max-h-[calc(100vh-66px)] sm:max-h-[calc(100vh-72px)] overflow-y-auto overscroll-contain border-t border-[#DEDCCF] bg-[#F7F6F1] shadow-2xl transition-all duration-300 lg:hidden"
         >
           <div className="flex flex-col gap-3 p-4 text-[15px]">
+            {/* Mobile Header Logo */}
+            <div className="flex items-center justify-between pb-1 border-b border-[#DEDCCF]/70">
+              <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
+                <img
+                  src="/images/safaribuilt-logo.png?v=6"
+                  alt="SafariHello"
+                  className="h-[36px] w-auto object-contain"
+                />
+              </Link>
+            </div>
+
             {/* Quick search input */}
             <div className="rounded-2xl border border-[#DEDCCF] bg-white p-1 shadow-xs">
               <NavbarSearch mobile onNavigate={() => setMobileOpen(false)} />
