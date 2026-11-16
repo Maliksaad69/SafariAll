@@ -39,8 +39,16 @@ if [ -n "$DATABASE_URL" ] && [ "$SKIP_PRISMA_MIGRATION" != "true" ]; then
         echo "==> Prisma migrations deployed successfully."
       else
         echo "==> 'prisma migrate deploy' failed. Checking and resolving failed migrations..."
-        # 1. Resolve failed initial migration if present (e.g. after database flush)
-        $PRISMA_CLI migrate resolve --rolled-back "20260928180338_init" >/dev/null 2>&1 || true
+        # 1. Resolve desynchronized or failed migrations as applied if objects already exist in database
+        for m in "20260928180338_init" \
+                 "20261019000000_add_media_slots_blog_messages_notifications" \
+                 "20261019180000_catalog_countries_offices_experts" \
+                 "20261020090000_live_departure_capacity" \
+                 "20261020120000_inquiry_departure" \
+                 "20261020150000_db_enforced_seat_rules" \
+                 "20261020200000_rich_chat"; do
+          $PRISMA_CLI migrate resolve --applied "$m" >/dev/null 2>&1 || true
+        done
 
         # 2. Re-attempt migration deploy
         if $PRISMA_CLI migrate deploy; then
