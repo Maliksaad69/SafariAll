@@ -8,6 +8,9 @@ import NavbarSearch from '@/components/NavbarSearch';
 import ChatLauncher from '@/components/ChatLauncher';
 import { SAFARI_COUNTRIES, COUNTRY_FLAGS, getCountrySeoUrl } from '@/lib/countries';
 
+let cachedNavData: { countries: string[]; operators: { companyName: string; slug: string }[] } | null = null;
+let pendingNavPromise: Promise<any> | null = null;
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -59,20 +62,43 @@ export default function Navbar() {
     window.location.href = '/';
   };
 
-  // Country list and top operators come from Postgres via /api/site/nav
-  const [countries, setCountries] = useState<string[]>([...SAFARI_COUNTRIES]);
-  const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>([]);
+  // Country list and top operators come from Postgres via /api/site/nav (cached client-side)
+  const [countries, setCountries] = useState<string[]>(
+    cachedNavData?.countries || [...SAFARI_COUNTRIES]
+  );
+  const [topOperators, setTopOperators] = useState<{ companyName: string; slug: string }[]>(
+    cachedNavData?.operators || []
+  );
+
   useEffect(() => {
-    fetch('/api/site/nav')
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.countries && d.countries.length > 0) {
-          const sorted = Array.from(new Set([...SAFARI_COUNTRIES, ...d.countries])).sort((a: string, b: string) => a.localeCompare(b));
-          setCountries(sorted);
-        }
-        if (d.operators && d.operators.length > 0) setTopOperators(d.operators);
-      })
-      .catch(() => {});
+    if (cachedNavData) return;
+
+    if (!pendingNavPromise) {
+      pendingNavPromise = fetch('/api/site/nav')
+        .then((r) => r.json())
+        .then((d) => {
+          let sortedCountries = [...SAFARI_COUNTRIES];
+          if (d.countries && d.countries.length > 0) {
+            sortedCountries = Array.from(new Set([...SAFARI_COUNTRIES, ...d.countries])).sort((a: string, b: string) => a.localeCompare(b));
+          }
+          cachedNavData = {
+            countries: sortedCountries,
+            operators: d.operators || [],
+          };
+          pendingNavPromise = null;
+          return cachedNavData;
+        })
+        .catch(() => {
+          pendingNavPromise = null;
+          return null;
+        });
+    }
+
+    pendingNavPromise.then((data) => {
+      if (!data) return;
+      setCountries(data.countries);
+      setTopOperators(data.operators);
+    });
   }, []);
 
   const navMenus = [

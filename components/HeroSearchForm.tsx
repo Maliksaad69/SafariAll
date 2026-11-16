@@ -16,14 +16,15 @@ const SAFARI_STYLES = [
   { value: 'Cultural Safari', label: 'Cultural & Walking' },
 ];
 
-export default function HeroSearchForm() {
+export default function HeroSearchForm({ initialTourCount }: { initialTourCount?: number } = {}) {
   const router = useRouter();
   const [destination, setDestination] = useState('');
   const [style, setStyle] = useState('');
   const [startDate, setStartDate] = useState('');
-  const [tourCount, setTourCount] = useState<number | null>(null);
+  const [tourCount, setTourCount] = useState<number | null>(initialTourCount ?? null);
 
   useEffect(() => {
+    if (typeof initialTourCount === 'number') return;
     let cancelled = false;
     fetch('/api/tours-count')
       .then((r) => (r.ok ? r.json() : null))
@@ -34,7 +35,7 @@ export default function HeroSearchForm() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialTourCount]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

@@ -17,7 +17,7 @@ export interface HeroSlide {
 export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
   return [
     {
-      url: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=75',
       location: 'Serengeti National Park · Tanzania',
       badge: 'Zero Commission · Direct Local Quotes',
       title: 'Compare African',
@@ -25,7 +25,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Booked directly from top-rated verified local operators at true local prices',
     },
     {
-      url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1600&q=75',
       location: 'Amboseli National Park · Kenya',
       badge: 'Iconic Landscapes · Amboseli & Tsavo',
       title: 'Walk Alongside Giant',
@@ -33,7 +33,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Witness world-famous tuskers beneath the snow-capped peak of Mount Kilimanjaro',
     },
     {
-      url: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=1600&q=75',
       location: 'Maasai Mara National Reserve · Kenya',
       badge: 'Big Cat Encounters · Maasai Mara',
       title: 'Witness The Great',
@@ -41,7 +41,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Dramatic Mara River crossings, apex predator stalks, and golden savannah plains',
     },
     {
-      url: 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=75',
       location: 'Okavango Delta · Botswana',
       badge: 'Pristine Wetlands · Okavango Delta',
       title: 'Glide Through Untamed',
@@ -49,7 +49,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Traverse silent papyrus waterways by traditional mokoro canoe in Botswana',
     },
     {
-      url: 'https://images.unsplash.com/photo-1551887196-72e32bfc7bf3?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1551887196-72e32bfc7bf3?auto=format&fit=crop&w=1600&q=75',
       location: 'Greater Kruger & Sabi Sand · South Africa',
       badge: 'Premier Reserves · Greater Kruger',
       title: 'Track Elusive Leopards &',
@@ -57,7 +57,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Spot Africa’s apex wildlife with top-tier rangers and luxury safari lodges',
     },
     {
-      url: 'https://images.unsplash.com/photo-1551776235-dde6d482980b?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1551776235-dde6d482980b?auto=format&fit=crop&w=1600&q=75',
       location: 'Bwindi Impenetrable Forest · Uganda',
       badge: 'Ancient Rainforest · Bwindi & Volcanoes',
       title: 'Stand Face-to-Face With',
@@ -65,7 +65,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'An intimate, life-changing encounter deep inside the misty rainforest canopy',
     },
     {
-      url: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=1600&q=75',
       location: 'Tarangire National Park · Tanzania',
       badge: 'Sunset Wilderness · Tarangire',
       title: 'Silhouetted Giraffes On',
@@ -73,7 +73,7 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
       subtitle: 'Experience incandescent African sunsets across vast acacia and baobab plains',
     },
     {
-      url: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=2560&q=85',
+      url: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1600&q=75',
       location: 'Ngorongoro Crater · Tanzania',
       badge: 'UNESCO World Heritage · Ngorongoro',
       title: 'Descend Into The World’s',
@@ -111,12 +111,21 @@ export default function HeroBackgroundSlider({
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loadedIndices, setLoadedIndices] = useState<number[]>([0, 1]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const startAutoPlay = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % resolvedSlides.length);
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % resolvedSlides.length;
+        setLoadedIndices((current) => {
+          const afterNext = (next + 1) % resolvedSlides.length;
+          if (current.includes(next) && current.includes(afterNext)) return current;
+          return Array.from(new Set([...current, next, afterNext]));
+        });
+        return next;
+      });
     }, autoPlayInterval);
   }, [resolvedSlides.length, autoPlayInterval]);
 
@@ -147,6 +156,7 @@ export default function HeroBackgroundSlider({
       <div className="absolute inset-0 overflow-hidden z-0">
         {resolvedSlides.map((slide, idx) => {
           const isActive = idx === currentIndex;
+          const isLoaded = loadedIndices.includes(idx);
           const animClass = ANIMATION_CLASSES[idx % ANIMATION_CLASSES.length];
           return (
             <div
@@ -160,7 +170,7 @@ export default function HeroBackgroundSlider({
                 className={`w-full h-full bg-cover bg-center ${
                   isActive ? animClass : 'scale-100'
                 }`}
-                style={{ backgroundImage: `url('${slide.url}')` }}
+                style={isLoaded ? { backgroundImage: `url('${slide.url}')` } : undefined}
               />
             </div>
           );

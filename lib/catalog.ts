@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import type { SiteOperator, SiteTour } from '@/lib/site-data';
 import { todayUtc } from '@/lib/booking';
 import { CURATED_COUNTRIES_DATA } from '@/lib/countries';
+import { withMemoryCache } from '@/lib/cache';
 
 // Read helpers that shape Postgres rows into the card props the UI components use.
 
@@ -47,166 +48,184 @@ export function toTourCard(t: TourCardRow): SiteTour {
 }
 
 export async function getTourCards(where: Prisma.TourWhereInput = {}, take?: number): Promise<SiteTour[]> {
-  try {
-    const rows = await prisma.tour.findMany({
-      where: { isPublished: true, ...where },
-      orderBy: [{ operator: { totalReviews: 'desc' } }, { createdAt: 'desc' }],
-      include: tourCardInclude,
-      take,
-    });
-    if (rows && rows.length > 0) {
-      return rows.map(toTourCard);
+  const isDefault = Object.keys(where).length === 0;
+  const cacheKey = isDefault ? `tour_cards_default_${take ?? 'all'}` : null;
+
+  const fetcher = async () => {
+    try {
+      const rows = await prisma.tour.findMany({
+        where: { isPublished: true, ...where },
+        orderBy: [{ operator: { totalReviews: 'desc' } }, { createdAt: 'desc' }],
+        include: tourCardInclude,
+        take,
+      });
+      if (rows && rows.length > 0) {
+        return rows.map(toTourCard);
+      }
+      return [];
+    } catch (err) {
+      console.warn('[catalog] Database query failed in getTourCards:', (err as Error)?.message);
+      return [];
     }
-    return [];
-  } catch (err) {
-    console.warn('[catalog] Database query failed in getTourCards:', (err as Error)?.message);
-    return [];
+  };
+
+  if (cacheKey) {
+    return withMemoryCache(cacheKey, 60, fetcher);
   }
+  return fetcher();
 }
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString('en-US')}`;
 
 export async function getOperatorCards(): Promise<SiteOperator[]> {
-  try {
-    const rows = await prisma.operator.findMany({
-      orderBy: [{ isVerified: 'desc' }, { totalReviews: 'desc' }],
-      include: {
-        tours: {
-          where: { isPublished: true },
-          orderBy: { minPriceUsd: 'desc' },
-          select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true, tourType: true },
+  return withMemoryCache('operator_cards_all', 60, async () => {
+    try {
+      const rows = await prisma.operator.findMany({
+        orderBy: [{ isVerified: 'desc' }, { totalReviews: 'desc' }],
+        include: {
+          tours: {
+            where: { isPublished: true },
+            orderBy: { minPriceUsd: 'desc' },
+            select: { title: true, minPriceUsd: true, durationDays: true, primaryCountry: true, tourType: true },
+          },
         },
-      },
-    });
-    if (rows && rows.length > 0) {
-      return rows.map((op) => {
-        const perDay = op.tours.map((t) => t.minPriceUsd / Math.max(t.durationDays, 1));
-
-        // Format clean, human-readable Tour Types — NEVER output raw TALA JSON!
-        let tourTypes = 'Tailor-Made Private & Group Safaris';
-        const distinctTourTypes = Array.from(new Set(op.tours.map((t) => t.tourType).filter(Boolean)));
-
-        if (distinctTourTypes.length > 0) {
-          const typeNames: Record<string, string> = {
-            PRIVATE: 'Private Safaris',
-            SHARED_GROUP: 'Group Safaris',
-            FLY_IN: 'Fly-in Safaris',
-            SELF_DRIVE: 'Self-Drive Safaris',
-          };
-          tourTypes = distinctTourTypes.map((tt) => typeNames[tt] || tt).join(', ');
-        } else if (
-          op.serviceSummary &&
-          !op.serviceSummary.trim().startsWith('{') &&
-          !op.serviceSummary.includes('talaNumber') &&
-          !op.serviceSummary.includes('documentUrl')
-        ) {
-          tourTypes = op.serviceSummary.trim();
-        } else if (op.priceTier) {
-          const tierNames: Record<string, string> = {
-            CAMPING: 'Budget Camping & Overland Safaris',
-            BUDGET: 'Budget Adventure Safaris',
-            MID_RANGE: 'Mid-Range Lodge & Tented Safaris',
-            LUXURY: 'Luxury Lodge & Fly-in Safaris',
-            SUPER_LUXURY: 'VIP Bespoke & Private Reserve Safaris',
-          };
-          tourTypes = tierNames[op.priceTier] || 'Tailor-Made African Safaris';
-        }
-
-        // Destinations: collect all unique operating countries from countryOfOrigin, officesIn, and tour countries
-        const rawDestinations = [
-          op.countryOfOrigin,
-          ...(Array.isArray(op.officesIn) ? op.officesIn : []),
-          ...op.tours.map((t) => t.primaryCountry),
-        ].filter((c): c is string => typeof c === 'string' && c.trim().length > 0);
-        const destinations = Array.from(new Set(rawDestinations));
-
-        const offices = Array.isArray(op.officesIn) && op.officesIn.length > 0
-          ? op.officesIn
-          : [op.countryOfOrigin].filter(Boolean);
-
-        return {
-          id: op.id,
-          companyName: op.companyName,
-          slug: op.slug,
-          averageRating: op.averageRating,
-          totalReviews: op.totalReviews,
-          officesIn: offices.length ? offices : (destinations.length ? destinations : ['East Africa']),
-          priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'Custom quotes available',
-          tourTypes,
-          destinations: destinations.length ? destinations : offices,
-          isVerified: op.isVerified,
-          image: op.bannerUrl ?? '',
-          logo: op.logoUrl ?? '',
-          toursCount: op.tours.length,
-          topTours: op.tours.slice(0, 3).map((t) => ({ name: t.title, price: `${usd(t.minPriceUsd)} pp` })),
-        };
       });
+      if (rows && rows.length > 0) {
+        return rows.map((op) => {
+          const perDay = op.tours.map((t) => t.minPriceUsd / Math.max(t.durationDays, 1));
+
+          // Format clean, human-readable Tour Types — NEVER output raw TALA JSON!
+          let tourTypes = 'Tailor-Made Private & Group Safaris';
+          const distinctTourTypes = Array.from(new Set(op.tours.map((t) => t.tourType).filter(Boolean)));
+
+          if (distinctTourTypes.length > 0) {
+            const typeNames: Record<string, string> = {
+              PRIVATE: 'Private Safaris',
+              SHARED_GROUP: 'Group Safaris',
+              FLY_IN: 'Fly-in Safaris',
+              SELF_DRIVE: 'Self-Drive Safaris',
+            };
+            tourTypes = distinctTourTypes.map((tt) => typeNames[tt] || tt).join(', ');
+          } else if (
+            op.serviceSummary &&
+            !op.serviceSummary.trim().startsWith('{') &&
+            !op.serviceSummary.includes('talaNumber') &&
+            !op.serviceSummary.includes('documentUrl')
+          ) {
+            tourTypes = op.serviceSummary.trim();
+          } else if (op.priceTier) {
+            const tierNames: Record<string, string> = {
+              CAMPING: 'Budget Camping & Overland Safaris',
+              BUDGET: 'Budget Adventure Safaris',
+              MID_RANGE: 'Mid-Range Lodge & Tented Safaris',
+              LUXURY: 'Luxury Lodge & Fly-in Safaris',
+              SUPER_LUXURY: 'VIP Bespoke & Private Reserve Safaris',
+            };
+            tourTypes = tierNames[op.priceTier] || 'Tailor-Made African Safaris';
+          }
+
+          // Destinations: collect all unique operating countries from countryOfOrigin, officesIn, and tour countries
+          const rawDestinations = [
+            op.countryOfOrigin,
+            ...(Array.isArray(op.officesIn) ? op.officesIn : []),
+            ...op.tours.map((t) => t.primaryCountry),
+          ].filter((c): c is string => typeof c === 'string' && c.trim().length > 0);
+          const destinations = Array.from(new Set(rawDestinations));
+
+          const offices = Array.isArray(op.officesIn) && op.officesIn.length > 0
+            ? op.officesIn
+            : [op.countryOfOrigin].filter(Boolean);
+
+          return {
+            id: op.id,
+            companyName: op.companyName,
+            slug: op.slug,
+            averageRating: op.averageRating,
+            totalReviews: op.totalReviews,
+            officesIn: offices.length ? offices : (destinations.length ? destinations : ['East Africa']),
+            priceRange: perDay.length ? `${usd(Math.min(...perDay))} to ${usd(Math.max(...perDay))}` : 'Custom quotes available',
+            tourTypes,
+            destinations: destinations.length ? destinations : offices,
+            isVerified: op.isVerified,
+            image: op.bannerUrl ?? '',
+            logo: op.logoUrl ?? '',
+            toursCount: op.tours.length,
+            topTours: op.tours.slice(0, 3).map((t) => ({ name: t.title, price: `${usd(t.minPriceUsd)} pp` })),
+          };
+        });
+      }
+      return [];
+    } catch (err) {
+      console.warn('[catalog] Database query failed in getOperatorCards:', (err as Error)?.message);
+      return [];
     }
-    return [];
-  } catch (err) {
-    console.warn('[catalog] Database query failed in getOperatorCards:', (err as Error)?.message);
-    return [];
-  }
+  });
 }
 
 // Countries are destinations of type COUNTRY, ordered in alphabetical order.
 export async function getCountries() {
-  try {
-    const [countries, parks, tourCounts] = await Promise.all([
-      prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: { name: 'asc' } }),
-      prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
-      prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
-    ]);
+  return withMemoryCache('destinations_countries_all', 120, async () => {
+    try {
+      const [countries, parks, tourCounts] = await Promise.all([
+        prisma.destination.findMany({ where: { type: 'COUNTRY' }, orderBy: { name: 'asc' } }),
+        prisma.destination.findMany({ where: { type: { not: 'COUNTRY' } }, orderBy: { name: 'asc' }, select: { name: true, slug: true, country: true } }),
+        prisma.tour.groupBy({ by: ['primaryCountry'], where: { isPublished: true }, _count: { _all: true } }),
+      ]);
 
-    if (countries && countries.length > 0) {
-      const dbCountryNames = new Set(countries.map((c) => c.name.toLowerCase()));
-      const mappedDb = countries.map((c) => {
-        const countryParks = parks.filter((p) => p.country === c.name);
-        return {
-          ...c,
-          parks: countryParks,
-          toursCount: tourCounts.find((t) => t.primaryCountry === c.name)?._count._all ?? 0,
-        };
-      });
+      if (countries && countries.length > 0) {
+        const dbCountryNames = new Set(countries.map((c) => c.name.toLowerCase()));
+        const mappedDb = countries.map((c) => {
+          const countryParks = parks.filter((p) => p.country === c.name);
+          return {
+            ...c,
+            parks: countryParks,
+            toursCount: tourCounts.find((t) => t.primaryCountry === c.name)?._count._all ?? 0,
+          };
+        });
 
-      // Merge any canonical countries not in DB so all 13 are always present
-      const missingCurated = CURATED_COUNTRIES_DATA.filter(
-        (cur) => !dbCountryNames.has(cur.name.toLowerCase())
-      );
+        // Merge any canonical countries not in DB so all 13 are always present
+        const missingCurated = CURATED_COUNTRIES_DATA.filter(
+          (cur) => !dbCountryNames.has(cur.name.toLowerCase())
+        );
 
-      return [...mappedDb, ...missingCurated].sort((a, b) => a.name.localeCompare(b.name));
+        return [...mappedDb, ...missingCurated].sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      return CURATED_COUNTRIES_DATA;
+    } catch (err) {
+      console.warn('[catalog] Database query failed in getCountries, using curated countries:', (err as Error)?.message);
+      return CURATED_COUNTRIES_DATA;
     }
-
-    return CURATED_COUNTRIES_DATA;
-  } catch (err) {
-    console.warn('[catalog] Database query failed in getCountries, using curated countries:', (err as Error)?.message);
-    return CURATED_COUNTRIES_DATA;
-  }
+  });
 }
 
 export async function getExperts() {
-  try {
-    const experts = await prisma.expert.findMany({ orderBy: { sortOrder: 'asc' } });
-    if (experts && experts.length > 0) return experts;
-    return [];
-  } catch (err) {
-    console.warn('[catalog] Database query failed in getExperts:', (err as Error)?.message);
-    return [];
-  }
+  return withMemoryCache('experts_all', 300, async () => {
+    try {
+      const experts = await prisma.expert.findMany({ orderBy: { sortOrder: 'asc' } });
+      if (experts && experts.length > 0) return experts;
+      return [];
+    } catch (err) {
+      console.warn('[catalog] Database query failed in getExperts:', (err as Error)?.message);
+      return [];
+    }
+  });
 }
 
 export async function getLatestBlogPosts(take = 3) {
-  try {
-    const posts = await prisma.blogPost.findMany({
-      where: { status: 'PUBLISHED' },
-      orderBy: { createdAt: 'desc' },
-      take,
-      select: { title: true, slug: true, coverImageUrl: true },
-    });
-    if (posts && posts.length > 0) return posts;
-    return [];
-  } catch (err) {
-    console.warn('[catalog] Database query failed in getLatestBlogPosts:', (err as Error)?.message);
-    return [];
-  }
+  return withMemoryCache(`latest_blog_posts_${take}`, 120, async () => {
+    try {
+      const posts = await prisma.blogPost.findMany({
+        where: { status: 'PUBLISHED' },
+        orderBy: { createdAt: 'desc' },
+        take,
+        select: { title: true, slug: true, coverImageUrl: true },
+      });
+      if (posts && posts.length > 0) return posts;
+      return [];
+    } catch (err) {
+      console.warn('[catalog] Database query failed in getLatestBlogPosts:', (err as Error)?.message);
+      return [];
+    }
+  });
 }

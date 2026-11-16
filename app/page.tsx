@@ -9,35 +9,38 @@ import TopRatedOperatorsBanner from '@/components/TopRatedOperatorsBanner';
 import SafariExpertsTicker from '@/components/SafariExpertsTicker';
 import prisma from '@/lib/prisma';
 import { getTourCards, getOperatorCards, getCountries, getExperts, getLatestBlogPosts } from '@/lib/catalog';
+import { withMemoryCache } from '@/lib/cache';
 import { CheckCircle2, ChevronRight, Award } from 'lucide-react';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getRealStats() {
-  try {
-    const [tourCount, operatorCount, reviewAgg, destinationCount] = await Promise.all([
-      prisma.tour.count({ where: { isPublished: true } }),
-      prisma.operator.count({ where: { isVerified: true } }),
-      prisma.review.aggregate({ where: { status: 'APPROVED' }, _avg: { overallRating: true }, _count: { id: true } }),
-      prisma.destination.count(),
-    ]);
-    return {
-      tours: tourCount,
-      operators: operatorCount,
-      reviews: reviewAgg._count.id,
-      rating: reviewAgg._avg.overallRating ? Math.round(reviewAgg._avg.overallRating * 10) / 10 : 0,
-      destinations: destinationCount,
-    };
-  } catch (err) {
-    console.warn('[HomePage] Database query failed in getRealStats:', (err as Error)?.message);
-    return {
-      tours: 0,
-      operators: 0,
-      reviews: 0,
-      rating: 0,
-      destinations: 0,
-    };
-  }
+  return withMemoryCache('home_real_stats', 60, async () => {
+    try {
+      const [tourCount, operatorCount, reviewAgg, destinationCount] = await Promise.all([
+        prisma.tour.count({ where: { isPublished: true } }),
+        prisma.operator.count({ where: { isVerified: true } }),
+        prisma.review.aggregate({ where: { status: 'APPROVED' }, _avg: { overallRating: true }, _count: { id: true } }),
+        prisma.destination.count(),
+      ]);
+      return {
+        tours: tourCount,
+        operators: operatorCount,
+        reviews: reviewAgg._count.id,
+        rating: reviewAgg._avg.overallRating ? Math.round(reviewAgg._avg.overallRating * 10) / 10 : 0,
+        destinations: destinationCount,
+      };
+    } catch (err) {
+      console.warn('[HomePage] Database query failed in getRealStats:', (err as Error)?.message);
+      return {
+        tours: 0,
+        operators: 0,
+        reviews: 0,
+        rating: 0,
+        destinations: 0,
+      };
+    }
+  });
 }
 
 export default async function HomePage() {
@@ -87,7 +90,7 @@ export default async function HomePage() {
         <HeroBackgroundSlider />
 
         {/* ── Floating Overlapping Search Card ── */}
-        <HeroSearchForm />
+        <HeroSearchForm initialTourCount={stats.tours} />
 
         {/* ── Trust strip (Inspired by SafariHello Prototype) ── */}
         <div className="relative z-10 mx-auto mt-6 sm:mt-10 max-w-[1240px] px-4 sm:px-6">

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
+import { getClientFavoriteIds, updateClientFavorites } from '@/lib/favorites-client';
 
 interface FavoriteHeartButtonProps {
   tourId: string;
@@ -18,18 +19,13 @@ export default function FavoriteHeartButton({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch('/api/favorites');
-        if (!res.ok) return;
-        const data = await res.json();
-        const ids = Array.isArray(data?.tours) ? data.tours.map((item: any) => item.id) : [];
-        setIsFavorite(ids.includes(tourId));
-      } catch {
-        setIsFavorite(false);
-      }
+    let active = true;
+    getClientFavoriteIds().then((ids) => {
+      if (active) setIsFavorite(ids.includes(tourId));
+    });
+    return () => {
+      active = false;
     };
-    load();
   }, [tourId]);
 
   const toggleFavorite = async () => {
@@ -43,6 +39,7 @@ export default function FavoriteHeartButton({
       if (!res.ok) return;
       const data = await res.json();
       const favorites = Array.isArray(data?.favorites) ? data.favorites : [];
+      updateClientFavorites(favorites);
       setIsFavorite(favorites.includes(tourId));
       window.dispatchEvent(new CustomEvent('favorites:updated', { detail: { count: favorites.length } }));
     } finally {

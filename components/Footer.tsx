@@ -45,21 +45,23 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mt-12 border-t border-[#193A38] bg-[#214446] text-white">
+    <footer className="mt-12 border-t border-white/10 bg-[#092a26] text-[#b9c9c1]">
       <div className="mx-auto max-w-[1230px] px-4 sm:px-6 pt-14 pb-10">
         {/* Responsive 5-column grid fixing the previous 14-col overflow */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 border-b border-white/10 pb-12">
           {/* Column 1: Brand overview */}
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
-              <img
-                src="/images/safaribuilt-logo.png?v=6"
-                alt="SafariHello — Africa's Marketplace for Safari Tours"
-                className="h-[46px] sm:h-[56px] w-auto object-contain"
-              />
+              <div className="inline-flex items-center bg-white rounded-xl px-3.5 py-1.5 shadow-sm">
+                <img
+                  src="/images/safaribuilt-logo.png?v=6"
+                  alt="SafariHello — Africa's Marketplace for Safari Tours"
+                  className="h-[38px] sm:h-[44px] w-auto object-contain"
+                />
+              </div>
             </Link>
 
-            <p className="text-sm leading-relaxed text-white/85">
+            <p className="text-sm leading-relaxed text-[#b9c9c1]">
               Africa&apos;s marketplace for safari tours. Discover amazing wildlife experiences and connect directly with local safari operators.
             </p>
           </div>
@@ -67,7 +69,7 @@ export default function Footer() {
           {/* Columns 2-4: Categorized Links */}
           {columns.map((col) => (
             <div key={col.heading} className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+              <h4 className="text-xs font-extrabold uppercase tracking-wider text-white">
                 {col.heading}
               </h4>
               <ul className="space-y-2">
@@ -75,7 +77,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="inline-block py-1 text-sm text-white/80 transition-colors hover:text-white"
+                      className="inline-block py-1 text-sm text-[#b9c9c1] transition-colors hover:text-[#e78748]"
                     >
                       {link.label}
                     </Link>
@@ -87,23 +89,23 @@ export default function Footer() {
 
           {/* Column 5: For Tour Operators CTA */}
           <div className="space-y-3 sm:col-span-2 lg:col-span-1">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">
+            <h4 className="text-xs font-extrabold uppercase tracking-wider text-white">
               For Tour Operators
             </h4>
-            <p className="text-sm leading-relaxed text-white/85">
+            <p className="text-sm leading-relaxed text-[#b9c9c1]">
               Are you a licensed African safari company? Join our verified network and receive direct traveler quote requests — free of charge.
             </p>
             <div className="pt-1">
               <Link
                 href="/register?role=OPERATOR"
-                className="btn btn-secondary w-full justify-center text-sm bg-white hover:bg-white/90 text-[#214446] font-bold border-transparent"
+                className="btn w-full justify-center text-sm bg-[#e78748] hover:bg-[#d97536] text-[#092a26] font-extrabold border-transparent shadow-xs transition-colors"
               >
                 <Award className="h-4 w-4" />
                 Register Your Agency
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             </div>
-            <p className="flex items-center gap-1.5 text-xs text-white/70 pt-1">
+            <p className="flex items-center gap-1.5 text-xs text-[#8d9b92] pt-1">
               <Lock className="h-3.5 w-3.5 shrink-0" />
               <span>Anti-scam verification · No hidden fees</span>
             </p>
@@ -111,7 +113,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-white/75 lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-center gap-4 pt-8 text-xs text-[#8d9b92] lg:grid-cols-3">
           <p className="order-1 text-center lg:text-left">
             © {year} SafariHello. All rights reserved.
           </p>
@@ -119,13 +121,13 @@ export default function Footer() {
             <LoneAlphaBadge />
           </div>
           <div className="order-3 flex flex-wrap items-center justify-center gap-5 sm:gap-6 lg:justify-end">
-            <Link href="/privacy-policy" className="py-1 transition-colors hover:text-white">
+            <Link href="/privacy-policy" className="py-1 transition-colors hover:text-[#e78748]">
               Privacy Policy
             </Link>
-            <Link href="/faq" className="py-1 transition-colors hover:text-white">
+            <Link href="/faq" className="py-1 transition-colors hover:text-[#e78748]">
               FAQ
             </Link>
-            <Link href="/how-it-works" className="py-1 transition-colors hover:text-white">
+            <Link href="/how-it-works" className="py-1 transition-colors hover:text-[#e78748]">
               How It Works
             </Link>
           </div>

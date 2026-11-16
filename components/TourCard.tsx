@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
+import { getClientFavoriteIds, updateClientFavorites } from '@/lib/favorites-client';
 
 interface TourCardProps {
   tour: {
@@ -59,19 +60,13 @@ export default function TourCard({ tour }: TourCardProps) {
   const [loadingFavorite, setLoadingFavorite] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch('/api/favorites');
-        if (!res.ok) return;
-        const data = await res.json();
-        const ids = Array.isArray(data?.tours) ? data.tours.map((item: any) => item.id) : [];
-        setIsFavorite(ids.includes(tour.id));
-      } catch {
-        setIsFavorite(false);
-      }
+    let active = true;
+    getClientFavoriteIds().then((ids) => {
+      if (active) setIsFavorite(ids.includes(tour.id));
+    });
+    return () => {
+      active = false;
     };
-
-    load();
   }, [tour.id]);
 
   const toggleFavorite = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,6 +85,7 @@ export default function TourCard({ tour }: TourCardProps) {
 
       const data = await res.json();
       const favorites = Array.isArray(data?.favorites) ? data.favorites : [];
+      updateClientFavorites(favorites);
       setIsFavorite(favorites.includes(tour.id));
       window.dispatchEvent(new CustomEvent('favorites:updated', { detail: { count: favorites.length } }));
     } finally {
