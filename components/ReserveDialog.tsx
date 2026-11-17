@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLiveRefresh } from '@/lib/use-live';
 import { useRouter } from 'next/navigation';
-import { X, Loader2, CheckCircle2, AlertCircle, Calendar, Users, Minus, Plus, ArrowRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { X, Loader2, CheckCircle2, AlertCircle, Calendar, Users, Minus, Plus, ArrowRight, ArrowLeft } from 'lucide-react';
 
 interface Slot {
   slotId: string;
@@ -460,8 +460,8 @@ export default function ReserveDialog({ tourId, tourTitle, minPriceUsd }: Reserv
                             placeholder="Dietary requirements, accessibility, celebrating something, room arrangements…"
                             className="form-control resize-none"
                           />
-                          <p className="mt-2 flex items-start gap-1.5 text-[11px] text-[var(--ink-muted)]">
-                            <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-[var(--brand)]" />
+                          <p className="mt-2 flex items-start gap-1.5 text-xs text-[var(--ink-secondary)]">
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#2A6B48]" />
                             No payment now — the agency reviews your request and confirms availability first.
                           </p>
                         </div>

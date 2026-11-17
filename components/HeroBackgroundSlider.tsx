@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Compass } from 'lucide-react';
+import { Compass, Check, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export interface HeroSlide {
@@ -83,13 +83,6 @@ export function getDefaultHeroSlides(tourCount?: number): HeroSlide[] {
   ];
 }
 
-const ANIMATION_CLASSES = [
-  'ken-burns-in',
-  'ken-burns-right',
-  'ken-burns-out',
-  'ken-burns-left',
-];
-
 export interface HeroBackgroundSliderProps {
   slides?: HeroSlide[];
   tourCount?: number;
@@ -103,11 +96,11 @@ export interface HeroBackgroundSliderProps {
 export default function HeroBackgroundSlider({
   slides,
   tourCount,
-  autoPlayInterval = 6000,
+  autoPlayInterval = 7000,
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[calc(100vh-54px)] min-h-[calc(100dvh-54px)] sm:min-h-[calc(100vh-58px)] sm:min-h-[calc(100dvh-58px)] lg:min-h-[calc(100vh-62px)] lg:min-h-[calc(100dvh-62px)]',
+  minHeightClass = 'min-h-[520px] sm:min-h-[580px] lg:min-h-[620px]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -143,67 +136,53 @@ export default function HeroBackgroundSlider({
       aria-label="African Safari Hero"
       className={`relative w-full overflow-hidden flex flex-col justify-center ${minHeightClass} ${className}`}
     >
-      {/* ── Top Dynamic Slide Progress Indicator ── */}
-      <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
-        <div
-          key={currentIndex}
-          className="h-full bg-gradient-to-r from-[#123b34] via-[#edab7e] to-[#f6c6a4] hero-progress-bar shadow-[0_0_8px_rgba(237,171,126,0.8)]"
-          style={{ animationDuration: `${autoPlayInterval}ms` }}
-        />
-      </div>
-
-      {/* ── Background Crossfading Images with Cinematic Animations ── */}
+      {/* ── Background Crossfading Images (Clean Naturalist Photography) ── */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {resolvedSlides.map((slide, idx) => {
           const isActive = idx === currentIndex;
           const isLoaded = loadedIndices.includes(idx);
-          const animClass = ANIMATION_CLASSES[idx % ANIMATION_CLASSES.length];
           return (
             <div
               key={slide.url}
               aria-hidden={!isActive}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              className={`absolute inset-0 transition-opacity duration-700 ease-out ${
                 isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
               <div
-                className={`w-full h-full bg-cover bg-center ${
-                  isActive ? animClass : 'scale-100'
-                }`}
+                className="w-full h-full bg-cover bg-center"
                 style={isLoaded ? { backgroundImage: `url('${slide.url}')` } : undefined}
               />
             </div>
           );
         })}
 
-        {/* ── Layered Directional Contrast Scrims ── */}
-        {/* Desktop directional scrim (dark on left, sheer on right) */}
+        {/* ── Directional Contrast Scrims (Calm Dark Ground for Pure Legibility) ── */}
         <div
           className="hidden md:block absolute inset-0 z-15"
           style={{
             background:
-              'linear-gradient(90deg, rgba(8,34,30,0.92) 0%, rgba(8,34,30,0.72) 48%, rgba(8,34,30,0.18) 100%)',
+              'linear-gradient(90deg, rgba(19,34,32,0.92) 0%, rgba(19,34,32,0.76) 52%, rgba(19,34,32,0.28) 100%)',
           }}
         />
-        {/* Mobile vertical scrim */}
         <div
           className="md:hidden absolute inset-0 z-15"
           style={{
             background:
-              'linear-gradient(180deg, rgba(8,34,30,0.92) 0%, rgba(8,34,30,0.78) 55%, rgba(8,34,30,0.92) 100%)',
+              'linear-gradient(180deg, rgba(19,34,32,0.94) 0%, rgba(19,34,32,0.82) 65%, rgba(19,34,32,0.95) 100%)',
           }}
         />
       </div>
 
-      {/* ── Top Floating Location Badge ── */}
-      <div className="absolute top-3.5 right-3.5 sm:top-5 sm:right-8 z-30 max-w-[calc(100vw-28px)]">
+      {/* ── Location Badge (Quiet Naturalist Field Tag) ── */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-30 max-w-[calc(100vw-32px)]">
         {showLocationBadge && currentSlide && (
           <div
             key={currentSlide.location}
-            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0b2926]/80 px-2.5 py-1 sm:px-3 sm:py-1 backdrop-blur-md shadow-md max-w-full"
+            className="flex items-center gap-2 rounded-full border border-white/15 bg-[#132220]/80 px-3 py-1 backdrop-blur-sm"
           >
-            <Compass className="h-3.5 w-3.5 text-[#edab7e] shrink-0" />
-            <span className="text-[10px] sm:text-[11px] font-extrabold text-[#f4f7f3] tracking-wider uppercase truncate">
+            <Compass className="h-3.5 w-3.5 text-[#E59E67] shrink-0" strokeWidth={1.5} />
+            <span className="text-xs font-medium text-[#EAE6DB] truncate">
               {currentSlide.location}
             </span>
           </div>
@@ -212,48 +191,55 @@ export default function HeroBackgroundSlider({
 
       {/* ── Foreground Content ── */}
       {children ? (
-        <div className="relative z-20 w-full h-full flex flex-col justify-between py-6 px-3 sm:px-4 md:py-0 md:px-0">
+        <div className="relative z-20 w-full h-full flex flex-col justify-between py-6 px-4 md:py-0 md:px-0">
           {children}
         </div>
       ) : (
-        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 lg:pt-12 pb-20 sm:pb-24 lg:pb-28">
-          <div className="max-w-[830px]">
-            {/* Eyebrow */}
-            <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#edab7e] mb-2.5 sm:mb-3">
-              <span>AFRICA&apos;S MARKETPLACE FOR SAFARI TOURS</span>
+        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24 sm:pt-16 sm:pb-28 lg:pt-20 lg:pb-32">
+          <div className="max-w-[760px]">
+            {/* Category Eyebrow */}
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-[#E59E67] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#E59E67]" />
+              <span>Africa&apos;s safari marketplace</span>
             </div>
 
-            {/* Heading */}
-            <h1 className="font-display font-extrabold text-[32px] xs:text-[38px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.08] sm:leading-[1.06] tracking-[-1.2px] xs:tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-3 sm:mb-3.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-              Your next safari<br className="hidden sm:inline" /> starts with{' '}
-              <span className="text-[#edab7e]">hello.</span>
+            {/* Main Headline */}
+            <h1 className="font-display font-semibold text-3xl sm:text-5xl lg:text-6xl text-white leading-[1.08] tracking-tight mb-4">
+              Compare African safari tours and connect directly with local operators
             </h1>
 
             {/* Description */}
-            <p className="text-[14px] sm:text-[17px] leading-[1.6] sm:leading-[1.65] max-w-[580px] text-[#e5ece7] mb-5 sm:mb-6 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
-              Explore extraordinary African safaris, compare authentic tours, and connect directly with trusted local operators. The adventure is yours to discover.
+            <p className="text-base sm:text-lg leading-relaxed max-w-[600px] text-[#D8DFDC] mb-6 font-normal">
+              Explore authentic safari itineraries across 13 countries. Request custom quotes directly from verified in-country specialists at true local rates.
             </p>
 
-            {/* CTA Button */}
-            <div>
+            {/* Action */}
+            <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/african-safari-tours"
-                className="inline-flex items-center justify-center gap-2 bg-[#edab7e] hover:bg-[#df9c6f] text-[#0b2926] font-extrabold text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
+                className="btn bg-[#C9773B] hover:bg-[#B86930] text-white font-medium text-sm px-6 py-3 rounded-lg shadow-xs inline-flex items-center gap-2"
               >
-                Find Your Perfect Safari &nbsp; ↗
+                <span>Explore safari tours</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/top-safari-countries"
+                className="btn bg-white/10 hover:bg-white/15 text-white border border-white/20 font-medium text-sm px-5 py-3 rounded-lg"
+              >
+                <span>View destinations</span>
               </Link>
             </div>
 
-            {/* Feature Check Chips */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-5 sm:mt-6">
+            {/* Value Highlights */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-white/90 text-xs sm:text-[13px] font-medium mt-8 pt-6 border-t border-white/10">
               <span className="flex items-center gap-2">
-                <b className="text-[#edab7e] font-black text-sm">✓</b> Direct local quotes
+                <Check className="w-4 h-4 text-[#E59E67] shrink-0" strokeWidth={2} /> Direct local quotes
               </span>
               <span className="flex items-center gap-2">
-                <b className="text-[#edab7e] font-black text-sm">✓</b> Explore 13 African countries
+                <Check className="w-4 h-4 text-[#E59E67] shrink-0" strokeWidth={2} /> 13 African destinations
               </span>
               <span className="flex items-center gap-2">
-                <b className="text-[#edab7e] font-black text-sm">✓</b> No booking commission
+                <Check className="w-4 h-4 text-[#E59E67] shrink-0" strokeWidth={2} /> Zero booking commission
               </span>
             </div>
           </div>

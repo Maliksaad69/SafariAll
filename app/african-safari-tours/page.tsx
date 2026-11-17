@@ -107,40 +107,37 @@ export default async function AfricanSafariToursPage({ searchParams }: AfricanSa
       <Navbar />
 
       <main className="flex-1 w-full mx-auto pb-12">
-        {/* Page Hero Banner (Deep Safari Teal with Pure White Typography) */}
-        <div className="bg-[#214446] border-b border-[#193A38] py-10 sm:py-12 !text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#193A38]/90 via-[#214446] to-[#193A38]/90 pointer-events-none" />
-          <div className="absolute -right-24 -bottom-24 w-96 h-96 rounded-full bg-[#8C9F91]/10 blur-3xl pointer-events-none" />
-
-          <div className="relative max-w-[1230px] mx-auto px-4 sm:px-6">
-            <nav className="text-sm font-semibold !text-white/80 mb-3.5 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
-              <Link href="/" className="!text-white/85 hover:!text-white hover:underline transition-colors">Home</Link>
-              <ChevronRight className="w-4 h-4 text-white/60" />
-              <span className="!text-white font-extrabold">{heroTitle}</span>
+        {/* Page Hero Banner */}
+        <div className="bg-[#132220] border-b border-white/10 py-10 sm:py-12 text-white relative">
+          <div className="relative max-w-[1240px] mx-auto px-4 sm:px-6">
+            <nav className="text-xs font-medium text-white/70 mb-3 flex flex-wrap items-center gap-2" aria-label="Breadcrumb">
+              <Link href="/" className="text-white/80 hover:text-white transition-colors">Home</Link>
+              <ChevronRight className="w-3.5 h-3.5 text-white/50" />
+              <span className="text-white font-medium">{heroTitle}</span>
             </nav>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold font-display !text-white tracking-tight drop-shadow-sm">
+                <h1 className="text-2xl sm:text-4xl font-semibold font-display text-white tracking-tight">
                   {heroTitle}
                 </h1>
-                <p className="mt-2.5 text-base sm:text-lg !text-white/90 font-normal max-w-2xl leading-relaxed">
+                <p className="mt-2 text-sm sm:text-base text-[#D8DFDC] font-normal max-w-2xl leading-relaxed">
                   Compare verified African safari packages from local operators with zero middleman commissions.
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 self-start md:self-auto rounded-full px-4 py-2.5 text-sm font-bold !text-white shadow-sm border border-white/20 bg-white/10 backdrop-blur-md">
-                <Star className="w-4 h-4 fill-[#E4DBB4] text-[#E4DBB4]" />
-                <span className="font-extrabold !text-white">4.9 / 5</span>
-                <span className="!text-white/80">· 180,175 reviews</span>
+              <div className="inline-flex items-center gap-2 self-start md:self-auto rounded-lg px-3 py-1.5 text-xs font-medium text-white border border-white/15 bg-white/5">
+                <Star className="w-3.5 h-3.5 fill-[#C9773B] text-[#C9773B]" />
+                <span className="tabular-nums font-semibold text-white">4.9 / 5</span>
+                <span className="text-white/70">· Verified traveler reviews</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="max-w-[1230px] mx-auto px-4 py-6 sm:py-8">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+        <div className="max-w-[1240px] mx-auto px-4 py-6 sm:py-8">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
             {/* Sidebar */}
-            <div className="lg:w-[320px] flex-shrink-0">
+            <div className="lg:w-[300px] flex-shrink-0">
               <div className="sticky top-20">
                 <FilterSidebar
                   currentCountry={country}
@@ -163,25 +160,25 @@ export default async function AfricanSafariToursPage({ searchParams }: AfricanSa
               {/* Header Info */}
               <div className="mb-6">
                 {activeFilters.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2.5 mb-4">
-                    <span className="text-sm font-bold !text-[#193A38]">Active filters:</span>
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="text-xs font-semibold text-[#182624]">Active filters:</span>
                     {activeFilters.map((f) => (
                       <Link
                         key={f.key}
                         href={removeFilterHref(f.key)}
-                        className="inline-flex items-center gap-2 rounded-full border border-[#DEDCCF] bg-white px-3.5 py-1.5 text-sm font-bold !text-[#193A38] hover:border-[#214446] hover:bg-[#E4DBB4]/20 transition-all shadow-2xs"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[#E2DFD4] bg-white px-2.5 py-1 text-xs font-medium text-[#182624] hover:bg-[#EFECE4] transition-colors"
                       >
                         {f.label}
-                        <span aria-hidden="true" className="!text-[#193A38] text-base font-extrabold leading-none">×</span>
+                        <span aria-hidden="true" className="text-[#6B7D79] text-sm leading-none">×</span>
                         <span className="sr-only">Remove filter</span>
                       </Link>
                     ))}
-                    <Link href="/african-safari-tours" className="text-sm font-extrabold !text-[#214446] hover:underline ml-1">Clear all</Link>
+                    <Link href="/african-safari-tours" className="text-xs font-medium text-[#1E433B] hover:underline ml-1">Clear all</Link>
                   </div>
                 )}
 
-                <div className="text-sm sm:text-base font-medium !text-[#344C49]">
-                  Showing <strong className="!text-[#214446] font-extrabold">1-{orderedTours.length} of {orderedTours.length}</strong> safari tours. Direct local quotes guaranteed.
+                <div className="text-xs sm:text-sm font-normal text-[#3D4D4A]">
+                  Showing <strong className="tabular-nums text-[#182624] font-semibold">1-{orderedTours.length} of {orderedTours.length}</strong> safari tours. Direct local quotes guaranteed.
                 </div>
               </div>
 

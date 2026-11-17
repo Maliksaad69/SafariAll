@@ -40,15 +40,15 @@ export default function SafariExpertsTicker({ experts }: SafariExpertsTickerProp
     <div className="relative w-full overflow-hidden">
       {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--ink-secondary)]">
-          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[11.5px] sm:text-xs">Live Field Reports · Left-to-Right</span>
+        <div className="flex items-center gap-2 text-xs font-medium text-[#6B7D79]">
+          <span className="inline-block h-2 w-2 rounded-full bg-[#2A6B48]" />
+          <span>Independent safari field authorities</span>
         </div>
       </div>
 
       {/* Ticker Stage with Edge Fades & Touch Support */}
       <div
-        className="relative overflow-hidden py-2"
+        className="relative overflow-hidden py-1"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
@@ -58,19 +58,19 @@ export default function SafariExpertsTicker({ experts }: SafariExpertsTickerProp
         {!prefersReduced && (
           <>
             <div
-              className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-r from-[#F7F6F1] to-transparent z-10"
+              className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#F7F5F0] to-transparent z-10"
               aria-hidden="true"
             />
             <div
-              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-20 bg-gradient-to-l from-[#F7F6F1] to-transparent z-10"
+              className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#F7F5F0] to-transparent z-10"
               aria-hidden="true"
             />
           </>
         )}
 
-        {/* Ticker Track: scrolls from Left to Right */}
+        {/* Ticker Track */}
         <div
-          className="animate-ticker-ltr gap-3.5 sm:gap-5"
+          className="animate-ticker-ltr gap-4"
           style={{
             animationPlayState: isPaused || prefersReduced ? 'paused' : 'running',
           }}
@@ -78,50 +78,50 @@ export default function SafariExpertsTicker({ experts }: SafariExpertsTickerProp
           {tickerItems.map((expert, idx) => (
             <article
               key={`${expert.id}-${idx}`}
-              className="surface-card surface-card-hover group flex flex-col justify-between w-[275px] sm:w-[330px] md:w-[360px] h-[190px] sm:h-[200px] shrink-0 p-3.5 sm:p-5 rounded-2xl border border-[var(--glass-border)] shadow-xs hover:shadow-md transition-all bg-white/90 backdrop-blur-md active:scale-[0.99]"
+              className="surface-card flex flex-col justify-between w-[280px] sm:w-[320px] md:w-[350px] h-[190px] shrink-0 p-4 rounded-xl border border-[#E2DFD4] bg-white shadow-xs"
             >
               {/* Header: Avatar, Name, Review Badge */}
-              <div className="flex items-center gap-2.5 sm:gap-3">
-                <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-[var(--brand)]/30 shadow-2xs">
+              <div className="flex items-center gap-3">
+                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-[#E2DFD4]">
                   <img
                     src={expert.imageUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                     alt={expert.name}
                     className="h-full w-full object-cover"
                   />
-                  <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-emerald-500 ring-2 ring-white" title="Verified Expert" />
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#2A6B48] ring-2 ring-white" title="Verified Expert" />
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-1">
                     <Link
                       href={`/experts/${expert.slug}`}
-                      className="font-bold text-[14px] sm:text-[14.5px] text-[var(--ink)] group-hover:text-[var(--brand-ink)] transition-colors truncate"
+                      className="font-semibold text-sm text-[#182624] hover:text-[#1E433B] transition-colors truncate"
                     >
                       {expert.name}
                     </Link>
                   </div>
-                  <div className="text-[11px] sm:text-[11.5px] font-semibold text-[var(--ink-secondary)] truncate">{expert.country} Specialist</div>
-                  <div className="mt-0.5 flex items-center gap-1 text-[10.5px] sm:text-[11px] font-extrabold text-[var(--gold)]">
+                  <div className="text-xs text-[#6B7D79] truncate">{expert.country} specialist</div>
+                  <div className="mt-0.5 flex items-center gap-1 text-xs text-[#C9773B]">
                     <Star className="h-3 w-3 fill-current shrink-0" />
-                    <span className="truncate">{expert.reviewCount} Verified Expert Reviews</span>
+                    <span className="tabular-nums truncate font-medium">{expert.reviewCount} verified reviews</span>
                   </div>
                 </div>
               </div>
 
               {/* Biography / Review Snippet */}
-              <p className="line-clamp-3 text-[12px] sm:text-[12.5px] leading-relaxed text-[var(--ink-body)] italic opacity-90 pl-1 border-l-2 border-[var(--brand)]/40">
+              <p className="line-clamp-3 text-xs leading-relaxed text-[#3D4D4A] pl-2 border-l-2 border-[#1E433B]/30">
                 &ldquo;{expert.biography}&rdquo;
               </p>
 
               {/* Card Footer Link */}
-              <div className="flex items-center justify-between pt-2 border-t border-[var(--border-soft)]">
-                <span className="text-[10.5px] sm:text-[11px] font-bold text-[var(--ink-muted)]">Independent Field Authority</span>
+              <div className="flex items-center justify-between pt-2 border-t border-[#E2DFD4]">
+                <span className="text-[11px] text-[#8C9C98]">Field authority</span>
                 <Link
                   href={`/experts/${expert.slug}`}
-                  className="inline-flex items-center gap-1 text-[11.5px] sm:text-[12px] font-bold text-[var(--brand-ink)] group-hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[#1E433B] hover:underline"
                 >
-                  <span>Read Reviews</span>
-                  <ChevronRight className="h-3.5 w-3.5" />
+                  <span>Read reviews</span>
+                  <ChevronRight className="h-3 w-3" />
                 </Link>
               </div>
             </article>

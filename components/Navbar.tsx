@@ -233,19 +233,19 @@ export default function Navbar() {
   };
 
   return (
-    <header className="glass-nav sticky top-0 z-50 font-sans text-[#193A38] w-full border-b border-[#e5ece7] bg-white/95 backdrop-blur-md overflow-x-clip shadow-xs">
-      <div className="w-full max-w-[1440px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8">
-        <div className="flex h-[54px] sm:h-[58px] lg:h-[62px] items-center justify-between gap-2 lg:gap-4 xl:gap-6 w-full min-w-0">
+    <header className="sticky top-0 z-50 font-sans text-[#182624] w-full border-b border-[#E2DFD4] bg-white/95 backdrop-blur-sm overflow-x-clip shadow-xs">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-[56px] lg:h-[60px] items-center justify-between gap-3 lg:gap-6 w-full min-w-0">
           <Link href="/" className="flex items-center flex-shrink-0 transition-opacity hover:opacity-90" aria-label="SafariHello homepage">
             <img
               src="/images/safaribuilt-logo.png?v=6"
               alt="SafariHello — Africa's Marketplace for Safari Tours"
-              className="h-[30px] sm:h-[34px] lg:h-[38px] xl:h-[42px] w-auto object-contain shrink-0"
+              className="h-[32px] sm:h-[36px] lg:h-[40px] w-auto object-contain shrink-0"
             />
           </Link>
 
-          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-3">
-            <nav className="relative flex items-center justify-center gap-0.5 xl:gap-1.5 2xl:gap-3 text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.03em] text-[#193A38]">
+          <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-2">
+            <nav className="relative flex items-center justify-center gap-1 xl:gap-2 text-xs font-medium text-[#182624]">
               {navMenus.map(({ href, label, items, isWide, viewAllLabel }) => {
                 const active = isActive(href);
                 const isOpen = openMenu === href;
@@ -259,52 +259,52 @@ export default function Navbar() {
                   >
                     <Link
                       href={href}
-                      className={`flex items-center gap-1 xl:gap-1.5 rounded-full px-2 py-1 xl:px-3 xl:py-1.5 transition-colors whitespace-nowrap ${active ? 'bg-[#123b34] text-white shadow-xs' : 'text-[#193A38] hover:bg-[#edf3f0] hover:text-[#0b2926]'}`}
+                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap ${active ? 'bg-[#1E433B] text-white shadow-xs' : 'text-[#182624] hover:bg-[#EFECE4]'}`}
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                     >
                       <span>{label}</span>
-                      <ChevronDown className={`h-3 w-3 xl:h-3.5 xl:w-3.5 text-[#516D6A] transition-transform duration-200 ${isOpen ? 'rotate-180 text-[#0b2926]' : ''}`} />
+                      <ChevronDown className={`h-3.5 w-3.5 text-[#6B7D79] transition-transform duration-150 ${isOpen ? 'rotate-180 text-[#182624]' : ''}`} />
                     </Link>
 
                     <div
-                      className={`absolute ${isWide ? '-left-8 sm:-left-12' : 'left-0'} top-full pt-2 transition-all duration-200 ${
-                        isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
+                      className={`absolute ${isWide ? '-left-8 sm:-left-12' : 'left-0'} top-full pt-1.5 transition-all duration-150 ${
+                        isOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'
                       }`}
                     >
                       <div
-                        className={`popover p-3 bg-white text-[#193A38] border border-[#DEDCCF] shadow-2xl rounded-2xl ${
-                          isWide ? 'w-[470px] sm:w-[500px]' : 'w-[240px]'
+                        className={`popover p-3 bg-white text-[#182624] border border-[#E2DFD4] shadow-md rounded-xl ${
+                          isWide ? 'w-[480px] sm:w-[500px]' : 'w-[240px]'
                         }`}
                       >
                         {isWide ? (
                           <>
-                            <div className="px-2 pb-2 mb-1.5 border-b border-[#DEDCCF]/70 flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#516D6A]">
+                            <div className="px-2 pb-2 mb-2 border-b border-[#E2DFD4] flex items-center justify-between text-xs font-semibold text-[#6B7D79]">
                               <span>Destinations (A–Z)</span>
-                              <span className="text-[#8C9F91] font-semibold">{items.length} African Countries</span>
+                              <span className="text-[#8C9C98] font-normal">{items.length} African countries</span>
                             </div>
-                            <div className="grid grid-cols-2 gap-x-1.5 gap-y-1">
+                            <div className="grid grid-cols-2 gap-x-2 gap-y-1">
                               {items.map((item) => (
                                 <Link
                                   key={item.href}
                                   href={item.href}
                                   onClick={() => setOpenMenu(null)}
-                                  className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38] group"
+                                  className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#182624] transition-colors hover:bg-[#EFECE4] group"
                                 >
-                                  {item.flag && <span className="text-base shrink-0 leading-none">{item.flag}</span>}
-                                  <span className="truncate group-hover:translate-x-0.5 transition-transform">{item.label}</span>
+                                  {item.flag && <span className="text-sm shrink-0 leading-none">{item.flag}</span>}
+                                  <span className="truncate">{item.label}</span>
                                 </Link>
                               ))}
                             </div>
                             {viewAllLabel && (
-                              <div className="mt-2.5 pt-2 border-t border-[#DEDCCF]">
+                              <div className="mt-2.5 pt-2 border-t border-[#E2DFD4]">
                                 <Link
                                   href={href}
                                   onClick={() => setOpenMenu(null)}
-                                  className="flex items-center justify-between rounded-xl bg-[#F7F6F1] hover:bg-[#E4DBB4]/40 px-3 py-2 text-xs font-bold !text-[#193A38] transition-colors"
+                                  className="flex items-center justify-between rounded-lg bg-[#F7F5F0] hover:bg-[#EFECE4] border border-[#E2DFD4] px-3 py-2 text-xs font-medium text-[#1E433B] transition-colors"
                                 >
                                   <span>{viewAllLabel}</span>
-                                  <ChevronRight className="w-3.5 h-3.5 text-[#214446]" />
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#1E433B]" />
                                 </Link>
                               </div>
                             )}
@@ -316,17 +316,17 @@ export default function Navbar() {
                                 key={item.href}
                                 href={item.href}
                                 onClick={() => setOpenMenu(null)}
-                                className="block rounded-lg px-3 py-2 text-[13px] font-semibold normal-case tracking-normal !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]"
+                                className="block rounded-lg px-3 py-2 text-xs font-medium text-[#182624] transition-colors hover:bg-[#EFECE4]"
                               >
                                 {item.label}
                               </Link>
                             ))}
                             {viewAllLabel && (
-                              <div className="mt-1 pt-1.5 border-t border-[#DEDCCF]">
+                              <div className="mt-1 pt-1.5 border-t border-[#E2DFD4]">
                                 <Link
                                   href={href}
                                   onClick={() => setOpenMenu(null)}
-                                  className="block rounded-lg px-3 py-1.5 text-xs font-bold text-[#214446] hover:bg-[#E4DBB4]/40 transition-colors"
+                                  className="block rounded-lg px-3 py-1.5 text-xs font-medium text-[#1E433B] hover:bg-[#EFECE4] transition-colors"
                                 >
                                   {viewAllLabel}
                                 </Link>
@@ -342,7 +342,7 @@ export default function Navbar() {
             </nav>
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 2xl:gap-4 text-xs xl:text-[13px] font-semibold shrink-0">
+          <div className="hidden lg:flex items-center gap-3 text-xs font-medium shrink-0">
             {sessionUser && (
               <div className="relative" ref={notifRef}>
                 <button

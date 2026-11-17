@@ -20,7 +20,6 @@ import {
   CheckCircle2,
   Star,
   Flag,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
   Clock,
@@ -279,7 +278,7 @@ export default function MyTripsPage() {
                             {STATUS_LABEL[t.status] || t.status}
                           </span>
                           {t.status === 'APPROVED' && progress?.isStarted && (
-                            <span className="badge badge-brand animate-pulse">
+                            <span className="badge badge-brand">
                               Tour Started · Day {progress.currentDay}/{progress.durationDays}
                             </span>
                           )}
@@ -344,8 +343,9 @@ export default function MyTripsPage() {
                       {tripProgress.isStarted ? (
                         <div>
                           <div className="flex items-center justify-between mb-2">
-                            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
-                              <Sparkles className="h-4 w-4" /> Tour Currently In Progress
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1E433B]">
+                              <span className="w-2 h-2 rounded-full bg-[#2A6B48]" />
+                              <span>Tour in progress</span>
                             </span>
                             <span className="text-xs font-bold text-[var(--brand-deep)]">
                               Day {tripProgress.currentDay} of {tripProgress.durationDays}

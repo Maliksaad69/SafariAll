@@ -147,7 +147,7 @@ export default function AgencyReservationsTable({ initialReservations }: { initi
                       const now = new Date();
                       if (now >= start && now < end) {
                         const dayNum = Math.min(dur, Math.max(1, Math.floor((now.getTime() - start.getTime()) / 86_400_000) + 1));
-                        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#193A38] text-white animate-pulse">Tour Started · Day {dayNum}/{dur}</span>;
+                        return <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#1E433B] text-white">Tour Started · Day {dayNum}/{dur}</span>;
                       }
                       if (now >= end) {
                         return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">Target Days Complete</span>;

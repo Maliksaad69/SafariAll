@@ -72,3 +72,6 @@ Thumbs.db
 tools/pgdata/
 tools/pg*.log
 tools/*.out
+
+# Unslop tool checkout
+unslop/

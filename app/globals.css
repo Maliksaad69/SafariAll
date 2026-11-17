@@ -1,128 +1,129 @@
 @import "tailwindcss";
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN SYSTEM — SafariRequest (Global UI Color System)
-   Primary:        #214446 – Deep Safari Teal
-   Primary Dark:   #193A38 – Forest Shadow
-   Background:     #F7F6F1 – Warm Ivory
-   Secondary:      #E4DBB4 – Savannah Sand
-   Accent:         #8C9F91 – Safari Sage
-   White:          #FFFFFF – Pure White
-   Body Text:      #344C49 – Dark Muted Teal
-   Borders:        #DEDCCF – Warm Safari Border
+   DESIGN SYSTEM — SafariAsili (Unslopped & Production-Grade)
+   World: African Savannah & Naturalist Expedition
+   Neutral Light Ramp:
+     Background:     #F7F5F0 – Warm Ivory Canvas
+     Card:           #FFFFFF – Pure White
+     Raised:         #EFECE4 – Weathered Linen
+     Borders:        #E2DFD4 – Quiet Hairline
+     Primary Text:   #182624 – Deep Charcoal Slate
+     Secondary Text: #3D4D4A – Muted Slate
+     Muted Text:     #6B7D79 – Field Slate
+   Accent:           #C9773B – Savannah Ochre (single deliberate accent, >= 4.5:1)
+   Brand Forest:     #1E433B – Deep Acacia Evergreen
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @theme {
-  --color-safari-primary: #214446;
-  --color-safari-dark: #193A38;
-  --color-safari-ivory: #F7F6F1;
-  --color-safari-sand: #E4DBB4;
-  --color-safari-sage: #8C9F91;
-  --color-safari-body: #344C49;
-  --color-safari-border: #DEDCCF;
+  --color-safari-primary: #1E433B;
+  --color-safari-dark: #142E28;
+  --color-safari-ivory: #F7F5F0;
+  --color-safari-sand: #EAE6DB;
+  --color-safari-sage: #C9773B;
+  --color-safari-body: #3D4D4A;
+  --color-safari-border: #E2DFD4;
 
-  /* ── LoneAlpha Brand Attribution Tokens ── */
-  --color-brand-border: #DEDCCF;
-  --color-brand-gold: #C5A059;
-  --color-brand-muted: #516D6A;
-  --color-brand-charcoal: #193A38;
+  /* ── Brand Attribution Tokens ── */
+  --color-brand-border: #E2DFD4;
+  --color-brand-gold: #C9773B;
+  --color-brand-muted: #6B7D79;
+  --color-brand-charcoal: #182624;
 }
 
 @layer base {
   :root {
-    /* ── Mandatory Safari Brand Color Tokens ── */
-    --primary:          #214446;  /* Deep Safari Teal */
-    --primary-dark:     #193A38;  /* Forest Shadow */
-    --bg-ivory:         #F7F6F1;  /* Warm Ivory */
-    --secondary-sand:   #E4DBB4;  /* Savannah Sand */
-    --accent-sage:      #8C9F91;  /* Safari Sage */
-    --white:            #FFFFFF;  /* White */
-    --text-body:        #344C49;  /* Dark Muted Teal */
-    --border-color:     #DEDCCF;  /* Borders */
+    /* ── Safari Brand Color Tokens ── */
+    --primary:          #1E433B;  /* Deep Acacia */
+    --primary-dark:     #142E28;  /* Forest Shade */
+    --bg-ivory:         #F7F5F0;  /* Warm Ivory */
+    --secondary-sand:   #EAE6DB;  /* Linen Sand */
+    --accent-sage:      #C9773B;  /* Savannah Ochre Accent */
+    --white:            #FFFFFF;
+    --text-body:        #3D4D4A;
+    --border-color:     #E2DFD4;
 
-    /* ── Typography & Ink Tokens ── */
-    --ink:              #193A38;  /* Forest Shadow — headings and emphasis */
-    --ink-body:         #344C49;  /* Dark Muted Teal — body copy */
-    --ink-secondary:    #516D6A;  /* Muted Teal — secondary labels, meta */
-    --ink-muted:        #788E8B;  /* Soft Muted Teal */
+    /* ── Typography & Ink Tokens (3 Clear Roles) ── */
+    --ink:              #182624;  /* Primary text */
+    --ink-body:         #3D4D4A;  /* Secondary text */
+    --ink-secondary:    #6B7D79;  /* Muted metadata */
+    --ink-muted:        #8C9C98;  /* Subtle captions */
 
-    /* ── Brand Action Tokens ── */
-    --brand:            #214446;  /* Deep Safari Teal — primary buttons & active actions */
-    --brand-strong:     #193A38;  /* Forest Shadow — hover / active state */
-    --brand-deep:       #214446;  /* Deep Safari Teal */
-    --brand-ink:        #214446;  /* Deep Safari Teal text */
-    --brand-light:      #E4DBB4;  /* Savannah Sand highlight on dark/green */
-    --brand-on:         #FFFFFF;  /* White on brand */
-    --brand-soft:       rgba(140, 159, 145, 0.20); /* Safari Sage soft tint */
-    --brand-pale:       rgba(228, 219, 180, 0.40); /* Savannah Sand soft tint */
+    /* ── Action & Accent Tokens ── */
+    --brand:            #1E433B;  /* Primary action fill */
+    --brand-strong:     #142E28;  /* Hover / active */
+    --brand-deep:       #1E433B;
+    --brand-ink:        #1E433B;
+    --brand-light:      #EAE6DB;
+    --brand-on:         #FFFFFF;
+    --brand-soft:       rgba(30, 67, 59, 0.08);
+    --brand-pale:       rgba(234, 230, 219, 0.50);
 
-    /* ── Canvas Surfaces ── */
-    --canvas-base:      #F7F6F1;  /* Warm Ivory */
-    --canvas-1:         #FFFFFF;  /* Crisp White */
-    --canvas-2:         #E4DBB4;  /* Savannah Sand */
-    --canvas-3:         #F7F6F1;  /* Warm Ivory */
+    /* ── Surfaces ── */
+    --canvas-base:      #F7F5F0;
+    --canvas-1:         #FFFFFF;
+    --canvas-2:         #EAE6DB;
+    --canvas-3:         #F7F5F0;
 
-    /* ── Named Section Tints ── */
-    --ivory:            #F7F6F1;  /* Warm Ivory section */
-    --card-ivory:       #FFFFFF;  /* Card fill */
-    --sand:             #E4DBB4;  /* Savannah Sand section */
+    --ivory:            #F7F5F0;
+    --card-ivory:       #FFFFFF;
+    --sand:             #EAE6DB;
     --blog-bg:          #FFFFFF;
 
-    /* ── Surfaces (Cards & Containers) ── */
-    --surface-page:     #F7F6F1;  /* Warm Ivory */
-    --surface-card:     #FFFFFF;  /* White card */
-    --surface-card-sand:#E4DBB4;  /* Savannah Sand card */
-    --surface-raised:   #FFFFFF;
-    --surface-sunk:     #E4DBB4;  /* Savannah Sand */
+    --surface-page:     #F7F5F0;
+    --surface-card:     #FFFFFF;
+    --surface-card-sand:#EAE6DB;
+    --surface-raised:   #EFECE4;
+    --surface-sunk:     #EAE6DB;
 
-    /* ── Component Aliases (Backwards-compatibility) ── */
-    --header-navy:      #214446;  /* Deep Safari Teal */
-    --heading-navy:     #193A38;  /* Forest Shadow */
-    --primary-orange:   #214446;  /* Primary button = Deep Safari Teal */
-    --soft-sky-blue:    #E4DBB4;  /* Savannah Sand */
-    --section-blue:     #E4DBB4;  /* Savannah Sand */
-    --ocean:            #214446;  /* Deep Safari Teal */
-    --ocean-strong:     #193A38;  /* Forest Shadow */
-    --ocean-light:      #2D5B5E;
-    --ocean-soft:       rgba(33, 68, 70, 0.12);
+    /* ── Component Aliases ── */
+    --header-navy:      #1E433B;
+    --heading-navy:     #182624;
+    --primary-orange:   #C9773B;
+    --soft-sky-blue:    #EAE6DB;
+    --section-blue:     #EAE6DB;
+    --ocean:            #1E433B;
+    --ocean-strong:     #142E28;
+    --ocean-light:      #265349;
+    --ocean-soft:       rgba(30, 67, 59, 0.08);
 
-    /* ── Accents & Ratings ── */
-    --accent:           #8C9F91;  /* Safari Sage */
-    --secondary:        #E4DBB4;  /* Savannah Sand */
-    --gold:             #8C9F91;  /* Safari Sage accent */
-    --gold-soft:        rgba(140, 159, 145, 0.22);
+    /* ── Accents ── */
+    --accent:           #C9773B;
+    --secondary:        #EAE6DB;
+    --gold:             #C9773B;
+    --gold-soft:        rgba(201, 119, 59, 0.12);
 
-    /* ── Borders ── */
-    --border:           #DEDCCF;  /* Warm Safari Border */
-    --border-strong:    #C5C2B1;
-    --border-soft:      #EBE9DF;
+    /* ── Hairline Borders ── */
+    --border:           #E2DFD4;
+    --border-strong:    #C8C4B6;
+    --border-soft:      #EBE8DE;
 
-    /* ── Glass & Panels ── */
-    --glass-blur:        16px;
-    --glass-bg:          rgba(255, 255, 255, 0.96);
-    --glass-bg-soft:     rgba(247, 246, 241, 0.92);
-    --glass-border:      #DEDCCF;
-    --glass-edge:        rgba(33, 68, 70, 0.08);
-    --glass-shadow:      0 1px 3px rgba(25, 58, 56, 0.04), 0 6px 16px rgba(25, 58, 56, 0.05);
-    --glass-shadow-lift: 0 4px 12px rgba(25, 58, 56, 0.07), 0 12px 28px rgba(25, 58, 56, 0.10);
+    /* ── Quiet Chrome & Panels ── */
+    --glass-blur:        8px;
+    --glass-bg:          rgba(255, 255, 255, 0.98);
+    --glass-bg-soft:     #F7F5F0;
+    --glass-border:      #E2DFD4;
+    --glass-edge:        rgba(24, 38, 36, 0.06);
+    --glass-shadow:      0 1px 2px rgba(24, 38, 36, 0.04);
+    --glass-shadow-lift: 0 4px 12px rgba(24, 38, 36, 0.06);
 
     /* ── Semantic Status Tokens ── */
-    --success:          #2A5944;  /* Forest Green */
-    --success-soft:     rgba(42, 89, 68, 0.14);
+    --success:          #2A6B48;
+    --success-soft:     rgba(42, 107, 72, 0.10);
     --danger:           #A83838;
-    --danger-soft:      rgba(168, 56, 56, 0.12);
-    --info:             #214446;
-    --info-soft:        rgba(33, 68, 70, 0.14);
-    --warning:          #B88728;
-    --warning-soft:     rgba(184, 135, 40, 0.14);
+    --danger-soft:      rgba(168, 56, 56, 0.10);
+    --info:             #1E433B;
+    --info-soft:        rgba(30, 67, 59, 0.10);
+    --warning:          #B87A24;
+    --warning-soft:     rgba(184, 122, 36, 0.10);
 
-    /* ── Dark Panels (Navigation, Footer, Hero Banners) ── */
-    --dark:             #214446;  /* Deep Safari Teal */
-    --dark-raised:      #193A38;  /* Forest Shadow */
-    --dark-border:      rgba(255, 255, 255, 0.16);
-    --dark-text:        #FFFFFF;
-    --dark-text-soft:   rgba(255, 255, 255, 0.85);  /* White on green */
-    --dark-gold:        #FFFFFF;  /* White accent on green */
+    /* ── Dark Panels ── */
+    --dark:             #132220;
+    --dark-raised:      #1A2C29;
+    --dark-border:      rgba(255, 255, 255, 0.08);
+    --dark-text:        #F3F4F1;
+    --dark-text-soft:   rgba(243, 244, 241, 0.80);
+    --dark-gold:        #E59E67;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -181,45 +182,42 @@
 .glass-card,
 .glass-panel {
   background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(24, 38, 36, 0.04);
+  border-radius: 16px;
 }
 
-.glass-panel { background: var(--glass-bg-soft); border-radius: 22px; }
+.glass-panel { background: var(--glass-bg-soft); border-radius: 16px; }
 
 .surface-card {
-  background: var(--white, #FFFFFF);
+  background: #FFFFFF;
   border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.04), 0 4px 14px rgba(25, 58, 56, 0.04);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(24, 38, 36, 0.04);
 }
 
 .surface-card-sand {
-  background: var(--secondary-sand, #E4DBB4);
+  background: var(--secondary-sand);
   border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.04), 0 4px 14px rgba(25, 58, 56, 0.04);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(24, 38, 36, 0.04);
 }
 
 .surface-card-hover {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.25s ease;
+  transition: border-color 160ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 160ms cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .surface-card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(25, 58, 56, 0.08), 0 12px 24px rgba(25, 58, 56, 0.08);
-  border-color: rgba(33, 68, 70, 0.25);
+  border-color: var(--border-strong);
+  box-shadow: 0 4px 16px rgba(24, 38, 36, 0.06);
 }
 
 .surface-dark {
-  background: var(--dark, #214446);
-  color: #FFFFFF;
-  border-radius: 18px;
+  background: var(--dark);
+  color: var(--dark-text);
+  border-radius: 16px;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -368,28 +366,33 @@ select.form-control option {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.7rem 1.5rem;
+  padding: 0.625rem 1.25rem;
   font-family: var(--font-body, 'Manrope', sans-serif);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.875rem;
-  line-height: 1.2;
-  border-radius: 12px;
+  line-height: 1.25;
+  border-radius: 10px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.2s ease, border-color 0.2s ease,
-              color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  transition: background-color 140ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 140ms cubic-bezier(0.22, 1, 0.36, 1),
+              color 140ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 100ms ease;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
 
-/* Primary Button: Deep Safari Teal with white text */
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Primary Button: Deep Acacia fill with pure white typography */
 .btn-primary {
-  background-color: var(--primary, #214446);
+  background-color: var(--primary, #1E433B);
   color: #FFFFFF !important;
-  box-shadow: 0 2px 4px rgba(25, 58, 56, 0.22);
+  box-shadow: 0 1px 2px rgba(24, 38, 36, 0.12);
   border: 1px solid transparent;
 }
 .btn-primary,
@@ -397,54 +400,45 @@ select.form-control option {
   color: #FFFFFF !important;
 }
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background-color: var(--primary-dark, #193A38);
-  box-shadow: 0 4px 10px rgba(25, 58, 56, 0.28);
+  background-color: var(--primary-dark, #142E28);
 }
 .btn-primary:hover:not(:disabled) * {
   color: #FFFFFF !important;
 }
 
-/* Secondary Button: Savannah Sand with dark teal text */
+/* Secondary Button: Weathered Linen with deep neutral text */
 .btn-secondary {
-  background-color: var(--secondary-sand, #E4DBB4);
-  color: var(--primary-dark, #193A38);
+  background-color: var(--secondary-sand, #EAE6DB);
+  color: var(--ink, #182624);
   border: 1px solid var(--border);
-  box-shadow: 0 1px 2px rgba(25, 58, 56, 0.05);
+  box-shadow: 0 1px 2px rgba(24, 38, 36, 0.04);
 }
 .btn-secondary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background-color: #D8CDA1;
-  border-color: var(--primary, #214446);
-  color: var(--primary-dark, #193A38);
-  box-shadow: 0 3px 8px rgba(25, 58, 56, 0.08);
+  background-color: #E2DDD0;
+  border-color: var(--border-strong);
+  color: var(--ink, #182624);
 }
 
-/* Accent Button: Safari Sage with white text */
+/* Accent Button: Savannah Ochre */
 .btn-sage,
 .btn-accent {
-  background-color: var(--accent-sage, #8C9F91);
-  color: var(--white, #FFFFFF);
+  background-color: var(--accent, #C9773B);
+  color: #FFFFFF !important;
   border: 1px solid transparent;
-  box-shadow: 0 1px 3px rgba(25, 58, 56, 0.12);
+  box-shadow: 0 1px 2px rgba(201, 119, 59, 0.20);
 }
 .btn-sage:hover:not(:disabled),
 .btn-accent:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background-color: #798C7E;
-  box-shadow: 0 3px 8px rgba(25, 58, 56, 0.18);
+  background-color: #B86930;
 }
 
 .btn-ocean {
-  background-color: var(--primary, #214446);
+  background-color: var(--primary, #1E433B);
   color: #FFFFFF;
-  box-shadow: 0 2px 4px rgba(25, 58, 56, 0.22);
   border: 1px solid transparent;
 }
 .btn-ocean:hover:not(:disabled) {
-  transform: translateY(-1px);
-  background-color: var(--primary-dark, #193A38);
-  box-shadow: 0 4px 10px rgba(25, 58, 56, 0.28);
+  background-color: var(--primary-dark, #142E28);
 }
 
 .btn-ghost-dark {
@@ -644,64 +638,16 @@ select.form-control {
 .popover {
   background: #FFFFFF;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 16px 40px rgba(16, 59, 92, 0.18), 0 2px 6px rgba(16, 59, 92, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(24, 38, 36, 0.08);
 }
 
-/* ── Animations ── */
+/* ── Refined Animations ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-up { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-@keyframes floaty {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-10px); }
-}
-.animate-floaty { animation: floaty 7s ease-in-out infinite; }
-
-/* ── Hero Ken Burns & Cinematic Motion ── */
-@keyframes kenBurnsZoomIn {
-  0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.10) translate(-1%, -1%); }
-}
-@keyframes kenBurnsZoomOut {
-  0% { transform: scale(1.12) translate(1%, 0); }
-  100% { transform: scale(1.02) translate(0, 0); }
-}
-@keyframes kenBurnsPanRight {
-  0% { transform: scale(1.06) translate(-2%, 0); }
-  100% { transform: scale(1.12) translate(2%, -1%); }
-}
-@keyframes kenBurnsPanLeft {
-  0% { transform: scale(1.06) translate(2%, 0); }
-  100% { transform: scale(1.12) translate(-2%, 1%); }
-}
-@keyframes heroProgress {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
-.ken-burns-in { animation: kenBurnsZoomIn 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
-.ken-burns-out { animation: kenBurnsZoomOut 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
-.ken-burns-right { animation: kenBurnsPanRight 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
-.ken-burns-left { animation: kenBurnsPanLeft 6s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform; }
-.hero-progress-bar { animation: heroProgress 4.8s linear forwards; }
-
-/* ── Hero Text Continuous Crossfade Animation ── */
-@keyframes heroTextFade {
-  0% {
-    opacity: 0;
-    transform: translateY(12px) scale(0.985);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-.animate-hero-text {
-  animation: heroTextFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+.animate-fade-up { animation: fadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 /* ── Left-to-Right Scrolling Ticker (WCAG Accessible Motion) ── */
 @keyframes scrollLeftToRight {
@@ -716,25 +662,21 @@ select.form-control {
 .animate-ticker-ltr {
   display: flex;
   width: max-content;
-  animation: scrollLeftToRight 34s linear infinite;
+  animation: scrollLeftToRight 45s linear infinite;
   will-change: transform;
 }
 
-/* Respect user's vestibular / reduced motion preference (accessible-animation skill) */
+/* Respect user's vestibular / reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .animate-ticker-ltr {
     animation: none !important;
     transform: none !important;
     width: 100% !important;
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
   }
-  .ken-burns-in,
-  .ken-burns-out,
-  .ken-burns-right,
-  .ken-burns-left {
+  .animate-fade-up {
     animation: none !important;
-    transform: none !important;
   }
 }
 

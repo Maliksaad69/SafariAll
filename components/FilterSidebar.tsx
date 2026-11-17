@@ -8,7 +8,7 @@ import {
   Users,
   Compass,
   Clock,
-  Sparkles,
+  Layers,
   SlidersHorizontal,
   ChevronDown,
   X,
@@ -217,19 +217,19 @@ export default function FilterSidebar({
         </div>
       </div>
 
-      <div className="border-t border-[#DEDCCF]"></div>
+      <div className="border-t border-[#E2DFD4]"></div>
 
       {/* Tour Format */}
       <div className="p-4 sm:p-5">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-[#193A38] flex items-center gap-1.5">
-            <Compass className="w-4 h-4 text-[#214446]" /> Tour Format
+          <span className="text-xs sm:text-[13px] font-semibold text-[#182624] flex items-center gap-1.5">
+            <Compass className="w-4 h-4 text-[#1E433B]" /> Tour format
           </span>
           {searchParams.get('tourType') && (
             <button
               type="button"
               onClick={() => handleParamChange('tourType', '')}
-              className="text-[11px] font-bold text-[#516D6A] hover:text-[#214446] hover:underline cursor-pointer"
+              className="text-[11px] font-medium text-[#6B7D79] hover:text-[#1E433B] hover:underline cursor-pointer"
             >
               Clear
             </button>
@@ -239,43 +239,43 @@ export default function FilterSidebar({
           <button
             type="button"
             onClick={() => handleParamChange('tourType', searchParams.get('tourType') === 'PRIVATE' ? '' : 'PRIVATE')}
-            className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs sm:text-[13px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
               searchParams.get('tourType') === 'PRIVATE'
-                ? 'bg-[#214446] !text-white border-[#214446] shadow-sm ring-1 ring-[#214446]'
-                : 'bg-white border-[#DEDCCF] !text-[#193A38] hover:bg-[#E4DBB4]/30 hover:border-[#214446]/40'
+                ? 'bg-[#1E433B] text-white border-[#1E433B] shadow-xs'
+                : 'bg-white border-[#E2DFD4] text-[#182624] hover:bg-[#EFECE4]'
             }`}
           >
             <Compass className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Private Tour</span>
+            <span className="whitespace-nowrap">Private tour</span>
           </button>
           <button
             type="button"
             onClick={() => handleParamChange('tourType', searchParams.get('tourType') === 'SHARED_GROUP' ? '' : 'SHARED_GROUP')}
-            className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs sm:text-[13px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
               searchParams.get('tourType') === 'SHARED_GROUP'
-                ? 'bg-[#214446] !text-white border-[#214446] shadow-sm ring-1 ring-[#214446]'
-                : 'bg-white border-[#DEDCCF] !text-[#193A38] hover:bg-[#E4DBB4]/30 hover:border-[#214446]/40'
+                ? 'bg-[#1E433B] text-white border-[#1E433B] shadow-xs'
+                : 'bg-white border-[#E2DFD4] text-[#182624] hover:bg-[#EFECE4]'
             }`}
           >
             <Users className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Shared Group</span>
+            <span className="whitespace-nowrap">Shared group</span>
           </button>
         </div>
       </div>
 
-      <div className="border-t border-[#DEDCCF]"></div>
+      <div className="border-t border-[#E2DFD4]"></div>
 
       {/* Tour Length */}
       <div className="p-4 sm:p-5">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-[#193A38] flex items-center gap-1.5">
-            <Clock className="w-4 h-4 text-[#214446]" /> Tour Length
+          <span className="text-xs sm:text-[13px] font-semibold text-[#182624] flex items-center gap-1.5">
+            <Clock className="w-4 h-4 text-[#1E433B]" /> Tour length
           </span>
           {currentDuration && (
             <button
               type="button"
               onClick={() => handleParamChange('duration', '')}
-              className="text-[11px] font-bold text-[#516D6A] hover:text-[#214446] hover:underline cursor-pointer"
+              className="text-[11px] font-medium text-[#6B7D79] hover:text-[#1E433B] hover:underline cursor-pointer"
             >
               Clear
             </button>
@@ -320,8 +320,8 @@ export default function FilterSidebar({
       {/* Comfort Level */}
       <div className="p-4 sm:p-5">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-[#193A38] flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-[#214446]" /> Comfort Level
+          <span className="text-xs sm:text-[13px] font-semibold text-[#182624] flex items-center gap-1.5">
+            <Layers className="w-4 h-4 text-[#1E433B]" /> Comfort level
           </span>
           {currentComfort && (
             <button

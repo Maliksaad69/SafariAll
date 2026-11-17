@@ -13,7 +13,7 @@ import {
   ShieldCheck,
   Headphones,
   Briefcase,
-  Sparkles,
+  Globe,
   ArrowRight,
   HelpCircle,
   Check,
@@ -528,7 +528,7 @@ export default function ContactUsPage() {
 
                 <li className="flex items-start gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7F6F1] text-[#214446] border border-[#DEDCCF]">
-                    <Sparkles className="h-4 w-4" />
+                    <Globe className="h-4 w-4" />
                   </div>
                   <div>
                     <strong className="text-[#193A38] font-bold block">Content &amp; Partnerships</strong>

@@ -10,7 +10,6 @@ import {
   DollarSign,
   Compass,
   MapPin,
-  Sparkles,
   ArrowUpRight,
   LayoutGrid,
   Layers,
@@ -274,27 +273,27 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
             <button
               type="button"
               onClick={() => setViewMode('spotlight')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === 'spotlight'
-                  ? 'bg-[var(--brand-deep)] text-white shadow-xs'
-                  : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'
+                  ? 'bg-[#1E433B] text-white shadow-xs'
+                  : 'text-[#6B7D79] hover:text-[#182624]'
               }`}
-              title="Interactive Spotlight View"
+              title="Spotlight View"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[var(--brand)]" />
+              <Compass className="w-3.5 h-3.5" strokeWidth={1.5} />
               <span className="hidden sm:inline">Spotlight</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode('matrix')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 viewMode === 'matrix'
-                  ? 'bg-[var(--brand-deep)] text-white shadow-xs'
-                  : 'text-[var(--ink-secondary)] hover:text-[var(--ink)]'
+                  ? 'bg-[#1E433B] text-white shadow-xs'
+                  : 'text-[#6B7D79] hover:text-[#182624]'
               }`}
-              title="Compare All Destinations Matrix"
+              title="Compare Destinations"
             >
-              <LayoutGrid className="w-3.5 h-3.5 text-[var(--brand)]" />
+              <LayoutGrid className="w-3.5 h-3.5" strokeWidth={1.5} />
               <span className="hidden sm:inline">Compare All</span>
             </button>
           </div>
@@ -343,54 +342,53 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
           onTouchEnd={() => setUserHovered(false)}
         >
           {/* Main Stage: Cinematic Country Hero Canvas */}
-          <div className="relative rounded-3xl overflow-hidden shadow-lg border border-[var(--border)] bg-[#193A38] text-white">
-            {/* Top Animated Progress Bar for Auto-Advance */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 z-20 overflow-hidden">
+          <div className="relative rounded-2xl overflow-hidden shadow-xs border border-[#E2DFD4] bg-[#132220] text-white">
+            {/* Top Indicator */}
+            <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/10 z-20 overflow-hidden">
               <div
                 key={activeCountry.slug}
-                className="h-full bg-gradient-to-r from-[var(--brand)] to-[var(--brand-strong)] hero-progress-bar shadow-[0_0_8px_rgba(33,68,70,0.8)]"
+                className="h-full bg-[#E59E67] transition-all"
                 style={{
-                  animationDuration: `${AUTO_PLAY_INTERVAL}ms`,
-                  animationPlayState: isPaused || userHovered ? 'paused' : 'running',
+                  width: `${((currentIndex + 1) / filteredCountries.length) * 100}%`,
                 }}
               />
             </div>
 
-            {/* Background Panorama with Atmospheric Gradients */}
+            {/* Background Panorama */}
             <div
-              className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out transform scale-100"
+              className="absolute inset-0 bg-cover bg-center transition-opacity duration-500 ease-out"
               style={{
                 backgroundImage: `url('${activeCountry.featuredImageUrl || 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=2400&q=90'}')`,
               }}
             />
-            {/* Rich multi-stage overlay for contrast: Forest Shadow deep tint into natural warmth */}
-            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#193A38]/95 via-[#193A38]/85 md:via-[#193A38]/70 to-black/35" />
+            {/* Directional scrim for contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#132220]/95 via-[#132220]/80 md:via-[#132220]/65 to-black/30" />
 
             {/* Stage Content */}
             <div className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between">
               {/* Top Meta Badges & Navigation Buttons */}
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--brand)] text-white text-xs font-extrabold shadow-sm">
-                    <Sparkles className="w-3.5 h-3.5 fill-current" />
-                    <span>{activeCountry.rank} Safari Destination</span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#1E433B] text-white text-xs font-medium border border-white/10 shadow-xs">
+                    <span className="tabular-nums font-semibold">{activeCountry.rank}</span>
+                    <span>Safari destination</span>
                   </span>
 
                   {activeCountry.toursCount !== undefined && activeCountry.toursCount > 0 && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-semibold">
-                      <span className="w-2 h-2 rounded-full bg-[var(--brand)] animate-pulse" />
-                      <span>{activeCountry.toursCount} Verified Tour Packages</span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-medium">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#E59E67]" />
+                      <span className="tabular-nums">{activeCountry.toursCount} verified tours</span>
                     </span>
                   )}
                 </div>
 
                 {/* Prev/Next Buttons & Count */}
-                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/20">
+                <div className="flex items-center gap-1 bg-black/40 backdrop-blur-sm p-1 rounded-lg border border-white/15">
                   <button
                     type="button"
                     onClick={prevDestination}
                     aria-label="Previous destination"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -399,12 +397,12 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                     type="button"
                     onClick={() => setIsPaused((prev) => !prev)}
                     aria-label={isPaused ? 'Resume auto-play' : 'Pause auto-play'}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
                   >
                     {isPaused ? <Play className="w-3.5 h-3.5 fill-current" /> : <Pause className="w-3.5 h-3.5 fill-current" />}
                   </button>
 
-                  <span className="text-[11px] font-bold text-white/90 px-1 min-w-[32px] text-center font-mono">
+                  <span className="text-xs font-medium text-white/90 px-1.5 min-w-[36px] text-center tabular-nums">
                     {currentIndex + 1} / {filteredCountries.length}
                   </span>
 
@@ -412,7 +410,7 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
                     type="button"
                     onClick={nextDestination}
                     aria-label="Next destination"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-white/90 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -422,26 +420,25 @@ export default function FeaturedCountriesSection({ countries }: FeaturedCountrie
               {/* Middle: Country Headline, Ratings & Vibe */}
               <div className="my-6 max-w-3xl">
                 <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <h3 className="text-3xl sm:text-4xl md:text-5xl font-black font-display text-white tracking-tight drop-shadow-md">
+                  <h3 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-display text-white tracking-tight">
                     {activeCountry.name}
                   </h3>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E4DBB4] border border-[#DEDCCF] text-xs shadow-sm">
-                    <Star className="w-3.5 h-3.5 fill-[#193A38] text-[#193A38]" />
-                    <span className="font-extrabold text-[#193A38]">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EAE6DB] border border-[#E2DFD4] text-xs">
+                    <Star className="w-3.5 h-3.5 fill-[#C9773B] text-[#C9773B]" />
+                    <span className="font-semibold text-[#182624] tabular-nums">
                       {(activeCountry.rating ?? 4.9).toFixed(1)}
                     </span>
-                    <span className="text-[#344C49] font-bold">
+                    <span className="text-[#6B7D79] tabular-nums">
                       ({activeCountry.reviewCount?.toLocaleString() ?? '1.2k'} reviews)
                     </span>
                   </div>
                 </div>
 
-                <p className="text-sm sm:text-base font-bold text-white mb-3 flex items-center gap-2 drop-shadow">
-                  <span>✦</span>
-                  <span>{currentMeta.tagline}</span>
+                <p className="text-sm sm:text-base font-medium text-[#EAE6DB] mb-3">
+                  {currentMeta.tagline}
                 </p>
 
-                <p className="text-xs sm:text-sm text-white/90 leading-relaxed max-w-2xl line-clamp-3 md:line-clamp-none font-light">
+                <p className="text-xs sm:text-sm text-white/90 leading-relaxed max-w-2xl line-clamp-3 md:line-clamp-none font-normal">
                   {activeCountry.description}
                 </p>
 

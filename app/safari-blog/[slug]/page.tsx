@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { MapPin, Calendar, Users, Eye, ArrowLeft, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, Users, Eye, ArrowLeft, ArrowRight, ShieldCheck, Compass } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,8 +117,9 @@ export default async function SafariBlogPostPage({ params }: { params: Promise<{
             <section className="my-12 rounded-3xl surface-card border border-black/5 p-6 sm:p-8 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[var(--brand)]">
-                    <Sparkles className="h-3.5 w-3.5" /> Recommended Itineraries
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1E433B]">
+                    <Compass className="h-3.5 w-3.5" />
+                    <span>Recommended itineraries</span>
                   </div>
                   <h2 className="text-2xl font-bold font-display text-[var(--brand-deep)] mt-1">
                     Safari Packages by {operator.companyName}
