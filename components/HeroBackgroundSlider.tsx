@@ -238,7 +238,7 @@ export default function HeroBackgroundSlider({
             <div>
               <Link
                 href="/african-safari-tours"
-                className="inline-flex items-center justify-center gap-2 bg-[#edab7e] hover:bg-[#df9c6f] text-[#0b2926] font-extrabold text-sm sm:text-[15px] px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl shadow-xl transition-all active:scale-[0.98] w-full xs:w-auto text-center"
+                className="inline-flex items-center justify-center gap-2 bg-[#edab7e] hover:bg-[#df9c6f] text-[#0b2926] font-extrabold text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98]"
               >
                 Find Your Perfect Safari &nbsp; ↗
               </Link>
