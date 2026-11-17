@@ -134,7 +134,7 @@ export default function HeroSearchForm({ initialTourCount }: { initialTourCount?
         <div className="p-1 sm:col-span-2 lg:col-span-1">
           <button
             type="submit"
-            className="w-full h-full min-h-[48px] sm:min-h-[52px] px-6 sm:px-8 py-3 bg-[#e78748] hover:bg-[#d97738] text-[#0b2926] font-extrabold text-sm sm:text-[15px] rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            className="w-full h-full min-h-[48px] sm:min-h-[52px] px-6 sm:px-8 py-3 bg-[#edab7e] hover:bg-[#df9c6f] text-[#0b2926] font-extrabold text-sm sm:text-[15px] rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
             <span>Search Safaris</span>
             <ArrowRight className="w-4 h-4" />

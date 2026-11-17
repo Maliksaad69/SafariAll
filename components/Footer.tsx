@@ -98,7 +98,7 @@ export default function Footer() {
                 href="/register?role=OPERATOR"
                 className="btn w-full justify-center text-sm bg-[#123b34] hover:bg-[#0b2926] text-white font-extrabold border-transparent shadow-sm transition-colors"
               >
-                <Award className="h-4 w-4 text-[#e78748]" />
+                <Award className="h-4 w-4 text-[#edab7e]" />
                 Register Your Agency
                 <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>

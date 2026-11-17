@@ -107,7 +107,7 @@ export default function HeroBackgroundSlider({
   showLocationBadge = true,
   children,
   className = '',
-  minHeightClass = 'min-h-[500px] sm:min-h-[530px] lg:min-h-[570px]',
+  minHeightClass = 'min-h-[calc(100vh-54px)] min-h-[calc(100dvh-54px)] sm:min-h-[calc(100vh-58px)] sm:min-h-[calc(100dvh-58px)] lg:min-h-[calc(100vh-62px)] lg:min-h-[calc(100dvh-62px)]',
 }: HeroBackgroundSliderProps) {
   const resolvedSlides = slides || getDefaultHeroSlides(tourCount);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -141,13 +141,13 @@ export default function HeroBackgroundSlider({
   return (
     <section
       aria-label="African Safari Hero"
-      className={`relative w-full overflow-hidden flex items-start ${minHeightClass} ${className}`}
+      className={`relative w-full overflow-hidden flex flex-col justify-center ${minHeightClass} ${className}`}
     >
       {/* ── Top Dynamic Slide Progress Indicator ── */}
       <div className="absolute top-0 left-0 right-0 h-1 z-30 bg-black/35 overflow-hidden">
         <div
           key={currentIndex}
-          className="h-full bg-gradient-to-r from-[#123b34] via-[#e78748] to-[#f6bd91] hero-progress-bar shadow-[0_0_8px_rgba(231,135,72,0.8)]"
+          className="h-full bg-gradient-to-r from-[#123b34] via-[#edab7e] to-[#f6c6a4] hero-progress-bar shadow-[0_0_8px_rgba(237,171,126,0.8)]"
           style={{ animationDuration: `${autoPlayInterval}ms` }}
         />
       </div>
@@ -196,14 +196,14 @@ export default function HeroBackgroundSlider({
       </div>
 
       {/* ── Top Floating Location Badge ── */}
-      <div className="absolute top-4 right-4 sm:right-8 z-30">
+      <div className="absolute top-3.5 right-3.5 sm:top-5 sm:right-8 z-30 max-w-[calc(100vw-28px)]">
         {showLocationBadge && currentSlide && (
           <div
             key={currentSlide.location}
-            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0b2926]/75 px-3 py-1 backdrop-blur-md shadow-md"
+            className="animate-fade-up flex items-center gap-1.5 rounded-full border border-white/20 bg-[#0b2926]/80 px-2.5 py-1 sm:px-3 sm:py-1 backdrop-blur-md shadow-md max-w-full"
           >
-            <Compass className="h-3.5 w-3.5 text-[#e78748] shrink-0" />
-            <span className="text-[10px] sm:text-[11px] font-extrabold text-[#f4f7f3] tracking-wider uppercase">
+            <Compass className="h-3.5 w-3.5 text-[#edab7e] shrink-0" />
+            <span className="text-[10px] sm:text-[11px] font-extrabold text-[#f4f7f3] tracking-wider uppercase truncate">
               {currentSlide.location}
             </span>
           </div>
@@ -216,21 +216,21 @@ export default function HeroBackgroundSlider({
           {children}
         </div>
       ) : (
-        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-9 pb-20 sm:pb-24 lg:pb-28">
+        <div className="relative z-20 w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 lg:pt-12 pb-20 sm:pb-24 lg:pb-28">
           <div className="max-w-[830px]">
             {/* Eyebrow */}
-            <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#f4ba8e] mb-2.5 sm:mb-3">
+            <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.17em] text-[#edab7e] mb-2.5 sm:mb-3">
               <span>AFRICA&apos;S MARKETPLACE FOR SAFARI TOURS</span>
             </div>
 
             {/* Heading */}
-            <h1 className="font-display font-extrabold text-[36px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.06] tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-3 sm:mb-3.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+            <h1 className="font-display font-extrabold text-[32px] xs:text-[38px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.08] sm:leading-[1.06] tracking-[-1.2px] xs:tracking-[-1.8px] sm:tracking-[-2.5px] text-white mb-3 sm:mb-3.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
               Your next safari<br className="hidden sm:inline" /> starts with{' '}
-              <span className="text-[#f3ae7d]">hello.</span>
+              <span className="text-[#edab7e]">hello.</span>
             </h1>
 
             {/* Description */}
-            <p className="text-[15px] sm:text-[17px] leading-[1.65] max-w-[580px] text-[#e5ece7] mb-5 sm:mb-6 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
+            <p className="text-[14px] sm:text-[17px] leading-[1.6] sm:leading-[1.65] max-w-[580px] text-[#e5ece7] mb-5 sm:mb-6 font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
               Explore extraordinary African safaris, compare authentic tours, and connect directly with trusted local operators. The adventure is yours to discover.
             </p>
 
@@ -238,22 +238,22 @@ export default function HeroBackgroundSlider({
             <div>
               <Link
                 href="/african-safari-tours"
-                className="inline-flex items-center justify-center gap-2 bg-[#e78748] hover:bg-[#d87638] text-[#0b2926] font-extrabold text-sm sm:text-[15px] px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl shadow-xl transition-all active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 bg-[#edab7e] hover:bg-[#df9c6f] text-[#0b2926] font-extrabold text-sm sm:text-[15px] px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl shadow-xl transition-all active:scale-[0.98] w-full xs:w-auto text-center"
               >
                 Find Your Perfect Safari &nbsp; ↗
               </Link>
             </div>
 
             {/* Feature Check Chips */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-5 sm:mt-6">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-6 text-white text-xs sm:text-[13px] font-bold mt-5 sm:mt-6">
               <span className="flex items-center gap-2">
-                <b className="text-[#f2aa78] font-black text-sm">✓</b> Direct local quotes
+                <b className="text-[#edab7e] font-black text-sm">✓</b> Direct local quotes
               </span>
               <span className="flex items-center gap-2">
-                <b className="text-[#f2aa78] font-black text-sm">✓</b> Explore 13 African countries
+                <b className="text-[#edab7e] font-black text-sm">✓</b> Explore 13 African countries
               </span>
               <span className="flex items-center gap-2">
-                <b className="text-[#f2aa78] font-black text-sm">✓</b> No booking commission
+                <b className="text-[#edab7e] font-black text-sm">✓</b> No booking commission
               </span>
             </div>
           </div>
