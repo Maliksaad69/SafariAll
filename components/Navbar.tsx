@@ -421,7 +421,10 @@ export default function Navbar() {
                   <div className="popover absolute right-0 mt-3 w-56 overflow-hidden bg-white text-[#193A38] border border-[#DEDCCF] shadow-xl">
                     <div className="truncate border-b border-[#DEDCCF] px-3 py-2 text-[11px] font-medium !text-[#516D6A]">{sessionUser.email}</div>
                     {sessionUser.role === 'OPERATOR' && (
-                      <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Agency Dashboard</Link>
+                      <>
+                        <Link href="/operator-portal" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Agency Dashboard</Link>
+                        <Link href="/operator-portal/tours/new" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">List Your Tours</Link>
+                      </>
                     )}
                     {sessionUser.role === 'ADMIN' && (
                       <Link href="/admin" className="block px-3 py-2 text-[13px] font-semibold !text-[#193A38] transition-colors hover:bg-[#E4DBB4]/40 hover:!text-[#193A38]">Admin Panel</Link>
@@ -439,12 +442,6 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-1.5 xl:gap-2 shrink-0">
-                <Link
-                  href="/register?role=OPERATOR"
-                  className="hidden xl:inline-flex items-center justify-center rounded-xl border border-[#dbe1dc] bg-[#f4f7f5] hover:bg-[#edf3f0] px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors whitespace-nowrap"
-                >
-                  List Your Tours
-                </Link>
                 <Link
                   href="/login"
                   className="inline-flex items-center justify-center rounded-xl border border-[#dbe1dc] bg-white px-2.5 py-1 text-xs font-bold text-[#193A38] transition-colors hover:bg-[#f4f7f5] whitespace-nowrap"
@@ -615,13 +612,22 @@ export default function Navbar() {
                   </div>
 
                   {sessionUser.role === 'OPERATOR' && (
-                    <Link
-                      href="/operator-portal"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
-                    >
-                      <User className="h-4 w-4 text-[#214446]" /> Agency Dashboard
-                    </Link>
+                    <>
+                      <Link
+                        href="/operator-portal"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
+                      >
+                        <User className="h-4 w-4 text-[#214446]" /> Agency Dashboard
+                      </Link>
+                      <Link
+                        href="/operator-portal/tours/new"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex min-h-[46px] items-center gap-2.5 rounded-xl bg-white px-4 py-2.5 font-semibold text-[#193A38] hover:bg-[#E4DBB4]/30"
+                      >
+                        <Compass className="h-4 w-4 text-[#214446]" /> List Your Tours
+                      </Link>
+                    </>
                   )}
                   {sessionUser.role === 'ADMIN' && (
                     <Link
@@ -677,13 +683,6 @@ export default function Navbar() {
                       Register
                     </Link>
                   </div>
-                  <Link
-                    href="/register?role=OPERATOR"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex min-h-[40px] w-full items-center justify-center rounded-xl border border-[#DEDCCF] bg-white text-center text-[12.5px] font-bold text-[#193A38] hover:bg-[#E4DBB4]/20 transition-colors"
-                  >
-                    List Your Tours (For Tour Operators)
-                  </Link>
                 </div>
               )}
             </div>
